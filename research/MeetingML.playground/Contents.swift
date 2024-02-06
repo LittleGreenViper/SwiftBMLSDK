@@ -31,4 +31,3 @@ func createModelFile(file inFileSize: String = "small") {
 }
 
 createModelFile(file: "large")
-exit

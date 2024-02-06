@@ -3,9 +3,42 @@ import Contacts     // For the postal address
 import CreateML     // For taggedData
 
 /* ###################################################################################################################################### */
-// MARK: - Special Array Extension for Creating Tagged Data -
+// MARK: - Date Extension -
+/* ###################################################################################################################################### */
+/**
+ This extension allows us to convert a date to a certain time zone.
+ */
+fileprivate extension Date {
+    /* ################################################################## */
+    /**
+     Convert a date between two timezones.
+     
+     Inspired by [this SO answer](https://stackoverflow.com/a/54064820/879365)
+     
+     - parameter from: The source timezone.
+     - paremeter to: The destination timezone.
+     
+     - returns: The converted date
+     */
+    func convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date { addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self))) }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Special Array Extension for Creating Tagged ML Data Summaries -
 /* ###################################################################################################################################### */
 public extension Array where Element == MeetingJSONParser.Meeting {
+    /* ################################################# */
+    /**
+     Returns the ML type for this array.
+     */
+    static var dataValueType: MLDataValue.ValueType { MLDataValue.ValueType.sequence }
+    
+    /* ################################################# */
+    /**
+     Returns the meeting array as a sequence datatype.
+     */
+    var dataValue: MLDataValue { MLDataValue.SequenceType(map { $0.dataValue }).dataValue }
+
     /* ################################################# */
     /**
      This reduces the entire array into a tagged ML value array.
@@ -26,10 +59,10 @@ public extension Array where Element == MeetingJSONParser.Meeting {
         
         return ret
     }
-    
+
     /* ################################################# */
     /**
-     This reduces the entire array into a tagged String value array.
+     This reduces the entire array into a tagged String data table array.
      */
     var taggedStringData: [String: [String]] {
         var ret = [String: [String]]()
@@ -576,7 +609,7 @@ public struct MeetingJSONParser: Codable {
         /**
          This is the local timezone of this meeting.
          */
-        public let timezone: TimeZone
+        public let timeZone: TimeZone
         
         /* ################################################# */
         /**
@@ -712,7 +745,7 @@ public struct MeetingJSONParser: Codable {
                 "weekday": weekday,
                 "startTime": formatter.string(from: self.startTime),
                 "duration": duration,
-                "timezone": timezone.identifier,
+                "timezone": timeZone.identifier,
                 "serverID": serverID,
                 "localMeetingID": localMeetingID
             ]
@@ -757,7 +790,80 @@ public struct MeetingJSONParser: Codable {
             
             return ret
         }
+
+        /* ################################################# */
+        /**
+         This provides the object as "tagged" ML data, with nesting.
+         */
+        public var hierarchicalMLData: [MLDataValue: MLDataValue] {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm:ss"
+            
+            var ret: [MLDataValue: MLDataValue] = [
+                MLDataValue.string("name"): MLDataValue.string(name),
+                MLDataValue.string("organization"): MLDataValue.string(organization.rawValue),
+                MLDataValue.string("meetingType"): MLDataValue.string(meetingType.rawValue),
+                MLDataValue.string("weekday"): MLDataValue.int(weekday),
+                MLDataValue.string("startTime"): MLDataValue.string(formatter.string(from: self.startTime)),
+                MLDataValue.string("duration"): MLDataValue.double(duration),
+                MLDataValue.string("timezone"): MLDataValue.string(timeZone.identifier),
+                MLDataValue.string("serverID"): MLDataValue.int(serverID),
+                MLDataValue.string("localMeetingID"): MLDataValue.int(localMeetingID)
+            ]
+
+            if let comments = comments,
+               !comments.isEmpty {
+                ret[MLDataValue.string("comments")] = MLDataValue.string(comments)
+            }
+            
+            if let locationInfo = locationInfo,
+               !locationInfo.isEmpty {
+                ret[MLDataValue.string("locationInfo")] = MLDataValue.string(locationInfo)
+            }
+            
+            if let virtualURL = virtualURL?.absoluteString,
+               !virtualURL.isEmpty {
+                ret[MLDataValue.string("virtualURL")] = MLDataValue.string(virtualURL)
+            }
+            
+            if let virtualPhoneNumber = virtualPhoneNumber,
+               !virtualPhoneNumber.isEmpty {
+                ret[MLDataValue.string("virtualPhoneNumber")] = MLDataValue.string(virtualPhoneNumber)
+            }
+            
+            if let virtualInfo = virtualInfo,
+               !virtualInfo.isEmpty {
+                ret[MLDataValue.string("virtualInfo")] = MLDataValue.string(virtualInfo)
+            }
+            
+            if let coords = coords,
+               CLLocationCoordinate2DIsValid(coords) {
+                ret[MLDataValue.string("coords")] = MLDataValue.DictionaryType([MLDataValue.string("latitude"): MLDataValue.double(coords.latitude),MLDataValue.string("longitude"): MLDataValue.double(coords.longitude)]).dataValue
+            }
+            
+            if !basicInPersonAddress.isEmpty {
+                ret[MLDataValue.string("inPersonAddress")] = MLDataValue.string(basicInPersonAddress)
+            }
+            
+            if !formats.isEmpty {
+                ret[MLDataValue.string("formats")] = MLDataValue.SequenceType(formats.map { $0.dataValue }).dataValue
+            }
+            
+            return ret
+        }
         
+        /* ################################################# */
+        /**
+         This returns the start time and weekday as date components.
+         */
+        public var dateComponents: DateComponents? {
+            let components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
+            guard let startHour = components.hour,
+                  let startMinute = components.minute
+            else { return nil}
+            return DateComponents(calendar: .current, hour: startHour, minute: startMinute, weekday: weekday)
+        }
+
         /* ################################################# */
         /**
          This returns the address as a basic readable address.
@@ -768,16 +874,58 @@ public struct MeetingJSONParser: Codable {
                 let formatter = CNPostalAddressFormatter()
                 formatter.style = .mailingAddress
                 
-                if !ret.isEmpty {
-                    ret += "\n"
-                }
-                
-                ret += formatter.string(from: postalAddress)
+                ret += (!ret.isEmpty ? "\n" : "") + formatter.string(from: postalAddress)
             }
 
             return ret
         }
         
+        /* ################################################################## */
+        /**
+         True, if the meeting has a virtual component.
+         */
+        public var hasVirtual: Bool { .virtual == meetingType || .hybrid == meetingType }
+        
+        /* ################################################################## */
+        /**
+         True, if the meeting has an in-person component.
+         */
+        public var hasInPerson: Bool { .inPerson == meetingType || .hybrid == meetingType }
+
+        /* ################################################################## */
+        /**
+         This is the start time of the next meeting, in the meeting's local timezone. By default, the date will have the meeting's timezone set, but it can adjust to our local timezone.
+         
+         - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
+         - returns: The date of the next meeting.
+         
+         > NOTE: If the date is invalid, then the distant future will be returned.
+         */
+        public func getNextStartDate(isAdjusted inAdjust: Bool = false) -> Date {
+            guard let dateComponents = dateComponents else { return .distantFuture }
+            let nextStartDate = Calendar.current.nextDate(after: .now, matching: dateComponents, matchingPolicy: .nextTimePreservingSmallerComponents)
+            
+            if inAdjust {
+                return nextStartDate?.convert(from: timeZone, to: .current) ?? Date.distantFuture
+            } else {
+                return nextStartDate ?? .distantFuture
+            }
+        }
+        
+        /* ################################################################## */
+        /**
+         This is the start time of the previous meeting, in the meeting's local timezone. By default, the date will have the meeting's timezone set, but it can adjust to our local timezone.
+         
+         - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
+         - returns: The date of the last meeting.
+
+         > NOTE: If the date is invalid, then the distant past will be returned.
+         */
+        public func getPreviousStartDate(isAdjusted inAdjust: Bool = false) -> Date {
+            guard .distantFuture > getNextStartDate(isAdjusted: inAdjust) else { return .distantPast }
+            return getNextStartDate().addingTimeInterval(-(60 * 60 * 24 * 7))
+        }
+
         // MARK: Initializer
                 
         /* ################################################# */
@@ -808,9 +956,9 @@ public struct MeetingJSONParser: Codable {
             self.organization = Organization(rawValue: organizationStr) ?? .none
 
             if let timezoneStr = inDictionary["time_zone"] as? String ?? TimeZone.current.localizedName(for: .standard, locale: .current) {
-                self.timezone = TimeZone(identifier: timezoneStr) ?? .current
+                self.timeZone = TimeZone(identifier: timezoneStr) ?? .current
             } else {
-                self.timezone = .current
+                self.timeZone = .current
             }
 
             if let duration = inDictionary["duration"] as? Int,
@@ -901,7 +1049,7 @@ public struct MeetingJSONParser: Codable {
             weekday = try container.decode(Int.self, forKey: .weekday)
             startTime = try container.decode(Date.self, forKey: .startTime)
             duration = try container.decode(TimeInterval.self, forKey: .duration)
-            timezone = try container.decode(TimeZone.self, forKey: .timezone)
+            timeZone = try container.decode(TimeZone.self, forKey: .timezone)
             organization = try container.decode(Organization.self, forKey: .organization)
             name = try container.decode(String.self, forKey: .name)
             formats = try container.decode([Format].self, forKey: .formats)
@@ -965,7 +1113,7 @@ public struct MeetingJSONParser: Codable {
             try container.encode(weekday, forKey: .weekday)
             try container.encode(startTime, forKey: .startTime)
             try container.encode(duration, forKey: .duration)
-            try container.encode(timezone, forKey: .timezone)
+            try container.encode(timeZone, forKey: .timezone)
             try container.encode(organization, forKey: .organization)
             try container.encode(name, forKey: .name)
             try container.encode(formats, forKey: .formats)
@@ -1008,7 +1156,7 @@ public struct MeetingJSONParser: Codable {
             weekday = 0
             startTime = .now
             duration = 0
-            timezone = .current
+            timeZone = .current
             organization = .none
             name = ""
             formats = []
