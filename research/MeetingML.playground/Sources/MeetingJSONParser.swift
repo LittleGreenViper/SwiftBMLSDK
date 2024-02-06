@@ -11,11 +11,13 @@ public extension Array where Element == MeetingJSONParser.Meeting {
      This reduces the entire array into a tagged value array.
      */
     var taggedData: [String: any MLDataValueConvertible] {
-        reduce([:]) { current, next in
-            var interimData = current
-
-            return interimData
+        var ret = [String: any MLDataValueConvertible]()
+        
+        forEach { meeting in
+            let taggedDictionary = meeting.taggedFlatData
         }
+        
+        return ret
     }
 }
 
@@ -75,28 +77,50 @@ public struct MeetingJSONParser: Codable {
          */
         public let searchTime: TimeInterval
         
+        /* ############################################# */
+        /**
+         Default Initializer.
+         
+         - parameters:
+             - actualSize: This is the actual size of this single page of results, in results (not bytes).
+             - pageSize: This is the number of results allowed as a maximum, per page, in results.
+             - startingIndex: This is the 0-based starting index, of the total found set (in results), for this page.
+             - total: This is the total size of all results in the found set.
+             - totalPages: This is the total number of pages that contain the found set.
+             - page: This is the 0-based index of this page of results.
+             - searchTime: This is the number of seconds, reported by the server, to generate this page of results.
+         */
+        public init(actualSize inActualSize: Int = 0,
+                    pageSize inPageSize: Int = 0,
+                    startingIndex inStartingIndex: Int = 0,
+                    total inTotal: Int = 0,
+                    totalPages inTotalPages: Int = 0,
+                    page inPage: Int = 0,
+                    searchTime inSearchTime: TimeInterval = 0
+        ) {
+            actualSize = inActualSize
+            pageSize = inPageSize
+            startingIndex = inStartingIndex
+            total = inTotal
+            totalPages = inTotalPages
+            page = inPage
+            searchTime = inSearchTime
+        }
+
         // MARK: MLDataValueConvertible Conformance
 
         /* ############################################# */
         /**
          This is required, but doesn't do anything.
          */
-        public init?(from inDataValue: MLDataValue) { nil }
-        
+        public init() { self.init(actualSize: 0, pageSize: 0, startingIndex: 0, total: 0, totalPages: 0, page: 0, searchTime: 0) }
+
         /* ############################################# */
         /**
          This is required, but doesn't do anything.
          */
-        public init() {
-            actualSize = 0
-            pageSize = 0
-            startingIndex = 0
-            total = 0
-            totalPages = 0
-            page = 0
-            searchTime = 0
-        }
-        
+        public init?(from inDataValue: MLDataValue) { nil }
+
         /* ############################################# */
         /**
          Returns the ML value type.
@@ -189,7 +213,13 @@ public struct MeetingJSONParser: Codable {
              This is the [ISO 639-2](https://www.loc.gov/standards/iso639-2/php/code_list.php) code for the language used for the name and description.
              */
             public let language: String
-
+            
+            /* ############################################# */
+            /**
+             Returns the format, as single string, with values separarated by tabs.
+             */
+            public var asString: String { "key: \(key)\tname \(name)\tdescription: \(description)\tlanguage: \(language)" }
+            
             /* ############################################# */
             /**
              A failable initializer. This initializer parses "raw" format data, and populates the instance properties.
@@ -353,10 +383,16 @@ public struct MeetingJSONParser: Codable {
             
             /* ############################################# */
             /**
+             This the venue name for the in-person meeting.
+             */
+            case inPersonVenueName
+            
+            /* ############################################# */
+            /**
              This the street address for the in-person meeting.
              */
             case inPersonAddress_street
-            
+
             /* ############################################# */
             /**
              This the neighborhood for the in-person meeting.
@@ -422,6 +458,32 @@ public struct MeetingJSONParser: Codable {
              This contains an array of formats that apply to the meeting.
              */
             case formats
+        }
+
+        /* ############################################################################################################################## */
+        // MARK: Meeting Type Enum
+        /* ############################################################################################################################## */
+        /**
+         This provides values for the type of meeting.
+         */
+        public enum MeetingType: String {
+            /* ############################################# */
+            /**
+             The meeting only gathers virtually.
+             */
+            case virtual
+
+            /* ############################################# */
+            /**
+             The meeting only gathers in-person.
+             */
+            case inPerson
+
+            /* ############################################# */
+            /**
+             The meeting gathers, both in-person, and virtually.
+             */
+            case hybrid
         }
 
         /* ############################################################################################################################## */
@@ -522,10 +584,16 @@ public struct MeetingJSONParser: Codable {
         
         /* ################################################# */
         /**
+         This is the name for an in-person venue. It is optional.
+         */
+        public let inPersonVenueName: String?
+        
+        /* ################################################# */
+        /**
          This is a physical address of an in-person meeting. It is optional.
          */
         public let inPersonAddress: CNPostalAddress?
-        
+
         /* ################################################# */
         /**
          This is any additional text, describing the location. It is optional.
@@ -551,34 +619,101 @@ public struct MeetingJSONParser: Codable {
         public let virtualInfo: String?
         
         // MARK: Public Computed Properties
-                
+        
         /* ################################################# */
         /**
-         This provides the object as "tagged" data, for things like ML processing.
+         The meeting type.
          */
-        public var taggedData: [String: MLDataValue] {
+        public var meetingType: MeetingType {
+            if (nil != inPersonAddress) || (nil != inPersonVenueName && !inPersonVenueName!.isEmpty),
+               (nil != virtualURL) || (nil != virtualPhoneNumber) {
+                return .hybrid
+            } else if nil != inPersonAddress || (nil != inPersonVenueName && !inPersonVenueName!.isEmpty) {
+                return .inPerson
+            } else {
+                return .virtual
+            }
+        }
+        
+        /* ################################################# */
+        /**
+         This provides the object as "tagged" data, for things like ML processing, but with all values atomic (not nested).
+         */
+        public var taggedFlatData: [String: MLDataValue] {
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm:ss"
-            let startTime = formatter.string(from: self.startTime)
-            let coords = nil != coords ? "\(coords!.latitude),\(coords!.longitude)" : ""
-            return [
-                "serverID": MLDataValue.int(serverID),
-                "localMeetingID": MLDataValue.int(localMeetingID),
+
+            var ret = [
+                "name": MLDataValue.string(name),
+                "organization": MLDataValue.string(organization.rawValue),
+                "meetingType": MLDataValue.string(meetingType.rawValue),
                 "weekday": MLDataValue.int(weekday),
-                "startTime": MLDataValue.string(startTime),
+                "startTime": MLDataValue.string(formatter.string(from: self.startTime)),
                 "duration": MLDataValue.double(duration),
                 "timezone": MLDataValue.string(timezone.identifier),
-                "organization": MLDataValue.string(organization.rawValue),
-                "name": MLDataValue.string(name),
-                "comments": MLDataValue.string(comments ?? ""),
-                "locationInfo": MLDataValue.string(locationInfo ?? ""),
-                "virtualURL": MLDataValue.string(virtualURL?.absoluteString ?? ""),
-                "virtualPhoneNumber": MLDataValue.string(virtualPhoneNumber ?? ""),
-                "virtualInfo": MLDataValue.string(virtualInfo ?? ""),
-                "coords": MLDataValue.string(coords),
-                "inPersonAddress": MLDataValue.string(inPersonAddress?.description ?? ""),
-                "formats": MLDataValue.sequence(MLDataValue.SequenceType(formats.map { $0.dataValue }))
+                "serverID": MLDataValue.int(serverID),
+                "localMeetingID": MLDataValue.int(localMeetingID)
             ]
+            
+            if let comments = comments,
+               !comments.isEmpty {
+                ret["comments"] = MLDataValue.string(comments)
+            }
+            
+            if let locationInfo = locationInfo,
+               !locationInfo.isEmpty {
+                ret["locationInfo"] = MLDataValue.string(locationInfo)
+            }
+            
+            if let virtualURL = virtualURL?.absoluteString,
+               !virtualURL.isEmpty {
+                ret["virtualURL"] = MLDataValue.string(virtualURL)
+            }
+            
+            if let virtualPhoneNumber = virtualPhoneNumber,
+               !virtualPhoneNumber.isEmpty {
+                ret["virtualPhoneNumber"] = MLDataValue.string(virtualPhoneNumber)
+            }
+            
+            if let virtualInfo = virtualInfo,
+               !virtualInfo.isEmpty {
+                ret["virtualInfo"] = MLDataValue.string(virtualInfo)
+            }
+            
+            if let coords = coords,
+               CLLocationCoordinate2DIsValid(coords) {
+                ret["coords"] = MLDataValue.string("\(coords.latitude),\(coords.longitude)")
+            }
+            
+            if !basicInPersonAddress.isEmpty {
+                ret["inPersonAddress"] = MLDataValue.string(basicInPersonAddress)
+            }
+            
+            if !formats.isEmpty {
+                ret["formats"] = MLDataValue.string(formats.map { $0.asString }.joined(separator: "\n"))
+            }
+            
+            return ret
+        }
+        
+        /* ################################################# */
+        /**
+         This returns the address as a basic readable address.
+         */
+        public var basicInPersonAddress: String {
+            var ret = inPersonVenueName ?? ""
+            if let postalAddress = inPersonAddress {
+                let formatter = CNPostalAddressFormatter()
+                formatter.style = .mailingAddress
+                
+                if !ret.isEmpty {
+                    ret += "\n"
+                }
+                
+                ret += formatter.string(from: postalAddress)
+            }
+
+            return ret
         }
         
         // MARK: Initializer
@@ -656,9 +791,11 @@ public struct MeetingJSONParser: Codable {
                 self.inPersonAddress = mutableGoPostal
                 let locationInfo = MeetingJSONParser._decodeUnicode(physicalAddress["info"]?.trimmingCharacters(in: .whitespacesAndNewlines))
                 self.locationInfo = locationInfo.isEmpty ? nil : locationInfo
+                self.inPersonVenueName = physicalAddress["name"]
             } else {
                 self.inPersonAddress = nil
                 self.locationInfo = nil
+                self.inPersonVenueName = nil
             }
 
             if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
@@ -725,6 +862,12 @@ public struct MeetingJSONParser: Codable {
                 coords = nil
             }
             
+            if let venueName = try? container.decode(String.self, forKey: .inPersonVenueName) {
+                inPersonVenueName = venueName
+            } else {
+                inPersonVenueName = nil
+            }
+            
             if let street = try? container.decode(String.self, forKey: .inPersonAddress_street),
                let subLocality = try? container.decode(String.self, forKey: .inPersonAddress_subLocality),
                let city = try? container.decode(String.self, forKey: .inPersonAddress_city),
@@ -774,6 +917,7 @@ public struct MeetingJSONParser: Codable {
             try? container.encode(coords?.latitude, forKey: .coords_lat)
             try? container.encode(coords?.longitude, forKey: .coords_lng)
             
+            try? container.encode(inPersonVenueName, forKey: .inPersonVenueName)
             try? container.encode(inPersonAddress?.street, forKey: .inPersonAddress_street)
             try? container.encode(inPersonAddress?.subLocality, forKey: .inPersonAddress_subLocality)
             try? container.encode(inPersonAddress?.city, forKey: .inPersonAddress_city)
@@ -813,6 +957,7 @@ public struct MeetingJSONParser: Codable {
             virtualPhoneNumber = nil
             virtualInfo = nil
             inPersonAddress = nil
+            inPersonVenueName = nil
         }
         
         /* ############################################# */
@@ -823,26 +968,14 @@ public struct MeetingJSONParser: Codable {
         
         /* ############################################# */
         /**
-         Returns the format, as an ML Dictionary.
+         Returns the meeting, as a fairly basic ML Dictionary.
          */
         public var dataValue: MLDataValue {
-            let dateFormatter = DateFormatter()
-            dateFormatter.calendar = Calendar(identifier: .iso8601)
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            dateFormatter.dateFormat = "HH:mm:ss"
+            var retDictionary = [MLDataValue: MLDataValue]()
             
-            return MLDataValue.DictionaryType([
-                MLDataValue.string("id"): MLDataValue.int(Int(id)),
-                MLDataValue.string("serverID"): MLDataValue.int(serverID),
-                MLDataValue.string("localMeetingID"): MLDataValue.int(localMeetingID),
-                MLDataValue.string("weekday"): MLDataValue.int(weekday),
-                MLDataValue.string("startTime"): MLDataValue.string(dateFormatter.string(from: startTime)),
-                MLDataValue.string("duration"): MLDataValue.double(duration),
-                MLDataValue.string("timezone"): MLDataValue.string(timezone.identifier),
-                MLDataValue.string("organization"): MLDataValue.string(organization.rawValue),
-                MLDataValue.string("name"): MLDataValue.string(name),
-                MLDataValue.string("formats"): MLDataValue.sequence(MLDataValue.SequenceType(formats.map { $0.dataValue }))
-            ]).dataValue
+            taggedFlatData.forEach { key, value in retDictionary[MLDataValue.string(key)] = value }
+            
+            return MLDataValue.DictionaryType(retDictionary).dataValue
         }
     }
 
