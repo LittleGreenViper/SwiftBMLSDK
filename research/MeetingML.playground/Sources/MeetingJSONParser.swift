@@ -8,13 +8,41 @@ import CreateML     // For taggedData
 public extension Array where Element == MeetingJSONParser.Meeting {
     /* ################################################# */
     /**
-     This reduces the entire array into a tagged value array.
+     This reduces the entire array into a tagged ML value array.
      */
-    var taggedData: [String: any MLDataValueConvertible] {
-        var ret = [String: any MLDataValueConvertible]()
+    var taggedMLData: [String: [MLDataValue]] {
+        var ret = [String: [MLDataValue]]()
         
         forEach { meeting in
-            let taggedDictionary = meeting.taggedFlatData
+            meeting.taggedMLData.forEach { key, value in
+                if var prev = ret[key] {
+                    prev.append(value)
+                    ret[key] = prev
+                } else {
+                    ret[key] = [value]
+                }
+            }
+        }
+        
+        return ret
+    }
+    
+    /* ################################################# */
+    /**
+     This reduces the entire array into a tagged String value array.
+     */
+    var taggedStringData: [String: [String]] {
+        var ret = [String: [String]]()
+        
+        forEach { meeting in
+            meeting.taggedStringData.forEach { key, value in
+                if var prev = ret[key] {
+                    prev.append(value)
+                    ret[key] = prev
+                } else {
+                    ret[key] = [value]
+                }
+            }
         }
         
         return ret
@@ -637,60 +665,94 @@ public struct MeetingJSONParser: Codable {
         
         /* ################################################# */
         /**
-         This provides the object as "tagged" data, for things like ML processing, but with all values atomic (not nested).
+         This provides the object as "tagged" data, for things like ML processing.
          */
-        public var taggedFlatData: [String: MLDataValue] {
+        public var taggedMLData: [String: MLDataValue] {
+            var ret = [String: MLDataValue]()
+            
+            taggedFlatData.forEach { key, value in
+                if let value = value as? Int {
+                    ret[key] = MLDataValue.int(value)
+                } else if let value = value as? Double {
+                    ret[key] = MLDataValue.double(value)
+                } else if let value = value as? String {
+                    ret[key] = MLDataValue.string(value)
+                }
+            }
+            
+            return ret
+        }
+        
+        /* ################################################# */
+        /**
+         This provides the object as "tagged" data, but all values as String.
+         */
+        public var taggedStringData: [String: String] {
+            var ret = [String: String]()
+            
+            taggedFlatData.forEach { key, value in
+                ret[key] = "\(value)"
+            }
+            
+            return ret
+        }
+
+        /* ################################################# */
+        /**
+         This provides the object as "tagged" data, but with all values atomic (not nested).
+         */
+        public var taggedFlatData: [String: Any] {
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm:ss"
 
-            var ret = [
-                "name": MLDataValue.string(name),
-                "organization": MLDataValue.string(organization.rawValue),
-                "meetingType": MLDataValue.string(meetingType.rawValue),
-                "weekday": MLDataValue.int(weekday),
-                "startTime": MLDataValue.string(formatter.string(from: self.startTime)),
-                "duration": MLDataValue.double(duration),
-                "timezone": MLDataValue.string(timezone.identifier),
-                "serverID": MLDataValue.int(serverID),
-                "localMeetingID": MLDataValue.int(localMeetingID)
+            var ret: [String: Any] = [
+                "name": name,
+                "organization": organization.rawValue,
+                "meetingType": meetingType.rawValue,
+                "weekday": weekday,
+                "startTime": formatter.string(from: self.startTime),
+                "duration": duration,
+                "timezone": timezone.identifier,
+                "serverID": serverID,
+                "localMeetingID": localMeetingID
             ]
             
             if let comments = comments,
                !comments.isEmpty {
-                ret["comments"] = MLDataValue.string(comments)
+                ret["comments"] = comments
             }
             
             if let locationInfo = locationInfo,
                !locationInfo.isEmpty {
-                ret["locationInfo"] = MLDataValue.string(locationInfo)
+                ret["locationInfo"] = locationInfo
             }
             
             if let virtualURL = virtualURL?.absoluteString,
                !virtualURL.isEmpty {
-                ret["virtualURL"] = MLDataValue.string(virtualURL)
+                ret["virtualURL"] = virtualURL
             }
             
             if let virtualPhoneNumber = virtualPhoneNumber,
                !virtualPhoneNumber.isEmpty {
-                ret["virtualPhoneNumber"] = MLDataValue.string(virtualPhoneNumber)
+                ret["virtualPhoneNumber"] = virtualPhoneNumber
             }
             
             if let virtualInfo = virtualInfo,
                !virtualInfo.isEmpty {
-                ret["virtualInfo"] = MLDataValue.string(virtualInfo)
+                ret["virtualInfo"] = virtualInfo
             }
             
             if let coords = coords,
                CLLocationCoordinate2DIsValid(coords) {
-                ret["coords"] = MLDataValue.string("\(coords.latitude),\(coords.longitude)")
+                ret["coords"] = "\(coords.latitude),\(coords.longitude)"
             }
             
             if !basicInPersonAddress.isEmpty {
-                ret["inPersonAddress"] = MLDataValue.string(basicInPersonAddress)
+                ret["inPersonAddress"] = basicInPersonAddress
             }
             
             if !formats.isEmpty {
-                ret["formats"] = MLDataValue.string(formats.map { $0.asString }.joined(separator: "\n"))
+                ret["formats"] = formats.map { $0.asString }.joined(separator: "\n")
             }
             
             return ret
@@ -973,7 +1035,7 @@ public struct MeetingJSONParser: Codable {
         public var dataValue: MLDataValue {
             var retDictionary = [MLDataValue: MLDataValue]()
             
-            taggedFlatData.forEach { key, value in retDictionary[MLDataValue.string(key)] = value }
+            taggedMLData.forEach { key, value in retDictionary[MLDataValue.string(key)] = value }
             
             return MLDataValue.DictionaryType(retDictionary).dataValue
         }
@@ -1051,4 +1113,3 @@ public struct MeetingJSONParser: Codable {
         self.meetings = meetingsJSON.compactMap { Self._parseMeeting($0) }
     }
 }
-

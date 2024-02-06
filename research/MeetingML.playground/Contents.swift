@@ -1,24 +1,23 @@
 import Foundation
 import CreateML
+
 @available(macOS 13.0, *)
 
 func loadJSON() -> (meta: MeetingJSONParser.PageMeta, meetings: [MeetingJSONParser.Meeting])? {
-    guard let jsonFileURL = Bundle.main.url(forResource: "all-meetings", withExtension: "json"),
-          let jsonData = try? Data(contentsOf: jsonFileURL),
-          let parser = MeetingJSONParser(jsonData: jsonData)
-    else { return nil }
+    print("Getting File")
+    guard let jsonFileURL = Bundle.main.url(forResource: "large-dump", withExtension: "json") else { return nil }
+    print("Extracting Data")
+    guard let jsonData = try? Data(contentsOf: jsonFileURL) else { return nil }
+    print("Parsing Data")
+    guard let parser = MeetingJSONParser(jsonData: jsonData as Data) else { return nil }
     
     return (meta: parser.meta, meetings: parser.meetings)
 }
 
-if let results = loadJSON(),
-    let mlDataTable = try? MLDataTable(dictionary: results.meetings.taggedData) {
-    print(mlDataTable)
+if let results = loadJSON() {
+    print("Training Day!")
+    if let classifier = try? MLTextClassifier(trainingData: results.meetings.taggedStringData) {
+        print(classifier)
+    }
 }
-//
-//let classifier = try MLTextClassifier(trainingData: dataFrame, textColumn: "text", labelColumn: "sentiment")
-//
-//let metaData = MLModelMetadata(author: "Mohammad Azam", shortDescription: "Predicts the sentiments associated with financial news", version: "1.0")
-//
-//try classifier.write(toFile: "~/Desktop/FinancialNewsSentimentAnalysis.mlmodel", metadata: metaData)
 
