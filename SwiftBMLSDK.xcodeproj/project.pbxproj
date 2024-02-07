@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D41620402B73C17F00E6E0CA /* SwiftMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftMLSDK.framework */; };
-		D4675D142B73C1CD00139CC3 /* SwiftMLSDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4675D122B73C1CD00139CC3 /* SwiftMLSDK.docc */; };
-		D4675D192B73C1E400139CC3 /* SwiftMLSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* SwiftMLSDKTests.swift */; };
+		D41620402B73C17F00E6E0CA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
+		D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */; };
+		D4675D192B73C1E400139CC3 /* SwiftBMLSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */; };
 		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 /* End PBXBuildFile section */
@@ -25,10 +25,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D41620352B73C17F00E6E0CA /* SwiftMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D416203F2B73C17F00E6E0CA /* SwiftMLSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftMLSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4675D122B73C1CD00139CC3 /* SwiftMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftMLSDK.docc; sourceTree = "<group>"; };
-		D4675D182B73C1E400139CC3 /* SwiftMLSDKTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDKTests.swift; sourceTree = "<group>"; };
+		D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftBMLSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftBMLSDK.docc; sourceTree = "<group>"; };
+		D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDKTests.swift; sourceTree = "<group>"; };
 		D4675D202B73C57D00139CC3 /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -44,7 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D41620402B73C17F00E6E0CA /* SwiftMLSDK.framework in Frameworks */,
+				D41620402B73C17F00E6E0CA /* SwiftBMLSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,8 +64,8 @@
 		D41620362B73C17F00E6E0CA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D41620352B73C17F00E6E0CA /* SwiftMLSDK.framework */,
-				D416203F2B73C17F00E6E0CA /* SwiftMLSDKTests.xctest */,
+				D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */,
+				D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,33 +73,33 @@
 		D4675D102B73C1CD00139CC3 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				D4675D112B73C1CD00139CC3 /* SwiftMLSDK */,
+				D4675D112B73C1CD00139CC3 /* SwiftBMLSDK */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		D4675D112B73C1CD00139CC3 /* SwiftMLSDK */ = {
+		D4675D112B73C1CD00139CC3 /* SwiftBMLSDK */ = {
 			isa = PBXGroup;
 			children = (
-				D4675D122B73C1CD00139CC3 /* SwiftMLSDK.docc */,
+				D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */,
 			);
-			path = SwiftMLSDK;
+			path = SwiftBMLSDK;
 			sourceTree = "<group>";
 		};
 		D4675D162B73C1E400139CC3 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				D4675D172B73C1E400139CC3 /* SwiftMLSDKTests */,
+				D4675D172B73C1E400139CC3 /* SwiftBMLSDKTests */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		D4675D172B73C1E400139CC3 /* SwiftMLSDKTests */ = {
+		D4675D172B73C1E400139CC3 /* SwiftBMLSDKTests */ = {
 			isa = PBXGroup;
 			children = (
-				D4675D182B73C1E400139CC3 /* SwiftMLSDKTests.swift */,
+				D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */,
 			);
-			path = SwiftMLSDKTests;
+			path = SwiftBMLSDKTests;
 			sourceTree = "<group>";
 		};
 		D4675D1C2B73C54800139CC3 /* Meta */ = {
@@ -123,9 +123,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		D41620342B73C17F00E6E0CA /* SwiftMLSDK */ = {
+		D41620342B73C17F00E6E0CA /* SwiftBMLSDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D41620492B73C17F00E6E0CA /* Build configuration list for PBXNativeTarget "SwiftMLSDK" */;
+			buildConfigurationList = D41620492B73C17F00E6E0CA /* Build configuration list for PBXNativeTarget "SwiftBMLSDK" */;
 			buildPhases = (
 				D41620302B73C17F00E6E0CA /* Headers */,
 				D41620312B73C17F00E6E0CA /* Sources */,
@@ -136,14 +136,14 @@
 			);
 			dependencies = (
 			);
-			name = SwiftMLSDK;
+			name = SwiftBMLSDK;
 			productName = SwiftMLSDK;
-			productReference = D41620352B73C17F00E6E0CA /* SwiftMLSDK.framework */;
+			productReference = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D416203E2B73C17F00E6E0CA /* SwiftMLSDKTests */ = {
+		D416203E2B73C17F00E6E0CA /* SwiftBMLSDKTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D416204C2B73C17F00E6E0CA /* Build configuration list for PBXNativeTarget "SwiftMLSDKTests" */;
+			buildConfigurationList = D416204C2B73C17F00E6E0CA /* Build configuration list for PBXNativeTarget "SwiftBMLSDKTests" */;
 			buildPhases = (
 				D416203B2B73C17F00E6E0CA /* Sources */,
 				D416203C2B73C17F00E6E0CA /* Frameworks */,
@@ -154,9 +154,9 @@
 			dependencies = (
 				D41620422B73C17F00E6E0CA /* PBXTargetDependency */,
 			);
-			name = SwiftMLSDKTests;
+			name = SwiftBMLSDKTests;
 			productName = SwiftMLSDKTests;
-			productReference = D416203F2B73C17F00E6E0CA /* SwiftMLSDKTests.xctest */;
+			productReference = D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -177,7 +177,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D416202F2B73C17F00E6E0CA /* Build configuration list for PBXProject "SwiftMLSDK" */;
+			buildConfigurationList = D416202F2B73C17F00E6E0CA /* Build configuration list for PBXProject "SwiftBMLSDK" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -190,8 +190,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D41620342B73C17F00E6E0CA /* SwiftMLSDK */,
-				D416203E2B73C17F00E6E0CA /* SwiftMLSDKTests */,
+				D41620342B73C17F00E6E0CA /* SwiftBMLSDK */,
+				D416203E2B73C17F00E6E0CA /* SwiftBMLSDKTests */,
 			);
 		};
 /* End PBXProject section */
@@ -220,7 +220,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4675D142B73C1CD00139CC3 /* SwiftMLSDK.docc in Sources */,
+				D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,7 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4675D192B73C1E400139CC3 /* SwiftMLSDKTests.swift in Sources */,
+				D4675D192B73C1E400139CC3 /* SwiftBMLSDKTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,7 +237,7 @@
 /* Begin PBXTargetDependency section */
 		D41620422B73C17F00E6E0CA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D41620342B73C17F00E6E0CA /* SwiftMLSDK */;
+			target = D41620342B73C17F00E6E0CA /* SwiftBMLSDK */;
 			targetProxy = D41620412B73C17F00E6E0CA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -494,7 +494,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D416202F2B73C17F00E6E0CA /* Build configuration list for PBXProject "SwiftMLSDK" */ = {
+		D416202F2B73C17F00E6E0CA /* Build configuration list for PBXProject "SwiftBMLSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D41620472B73C17F00E6E0CA /* Debug */,
@@ -503,7 +503,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D41620492B73C17F00E6E0CA /* Build configuration list for PBXNativeTarget "SwiftMLSDK" */ = {
+		D41620492B73C17F00E6E0CA /* Build configuration list for PBXNativeTarget "SwiftBMLSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D416204A2B73C17F00E6E0CA /* Debug */,
@@ -512,7 +512,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D416204C2B73C17F00E6E0CA /* Build configuration list for PBXNativeTarget "SwiftMLSDKTests" */ = {
+		D416204C2B73C17F00E6E0CA /* Build configuration list for PBXNativeTarget "SwiftBMLSDKTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D416204D2B73C17F00E6E0CA /* Debug */,
