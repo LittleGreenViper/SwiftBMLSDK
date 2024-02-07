@@ -46,11 +46,17 @@ fileprivate extension Date {
 // MARK: Special Unicode Encoder for String
 /* ###################################################################################################################################### */
 fileprivate extension String {
+    /* ################################################# */
+    /**
+     This decodes Unicode characters in the string.
+     */
+    var _decodeUnicode: String { self.applyingTransform(StringTransform("Hex-Any"), reverse: false) ?? "" }
+
     /* ################################################################## */
     /**
      This encodes characters that need Unicode.
      */
-    var encodedUnicode: String {
+    var _encodedUnicode: String {
         guard let data = self.data(using: .nonLossyASCII, allowLossyConversion: true) else { return "" }
         return String(data: data, encoding: .utf8) ?? self
     }
@@ -76,7 +82,7 @@ public extension Array where Element == MeetingJSONParser.Meeting {
     /**
      This returns the entire list as a JSON string.
      */
-    var jsonData: Data? { try? JSONEncoder().encode(map { $0.taggedStringData }) }
+    var jsonData: Data? { try? JSONEncoder().encode(self) }
 
     /* ################################################# */
     /**
@@ -297,8 +303,27 @@ public struct MeetingJSONParser: Codable {
             /**
              Returns the format, as single string, with values separarated by tabs.
              */
-            public var asString: String { "key: \(key)\tname \(name)\tdescription: \(description)\tlanguage: \(language)" }
+            public var asString: String { "\(key)\t\(name)\t\(description)\t\(language)" }
             
+            // MARK: Initializers
+            
+            /* ############################################# */
+            /**
+             Default initializer
+             
+             - parameters:
+                - key: The format key
+                - name: The short format name
+                - description: The longer format description
+                - language: The language code.
+             */
+            public init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String) throws {
+                self.key = inKey
+                self.name = inName
+                self.description = inDescription
+                self.language = inLanguage
+            }
+
             /* ############################################# */
             /**
              A failable initializer. This initializer parses "raw" format data, and populates the instance properties.
@@ -336,10 +361,10 @@ public struct MeetingJSONParser: Codable {
              */
             public func encode(to inEncoder: Encoder) throws {
                 var container = inEncoder.container(keyedBy: _CodingKeys.self)
-                try container.encode(key, forKey: .key)
-                try container.encode(name, forKey: .name)
-                try container.encode(description, forKey: .description)
-                try container.encode(language, forKey: .language)
+                try container.encode(key._encodedUnicode, forKey: .key)
+                try container.encode(name._encodedUnicode, forKey: .name)
+                try container.encode(description._encodedUnicode, forKey: .description)
+                try container.encode(language._encodedUnicode, forKey: .language)
             }
             
             // MARK: MLDataValueConvertible Conformance
@@ -748,7 +773,7 @@ public struct MeetingJSONParser: Codable {
             var ret = [String: String]()
             
             taggedFlatData.forEach { key, value in
-                ret[key] = "\(value)".encodedUnicode
+                ret[key] = "\(value)"._encodedUnicode
             }
             
             return ret
@@ -758,7 +783,7 @@ public struct MeetingJSONParser: Codable {
         /**
          This provides the object as "tagged" data, but with all values atomic (not nested).
          */
-        public var taggedFlatData: [String: Any] {
+        public var taggedFlatData: [String: Encodable] {
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm:ss"
 
@@ -1077,15 +1102,28 @@ public struct MeetingJSONParser: Codable {
             startTime = try container.decode(Date.self, forKey: .startTime)
             duration = try container.decode(TimeInterval.self, forKey: .duration)
             timeZone = try container.decode(TimeZone.self, forKey: .timezone)
-            organization = try container.decode(Organization.self, forKey: .organization)
+            let org = try container.decode(String.self, forKey: .organization)
+            organization = Organization(rawValue: org) ?? .none
             name = try container.decode(String.self, forKey: .name)
-            formats = try container.decode([Format].self, forKey: .formats)
             
-            comments = try? container.decode(String.self, forKey: .comments)
-            locationInfo = try? container.decode(String.self, forKey: .locationInfo)
-            virtualURL = try? container.decode(URL.self, forKey: .virtualURL)
-            virtualPhoneNumber = try? container.decode(String.self, forKey: .virtualPhoneNumber)
-            virtualInfo = try? container.decode(String.self, forKey: .virtualInfo)
+            let formatString = try container.decode(String.self, forKey: .formats)
+            let splitFormats = [String](formatString.components(separatedBy: "\n"))
+            let tempFormats = [Format](splitFormats.compactMap { singleFormatString in
+                let splitFormats = [String](singleFormatString.components(separatedBy: "\t"))
+                guard 4 == splitFormats.count else { return nil }
+                return try? Format(key: MeetingJSONParser._decodeUnicode(splitFormats[0]),
+                                   name: MeetingJSONParser._decodeUnicode(splitFormats[1]),
+                                   description: MeetingJSONParser._decodeUnicode(splitFormats[2]),
+                                   language: MeetingJSONParser._decodeUnicode(splitFormats[3]))
+            })
+            formats = tempFormats
+            
+            comments = (try? container.decode(String.self, forKey: .comments))?._decodeUnicode
+            locationInfo = (try? container.decode(String.self, forKey: .locationInfo))?._decodeUnicode
+            let tempURL = (try? container.decode(String.self, forKey: .virtualURL)) ?? ""
+            virtualURL = URL(string: tempURL)
+            virtualPhoneNumber = (try? container.decode(String.self, forKey: .virtualPhoneNumber))?._decodeUnicode
+            virtualInfo = (try? container.decode(String.self, forKey: .virtualInfo))?._decodeUnicode
             
             if let latitude = try? container.decode(CLLocationDegrees.self, forKey: .coords_lat),
                let longitude = try? container.decode(CLLocationDegrees.self, forKey: .coords_lng) {
@@ -1133,35 +1171,38 @@ public struct MeetingJSONParser: Codable {
          - parameter to: The encoder to load with our values.
          */
         public func encode(to inEncoder: Encoder) throws {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm:ss"
+
             var container = inEncoder.container(keyedBy: _CodingKeys.self)
             try container.encode(id, forKey: .id)
             try container.encode(serverID, forKey: .serverID)
             try container.encode(localMeetingID, forKey: .localMeetingID)
             try container.encode(weekday, forKey: .weekday)
-            try container.encode(startTime, forKey: .startTime)
+            try container.encode(formatter.string(from: startTime), forKey: .startTime)
             try container.encode(duration, forKey: .duration)
-            try container.encode(timeZone, forKey: .timezone)
-            try container.encode(organization, forKey: .organization)
+            try container.encode(timeZone.identifier, forKey: .timezone)
+            try container.encode(organization.rawValue, forKey: .organization)
             try container.encode(name, forKey: .name)
-            try container.encode(formats, forKey: .formats)
+            try container.encode(formats.map { $0.asString }.joined(separator: "\n"), forKey: .formats)
 
-            try? container.encode(comments, forKey: .comments)
-            try? container.encode(locationInfo, forKey: .locationInfo)
-            try? container.encode(virtualURL, forKey: .virtualURL)
-            try? container.encode(virtualPhoneNumber, forKey: .virtualPhoneNumber)
-            try? container.encode(virtualInfo, forKey: .virtualInfo)
+            try? container.encode(comments?._encodedUnicode, forKey: .comments)
+            try? container.encode(locationInfo?._encodedUnicode, forKey: .locationInfo)
+            try? container.encode(virtualURL?.absoluteString._encodedUnicode, forKey: .virtualURL)
+            try? container.encode(virtualPhoneNumber?._encodedUnicode, forKey: .virtualPhoneNumber)
+            try? container.encode(virtualInfo?._encodedUnicode, forKey: .virtualInfo)
 
             try? container.encode(coords?.latitude, forKey: .coords_lat)
             try? container.encode(coords?.longitude, forKey: .coords_lng)
             
-            try? container.encode(inPersonVenueName, forKey: .inPersonVenueName)
-            try? container.encode(inPersonAddress?.street, forKey: .inPersonAddress_street)
-            try? container.encode(inPersonAddress?.subLocality, forKey: .inPersonAddress_subLocality)
-            try? container.encode(inPersonAddress?.city, forKey: .inPersonAddress_city)
-            try? container.encode(inPersonAddress?.state, forKey: .inPersonAddress_state)
-            try? container.encode(inPersonAddress?.subAdministrativeArea, forKey: .inPersonAddress_subAdministrativeArea)
-            try? container.encode(inPersonAddress?.postalCode, forKey: .inPersonAddress_postalCode)
-            try? container.encode(inPersonAddress?.country, forKey: .inPersonAddress_country)
+            try? container.encode(inPersonVenueName?._encodedUnicode, forKey: .inPersonVenueName)
+            try? container.encode(inPersonAddress?.street._encodedUnicode, forKey: .inPersonAddress_street)
+            try? container.encode(inPersonAddress?.subLocality._encodedUnicode, forKey: .inPersonAddress_subLocality)
+            try? container.encode(inPersonAddress?.city._encodedUnicode, forKey: .inPersonAddress_city)
+            try? container.encode(inPersonAddress?.state._encodedUnicode, forKey: .inPersonAddress_state)
+            try? container.encode(inPersonAddress?.subAdministrativeArea._encodedUnicode, forKey: .inPersonAddress_subAdministrativeArea)
+            try? container.encode(inPersonAddress?.postalCode._encodedUnicode, forKey: .inPersonAddress_postalCode)
+            try? container.encode(inPersonAddress?.country._encodedUnicode, forKey: .inPersonAddress_country)
         }
         
         // MARK: MLDataValueConvertible Conformance

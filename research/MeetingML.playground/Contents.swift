@@ -36,6 +36,8 @@ if let results = loadJSON(file: "small") {
     do {
         print("Extracting Data")
         if let jsonData = results.meetings.jsonData {
+            print("Writing the File")
+            try jsonData.write(to: outputURL)
             print("Creating Regressor")
             let data = try DataFrame(jsonData: jsonData)
             print("Training Day!")
