@@ -1,3 +1,22 @@
+/*
+ © Copyright 2024, Little Green Viper Software Development LLC
+ LICENSE:
+ 
+ MIT License
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+ files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
+ modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ Software is furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 import CoreLocation // For physical venues.
 import Contacts     // For the postal address
 import CreateML     // For taggedData
@@ -24,7 +43,21 @@ fileprivate extension Date {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - Special Array Extension for Creating Tagged ML Data Summaries -
+// MARK: Special Unicode Encoder for String
+/* ###################################################################################################################################### */
+fileprivate extension String {
+    /* ################################################################## */
+    /**
+     This encodes characters that need Unicode.
+     */
+    var encodedUnicode: String {
+        guard let data = self.data(using: .nonLossyASCII, allowLossyConversion: true) else { return "" }
+        return String(data: data, encoding: .utf8) ?? self
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Special Array Extension for Summarizing Data -
 /* ###################################################################################################################################### */
 public extension Array where Element == MeetingJSONParser.Meeting {
     /* ################################################# */
@@ -41,24 +74,9 @@ public extension Array where Element == MeetingJSONParser.Meeting {
 
     /* ################################################# */
     /**
-     This reduces the entire array into a tagged ML value array.
+     This returns the entire list as a JSON string.
      */
-    var taggedMLData: [String: [MLDataValue]] {
-        var ret = [String: [MLDataValue]]()
-        
-        forEach { meeting in
-            meeting.taggedMLData.forEach { key, value in
-                if var prev = ret[key] {
-                    prev.append(value)
-                    ret[key] = prev
-                } else {
-                    ret[key] = [value]
-                }
-            }
-        }
-        
-        return ret
-    }
+    var jsonData: Data? { try? JSONEncoder().encode(map { $0.taggedStringData }) }
 
     /* ################################################# */
     /**
@@ -211,14 +229,14 @@ public struct MeetingJSONParser: Codable {
     /**
      This struct holds a parsed meeting instance.
      */
-    public struct Meeting: Codable, MLDataValueConvertible {
+    public struct Meeting: Codable, MLDataValueConvertible, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
         /* ############################################################################################################################## */
         // MARK: Format Information Container
         /* ############################################################################################################################## */
         /**
          This struct holds a parsed format information instance.
          */
-        public struct Format: Codable, MLDataValueConvertible {
+        public struct Format: Codable, MLDataValueConvertible, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
             /* ########################################################################################################################## */
             // MARK: Codable Coding Keys
             /* ########################################################################################################################## */
@@ -361,6 +379,12 @@ public struct MeetingJSONParser: Codable {
                     MLDataValue.string("language"): MLDataValue.string(language)
                 ]).dataValue
             }
+            
+            /* ############################################# */
+            /**
+             CustomDebugStringConvertible Conformance
+             */
+            public var debugDescription: String { String(self.description) }
         }
 
         /* ############################################################################################################################## */
@@ -724,7 +748,7 @@ public struct MeetingJSONParser: Codable {
             var ret = [String: String]()
             
             taggedFlatData.forEach { key, value in
-                ret[key] = "\(value)"
+                ret[key] = "\(value)".encodedUnicode
             }
             
             return ret
@@ -738,7 +762,8 @@ public struct MeetingJSONParser: Codable {
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm:ss"
 
-            var ret: [String: Any] = [
+            var ret: [String: Encodable] = [
+                "id": id,
                 "name": name,
                 "organization": organization.rawValue,
                 "meetingType": meetingType.rawValue,
@@ -892,6 +917,8 @@ public struct MeetingJSONParser: Codable {
          */
         public var hasInPerson: Bool { .inPerson == meetingType || .hybrid == meetingType }
 
+        // MARK: Instance Methods
+        
         /* ################################################################## */
         /**
          This is the start time of the next meeting, in the meeting's local timezone. By default, the date will have the meeting's timezone set, but it can adjust to our local timezone.
@@ -1187,8 +1214,110 @@ public struct MeetingJSONParser: Codable {
             
             return MLDataValue.DictionaryType(retDictionary).dataValue
         }
-    }
 
+        /* ############################################# */
+        /**
+         CustomDebugStringConvertible Conformance
+         */
+        public var description: String {
+            var ret = "Meeting:\n\t"
+            ret += "id: \(id)\n\t"
+            ret += "serverID: \(serverID)\n\t"
+            ret += "serverID: \(localMeetingID)\n\t"
+            ret += "weekday: \(weekday)\n\t"
+            ret += "startTime: \(startTime.debugDescription)\n\t"
+            ret += "duration: \(duration)\n\t"
+            ret += "timeZone: \(timeZone.debugDescription)\n\t"
+            ret += "organization: \(organization.rawValue)\n\t"
+            ret += "name: \(name)\n\t"
+            ret += "formats:\n\t\t\(formats.map { $0.debugDescription + "\n\t\t"})\n\t"
+            
+            if let coords = coords {
+                ret += "coords: (latitude: \(coords.latitude), longitude: \(coords.longitude))\n\t"
+            }
+            
+            if let comments = comments,
+               !comments.isEmpty {
+                ret += "comments: \(comments)\n\t"
+            }
+
+            if let locationInfo = locationInfo,
+               !locationInfo.isEmpty {
+                ret += "locationInfo: \(locationInfo)\n\t"
+            }
+
+            if let virtualURL = virtualURL?.absoluteString,
+               !virtualURL.isEmpty {
+                ret += "virtualURL: \(virtualURL)\n\t"
+            }
+
+            if let virtualPhoneNumber = virtualPhoneNumber,
+               !virtualPhoneNumber.isEmpty {
+                ret += "virtualPhoneNumber: \(virtualPhoneNumber)\n\t"
+            }
+
+            if let virtualInfo = virtualInfo,
+               !virtualInfo.isEmpty {
+                ret += "virtualInfo: \(virtualInfo)\n\t"
+            }
+
+            if let inPersonVenueName = inPersonVenueName,
+               !inPersonVenueName.isEmpty {
+                ret += "inPersonVenueName: \(inPersonVenueName)\n\t"
+            }
+
+            if nil != inPersonAddress,
+               !basicInPersonAddress.isEmpty {
+                ret += "inPersonAddress: \(basicInPersonAddress)\n\t"
+            }
+
+            return ret
+        }
+
+        /* ############################################# */
+        /**
+         CustomDebugStringConvertible Conformance
+         */
+        public var debugDescription: String { description }
+
+        /* ############################################# */
+        /**
+         Equatable Conformance
+         
+         - parameter lhs: The left-hand side of the comparison.
+         - parameter rhs: The right-hand side of the comparison.
+         */
+        public static func == (lhs: MeetingJSONParser.Meeting, rhs: MeetingJSONParser.Meeting) -> Bool { lhs.id == rhs.id }
+        
+        /* ############################################# */
+        /**
+         Hashable Conformance
+         
+         - parameter into: (INOUT) -The hasher to be loaded.
+         */
+        public func hash(into inOutHasher: inout Hasher) {
+            inOutHasher.combine(id)
+            inOutHasher.combine(serverID)
+            inOutHasher.combine(localMeetingID)
+            inOutHasher.combine(weekday)
+            inOutHasher.combine(startTime)
+            inOutHasher.combine(duration)
+            inOutHasher.combine(timeZone)
+            inOutHasher.combine(organization)
+            inOutHasher.combine(name)
+            inOutHasher.combine(formats)
+            inOutHasher.combine(coords?.latitude)
+            inOutHasher.combine(coords?.longitude)
+            inOutHasher.combine(comments)
+            inOutHasher.combine(locationInfo)
+            inOutHasher.combine(virtualURL)
+            inOutHasher.combine(virtualPhoneNumber)
+            inOutHasher.combine(virtualInfo)
+            inOutHasher.combine(inPersonAddress)
+            inOutHasher.combine(inPersonVenueName)
+        }
+    }
+    
     // META: Private Static Functions
     
     /* ################################################# */
