@@ -15,36 +15,22 @@ func loadJSON(file inFileSize: String) -> (meta: MeetingJSONParser.PageMeta, mee
     return (meta: parser.meta, meetings: parser.meetings)
 }
 
-func createTextClassifierModelFile(file inFileSize: String = "small") {
-    if let results = loadJSON(file: inFileSize) {
-        print("Training Day!")
-        if let classifier = try? MLTextClassifier(trainingData: results.meetings.taggedStringData),
-           let modelURL = URL(string: "~/Desktop/SwiftBMLSDK_Classifier.mlmodel") {
-            let metadata = MLModelMetadata(author: "SwiftBMLSDK_Classifier", shortDescription: "NA Meetings", license: "", version: "1.0")
-            print("Get to Work! (\(modelURL))")
-            do {
-                try classifier.write(toFile: modelURL.absoluteString, metadata: metadata)
-            } catch {
-                print("ERROR: \(error)")
-            }
-        }
+func getDataFrame(from inJSONData: Data) -> DataFrame? {
+    let outputURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask)[0].appendingPathComponent("SwiftBMLSDK_Meetings.json")
+    do {
+        print("Writing the File")
+        try inJSONData.write(to: outputURL)
+        print("Creating DataFrame")
+        return try DataFrame(jsonData: inJSONData)
+    } catch {
+        print("ERROR: \(error)")
     }
+    
+    return nil
 }
 
 if let results = loadJSON(file: "small") {
-    let outputURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask)[0].appendingPathComponent("SwiftBMLSDK_Meetings.json")
-    do {
-        print("Extracting Data")
-        if let jsonData = results.meetings.jsonData {
-            print("Writing the File")
-            try jsonData.write(to: outputURL)
-            print("Creating Regressor")
-            let data = try DataFrame(jsonData: jsonData)
-            print("Training Day!")
-            let regressor = try MLLinearRegressor(trainingData: data, targetColumn: "id")
-            print("Done!")
-        }
-    } catch {
-        print("ERROR: \(error)")
+    if let jsonData = results.meetings.jsonData,
+       let dataFrame = getDataFrame(from: jsonData) {
     }
 }

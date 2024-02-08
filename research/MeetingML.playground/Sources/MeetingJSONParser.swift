@@ -17,9 +17,8 @@
  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import CoreLocation // For physical venues.
+import CoreLocation // For coordinates.
 import Contacts     // For the postal address
-import CreateML     // For taggedData
 
 /* ###################################################################################################################################### */
 // MARK: - Date Extension -
@@ -68,18 +67,6 @@ fileprivate extension String {
 public extension Array where Element == MeetingJSONParser.Meeting {
     /* ################################################# */
     /**
-     Returns the ML type for this array.
-     */
-    static var dataValueType: MLDataValue.ValueType { MLDataValue.ValueType.sequence }
-    
-    /* ################################################# */
-    /**
-     Returns the meeting array as a sequence datatype.
-     */
-    var dataValue: MLDataValue { MLDataValue.SequenceType(map { $0.dataValue }).dataValue }
-
-    /* ################################################# */
-    /**
      This returns the entire list as a JSON string.
      */
     var jsonData: Data? { try? JSONEncoder().encode(self) }
@@ -119,7 +106,7 @@ public struct MeetingJSONParser: Codable {
     /**
      This struct holds metada about the page of meeting results.
      */
-    public struct PageMeta: Codable, MLDataValueConvertible {
+    public struct PageMeta: Codable {
         /* ############################################# */
         /**
          This is the actual size of this single page of results, in results (not bytes).
@@ -199,34 +186,6 @@ public struct MeetingJSONParser: Codable {
          This is required, but doesn't do anything.
          */
         public init() { self.init(actualSize: 0, pageSize: 0, startingIndex: 0, total: 0, totalPages: 0, page: 0, searchTime: 0) }
-
-        /* ############################################# */
-        /**
-         This is required, but doesn't do anything.
-         */
-        public init?(from inDataValue: MLDataValue) { nil }
-
-        /* ############################################# */
-        /**
-         Returns the ML value type.
-         */
-        public static var dataValueType: MLDataValue.ValueType { MLDataValue.ValueType.dictionary }
-        
-        /* ############################################# */
-        /**
-         Returns the format, as an ML Dictionary.
-         */
-        public var dataValue: MLDataValue {
-            MLDataValue.DictionaryType([
-                MLDataValue.string("actualSize"): MLDataValue.int(actualSize),
-                MLDataValue.string("pageSize"): MLDataValue.int(pageSize),
-                MLDataValue.string("startingIndex"): MLDataValue.int(startingIndex),
-                MLDataValue.string("total"): MLDataValue.int(total),
-                MLDataValue.string("totalPages"): MLDataValue.int(totalPages),
-                MLDataValue.string("page"): MLDataValue.int(page),
-                MLDataValue.string("searchTime"): MLDataValue.double(searchTime)
-            ]).dataValue
-        }
     }
 
     /* ################################################################################################################################## */
@@ -235,14 +194,14 @@ public struct MeetingJSONParser: Codable {
     /**
      This struct holds a parsed meeting instance.
      */
-    public struct Meeting: Codable, MLDataValueConvertible, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
+    public struct Meeting: Codable, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
         /* ############################################################################################################################## */
         // MARK: Format Information Container
         /* ############################################################################################################################## */
         /**
          This struct holds a parsed format information instance.
          */
-        public struct Format: Codable, MLDataValueConvertible, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
+        public struct Format: Codable, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
             /* ########################################################################################################################## */
             // MARK: Codable Coding Keys
             /* ########################################################################################################################## */
@@ -331,10 +290,10 @@ public struct MeetingJSONParser: Codable {
              - parameter inDictionary: A simple String-keyed dictionary of partly-parsed values.
              */
             public init?(_ inDictionary: [String: Any]) {
-                self.key = MeetingJSONParser._decodeUnicode(inDictionary["key"] as? String)
-                self.name = MeetingJSONParser._decodeUnicode(inDictionary["name"] as? String)
-                self.description = MeetingJSONParser._decodeUnicode(inDictionary["description"] as? String)
-                self.language = MeetingJSONParser._decodeUnicode(inDictionary["language"] as? String)
+                self.key = (inDictionary["key"] as? String)?._decodeUnicode ?? ""
+                self.name = (inDictionary["name"] as? String)?._decodeUnicode ?? ""
+                self.description = (inDictionary["description"] as? String)?._decodeUnicode ?? ""
+                self.language = (inDictionary["language"] as? String)?._decodeUnicode ?? ""
             }
             
             // MARK: Codable Conformance
@@ -365,44 +324,6 @@ public struct MeetingJSONParser: Codable {
                 try container.encode(name._encodedUnicode, forKey: .name)
                 try container.encode(description._encodedUnicode, forKey: .description)
                 try container.encode(language._encodedUnicode, forKey: .language)
-            }
-            
-            // MARK: MLDataValueConvertible Conformance
-
-            /* ############################################# */
-            /**
-             This is required, but doesn't do anything.
-             */
-            public init?(from inDataValue: MLDataValue) { nil }
-            
-            /* ############################################# */
-            /**
-             This is required, but doesn't do anything.
-             */
-            public init() {
-                key = ""
-                name = ""
-                description = ""
-                language = ""
-            }
-            
-            /* ############################################# */
-            /**
-             Returns the ML value type.
-             */
-            public static var dataValueType: MLDataValue.ValueType { MLDataValue.ValueType.dictionary }
-            
-            /* ############################################# */
-            /**
-             Returns the format, as an ML Dictionary.
-             */
-            public var dataValue: MLDataValue {
-                MLDataValue.DictionaryType([
-                    MLDataValue.string("key"): MLDataValue.string(key),
-                    MLDataValue.string("name"): MLDataValue.string(name),
-                    MLDataValue.string("description"): MLDataValue.string(description),
-                    MLDataValue.string("language"): MLDataValue.string(language)
-                ]).dataValue
             }
             
             /* ############################################# */
@@ -437,6 +358,12 @@ public struct MeetingJSONParser: Codable {
              */
             case localMeetingID
             
+            /* ############################################# */
+            /**
+             This is the basic meeting type (in-person, virtual, or hybrid).
+             */
+            case meetingType
+
             /* ############################################# */
             /**
              This is a 1-based weekday index.
@@ -747,26 +674,6 @@ public struct MeetingJSONParser: Codable {
         
         /* ################################################# */
         /**
-         This provides the object as "tagged" data, for things like ML processing.
-         */
-        public var taggedMLData: [String: MLDataValue] {
-            var ret = [String: MLDataValue]()
-            
-            taggedFlatData.forEach { key, value in
-                if let value = value as? Int {
-                    ret[key] = MLDataValue.int(value)
-                } else if let value = value as? Double {
-                    ret[key] = MLDataValue.double(value)
-                } else if let value = value as? String {
-                    ret[key] = MLDataValue.string(value)
-                }
-            }
-            
-            return ret
-        }
-        
-        /* ################################################# */
-        /**
          This provides the object as "tagged" data, but all values as String.
          */
         public var taggedStringData: [String: String] {
@@ -840,67 +747,6 @@ public struct MeetingJSONParser: Codable {
             
             return ret
         }
-
-        /* ################################################# */
-        /**
-         This provides the object as "tagged" ML data, with nesting.
-         */
-        public var hierarchicalMLData: [MLDataValue: MLDataValue] {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "HH:mm:ss"
-            
-            var ret: [MLDataValue: MLDataValue] = [
-                MLDataValue.string("name"): MLDataValue.string(name),
-                MLDataValue.string("organization"): MLDataValue.string(organization.rawValue),
-                MLDataValue.string("meetingType"): MLDataValue.string(meetingType.rawValue),
-                MLDataValue.string("weekday"): MLDataValue.int(weekday),
-                MLDataValue.string("startTime"): MLDataValue.string(formatter.string(from: self.startTime)),
-                MLDataValue.string("duration"): MLDataValue.double(duration),
-                MLDataValue.string("timezone"): MLDataValue.string(timeZone.identifier),
-                MLDataValue.string("serverID"): MLDataValue.int(serverID),
-                MLDataValue.string("localMeetingID"): MLDataValue.int(localMeetingID)
-            ]
-
-            if let comments = comments,
-               !comments.isEmpty {
-                ret[MLDataValue.string("comments")] = MLDataValue.string(comments)
-            }
-            
-            if let locationInfo = locationInfo,
-               !locationInfo.isEmpty {
-                ret[MLDataValue.string("locationInfo")] = MLDataValue.string(locationInfo)
-            }
-            
-            if let virtualURL = virtualURL?.absoluteString,
-               !virtualURL.isEmpty {
-                ret[MLDataValue.string("virtualURL")] = MLDataValue.string(virtualURL)
-            }
-            
-            if let virtualPhoneNumber = virtualPhoneNumber,
-               !virtualPhoneNumber.isEmpty {
-                ret[MLDataValue.string("virtualPhoneNumber")] = MLDataValue.string(virtualPhoneNumber)
-            }
-            
-            if let virtualInfo = virtualInfo,
-               !virtualInfo.isEmpty {
-                ret[MLDataValue.string("virtualInfo")] = MLDataValue.string(virtualInfo)
-            }
-            
-            if let coords = coords,
-               CLLocationCoordinate2DIsValid(coords) {
-                ret[MLDataValue.string("coords")] = MLDataValue.DictionaryType([MLDataValue.string("latitude"): MLDataValue.double(coords.latitude),MLDataValue.string("longitude"): MLDataValue.double(coords.longitude)]).dataValue
-            }
-            
-            if !basicInPersonAddress.isEmpty {
-                ret[MLDataValue.string("inPersonAddress")] = MLDataValue.string(basicInPersonAddress)
-            }
-            
-            if !formats.isEmpty {
-                ret[MLDataValue.string("formats")] = MLDataValue.SequenceType(formats.map { $0.dataValue }).dataValue
-            }
-            
-            return ret
-        }
         
         /* ################################################# */
         /**
@@ -941,6 +787,18 @@ public struct MeetingJSONParser: Codable {
          True, if the meeting has an in-person component.
          */
         public var hasInPerson: Bool { .inPerson == meetingType || .hybrid == meetingType }
+
+        /* ################################################################## */
+        /**
+         This returns the next meeting start time, in the meeting's timezone.
+         */
+        public var nextStart: Date { getNextStartDate() }
+
+        /* ################################################################## */
+        /**
+         This returns the next meeting start time, adjusted from the meeting's timezone, to ours.
+         */
+        public var nextLocalStart: Date { getNextStartDate(isAdjusted: true) }
 
         // MARK: Instance Methods
         
@@ -1024,7 +882,7 @@ public struct MeetingJSONParser: Codable {
 
             self.id = (UInt64(serverID) << 44) + UInt64(localMeetingID)
 
-            self.name = MeetingJSONParser._decodeUnicode(inDictionary["name"] as? String)
+            self.name = (inDictionary["name"] as? String)?._decodeUnicode ?? ""
 
             if let long = inDictionary["longitude"] as? Double,
                let lat = inDictionary["latitude"] as? Double,
@@ -1036,22 +894,22 @@ public struct MeetingJSONParser: Codable {
 
             if let comments = inDictionary["comments"] as? String,
                !comments.isEmpty {
-                self.comments = MeetingJSONParser._decodeUnicode(comments)
+                self.comments = comments._decodeUnicode
             } else {
                 self.comments = nil
             }
 
             if let physicalAddress = inDictionary["physical_address"] as? [String: String] {
                 let mutableGoPostal = CNMutablePostalAddress()
-                mutableGoPostal.street = MeetingJSONParser._decodeUnicode(physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines))
-                mutableGoPostal.subLocality = MeetingJSONParser._decodeUnicode(physicalAddress["neighborhood"]?.trimmingCharacters(in: .whitespacesAndNewlines))
-                mutableGoPostal.city = MeetingJSONParser._decodeUnicode(physicalAddress["city"]?.trimmingCharacters(in: .whitespacesAndNewlines))
-                mutableGoPostal.state = MeetingJSONParser._decodeUnicode(physicalAddress["province"]?.trimmingCharacters(in: .whitespacesAndNewlines))
-                mutableGoPostal.subAdministrativeArea = MeetingJSONParser._decodeUnicode(physicalAddress["county"]?.trimmingCharacters(in: .whitespacesAndNewlines))
-                mutableGoPostal.postalCode = MeetingJSONParser._decodeUnicode(physicalAddress["postal_code"]?.trimmingCharacters(in: .whitespacesAndNewlines))
-                mutableGoPostal.country = MeetingJSONParser._decodeUnicode(physicalAddress["nation"]?.trimmingCharacters(in: .whitespacesAndNewlines))
+                mutableGoPostal.street = (physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                mutableGoPostal.subLocality = (physicalAddress["neighborhood"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                mutableGoPostal.city = (physicalAddress["city"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                mutableGoPostal.state = (physicalAddress["province"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                mutableGoPostal.subAdministrativeArea = (physicalAddress["county"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                mutableGoPostal.postalCode = (physicalAddress["postal_code"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                mutableGoPostal.country = (physicalAddress["nation"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
                 self.inPersonAddress = mutableGoPostal
-                let locationInfo = MeetingJSONParser._decodeUnicode(physicalAddress["info"]?.trimmingCharacters(in: .whitespacesAndNewlines))
+                let locationInfo = (physicalAddress["info"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
                 self.locationInfo = locationInfo.isEmpty ? nil : locationInfo
                 self.inPersonVenueName = physicalAddress["name"]
             } else {
@@ -1061,7 +919,7 @@ public struct MeetingJSONParser: Codable {
             }
 
             if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
-                let urlStr = MeetingJSONParser._decodeUnicode(virtualMeetingInfo["url"]?.trimmingCharacters(in: .whitespacesAndNewlines))
+                let urlStr = (virtualMeetingInfo["url"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
                 if !urlStr.isEmpty,
                    let virtualURL = URL(string: urlStr) {
                     self.virtualURL = virtualURL
@@ -1069,14 +927,14 @@ public struct MeetingJSONParser: Codable {
                     self.virtualURL = nil
                 }
                 
-                let virtualPhoneNumber = MeetingJSONParser._decodeUnicode(virtualMeetingInfo["phone_number"]?.trimmingCharacters(in: .whitespacesAndNewlines))
+                let virtualPhoneNumber = (virtualMeetingInfo["phone_number"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
                 if !virtualPhoneNumber.isEmpty {
                     self.virtualPhoneNumber = virtualPhoneNumber
                 } else {
                     self.virtualPhoneNumber = nil
                 }
                 
-                let virtualInfo = MeetingJSONParser._decodeUnicode(virtualMeetingInfo["info"]?.trimmingCharacters(in: .whitespacesAndNewlines))
+                let virtualInfo = (virtualMeetingInfo["info"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
                 self.virtualInfo = virtualInfo.isEmpty ? nil : virtualInfo
             } else {
                 self.virtualURL = nil
@@ -1111,17 +969,23 @@ public struct MeetingJSONParser: Codable {
             let tempFormats = [Format](splitFormats.compactMap { singleFormatString in
                 let splitFormats = [String](singleFormatString.components(separatedBy: "\t"))
                 guard 4 == splitFormats.count else { return nil }
-                return try? Format(key: MeetingJSONParser._decodeUnicode(splitFormats[0]),
-                                   name: MeetingJSONParser._decodeUnicode(splitFormats[1]),
-                                   description: MeetingJSONParser._decodeUnicode(splitFormats[2]),
-                                   language: MeetingJSONParser._decodeUnicode(splitFormats[3]))
+                return try? Format(key: splitFormats[0]._decodeUnicode,
+                                   name: splitFormats[1]._decodeUnicode,
+                                   description: splitFormats[2]._decodeUnicode,
+                                   language: splitFormats[3]
+                )
             })
             formats = tempFormats
             
             comments = (try? container.decode(String.self, forKey: .comments))?._decodeUnicode
             locationInfo = (try? container.decode(String.self, forKey: .locationInfo))?._decodeUnicode
-            let tempURL = (try? container.decode(String.self, forKey: .virtualURL)) ?? ""
-            virtualURL = URL(string: tempURL)
+            
+            if let tempURLString = (try? container.decode(String.self, forKey: .virtualURL)) {
+                virtualURL = URL(string: tempURLString)
+            } else {
+                virtualURL = nil
+            }
+            
             virtualPhoneNumber = (try? container.decode(String.self, forKey: .virtualPhoneNumber))?._decodeUnicode
             virtualInfo = (try? container.decode(String.self, forKey: .virtualInfo))?._decodeUnicode
             
@@ -1171,89 +1035,110 @@ public struct MeetingJSONParser: Codable {
          - parameter to: The encoder to load with our values.
          */
         public func encode(to inEncoder: Encoder) throws {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "HH:mm:ss"
-
             var container = inEncoder.container(keyedBy: _CodingKeys.self)
+            
             try container.encode(id, forKey: .id)
             try container.encode(serverID, forKey: .serverID)
             try container.encode(localMeetingID, forKey: .localMeetingID)
-            try container.encode(weekday, forKey: .weekday)
-            try container.encode(formatter.string(from: startTime), forKey: .startTime)
-            try container.encode(duration, forKey: .duration)
-            try container.encode(timeZone.identifier, forKey: .timezone)
-            try container.encode(organization.rawValue, forKey: .organization)
-            try container.encode(name, forKey: .name)
-            try container.encode(formats.map { $0.asString }.joined(separator: "\n"), forKey: .formats)
-
-            try? container.encode(comments?._encodedUnicode, forKey: .comments)
-            try? container.encode(locationInfo?._encodedUnicode, forKey: .locationInfo)
-            try? container.encode(virtualURL?.absoluteString._encodedUnicode, forKey: .virtualURL)
-            try? container.encode(virtualPhoneNumber?._encodedUnicode, forKey: .virtualPhoneNumber)
-            try? container.encode(virtualInfo?._encodedUnicode, forKey: .virtualInfo)
-
-            try? container.encode(coords?.latitude, forKey: .coords_lat)
-            try? container.encode(coords?.longitude, forKey: .coords_lng)
             
-            try? container.encode(inPersonVenueName?._encodedUnicode, forKey: .inPersonVenueName)
-            try? container.encode(inPersonAddress?.street._encodedUnicode, forKey: .inPersonAddress_street)
-            try? container.encode(inPersonAddress?.subLocality._encodedUnicode, forKey: .inPersonAddress_subLocality)
-            try? container.encode(inPersonAddress?.city._encodedUnicode, forKey: .inPersonAddress_city)
-            try? container.encode(inPersonAddress?.state._encodedUnicode, forKey: .inPersonAddress_state)
-            try? container.encode(inPersonAddress?.subAdministrativeArea._encodedUnicode, forKey: .inPersonAddress_subAdministrativeArea)
-            try? container.encode(inPersonAddress?.postalCode._encodedUnicode, forKey: .inPersonAddress_postalCode)
-            try? container.encode(inPersonAddress?.country._encodedUnicode, forKey: .inPersonAddress_country)
-        }
-        
-        // MARK: MLDataValueConvertible Conformance
+            let typeString = meetingType.rawValue
+            if !typeString.isEmpty {
+                try container.encode(typeString, forKey: .meetingType)
+            }
 
-        /* ############################################# */
-        /**
-         This is required, but doesn't do anything.
-         */
-        public init?(from inDataValue: MLDataValue) { nil }
-        
-        /* ############################################# */
-        /**
-         This is required, but doesn't do anything.
-         */
-        public init() {
-            id = 0
-            serverID = 0
-            localMeetingID = 0
-            weekday = 0
-            startTime = .now
-            duration = 0
-            timeZone = .current
-            organization = .none
-            name = ""
-            formats = []
-            coords = nil
-            comments = nil
-            locationInfo = nil
-            virtualURL = nil
-            virtualPhoneNumber = nil
-            virtualInfo = nil
-            inPersonAddress = nil
-            inPersonVenueName = nil
-        }
-        
-        /* ############################################# */
-        /**
-         Returns the ML value type.
-         */
-        public static var dataValueType: MLDataValue.ValueType { MLDataValue.ValueType.dictionary }
-        
-        /* ############################################# */
-        /**
-         Returns the meeting, as a fairly basic ML Dictionary.
-         */
-        public var dataValue: MLDataValue {
-            var retDictionary = [MLDataValue: MLDataValue]()
+            if 0 < weekday {
+                try container.encode(weekday, forKey: .weekday)
+            }
             
-            taggedMLData.forEach { key, value in retDictionary[MLDataValue.string(key)] = value }
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm:ss"
+            let timeString = formatter.string(from: startTime)
+            if !timeString.isEmpty {
+                try container.encode(timeString, forKey: .startTime)
+            }
             
-            return MLDataValue.DictionaryType(retDictionary).dataValue
+            if 0 < duration {
+                try container.encode(duration, forKey: .duration)
+            }
+            
+            let tzString = timeZone.identifier
+            if !tzString.isEmpty {
+                try container.encode(tzString, forKey: .timezone)
+            }
+            
+            let orgString = organization.rawValue
+            if !orgString.isEmpty {
+                try container.encode(orgString, forKey: .organization)
+            }
+            
+            if !name.isEmpty {
+                try container.encode(name, forKey: .name)
+            }
+            
+            let formatsString = formats.map { $0.asString }.joined(separator: "\n")
+            if !formatsString.isEmpty {
+                try container.encode(formatsString, forKey: .formats)
+            }
+            
+            if let comments = comments?._encodedUnicode,
+               !comments.isEmpty {
+                try? container.encode(comments, forKey: .comments)
+            }
+            if let locationInfo = locationInfo?._encodedUnicode,
+               !locationInfo.isEmpty {
+                try? container.encode(locationInfo, forKey: .locationInfo)
+            }
+            if let virtualURL = virtualURL?.absoluteString._encodedUnicode,
+               !virtualURL.isEmpty {
+                try? container.encode(virtualURL, forKey: .virtualURL)
+            }
+            if let virtualPhoneNumber = virtualPhoneNumber?._encodedUnicode,
+               !virtualPhoneNumber.isEmpty {
+                try? container.encode(virtualPhoneNumber, forKey: .virtualPhoneNumber)
+            }
+            if let virtualInfo = virtualInfo?._encodedUnicode,
+               !virtualInfo.isEmpty {
+                try? container.encode(virtualInfo, forKey: .virtualInfo)
+            }
+
+            if let latitude = coords?.latitude,
+               let longitude = coords?.longitude {
+                try? container.encode(Double(round(1000000.0 * latitude) / 1000000.0), forKey: .coords_lat)
+                try? container.encode(Double(round(1000000.0 * longitude) / 1000000.0), forKey: .coords_lng)
+            }
+            
+            if let inPersonVenueName = inPersonVenueName?._encodedUnicode,
+               !inPersonVenueName.isEmpty {
+                try? container.encode(inPersonVenueName, forKey: .inPersonVenueName)
+            }
+            if let string = inPersonVenueName?._encodedUnicode,
+               !string.isEmpty {
+                try? container.encode(string, forKey: .inPersonAddress_street)
+            }
+            if let string = inPersonAddress?.subLocality._encodedUnicode,
+               !string.isEmpty {
+                try? container.encode(string, forKey: .inPersonAddress_subLocality)
+            }
+            if let string = inPersonAddress?.city._encodedUnicode,
+               !string.isEmpty {
+                try? container.encode(string, forKey: .inPersonAddress_city)
+            }
+            if let string = inPersonAddress?.state._encodedUnicode,
+               !string.isEmpty {
+                try? container.encode(string, forKey: .inPersonAddress_state)
+            }
+            if let string = inPersonAddress?.subAdministrativeArea._encodedUnicode,
+               !string.isEmpty {
+                try? container.encode(string, forKey: .inPersonAddress_subAdministrativeArea)
+            }
+            if let string = inPersonAddress?.postalCode._encodedUnicode,
+               !string.isEmpty {
+                try? container.encode(string, forKey: .inPersonAddress_postalCode)
+            }
+            if let string = inPersonAddress?.country._encodedUnicode,
+               !string.isEmpty {
+                try? container.encode(string, forKey: .inPersonAddress_country)
+            }
         }
 
         /* ############################################# */
@@ -1363,12 +1248,6 @@ public struct MeetingJSONParser: Codable {
     
     /* ################################################# */
     /**
-     This decodes Unicode characters in the string.
-     */
-    private static func _decodeUnicode(_ inString: String?) -> String { inString?.applyingTransform(StringTransform("Hex-Any"), reverse: false) ?? "" }
-    
-    /* ################################################# */
-    /**
      This parses the page metadata from the raw dictionary.
      
      - parameter inDictionary: The partly-parsed raw JSON
@@ -1400,6 +1279,8 @@ public struct MeetingJSONParser: Codable {
      - parameter inDictionary: The partly-parsed raw JSON
      */
     private static func _parseMeeting(_ inDictionary: [String: Any]) -> Meeting? { Meeting(inDictionary) }
+    
+    // MARK: Public Constant Properties
     
     /* ################################################# */
     /**
