@@ -67,15 +67,17 @@ fileprivate extension String {
 public extension Array where Element == MeetingJSONParser.Meeting {
     /* ################################################# */
     /**
-     This returns the entire list as a JSON string.
+     This returns the entire list as a JSON Data instance.
      */
     var jsonData: Data? { try? JSONEncoder().encode(self) }
 
     /* ################################################# */
     /**
      This reduces the entire array into a tagged String data table array.
+     
+     This aggregates columns. The key is the column name, and the array are all the values that apply to that column.
      */
-    var taggedStringData: [String: [String]] {
+    var taggedStringSummary: [String: [String]] {
         var ret = [String: [String]]()
         
         forEach { meeting in
@@ -97,7 +99,11 @@ public extension Array where Element == MeetingJSONParser.Meeting {
 // MARK: - Meeting JSON Page Parser -
 /* ###################################################################################################################################### */
 /**
- This struct will accept raw JSON data from one page of results from the `LGV_MeetingServer`, and parse it into struct data.
+ This struct will accept raw JSON data from one page of results from the `LGV_MeetingServer`, and parse it into a non-mutable struct instance.
+ 
+ You use this by instantiating with the filable init (at the end of the file), with the JSON data from the server, as a String, as the only argument.
+ 
+ The parser then automatically populates a `meta` instance, that holds the page data from the server, and a `meetings` array, of all meeting instances, and some functional interfaces.
  */
 public struct MeetingJSONParser: Codable {
     /* ################################################################################################################################## */
@@ -540,7 +546,7 @@ public struct MeetingJSONParser: Codable {
             /**
              Narcotics Anonymous
              */
-            case na
+            case na = "NA"
         }
         
         // MARK: Required Instance Properties
@@ -1316,7 +1322,8 @@ public struct MeetingJSONParser: Codable {
         guard let simpleJSON = try? JSONSerialization.jsonObject(with: inJSONData, options: [.allowFragments]) as? NSDictionary,
               let metaJSON = simpleJSON["meta"] as? [String: Any],
               let meta = Self._parseMeta(metaJSON),
-              let meetingsJSON = simpleJSON["meetings"] as? [[String: Any]]
+              let meetingsJSON = simpleJSON["meetings"] as? [[String: Any]],
+              !meetingsJSON.isEmpty
         else { return nil }
         self.meta = meta
         self.meetings = meetingsJSON.compactMap { Self._parseMeeting($0) }
