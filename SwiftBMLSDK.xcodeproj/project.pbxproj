@@ -12,6 +12,7 @@
 		D4675D192B73C1E400139CC3 /* SwiftBMLSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */; };
 		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
+		D4C9C6242B750C65007FB793 /* MeetingJSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* MeetingJSONParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +31,7 @@
 		D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftBMLSDK.docc; sourceTree = "<group>"; };
 		D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDKTests.swift; sourceTree = "<group>"; };
 		D4675D202B73C57D00139CC3 /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
+		D4C9C6232B750C65007FB793 /* MeetingJSONParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingJSONParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 		D4675D112B73C1CD00139CC3 /* SwiftBMLSDK */ = {
 			isa = PBXGroup;
 			children = (
+				D4C9C6232B750C65007FB793 /* MeetingJSONParser.swift */,
 				D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */,
 			);
 			path = SwiftBMLSDK;
@@ -220,6 +223,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4C9C6242B750C65007FB793 /* MeetingJSONParser.swift in Sources */,
 				D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -450,6 +454,7 @@
 		D416204D2B73C17F00E6E0CA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P53V4JS928;
@@ -472,6 +477,7 @@
 		D416204E2B73C17F00E6E0CA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = P53V4JS928;

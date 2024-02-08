@@ -26,9 +26,6 @@
    <Group
       location = "group:research"
       name = "Research">
-      <FileRef
-         location = "group:MeetingML.playground">
-      </FileRef>
    </Group>
    <FileRef
       location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/SwiftBMLSDK.xcodeproj">
