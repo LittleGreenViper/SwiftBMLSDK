@@ -104,7 +104,7 @@ public struct MeetingJSONParser: Codable {
     // MARK: Page Metadata Container
     /* ################################################################################################################################## */
     /**
-     This struct holds metada about the page of meeting results.
+     This struct holds metada about the page of meeting results, as reported by the server.
      */
     public struct PageMeta: Codable {
         /* ############################################# */
@@ -398,13 +398,13 @@ public struct MeetingJSONParser: Codable {
             /**
              The latitude of the meeting.
              */
-            case coords_lat
+            case coords_lat = "latitude"
             
             /* ############################################# */
             /**
              The longitude of the meeting.
              */
-            case coords_lng
+            case coords_lng = "longitude"
 
             /* ############################################# */
             /**
@@ -688,7 +688,7 @@ public struct MeetingJSONParser: Codable {
 
         /* ################################################# */
         /**
-         This provides the object as "tagged" data, but with all values atomic (not nested).
+         This provides the object as "tagged" data, with all values atomic (not nested).
          */
         public var taggedFlatData: [String: Encodable] {
             let formatter = DateFormatter()
@@ -734,7 +734,8 @@ public struct MeetingJSONParser: Codable {
             
             if let coords = coords,
                CLLocationCoordinate2DIsValid(coords) {
-                ret["coords"] = "\(coords.latitude),\(coords.longitude)"
+                ret["latitude"] = coords.latitude
+                ret["longitude"] = coords.longitude
             }
             
             if !basicInPersonAddress.isEmpty {
@@ -1032,15 +1033,24 @@ public struct MeetingJSONParser: Codable {
         /**
          Encoder
          
+         The reason for the "flat" encoding, is that many ML parsers like fairly simple data, without nesting.
+         Nested structures, like the coordinates and the formats, are converted to top-level basic data types, so that a JSON file, made from the encoder, is simple and flat.
+         
+         Formats are encoded into a TDV string, with the fields being tab-separated, and the formats being linefeed-separated.
+         
+         If a value is not valid, it is not included in the encoding.
+         
          - parameter to: The encoder to load with our values.
          */
         public func encode(to inEncoder: Encoder) throws {
             var container = inEncoder.container(keyedBy: _CodingKeys.self)
             
+            // These three must always be present.
             try container.encode(id, forKey: .id)
             try container.encode(serverID, forKey: .serverID)
             try container.encode(localMeetingID, forKey: .localMeetingID)
             
+            // This is included in the encoder, but we don't care about it, for the decoder.
             let typeString = meetingType.rawValue
             if !typeString.isEmpty {
                 try container.encode(typeString, forKey: .meetingType)
