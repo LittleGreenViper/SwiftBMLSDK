@@ -38,7 +38,7 @@ fileprivate extension Date {
      
      - returns: The converted date
      */
-    func convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date { addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self))) }
+    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date { addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self))) }
 }
 
 /* ###################################################################################################################################### */
@@ -189,9 +189,9 @@ public struct MeetingJSONParser: Codable {
 
         /* ############################################# */
         /**
-         This is required, but doesn't do anything.
+         This is required, but doesn't do anything. It just instantiates an empty struct instance.
          */
-        public init() { self.init(actualSize: 0, pageSize: 0, startingIndex: 0, total: 0, totalPages: 0, page: 0, searchTime: 0) }
+        public init() { self.init(actualSize: 0) }
     }
 
     /* ################################################################################################################################## */
@@ -553,12 +553,6 @@ public struct MeetingJSONParser: Codable {
         
         /* ################################################# */
         /**
-         This is a unique ID (within the found set) for this meeting, based on the two local IDs.
-         */
-        public let id: UInt64
-        
-        /* ################################################# */
-        /**
          This is the unique ID (within the found set) for the data source server.
          */
         public let serverID: Int
@@ -663,6 +657,12 @@ public struct MeetingJSONParser: Codable {
         
         // MARK: Public Computed Properties
         
+        /* ################################################# */
+        /**
+         This is a unique ID (within the found set) for this meeting, based on the two local IDs.
+         */
+        public var id: UInt64 { (UInt64(serverID) << 44) + UInt64(localMeetingID) }
+
         /* ################################################# */
         /**
          The meeting type.
@@ -823,7 +823,7 @@ public struct MeetingJSONParser: Codable {
             let nextStartDate = Calendar.current.nextDate(after: .now, matching: dateComponents, matchingPolicy: .nextTimePreservingSmallerComponents)
             
             if inAdjust {
-                return nextStartDate?.convert(from: timeZone, to: .current) ?? Date.distantFuture
+                return nextStartDate?._convert(from: timeZone, to: .current) ?? Date.distantFuture
             } else {
                 return nextStartDate ?? .distantFuture
             }
@@ -886,8 +886,6 @@ public struct MeetingJSONParser: Codable {
             }
 
             self.formats = (inDictionary["formats"] as? [[String: Any]] ?? []).compactMap { Format($0) }
-
-            self.id = (UInt64(serverID) << 44) + UInt64(localMeetingID)
 
             self.name = (inDictionary["name"] as? String)?._decodeUnicode ?? ""
 
@@ -960,7 +958,6 @@ public struct MeetingJSONParser: Codable {
          */
         public init(from inDecoder: Decoder) throws {
             let container: KeyedDecodingContainer<_CodingKeys> = try inDecoder.container(keyedBy: _CodingKeys.self)
-            id = try container.decode(UInt64.self, forKey: .id)
             serverID = try container.decode(Int.self, forKey: .serverID)
             localMeetingID = try container.decode(Int.self, forKey: .localMeetingID)
             weekday = try container.decode(Int.self, forKey: .weekday)
@@ -1052,11 +1049,11 @@ public struct MeetingJSONParser: Codable {
             var container = inEncoder.container(keyedBy: _CodingKeys.self)
             
             // These three must always be present.
-            try container.encode(id, forKey: .id)
             try container.encode(serverID, forKey: .serverID)
             try container.encode(localMeetingID, forKey: .localMeetingID)
             
-            // This is included in the encoder, but we don't care about it, for the decoder.
+            // These are included in the encoder, but we don't care about them, for the decoder.
+            try container.encode(id, forKey: .id)
             let typeString = meetingType.rawValue
             if !typeString.isEmpty {
                 try container.encode(typeString, forKey: .meetingType)

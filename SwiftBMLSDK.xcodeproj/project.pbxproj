@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4045C1A2B766A010086E1B7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4045C192B766A010086E1B7 /* Preview Assets.xcassets */; };
 		D41620402B73C17F00E6E0CA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
+		D4436A7C2B76688B00A40ECA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4436A762B76688B00A40ECA /* Assets.xcassets */; };
+		D4436A7E2B76688B00A40ECA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4436A7A2B76688B00A40ECA /* ContentView.swift */; };
+		D4436A7F2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */; };
+		D4436A812B7668E200A40ECA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
+		D4436A822B7668E200A40ECA /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */; };
 		D4675D192B73C1E400139CC3 /* SwiftBMLSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */; };
 		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
@@ -23,14 +29,41 @@
 			remoteGlobalIDString = D41620342B73C17F00E6E0CA;
 			remoteInfo = SwiftMLSDK;
 		};
+		D4436A832B7668E200A40ECA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D416202C2B73C17F00E6E0CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D41620342B73C17F00E6E0CA;
+			remoteInfo = SwiftBMLSDK;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D4436A852B7668E200A40ECA /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D4436A822B7668E200A40ECA /* SwiftBMLSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		D4045C192B766A010086E1B7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftBMLSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4436A762B76688B00A40ECA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D4436A7A2B76688B00A40ECA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Test_HarnessApp.swift; sourceTree = "<group>"; };
+		D4436A862B76691E00A40ECA /* SwiftBMLSDK_Test_Harness.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SwiftBMLSDK_Test_Harness.entitlements; sourceTree = "<group>"; };
 		D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftBMLSDK.docc; sourceTree = "<group>"; };
 		D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDKTests.swift; sourceTree = "<group>"; };
 		D4675D202B73C57D00139CC3 /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
+		D4AC3AD22B76684200E314D8 /* SwiftBMLSDK Test Harness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftBMLSDK Test Harness.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4C9C6232B750C65007FB793 /* MeetingJSONParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingJSONParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -50,9 +83,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D4AC3ACF2B76684200E314D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4436A812B7668E200A40ECA /* SwiftBMLSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D4045C182B766A010086E1B7 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				D4045C192B766A010086E1B7 /* Preview Assets.xcassets */,
+			);
+			path = Preview;
+			sourceTree = "<group>";
+		};
 		D416202B2B73C17F00E6E0CA = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +109,7 @@
 				D4675D102B73C1CD00139CC3 /* Sources */,
 				D4675D162B73C1E400139CC3 /* Tests */,
 				D41620362B73C17F00E6E0CA /* Products */,
+				D4436A802B7668E200A40ECA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,8 +118,36 @@
 			children = (
 				D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */,
 				D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */,
+				D4AC3AD22B76684200E314D8 /* SwiftBMLSDK Test Harness.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D4436A752B76688B00A40ECA /* SwiftBMLSDKTestHarness */ = {
+			isa = PBXGroup;
+			children = (
+				D4436A872B76693E00A40ECA /* Meta */,
+				D4045C182B766A010086E1B7 /* Preview */,
+				D4436A762B76688B00A40ECA /* Assets.xcassets */,
+				D4436A7A2B76688B00A40ECA /* ContentView.swift */,
+				D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */,
+			);
+			path = SwiftBMLSDKTestHarness;
+			sourceTree = "<group>";
+		};
+		D4436A802B7668E200A40ECA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D4436A872B76693E00A40ECA /* Meta */ = {
+			isa = PBXGroup;
+			children = (
+				D4436A862B76691E00A40ECA /* SwiftBMLSDK_Test_Harness.entitlements */,
+			);
+			path = Meta;
 			sourceTree = "<group>";
 		};
 		D4675D102B73C1CD00139CC3 /* Sources */ = {
@@ -93,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				D4675D172B73C1E400139CC3 /* SwiftBMLSDKTests */,
+				D4436A752B76688B00A40ECA /* SwiftBMLSDKTestHarness */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -162,6 +241,25 @@
 			productReference = D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		D4AC3AD12B76684200E314D8 /* SwiftBMLSDK Test Harness */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4AC3AE02B76684300E314D8 /* Build configuration list for PBXNativeTarget "SwiftBMLSDK Test Harness" */;
+			buildPhases = (
+				D4AC3ACE2B76684200E314D8 /* Sources */,
+				D4AC3ACF2B76684200E314D8 /* Frameworks */,
+				D4AC3AD02B76684200E314D8 /* Resources */,
+				D4436A852B7668E200A40ECA /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D4436A842B7668E200A40ECA /* PBXTargetDependency */,
+			);
+			name = "SwiftBMLSDK Test Harness";
+			productName = "SwiftBMLSDK Test Harness";
+			productReference = D4AC3AD22B76684200E314D8 /* SwiftBMLSDK Test Harness.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -176,6 +274,9 @@
 						CreatedOnToolsVersion = 15.2;
 					};
 					D416203E2B73C17F00E6E0CA = {
+						CreatedOnToolsVersion = 15.2;
+					};
+					D4AC3AD12B76684200E314D8 = {
 						CreatedOnToolsVersion = 15.2;
 					};
 				};
@@ -195,6 +296,7 @@
 			targets = (
 				D41620342B73C17F00E6E0CA /* SwiftBMLSDK */,
 				D416203E2B73C17F00E6E0CA /* SwiftBMLSDKTests */,
+				D4AC3AD12B76684200E314D8 /* SwiftBMLSDK Test Harness */,
 			);
 		};
 /* End PBXProject section */
@@ -213,6 +315,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4AC3AD02B76684200E314D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4045C1A2B766A010086E1B7 /* Preview Assets.xcassets in Resources */,
+				D4436A7C2B76688B00A40ECA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +347,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D4AC3ACE2B76684200E314D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4436A7E2B76688B00A40ECA /* ContentView.swift in Sources */,
+				D4436A7F2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -243,6 +363,11 @@
 			isa = PBXTargetDependency;
 			target = D41620342B73C17F00E6E0CA /* SwiftBMLSDK */;
 			targetProxy = D41620412B73C17F00E6E0CA /* PBXContainerItemProxy */;
+		};
+		D4436A842B7668E200A40ECA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D41620342B73C17F00E6E0CA /* SwiftBMLSDK */;
+			targetProxy = D4436A832B7668E200A40ECA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -497,6 +622,74 @@
 			};
 			name = Release;
 		};
+		D4AC3ADE2B76684300E314D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Tests/SwiftBMLSDKTestHarness/Meta/SwiftBMLSDK_Test_Harness.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 0000;
+				DEVELOPMENT_ASSET_PATHS = "Tests/SwiftBMLSDKTestHarness/Preview\"";
+				DEVELOPMENT_TEAM = P53V4JS928;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.9.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.littlegreenviper.SwiftBMLSDK-Test-Harness";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 16.0;
+			};
+			name = Debug;
+		};
+		D4AC3ADF2B76684300E314D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Tests/SwiftBMLSDKTestHarness/Meta/SwiftBMLSDK_Test_Harness.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 0000;
+				DEVELOPMENT_ASSET_PATHS = "Tests/SwiftBMLSDKTestHarness/Preview\"";
+				DEVELOPMENT_TEAM = P53V4JS928;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 0.9.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.littlegreenviper.SwiftBMLSDK-Test-Harness";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 16.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -523,6 +716,15 @@
 			buildConfigurations = (
 				D416204D2B73C17F00E6E0CA /* Debug */,
 				D416204E2B73C17F00E6E0CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4AC3AE02B76684300E314D8 /* Build configuration list for PBXNativeTarget "SwiftBMLSDK Test Harness" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4AC3ADE2B76684300E314D8 /* Debug */,
+				D4AC3ADF2B76684300E314D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
