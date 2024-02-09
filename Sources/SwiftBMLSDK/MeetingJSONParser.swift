@@ -38,22 +38,26 @@ fileprivate extension Date {
      
      - returns: The converted date
      */
-    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date { addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self))) }
+    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date {
+        addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self)))
+    }
 }
 
 /* ###################################################################################################################################### */
-// MARK: Special Unicode Encoder for String
+// MARK: Special Unicode Encoder/Decoder for String
 /* ###################################################################################################################################### */
 fileprivate extension String {
     /* ################################################# */
     /**
-     This decodes Unicode characters in the string.
+     This decodes standard Unicode escape characters ("\u0123") in the string.
      */
-    var _decodeUnicode: String { self.applyingTransform(StringTransform("Hex-Any"), reverse: false) ?? "" }
+    var _decodeUnicode: String {
+        self.applyingTransform(StringTransform("Hex-Any"), reverse: false) ?? ""
+    }
 
     /* ################################################################## */
     /**
-     This encodes characters that need Unicode.
+     This encodes characters that need Unicode as standard Unicode escape ("\u0123").
      */
     var _encodedUnicode: String {
         guard let data = self.data(using: .nonLossyASCII, allowLossyConversion: true) else { return "" }
@@ -92,6 +96,46 @@ public extension Array where Element == MeetingJSONParser.Meeting {
         }
         
         return ret
+    }
+    
+    /* ################################################# */
+    /**
+     Returns meetings that have an in-person component.
+     */
+    var inPersonMeetings: [MeetingJSONParser.Meeting] {
+        compactMap { .hybrid == $0.meetingType || .inPerson == $0.meetingType ? $0 : nil }
+    }
+    
+    /* ################################################# */
+    /**
+     Returns meetings that are only in-person.
+     */
+    var inPersonOnlyMeetings: [MeetingJSONParser.Meeting] {
+        compactMap { .inPerson == $0.meetingType ? $0 : nil }
+    }
+
+    /* ################################################# */
+    /**
+     Returns meetings that have a virtual component.
+     */
+    var virtualMeetings: [MeetingJSONParser.Meeting] {
+        compactMap { .hybrid == $0.meetingType || .virtual == $0.meetingType ? $0 : nil }
+    }
+
+    /* ################################################# */
+    /**
+     Returns meetings that are only virtual.
+     */
+    var virtualOnlyMeetings: [MeetingJSONParser.Meeting] {
+        compactMap { .virtual == $0.meetingType ? $0 : nil }
+    }
+
+    /* ################################################# */
+    /**
+     Returns meetings that are only hybrid.
+     */
+    var hybridMeetings: [MeetingJSONParser.Meeting] {
+        compactMap { .hybrid == $0.meetingType ? $0 : nil }
     }
 }
 
@@ -184,14 +228,6 @@ public struct MeetingJSONParser: Codable {
             page = inPage
             searchTime = inSearchTime
         }
-
-        // MARK: MLDataValueConvertible Conformance
-
-        /* ############################################# */
-        /**
-         This is required, but doesn't do anything. It just instantiates an empty struct instance.
-         */
-        public init() { self.init(actualSize: 0) }
     }
 
     /* ################################################################################################################################## */

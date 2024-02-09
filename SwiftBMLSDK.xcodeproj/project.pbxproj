@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		D4045C1A2B766A010086E1B7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4045C192B766A010086E1B7 /* Preview Assets.xcassets */; };
+		D4045C222B76895A0086E1B7 /* MeetingDump.json in Resources */ = {isa = PBXBuildFile; fileRef = D4045C202B76895A0086E1B7 /* MeetingDump.json */; };
+		D4045C232B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json in Resources */ = {isa = PBXBuildFile; fileRef = D4045C212B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json */; };
+		D4045C252B768CE50086E1B7 /* TaggedData.json in Resources */ = {isa = PBXBuildFile; fileRef = D4045C242B768CE50086E1B7 /* TaggedData.json */; };
 		D41620402B73C17F00E6E0CA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
 		D4436A7C2B76688B00A40ECA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4436A762B76688B00A40ECA /* Assets.xcassets */; };
 		D4436A7E2B76688B00A40ECA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4436A7A2B76688B00A40ECA /* ContentView.swift */; };
@@ -15,7 +18,7 @@
 		D4436A812B7668E200A40ECA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
 		D4436A822B7668E200A40ECA /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */; };
-		D4675D192B73C1E400139CC3 /* SwiftBMLSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */; };
+		D4675D192B73C1E400139CC3 /* MeetingJSONParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* MeetingJSONParserTests.swift */; };
 		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4C9C6242B750C65007FB793 /* MeetingJSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* MeetingJSONParser.swift */; };
@@ -54,6 +57,9 @@
 
 /* Begin PBXFileReference section */
 		D4045C192B766A010086E1B7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D4045C202B76895A0086E1B7 /* MeetingDump.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MeetingDump.json; sourceTree = "<group>"; };
+		D4045C212B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SwiftBMLSDK_Meetings.json; sourceTree = "<group>"; };
+		D4045C242B768CE50086E1B7 /* TaggedData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = TaggedData.json; sourceTree = "<group>"; };
 		D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftBMLSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4436A762B76688B00A40ECA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -61,7 +67,7 @@
 		D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Test_HarnessApp.swift; sourceTree = "<group>"; };
 		D4436A862B76691E00A40ECA /* SwiftBMLSDK_Test_Harness.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SwiftBMLSDK_Test_Harness.entitlements; sourceTree = "<group>"; };
 		D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftBMLSDK.docc; sourceTree = "<group>"; };
-		D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDKTests.swift; sourceTree = "<group>"; };
+		D4675D182B73C1E400139CC3 /* MeetingJSONParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingJSONParserTests.swift; sourceTree = "<group>"; };
 		D4675D202B73C57D00139CC3 /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		D4AC3AD22B76684200E314D8 /* SwiftBMLSDK Test Harness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftBMLSDK Test Harness.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4C9C6232B750C65007FB793 /* MeetingJSONParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingJSONParser.swift; sourceTree = "<group>"; };
@@ -100,6 +106,16 @@
 				D4045C192B766A010086E1B7 /* Preview Assets.xcassets */,
 			);
 			path = Preview;
+			sourceTree = "<group>";
+		};
+		D4045C1F2B76895A0086E1B7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D4045C202B76895A0086E1B7 /* MeetingDump.json */,
+				D4045C212B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json */,
+				D4045C242B768CE50086E1B7 /* TaggedData.json */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		D416202B2B73C17F00E6E0CA = {
@@ -179,7 +195,8 @@
 		D4675D172B73C1E400139CC3 /* SwiftBMLSDKTests */ = {
 			isa = PBXGroup;
 			children = (
-				D4675D182B73C1E400139CC3 /* SwiftBMLSDKTests.swift */,
+				D4045C1F2B76895A0086E1B7 /* Resources */,
+				D4675D182B73C1E400139CC3 /* MeetingJSONParserTests.swift */,
 			);
 			path = SwiftBMLSDKTests;
 			sourceTree = "<group>";
@@ -315,6 +332,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */,
+				D4045C252B768CE50086E1B7 /* TaggedData.json in Resources */,
+				D4045C232B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json in Resources */,
+				D4045C222B76895A0086E1B7 /* MeetingDump.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,7 +363,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4675D192B73C1E400139CC3 /* SwiftBMLSDKTests.swift in Sources */,
+				D4675D192B73C1E400139CC3 /* MeetingJSONParserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
