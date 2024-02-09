@@ -70,13 +70,31 @@ final class MeetingJSONParserTests: XCTestCase {
      This is how many hybrid meetings we expect to be in the dump.
      */
     static let numberOfHybridMeetings = 1320
+    
+    /* ################################################################## */
+    /**
+     The 0-based index, within our test dump, of a virtual meeting.
+     */
+    static let virtualMeetingIndex = 104
+
+    /* ################################################################## */
+    /**
+     The 0-based index, within our test dump, of a hybrid meeting.
+     */
+    static let hybridMeetingIndex = 8600
+
+    /* ################################################################## */
+    /**
+     The 0-based index, within our test dump, of an in-person meeting (also, the last one).
+     */
+    static let inPersonMeetingIndex = numberOfMeetingsInDump - 1
 
     /* ################################################################## */
     /**
      This will cache our parser, so we don't have to keep reloading it.
      */
     static var parser: MeetingJSONParser?
-        
+
     /* ################################################################## */
     /**
      This sets up the parser, so I guess it's actually our first test.
@@ -113,6 +131,8 @@ final class MeetingJSONParserTests: XCTestCase {
      This test takes a while, and hogs memory, because we load up a whole bunch of data and comparison data.
      */
     func testMeetingArrayExtension() {
+        XCTAssertNotNil(Self.parser)
+        XCTAssertGreaterThan(Self.parser?.meetings.count ?? 0, 0)
         // Test Meetings
         guard let inPersonMeetings = Self.parser?.meetings.inPersonMeetings
         else {
@@ -188,5 +208,50 @@ final class MeetingJSONParserTests: XCTestCase {
         }
         
         XCTAssertEqual(jsonData.count, jsonDump.count)
+    }
+
+    /* ################################################################## */
+    /**
+     */
+    func testSingleVirtualMeeting() {
+        XCTAssertNotNil(Self.parser)
+        guard let meetingsCount = Self.parser?.meetings.count,
+              Self.virtualMeetingIndex < meetingsCount,
+              let meeting = Self.parser?.meetings[Self.virtualMeetingIndex]
+        else {
+            XCTFail("No Virtual Meeting!")
+            return
+        }
+        print(meeting.debugDescription)
+    }
+
+    /* ################################################################## */
+    /**
+     */
+    func testSingleHybridMeeting() {
+        XCTAssertNotNil(Self.parser)
+        guard let meetingsCount = Self.parser?.meetings.count,
+              Self.hybridMeetingIndex < meetingsCount,
+              let meeting = Self.parser?.meetings[Self.hybridMeetingIndex]
+        else {
+            XCTFail("No Hybrid Meeting!")
+            return
+        }
+        print(meeting.debugDescription)
+    }
+
+    /* ################################################################## */
+    /**
+     */
+    func testSingleInPersonMeeting() {
+        XCTAssertNotNil(Self.parser)
+        guard let meetingsCount = Self.parser?.meetings.count,
+              Self.inPersonMeetingIndex < meetingsCount,
+              let meeting = Self.parser?.meetings[Self.inPersonMeetingIndex]
+        else {
+            XCTFail("No In-Person Meeting!")
+            return
+        }
+        print(meeting.debugDescription)
     }
 }
