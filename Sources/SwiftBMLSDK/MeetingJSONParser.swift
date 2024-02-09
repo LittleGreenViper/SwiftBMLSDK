@@ -44,28 +44,6 @@ fileprivate extension Date {
 }
 
 /* ###################################################################################################################################### */
-// MARK: File Private Special Unicode Encoder/Decoder for String
-/* ###################################################################################################################################### */
-fileprivate extension String {
-    /* ################################################# */
-    /**
-     This decodes standard Unicode escape characters ("\u0123") in the string.
-     */
-    var _decodeUnicode: String {
-        self.applyingTransform(StringTransform("Hex-Any"), reverse: false) ?? ""
-    }
-
-    /* ################################################################## */
-    /**
-     This encodes characters that need Unicode as standard Unicode escape ("\u0123").
-     */
-    var _encodedUnicode: String {
-        guard let data = self.data(using: .nonLossyASCII, allowLossyConversion: true) else { return "" }
-        return String(data: data, encoding: .utf8) ?? self
-    }
-}
-
-/* ###################################################################################################################################### */
 // MARK: - Public Special Array Extension for Summarizing Data -
 /* ###################################################################################################################################### */
 public extension Array where Element == MeetingJSONParser.Meeting {
@@ -336,10 +314,10 @@ public struct MeetingJSONParser: Codable {
              - parameter inDictionary: A simple String-keyed dictionary of partly-parsed values.
              */
             public init?(_ inDictionary: [String: Any]) {
-                self.key = (inDictionary["key"] as? String)?._decodeUnicode ?? ""
-                self.name = (inDictionary["name"] as? String)?._decodeUnicode ?? ""
-                self.description = (inDictionary["description"] as? String)?._decodeUnicode ?? ""
-                self.language = (inDictionary["language"] as? String)?._decodeUnicode ?? ""
+                self.key = (inDictionary["key"] as? String) ?? ""
+                self.name = (inDictionary["name"] as? String) ?? ""
+                self.description = (inDictionary["description"] as? String) ?? ""
+                self.language = (inDictionary["language"] as? String) ?? ""
             }
             
             // MARK: Codable Conformance
@@ -366,10 +344,10 @@ public struct MeetingJSONParser: Codable {
              */
             public func encode(to inEncoder: Encoder) throws {
                 var container = inEncoder.container(keyedBy: _CodingKeys.self)
-                try container.encode(key._encodedUnicode, forKey: .key)
-                try container.encode(name._encodedUnicode, forKey: .name)
-                try container.encode(description._encodedUnicode, forKey: .description)
-                try container.encode(language._encodedUnicode, forKey: .language)
+                try container.encode(key, forKey: .key)
+                try container.encode(name, forKey: .name)
+                try container.encode(description, forKey: .description)
+                try container.encode(language, forKey: .language)
             }
             
             /* ############################################# */
@@ -726,7 +704,7 @@ public struct MeetingJSONParser: Codable {
             var ret = [String: String]()
             
             taggedFlatData.forEach { key, value in
-                ret[key] = "\(value)"._encodedUnicode
+                ret[key] = "\(value)"
             }
             
             return ret
@@ -927,7 +905,7 @@ public struct MeetingJSONParser: Codable {
 
             self.formats = (inDictionary["formats"] as? [[String: Any]] ?? []).compactMap { Format($0) }
 
-            self.name = (inDictionary["name"] as? String)?._decodeUnicode ?? ""
+            self.name = (inDictionary["name"] as? String) ?? ""
 
             if let long = inDictionary["longitude"] as? Double,
                let lat = inDictionary["latitude"] as? Double,
@@ -939,22 +917,22 @@ public struct MeetingJSONParser: Codable {
 
             if let comments = inDictionary["comments"] as? String,
                !comments.isEmpty {
-                self.comments = comments._decodeUnicode
+                self.comments = comments
             } else {
                 self.comments = nil
             }
 
             if let physicalAddress = inDictionary["physical_address"] as? [String: String] {
                 let mutableGoPostal = CNMutablePostalAddress()
-                mutableGoPostal.street = (physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
-                mutableGoPostal.subLocality = (physicalAddress["neighborhood"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
-                mutableGoPostal.city = (physicalAddress["city"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
-                mutableGoPostal.state = (physicalAddress["province"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
-                mutableGoPostal.subAdministrativeArea = (physicalAddress["county"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
-                mutableGoPostal.postalCode = (physicalAddress["postal_code"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
-                mutableGoPostal.country = (physicalAddress["nation"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                mutableGoPostal.street = (physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.subLocality = (physicalAddress["neighborhood"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.city = (physicalAddress["city"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.state = (physicalAddress["province"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.subAdministrativeArea = (physicalAddress["county"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.postalCode = (physicalAddress["postal_code"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.country = (physicalAddress["nation"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 self.inPersonAddress = mutableGoPostal
-                let locationInfo = (physicalAddress["info"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                let locationInfo = (physicalAddress["info"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 self.locationInfo = locationInfo.isEmpty ? nil : locationInfo
                 self.inPersonVenueName = physicalAddress["name"]
             } else {
@@ -964,7 +942,7 @@ public struct MeetingJSONParser: Codable {
             }
 
             if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
-                let urlStr = (virtualMeetingInfo["url"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                let urlStr = (virtualMeetingInfo["url"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 if !urlStr.isEmpty,
                    let virtualURL = URL(string: urlStr) {
                     self.virtualURL = virtualURL
@@ -972,14 +950,14 @@ public struct MeetingJSONParser: Codable {
                     self.virtualURL = nil
                 }
                 
-                let virtualPhoneNumber = (virtualMeetingInfo["phone_number"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                let virtualPhoneNumber = (virtualMeetingInfo["phone_number"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 if !virtualPhoneNumber.isEmpty {
                     self.virtualPhoneNumber = virtualPhoneNumber
                 } else {
                     self.virtualPhoneNumber = nil
                 }
                 
-                let virtualInfo = (virtualMeetingInfo["info"]?.trimmingCharacters(in: .whitespacesAndNewlines))?._decodeUnicode ?? ""
+                let virtualInfo = (virtualMeetingInfo["info"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 self.virtualInfo = virtualInfo.isEmpty ? nil : virtualInfo
             } else {
                 self.virtualURL = nil
@@ -1013,16 +991,16 @@ public struct MeetingJSONParser: Codable {
             let tempFormats = [Format](splitFormats.compactMap { singleFormatString in
                 let splitFormats = [String](singleFormatString.components(separatedBy: "\t"))
                 guard 4 == splitFormats.count else { return nil }
-                return try? Format(key: splitFormats[0]._decodeUnicode,
-                                   name: splitFormats[1]._decodeUnicode,
-                                   description: splitFormats[2]._decodeUnicode,
+                return try? Format(key: splitFormats[0],
+                                   name: splitFormats[1],
+                                   description: splitFormats[2],
                                    language: splitFormats[3]
                 )
             })
             formats = tempFormats
             
-            comments = (try? container.decode(String.self, forKey: .comments))?._decodeUnicode
-            locationInfo = (try? container.decode(String.self, forKey: .locationInfo))?._decodeUnicode
+            comments = (try? container.decode(String.self, forKey: .comments))
+            locationInfo = (try? container.decode(String.self, forKey: .locationInfo))
             
             if let tempURLString = (try? container.decode(String.self, forKey: .virtualURL)) {
                 virtualURL = URL(string: tempURLString)
@@ -1030,8 +1008,8 @@ public struct MeetingJSONParser: Codable {
                 virtualURL = nil
             }
             
-            virtualPhoneNumber = (try? container.decode(String.self, forKey: .virtualPhoneNumber))?._decodeUnicode
-            virtualInfo = (try? container.decode(String.self, forKey: .virtualInfo))?._decodeUnicode
+            virtualPhoneNumber = (try? container.decode(String.self, forKey: .virtualPhoneNumber))
+            virtualInfo = (try? container.decode(String.self, forKey: .virtualInfo))
             
             if let latitude = try? container.decode(CLLocationDegrees.self, forKey: .coords_lat),
                let longitude = try? container.decode(CLLocationDegrees.self, forKey: .coords_lng) {
@@ -1133,23 +1111,23 @@ public struct MeetingJSONParser: Codable {
                 try container.encode(formatsString, forKey: .formats)
             }
             
-            if let comments = comments?._encodedUnicode,
+            if let comments = comments,
                !comments.isEmpty {
                 try? container.encode(comments, forKey: .comments)
             }
-            if let locationInfo = locationInfo?._encodedUnicode,
+            if let locationInfo = locationInfo,
                !locationInfo.isEmpty {
                 try? container.encode(locationInfo, forKey: .locationInfo)
             }
-            if let virtualURL = virtualURL?.absoluteString._encodedUnicode,
+            if let virtualURL = virtualURL?.absoluteString,
                !virtualURL.isEmpty {
                 try? container.encode(virtualURL, forKey: .virtualURL)
             }
-            if let virtualPhoneNumber = virtualPhoneNumber?._encodedUnicode,
+            if let virtualPhoneNumber = virtualPhoneNumber,
                !virtualPhoneNumber.isEmpty {
                 try? container.encode(virtualPhoneNumber, forKey: .virtualPhoneNumber)
             }
-            if let virtualInfo = virtualInfo?._encodedUnicode,
+            if let virtualInfo = virtualInfo,
                !virtualInfo.isEmpty {
                 try? container.encode(virtualInfo, forKey: .virtualInfo)
             }
@@ -1160,35 +1138,35 @@ public struct MeetingJSONParser: Codable {
                 try? container.encode(Double(round(1000000.0 * longitude) / 1000000.0), forKey: .coords_lng)
             }
             
-            if let inPersonVenueName = inPersonVenueName?._encodedUnicode,
+            if let inPersonVenueName = inPersonVenueName,
                !inPersonVenueName.isEmpty {
                 try? container.encode(inPersonVenueName, forKey: .inPersonVenueName)
             }
-            if let string = inPersonVenueName?._encodedUnicode,
+            if let string = inPersonAddress?.street,
                !string.isEmpty {
                 try? container.encode(string, forKey: .inPersonAddress_street)
             }
-            if let string = inPersonAddress?.subLocality._encodedUnicode,
+            if let string = inPersonAddress?.subLocality,
                !string.isEmpty {
                 try? container.encode(string, forKey: .inPersonAddress_subLocality)
             }
-            if let string = inPersonAddress?.city._encodedUnicode,
+            if let string = inPersonAddress?.city,
                !string.isEmpty {
                 try? container.encode(string, forKey: .inPersonAddress_city)
             }
-            if let string = inPersonAddress?.state._encodedUnicode,
+            if let string = inPersonAddress?.state,
                !string.isEmpty {
                 try? container.encode(string, forKey: .inPersonAddress_state)
             }
-            if let string = inPersonAddress?.subAdministrativeArea._encodedUnicode,
+            if let string = inPersonAddress?.subAdministrativeArea,
                !string.isEmpty {
                 try? container.encode(string, forKey: .inPersonAddress_subAdministrativeArea)
             }
-            if let string = inPersonAddress?.postalCode._encodedUnicode,
+            if let string = inPersonAddress?.postalCode,
                !string.isEmpty {
                 try? container.encode(string, forKey: .inPersonAddress_postalCode)
             }
-            if let string = inPersonAddress?.country._encodedUnicode,
+            if let string = inPersonAddress?.country,
                !string.isEmpty {
                 try? container.encode(string, forKey: .inPersonAddress_country)
             }

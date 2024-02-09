@@ -197,6 +197,8 @@ final class MeetingJSONParserTests: XCTestCase {
         }
         
         XCTAssertEqual(taggedStringData.count, taggedStringDump.count)
+//        guard let deskURL = (try? FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: false))?.appending(path: "TaggedData.json") else { return }
+//        try? taggedStringDump.write(to: deskURL)
 
         guard let jsonDump = Self.parser?.meetings.jsonData,
               !jsonDump.isEmpty,
@@ -206,8 +208,10 @@ final class MeetingJSONParserTests: XCTestCase {
             XCTFail("No JSON Data!")
             return
         }
-        
         XCTAssertEqual(jsonData.count, jsonDump.count)
+
+//        guard let deskURL = (try? FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: false))?.appending(path: "SwiftBMLSDK_Meetings.json") else { return }
+//        try? jsonDump.write(to: deskURL)
     }
 
     /* ################################################################## */
