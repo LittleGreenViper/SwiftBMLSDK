@@ -21,7 +21,7 @@ import CoreLocation // For coordinates.
 import Contacts     // For the postal address
 
 /* ###################################################################################################################################### */
-// MARK: - Date Extension -
+// MARK: - File Private Date Extension -
 /* ###################################################################################################################################### */
 /**
  This extension allows us to convert a date to a certain time zone.
@@ -44,7 +44,7 @@ fileprivate extension Date {
 }
 
 /* ###################################################################################################################################### */
-// MARK: Special Unicode Encoder/Decoder for String
+// MARK: File Private Special Unicode Encoder/Decoder for String
 /* ###################################################################################################################################### */
 fileprivate extension String {
     /* ################################################# */
@@ -66,12 +66,14 @@ fileprivate extension String {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - Special Array Extension for Summarizing Data -
+// MARK: - Public Special Array Extension for Summarizing Data -
 /* ###################################################################################################################################### */
 public extension Array where Element == MeetingJSONParser.Meeting {
     /* ################################################# */
     /**
-     This returns the entire list as a JSON Data instance.
+     This returns the entire list as a simple, 2-dimensional, JSON Data instance. The data is a simple sequence of single-dimension dictionaries.
+     
+     This is different from the input JSON, as it has the organization and "cleaning" provided by the parser. It also keeps it at 2 dimensions, for easy integration into ML stuff.
      */
     var jsonData: Data? { try? JSONEncoder().encode(self) }
 
@@ -140,21 +142,23 @@ public extension Array where Element == MeetingJSONParser.Meeting {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - Meeting JSON Page Parser -
+// MARK: - Public Meeting JSON Page Parser -
 /* ###################################################################################################################################### */
 /**
- This struct will accept raw JSON data from one page of results from the `LGV_MeetingServer`, and parse it into a non-mutable struct instance.
+ This struct will accept raw JSON data from one page of results from the `LGV_MeetingServer`, and parse it into a immutable struct instance.
  
- You use this by instantiating with the filable init (at the end of the file), with the JSON data from the server, as a String, as the only argument.
+ You use this by instantiating with the failable init (at the end of the file), with the JSON data from the server, as the only argument.
  
- The parser then automatically populates a `meta` instance, that holds the page data from the server, and a `meetings` array, of all meeting instances, and some functional interfaces.
+ The parser then automatically populates a `meta` instance, that reports the page metadata from the server, and a `meetings` array, of all meeting instances, and some functional interfaces.
+ 
+ This parser has no dependencies, other than the Foundation, CoreLocation, and Contacts SDKs, provided by Apple. It is Codable, but should really be decoded, as opposed to encoded.
  */
 public struct MeetingJSONParser: Codable {
     /* ################################################################################################################################## */
     // MARK: Page Metadata Container
     /* ################################################################################################################################## */
     /**
-     This struct holds metada about the page of meeting results, as reported by the server.
+     This struct holds metadata about the page of meeting results, as reported by the server.
      */
     public struct PageMeta: Codable {
         /* ############################################# */
@@ -234,7 +238,7 @@ public struct MeetingJSONParser: Codable {
     // MARK: Meeting Data Container
     /* ################################################################################################################################## */
     /**
-     This struct holds a parsed meeting instance.
+     This struct holds a single parsed meeting instance.
      */
     public struct Meeting: Codable, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
         /* ############################################################################################################################## */
@@ -705,7 +709,7 @@ public struct MeetingJSONParser: Codable {
          */
         public var meetingType: MeetingType {
             if (nil != inPersonAddress) || (nil != inPersonVenueName && !inPersonVenueName!.isEmpty),
-               (nil != virtualURL) || (nil != virtualPhoneNumber) {
+               (nil != virtualURL && !virtualURL!.absoluteString.isEmpty) || (nil != virtualPhoneNumber && !virtualPhoneNumber!.isEmpty) {
                 return .hybrid
             } else if nil != inPersonAddress || (nil != inPersonVenueName && !inPersonVenueName!.isEmpty) {
                 return .inPerson

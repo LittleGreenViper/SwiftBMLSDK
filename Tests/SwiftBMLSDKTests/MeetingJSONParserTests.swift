@@ -21,6 +21,17 @@ import XCTest
 @testable import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
+// MARK: - Bundle Access Extension -
+/* ###################################################################################################################################### */
+extension XCTestCase {
+    /* ################################################################## */
+    /**
+     This returns the bundle for this test.
+     */
+    var testBundle: Bundle { Bundle(for: type(of: self)) }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - Main Parser Test Class -
 /* ###################################################################################################################################### */
 final class MeetingJSONParserTests: XCTestCase {
@@ -65,13 +76,7 @@ final class MeetingJSONParserTests: XCTestCase {
      This will cache our parser, so we don't have to keep reloading it.
      */
     static var parser: MeetingJSONParser?
-    
-    /* ################################################################## */
-    /**
-     This returns the bundle for this test.
-     */
-    var testBundle: Bundle { Bundle(for: type(of: self)) }
-    
+        
     /* ################################################################## */
     /**
      This sets up the parser, so I guess it's actually our first test.
