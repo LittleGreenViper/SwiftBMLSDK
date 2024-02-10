@@ -93,7 +93,7 @@ final class MeetingJSONParserTests: XCTestCase {
     /**
      This will cache our parser, so we don't have to keep reloading it.
      */
-    static var parser: MeetingJSONParser?
+    static var parser: SwiftMLSDK_Parser?
 
     /* ################################################################## */
     /**
@@ -104,7 +104,7 @@ final class MeetingJSONParserTests: XCTestCase {
         guard nil == Self.parser else { return }
         guard let meetingDumpURL = testBundle.url(forResource: "MeetingDump", withExtension: "json") else { fatalError() }
         let jsonData = try Data(contentsOf: meetingDumpURL)
-        Self.parser = MeetingJSONParser(jsonData: jsonData)
+        Self.parser = SwiftMLSDK_Parser(jsonData: jsonData)
     }
     
     /* ################################################################## */
@@ -134,7 +134,7 @@ final class MeetingJSONParserTests: XCTestCase {
         XCTAssertNotNil(Self.parser)
         XCTAssertGreaterThan(Self.parser?.meetings.count ?? 0, 0)
         // Test Meetings
-        guard let inPersonMeetings = Self.parser?.meetings.inPersonMeetings
+        guard let inPersonMeetings = Self.parser?.inPersonMeetings
         else {
             XCTFail("No In-Person Meetings!")
             return
@@ -144,7 +144,7 @@ final class MeetingJSONParserTests: XCTestCase {
             XCTAssertTrue(.inPerson == $0.meetingType || .hybrid == $0.meetingType)
             XCTAssertTrue($0.hasInPerson)
         }
-        guard let inPersonOnlyMeetings = Self.parser?.meetings.inPersonOnlyMeetings
+        guard let inPersonOnlyMeetings = Self.parser?.inPersonOnlyMeetings
         else {
             XCTFail("No In-Person Only Meetings!")
             return
@@ -154,7 +154,7 @@ final class MeetingJSONParserTests: XCTestCase {
             XCTAssertEqual($0.meetingType, .inPerson)
             XCTAssertFalse($0.hasVirtual)
         }
-        guard let virtualMeetings = Self.parser?.meetings.virtualMeetings
+        guard let virtualMeetings = Self.parser?.virtualMeetings
         else {
             XCTFail("No Virtual Meetings!")
             return
@@ -164,7 +164,7 @@ final class MeetingJSONParserTests: XCTestCase {
             XCTAssertTrue(.virtual == $0.meetingType || .hybrid == $0.meetingType)
             XCTAssertTrue($0.hasVirtual)
         }
-        guard let virtualOnlyMeetings = Self.parser?.meetings.virtualOnlyMeetings
+        guard let virtualOnlyMeetings = Self.parser?.virtualOnlyMeetings
         else {
             XCTFail("No Virtual Only Meetings!")
             return
@@ -174,7 +174,7 @@ final class MeetingJSONParserTests: XCTestCase {
             XCTAssertEqual($0.meetingType, .virtual)
             XCTAssertFalse($0.hasInPerson)
         }
-        guard let hybridMeetings = Self.parser?.meetings.hybridMeetings
+        guard let hybridMeetings = Self.parser?.hybridMeetings
         else {
             XCTFail("No Hybrid Meetings!")
             return
@@ -186,21 +186,7 @@ final class MeetingJSONParserTests: XCTestCase {
             XCTAssertTrue($0.hasVirtual)
         }
 
-        guard let taggedStringDumpTemp = Self.parser?.meetings.taggedStringSummary,
-              !taggedStringDumpTemp.isEmpty,
-              let taggedStringDump = try? JSONEncoder().encode(taggedStringDumpTemp),
-              let taggedStringDumpURL = testBundle.url(forResource: "TaggedData", withExtension: "json"),
-              let taggedStringData = try? Data(contentsOf: taggedStringDumpURL)
-        else {
-            XCTFail("No Tagged String Data!")
-            return
-        }
-        
-        XCTAssertEqual(taggedStringData.count, taggedStringDump.count)
-//        guard let deskURL = (try? FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: false))?.appending(path: "TaggedData.json") else { return }
-//        try? taggedStringDump.write(to: deskURL)
-
-        guard let jsonDump = Self.parser?.meetings.jsonData,
+        guard let jsonDump = Self.parser?.meetingJSONData,
               !jsonDump.isEmpty,
               let jsonDumpDumpURL = testBundle.url(forResource: "SwiftBMLSDK_Meetings", withExtension: "json"),
               let jsonData = try? Data(contentsOf: jsonDumpDumpURL)
@@ -209,7 +195,8 @@ final class MeetingJSONParserTests: XCTestCase {
             return
         }
         XCTAssertEqual(jsonData.count, jsonDump.count)
-
+        
+// Commented out, but this is how we created the reference JSON file. A "known good" dump was saved.
 //        guard let deskURL = (try? FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: false))?.appending(path: "SwiftBMLSDK_Meetings.json") else { return }
 //        try? jsonDump.write(to: deskURL)
     }
