@@ -21,29 +21,6 @@ import CoreLocation // For coordinates.
 import Contacts     // For the postal address
 
 /* ###################################################################################################################################### */
-// MARK: - File Private Date Extension -
-/* ###################################################################################################################################### */
-/**
- This extension allows us to convert a date to a certain time zone.
- */
-fileprivate extension Date {
-    /* ################################################################## */
-    /**
-     Convert a date between two timezones.
-     
-     Inspired by [this SO answer](https://stackoverflow.com/a/54064820/879365)
-     
-     - parameter from: The source timezone.
-     - paremeter to: The destination timezone.
-     
-     - returns: The converted date
-     */
-    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date {
-        addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self)))
-    }
-}
-
-/* ###################################################################################################################################### */
 // MARK: - Baseline Meeting JSON Page Parser -
 /* ###################################################################################################################################### */
 /**
@@ -126,56 +103,6 @@ public struct SwiftMLSDK_Parser: Codable {
      The meeting data for this page of meetings.
      */
     public let meetings: [Meeting]
-    
-    // MARK: Public Computed Properties
-    
-    /* ################################################# */
-    /**
-     This returns the entire meeting list as a simple, 2-dimensional, JSON Data instance. The data is a simple sequence of single-dimension dictionaries.
-     
-     This is different from the input JSON, as it has the organization and "cleaning" provided by the parser. It also keeps it at 2 dimensions, for easy integration into ML stuff.
-     */
-    var meetingJSONData: Data? { try? JSONEncoder().encode(meetings) }
-    
-    /* ################################################# */
-    /**
-     Returns meetings that have an in-person component.
-     */
-    var inPersonMeetings: [SwiftMLSDK_Parser.Meeting] {
-        meetings.compactMap { .hybrid == $0.meetingType || .inPerson == $0.meetingType ? $0 : nil }
-    }
-    
-    /* ################################################# */
-    /**
-     Returns meetings that are only in-person.
-     */
-    var inPersonOnlyMeetings: [SwiftMLSDK_Parser.Meeting] {
-        meetings.compactMap { .inPerson == $0.meetingType ? $0 : nil }
-    }
-
-    /* ################################################# */
-    /**
-     Returns meetings that have a virtual component.
-     */
-    var virtualMeetings: [SwiftMLSDK_Parser.Meeting] {
-        meetings.compactMap { .hybrid == $0.meetingType || .virtual == $0.meetingType ? $0 : nil }
-    }
-
-    /* ################################################# */
-    /**
-     Returns meetings that are only virtual.
-     */
-    var virtualOnlyMeetings: [SwiftMLSDK_Parser.Meeting] {
-        meetings.compactMap { .virtual == $0.meetingType ? $0 : nil }
-    }
-
-    /* ################################################# */
-    /**
-     Returns meetings that are only hybrid.
-     */
-    var hybridMeetings: [SwiftMLSDK_Parser.Meeting] {
-        meetings.compactMap { .hybrid == $0.meetingType ? $0 : nil }
-    }
     
     // MARK: - Public Data Types and Enums -
     
@@ -846,66 +773,6 @@ public struct SwiftMLSDK_Parser: Codable {
             }
 
             return ret
-        }
-        
-        /* ################################################################## */
-        /**
-         True, if the meeting has a virtual component.
-         */
-        public var hasVirtual: Bool { .virtual == meetingType || .hybrid == meetingType }
-        
-        /* ################################################################## */
-        /**
-         True, if the meeting has an in-person component.
-         */
-        public var hasInPerson: Bool { .inPerson == meetingType || .hybrid == meetingType }
-
-        /* ################################################################## */
-        /**
-         This returns the next meeting start time, in the meeting's timezone.
-         */
-        public var nextStart: Date { getNextStartDate() }
-
-        /* ################################################################## */
-        /**
-         This returns the next meeting start time, adjusted from the meeting's timezone, to ours.
-         */
-        public var nextLocalStart: Date { getNextStartDate(isAdjusted: true) }
-
-        // MARK: Instance Methods
-        
-        /* ################################################################## */
-        /**
-         This is the start time of the next meeting, in the meeting's local timezone. By default, the date will have the meeting's timezone set, but it can adjust to our local timezone.
-         
-         - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
-         - returns: The date of the next meeting.
-         
-         > NOTE: If the date is invalid, then the distant future will be returned.
-         */
-        public func getNextStartDate(isAdjusted inAdjust: Bool = false) -> Date {
-            guard let dateComponents = dateComponents else { return .distantFuture }
-            let nextStartDate = Calendar.current.nextDate(after: .now, matching: dateComponents, matchingPolicy: .nextTimePreservingSmallerComponents)
-            
-            if inAdjust {
-                return nextStartDate?._convert(from: timeZone, to: .current) ?? Date.distantFuture
-            } else {
-                return nextStartDate ?? .distantFuture
-            }
-        }
-        
-        /* ################################################################## */
-        /**
-         This is the start time of the previous meeting, in the meeting's local timezone. By default, the date will have the meeting's timezone set, but it can adjust to our local timezone.
-         
-         - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
-         - returns: The date of the last meeting.
-
-         > NOTE: If the date is invalid, then the distant past will be returned.
-         */
-        public func getPreviousStartDate(isAdjusted inAdjust: Bool = false) -> Date {
-            guard .distantFuture > getNextStartDate(isAdjusted: inAdjust) else { return .distantPast }
-            return getNextStartDate().addingTimeInterval(-(60 * 60 * 24 * 7))
         }
 
         // MARK: Initializer

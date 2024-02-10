@@ -21,26 +21,9 @@ import XCTest
 @testable import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
-// MARK: - Bundle Access Extension -
+// MARK: - Parser Extensions Test Class -
 /* ###################################################################################################################################### */
-extension XCTestCase {
-    /* ################################################################## */
-    /**
-     This returns the bundle for this test.
-     */
-    var testBundle: Bundle { Bundle(for: type(of: self)) }
-}
-
-/* ###################################################################################################################################### */
-// MARK: - Main Parser Test Class -
-/* ###################################################################################################################################### */
-final class MeetingJSONParserTests: XCTestCase {
-    /* ################################################################## */
-    /**
-     This is how many meetings we expect to be in the dump.
-     */
-    static let numberOfMeetingsInDump = 34358
-    
+final class SwiftBMLSDK_Parser_ExtensionTests: SwiftBMLSDK_TestCase {
     /* ################################################################## */
     /**
      This is how many in-person (or hybrid) meetings we expect to be in the dump.
@@ -70,59 +53,6 @@ final class MeetingJSONParserTests: XCTestCase {
      This is how many hybrid meetings we expect to be in the dump.
      */
     static let numberOfHybridMeetings = 1320
-    
-    /* ################################################################## */
-    /**
-     The 0-based index, within our test dump, of a virtual meeting.
-     */
-    static let virtualMeetingIndex = 104
-
-    /* ################################################################## */
-    /**
-     The 0-based index, within our test dump, of a hybrid meeting.
-     */
-    static let hybridMeetingIndex = 8600
-
-    /* ################################################################## */
-    /**
-     The 0-based index, within our test dump, of an in-person meeting (also, the last one).
-     */
-    static let inPersonMeetingIndex = numberOfMeetingsInDump - 1
-
-    /* ################################################################## */
-    /**
-     This will cache our parser, so we don't have to keep reloading it.
-     */
-    static var parser: SwiftMLSDK_Parser?
-
-    /* ################################################################## */
-    /**
-     This sets up the parser, so I guess it's actually our first test.
-     */
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-        guard nil == Self.parser else { return }
-        guard let meetingDumpURL = testBundle.url(forResource: "MeetingDump", withExtension: "json") else { fatalError() }
-        let jsonData = try Data(contentsOf: meetingDumpURL)
-        Self.parser = SwiftMLSDK_Parser(jsonData: jsonData)
-    }
-    
-    /* ################################################################## */
-    /**
-     Just a basic sanity test, and we look at meta, here.
-     */
-    func testBasicMeetingMetrics() {
-        XCTAssertNotNil(Self.parser)
-        XCTAssertGreaterThan(Self.parser?.meetings.count ?? 0, 0)
-        // Test Meta
-        XCTAssertEqual(Self.parser?.meta.actualSize, Self.numberOfMeetingsInDump)
-        XCTAssertEqual(Self.parser?.meta.startingIndex, 0)
-        XCTAssertEqual(Self.parser?.meta.total, Self.parser?.meta.actualSize ?? -1)
-        XCTAssertEqual(Self.parser?.meta.totalPages, 1)
-        XCTAssertEqual(Self.parser?.meta.page, 0)
-        XCTAssertGreaterThan(Self.parser?.meta.searchTime ?? 0, 0)
-        XCTAssertEqual(Self.parser?.meta.actualSize ?? 0, Self.parser?.meetings.count ?? -1)
-    }
     
     /* ################################################################## */
     /**
@@ -199,50 +129,5 @@ final class MeetingJSONParserTests: XCTestCase {
 // Commented out, but this is how we created the reference JSON file. A "known good" dump was saved.
 //        guard let deskURL = (try? FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: false))?.appending(path: "SwiftBMLSDK_Meetings.json") else { return }
 //        try? jsonDump.write(to: deskURL)
-    }
-
-    /* ################################################################## */
-    /**
-     */
-    func testSingleVirtualMeeting() {
-        XCTAssertNotNil(Self.parser)
-        guard let meetingsCount = Self.parser?.meetings.count,
-              Self.virtualMeetingIndex < meetingsCount,
-              let meeting = Self.parser?.meetings[Self.virtualMeetingIndex]
-        else {
-            XCTFail("No Virtual Meeting!")
-            return
-        }
-        print(meeting.debugDescription)
-    }
-
-    /* ################################################################## */
-    /**
-     */
-    func testSingleHybridMeeting() {
-        XCTAssertNotNil(Self.parser)
-        guard let meetingsCount = Self.parser?.meetings.count,
-              Self.hybridMeetingIndex < meetingsCount,
-              let meeting = Self.parser?.meetings[Self.hybridMeetingIndex]
-        else {
-            XCTFail("No Hybrid Meeting!")
-            return
-        }
-        print(meeting.debugDescription)
-    }
-
-    /* ################################################################## */
-    /**
-     */
-    func testSingleInPersonMeeting() {
-        XCTAssertNotNil(Self.parser)
-        guard let meetingsCount = Self.parser?.meetings.count,
-              Self.inPersonMeetingIndex < meetingsCount,
-              let meeting = Self.parser?.meetings[Self.inPersonMeetingIndex]
-        else {
-            XCTFail("No In-Person Meeting!")
-            return
-        }
-        print(meeting.debugDescription)
     }
 }

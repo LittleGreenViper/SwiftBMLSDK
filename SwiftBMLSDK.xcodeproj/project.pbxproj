@@ -16,8 +16,11 @@
 		D4436A7F2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */; };
 		D4436A812B7668E200A40ECA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
 		D4436A822B7668E200A40ECA /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D45DB3A42B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A32B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift */; };
+		D45DB3A62B78031B00BAB475 /* SwiftBMLSDK_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */; };
+		D45DB3A82B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */; };
 		D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */; };
-		D4675D192B73C1E400139CC3 /* MeetingJSONParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* MeetingJSONParserTests.swift */; };
+		D4675D192B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift */; };
 		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4C9C6242B750C65007FB793 /* SwiftMLSDK_Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */; };
@@ -64,8 +67,11 @@
 		D4436A7A2B76688B00A40ECA /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Test_HarnessApp.swift; sourceTree = "<group>"; };
 		D4436A862B76691E00A40ECA /* SwiftBMLSDK_Test_Harness.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = SwiftBMLSDK_Test_Harness.entitlements; sourceTree = "<group>"; };
+		D45DB3A32B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Parser_Extensions.swift; sourceTree = "<group>"; };
+		D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Tests.swift; sourceTree = "<group>"; };
+		D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Parser_ExtensionTests.swift; sourceTree = "<group>"; };
 		D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftBMLSDK.docc; sourceTree = "<group>"; };
-		D4675D182B73C1E400139CC3 /* MeetingJSONParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeetingJSONParserTests.swift; sourceTree = "<group>"; };
+		D4675D182B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_ParserTests.swift; sourceTree = "<group>"; };
 		D4675D202B73C57D00139CC3 /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		D4AC3AD22B76684200E314D8 /* SwiftBMLSDK Test Harness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftBMLSDK Test Harness.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Parser.swift; sourceTree = "<group>"; };
@@ -175,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */,
+				D45DB3A32B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift */,
 				D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */,
 			);
 			path = SwiftBMLSDK;
@@ -192,8 +199,10 @@
 		D4675D172B73C1E400139CC3 /* SwiftBMLSDKTests */ = {
 			isa = PBXGroup;
 			children = (
+				D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */,
+				D4675D182B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift */,
+				D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */,
 				D4045C1F2B76895A0086E1B7 /* Resources */,
-				D4675D182B73C1E400139CC3 /* MeetingJSONParserTests.swift */,
 			);
 			path = SwiftBMLSDKTests;
 			sourceTree = "<group>";
@@ -351,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4C9C6242B750C65007FB793 /* SwiftMLSDK_Parser.swift in Sources */,
+				D45DB3A42B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift in Sources */,
 				D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -359,7 +369,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4675D192B73C1E400139CC3 /* MeetingJSONParserTests.swift in Sources */,
+				D45DB3A62B78031B00BAB475 /* SwiftBMLSDK_Tests.swift in Sources */,
+				D4675D192B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift in Sources */,
+				D45DB3A82B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
