@@ -92,7 +92,7 @@ public struct SwiftMLSDK_Parser: Codable {
         self.meetings = meetingsJSON.compactMap { Self._parseMeeting($0) }
     }
 
-    // MARK: Public Constant Properties
+    // MARK: Public Immutable Properties
     
     /* ################################################# */
     /**
@@ -330,7 +330,7 @@ public struct SwiftMLSDK_Parser: Codable {
             /**
              CustomDebugStringConvertible Conformance
              */
-            public var debugDescription: String { String(self.description) }
+            public var debugDescription: String { "\t\t(\(key))\t\(name)\t(\(language))\n\t\t\t\t\(description)" }
         }
 
         /* ############################################################################################################################## */
@@ -540,7 +540,7 @@ public struct SwiftMLSDK_Parser: Codable {
             /**
              Narcotics Anonymous
              */
-            case na = "NA"
+            case na
         }
         
         // MARK: Required Instance Properties
@@ -988,55 +988,58 @@ public struct SwiftMLSDK_Parser: Codable {
          CustomStringConvertible Conformance
          */
         public var description: String {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm:ss"
+            let timeString = formatter.string(from: startTime)
             var ret = "Meeting:\n\t"
-            ret += "id: \(id)\n\t"
-            ret += "serverID: \(serverID)\n\t"
-            ret += "serverID: \(localMeetingID)\n\t"
-            ret += "weekday: \(weekday)\n\t"
-            ret += "startTime: \(startTime.debugDescription)\n\t"
-            ret += "duration: \(duration)\n\t"
-            ret += "timeZone: \(timeZone.debugDescription)\n\t"
-            ret += "organization: \(organization.rawValue)\n\t"
-            ret += "name: \(name)\n\t"
-            ret += "formats:\n\t\t\(formats.map { $0.debugDescription + "\n\t\t"})\n\t"
+            ret += "id:\t\(id)\n\t"
+            ret += "serverID:\t\(serverID)\n\t"
+            ret += "localMeetingID:\t\(localMeetingID)\n\t"
+            ret += "weekday:\t\(weekday)\n\t"
+            ret += "startTime:\t\(timeString)\n\t"
+            ret += "duration:\t\(duration)\n\t"
+            ret += "timeZone:\t\(timeZone.debugDescription)\n\t"
+            ret += "organization:\t\(organization.rawValue)\n\t"
+            ret += "name:\t\(name)\n\t"
+            ret += "formats:\n\(formats.map { $0.debugDescription }.joined(separator: "\n"))\n\t"
             
             if let coords = coords {
-                ret += "coords: (latitude: \(coords.latitude), longitude: \(coords.longitude))\n\t"
+                ret += "coords:\t(latitude: \(coords.latitude), longitude: \(coords.longitude))\n\t"
             }
             
             if let comments = comments,
                !comments.isEmpty {
-                ret += "comments: \(comments)\n\t"
+                ret += "comments:\t\(comments)\n\t"
             }
 
             if let locationInfo = locationInfo,
                !locationInfo.isEmpty {
-                ret += "locationInfo: \(locationInfo)\n\t"
+                ret += "locationInfo:\t\(locationInfo)\n\t"
             }
 
             if let virtualURL = virtualURL?.absoluteString,
                !virtualURL.isEmpty {
-                ret += "virtualURL: \(virtualURL)\n\t"
+                ret += "virtualURL:\t\(virtualURL)\n\t"
             }
 
             if let virtualPhoneNumber = virtualPhoneNumber,
                !virtualPhoneNumber.isEmpty {
-                ret += "virtualPhoneNumber: \(virtualPhoneNumber)\n\t"
+                ret += "virtualPhoneNumber:\t\(virtualPhoneNumber)\n\t"
             }
 
             if let virtualInfo = virtualInfo,
                !virtualInfo.isEmpty {
-                ret += "virtualInfo: \(virtualInfo)\n\t"
+                ret += "virtualInfo:\t\(virtualInfo)\n\t"
             }
 
             if let inPersonVenueName = inPersonVenueName,
                !inPersonVenueName.isEmpty {
-                ret += "inPersonVenueName: \(inPersonVenueName)\n\t"
+                ret += "inPersonVenueName:\t\(inPersonVenueName)\n\t"
             }
 
             if nil != inPersonAddress,
                !basicInPersonAddress.isEmpty {
-                ret += "inPersonAddress: \(basicInPersonAddress)\n\t"
+                ret += "inPersonAddress:\t\(basicInPersonAddress)\n\t"
             }
 
             return ret
