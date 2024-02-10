@@ -18,13 +18,15 @@
  */
 
 import CoreLocation // For coordinates.
-import Contacts     // For the postal address
+import Contacts     // For the in-person address
 
 /* ###################################################################################################################################### */
 // MARK: - Baseline Meeting JSON Page Parser -
 /* ###################################################################################################################################### */
 /**
  This struct will accept raw JSON data from one page of results from the [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer), and parse it into an immutable struct instance.
+ 
+ This is a **baseline** parser; it doesn't really do anything more than make a simple map of the input JSON into an array of structs. It doesn't change the sorting, and provides a read-only, struct property view.
  
  You use this by instantiating with the public init, with the JSON data from the server, as the only argument.
  
@@ -647,7 +649,7 @@ public struct SwiftMLSDK_Parser: Codable {
          */
         public let virtualInfo: String?
         
-        // MARK: Public Computed Properties
+        // MARK: Computed Properties
         
         /* ################################################# */
         /**
@@ -668,111 +670,6 @@ public struct SwiftMLSDK_Parser: Codable {
             } else {
                 return .virtual
             }
-        }
-        
-        /* ################################################# */
-        /**
-         This provides the object as "tagged" data, but all values as String.
-         */
-        public var taggedStringData: [String: String] {
-            var ret = [String: String]()
-            
-            taggedFlatData.forEach { key, value in
-                ret[key] = "\(value)"
-            }
-            
-            return ret
-        }
-
-        /* ################################################# */
-        /**
-         This provides the object as "tagged" data, with all values atomic (not nested).
-         */
-        public var taggedFlatData: [String: Encodable] {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "HH:mm:ss"
-
-            var ret: [String: Encodable] = [
-                "id": id,
-                "name": name,
-                "organization": organization.rawValue,
-                "meetingType": meetingType.rawValue,
-                "weekday": weekday,
-                "startTime": formatter.string(from: self.startTime),
-                "duration": duration,
-                "timezone": timeZone.identifier,
-                "serverID": serverID,
-                "localMeetingID": localMeetingID
-            ]
-            
-            if let comments = comments,
-               !comments.isEmpty {
-                ret["comments"] = comments
-            }
-            
-            if let locationInfo = locationInfo,
-               !locationInfo.isEmpty {
-                ret["locationInfo"] = locationInfo
-            }
-            
-            if let virtualURL = virtualURL?.absoluteString,
-               !virtualURL.isEmpty {
-                ret["virtualURL"] = virtualURL
-            }
-            
-            if let virtualPhoneNumber = virtualPhoneNumber,
-               !virtualPhoneNumber.isEmpty {
-                ret["virtualPhoneNumber"] = virtualPhoneNumber
-            }
-            
-            if let virtualInfo = virtualInfo,
-               !virtualInfo.isEmpty {
-                ret["virtualInfo"] = virtualInfo
-            }
-            
-            if let coords = coords,
-               CLLocationCoordinate2DIsValid(coords) {
-                ret["latitude"] = coords.latitude
-                ret["longitude"] = coords.longitude
-            }
-            
-            if !basicInPersonAddress.isEmpty {
-                ret["inPersonAddress"] = basicInPersonAddress
-            }
-            
-            if !formats.isEmpty {
-                ret["formats"] = formats.map { $0.asString }.joined(separator: "\n")
-            }
-            
-            return ret
-        }
-        
-        /* ################################################# */
-        /**
-         This returns the start time and weekday as date components.
-         */
-        public var dateComponents: DateComponents? {
-            let components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
-            guard let startHour = components.hour,
-                  let startMinute = components.minute
-            else { return nil}
-            return DateComponents(calendar: .current, hour: startHour, minute: startMinute, weekday: weekday)
-        }
-
-        /* ################################################# */
-        /**
-         This returns the address as a basic readable address.
-         */
-        public var basicInPersonAddress: String {
-            var ret = inPersonVenueName ?? ""
-            if let postalAddress = inPersonAddress {
-                let formatter = CNPostalAddressFormatter()
-                formatter.style = .mailingAddress
-                
-                ret += (!ret.isEmpty ? "\n" : "") + formatter.string(from: postalAddress)
-            }
-
-            return ret
         }
 
         // MARK: Initializer

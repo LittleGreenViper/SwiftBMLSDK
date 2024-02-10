@@ -18,6 +18,7 @@
  */
 
 import Foundation
+import Contacts     // For the postal address
 
 /* ###################################################################################################################################### */
 // MARK: - File Private Date Extension -
@@ -43,7 +44,7 @@ fileprivate extension Date {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - Meeting JSON Page Parser Extensions -
+// MARK: - Parser Extensions -
 /* ###################################################################################################################################### */
 /**
  This extension adds some basic filtering and conversion options to the parser.
@@ -130,6 +131,34 @@ extension SwiftMLSDK_Parser.Meeting {
      True, if the meeting has an in-person component.
      */
     public var hasInPerson: Bool { .inPerson == meetingType || .hybrid == meetingType }
+    
+    /* ################################################# */
+    /**
+     This returns the start time and weekday as date components.
+     */
+    public var dateComponents: DateComponents? {
+        let components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
+        guard let startHour = components.hour,
+              let startMinute = components.minute
+        else { return nil}
+        return DateComponents(calendar: .current, hour: startHour, minute: startMinute, weekday: weekday)
+    }
+
+    /* ################################################# */
+    /**
+     This returns the address as a basic readable address.
+     */
+    public var basicInPersonAddress: String {
+        var ret = inPersonVenueName ?? ""
+        if let postalAddress = inPersonAddress {
+            let formatter = CNPostalAddressFormatter()
+            formatter.style = .mailingAddress
+            
+            ret += (!ret.isEmpty ? "\n" : "") + formatter.string(from: postalAddress)
+        }
+
+        return ret
+    }
 
     // MARK: Instance Methods
     

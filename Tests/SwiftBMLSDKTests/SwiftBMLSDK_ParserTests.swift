@@ -61,6 +61,7 @@ final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
 
     /* ################################################################## */
     /**
+     This fetches a single fully-virtual meeting, and tests it for correctness.
      */
     func testSingleVirtualMeeting() {
         XCTAssertNotNil(Self.parser)
@@ -76,6 +77,7 @@ final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
 
     /* ################################################################## */
     /**
+     This fetches a single hybrid in-person-virtual meeting, and tests it for correctness.
      */
     func testSingleHybridMeeting() {
         XCTAssertNotNil(Self.parser)
@@ -91,6 +93,7 @@ final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
 
     /* ################################################################## */
     /**
+     This fetches a single in-person meeting, and tests it for correctness.
      */
     func testSingleInPersonMeeting() {
         XCTAssertNotNil(Self.parser)
