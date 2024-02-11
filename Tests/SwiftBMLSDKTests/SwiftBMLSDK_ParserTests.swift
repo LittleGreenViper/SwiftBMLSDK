@@ -44,6 +44,10 @@ final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
     /* ################################################################## */
     /**
      This fetches each meeting, and tests it for correctness.
+     
+     Yep. All of them.
+     
+     Go fix a cup of coffee. In fact, grow and roast it. This will take a while...
      */
     func testAllMeetings() {
         XCTAssertFalse(Self.parser?.meetings.isEmpty ?? true)
