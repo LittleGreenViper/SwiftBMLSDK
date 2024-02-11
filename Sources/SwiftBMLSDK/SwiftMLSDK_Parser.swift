@@ -757,7 +757,8 @@ public struct SwiftMLSDK_Parser: Codable {
                 self.inPersonAddress = mutableGoPostal
                 let locationInfo = (physicalAddress["info"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 self.locationInfo = locationInfo.isEmpty ? nil : locationInfo
-                self.inPersonVenueName = physicalAddress["name"]
+                let inPersonVenueName = physicalAddress["name"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                self.inPersonVenueName = inPersonVenueName.isEmpty ? nil : inPersonVenueName
             } else {
                 self.inPersonAddress = nil
                 self.locationInfo = nil
