@@ -765,7 +765,7 @@ public struct SwiftMLSDK_Parser: Codable {
             }
 
             if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
-                let urlStr = (virtualMeetingInfo["url"]?.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                let urlStr = virtualMeetingInfo["url"]?.trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? ""
                 if !urlStr.isEmpty,
                    let virtualURL = URL(string: urlStr) {
                     self.virtualURL = virtualURL

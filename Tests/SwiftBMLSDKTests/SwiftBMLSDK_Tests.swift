@@ -41,7 +41,7 @@ class SwiftBMLSDK_TestCase: XCTestCase {
     /**
      This is how many meetings we expect to be in the dump.
      */
-    static let numberOfMeetingsInDump = 34358
+    static let numberOfMeetingsInDump = 34375
 
     /* ################################################################## */
     /**
@@ -124,11 +124,11 @@ class SwiftBMLSDK_TestCase: XCTestCase {
         if !originalFormats.isEmpty {
             var index = 0
             originalFormats.forEach{ format in
-                if let key = format["key"] as? String,
+                if let key = (format["key"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
                    !key.isEmpty,
-                   let name = format["name"] as? String,
-                   let description = format["description"] as? String,
-                   let language = format["language"] as? String,
+                   let name = (format["name"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
+                   let description = (format["description"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
+                   let language = (format["language"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
                    let id = format["id"] as? Int {
                     let currentFormat = inMeeting.formats[index]
                     XCTAssertEqual(currentFormat.key, key)
@@ -160,10 +160,10 @@ class SwiftBMLSDK_TestCase: XCTestCase {
         if let virtualInfo = original["virtual_information"] as? [String: String],
            !virtualInfo.isEmpty {
             XCTAssertEqual(virtualInfo["phone_number"], inMeeting.virtualPhoneNumber)
-            if let originalURL = virtualInfo["url"]?.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines),
+            if let originalURL = virtualInfo["url"]?.trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed),
                !originalURL.isEmpty,
                let testOrig = URL(string: originalURL),
-               let meetingURLString = inMeeting.virtualURL?.absoluteString.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines),
+               let meetingURLString = inMeeting.virtualURL?.absoluteString.trimmingCharacters(in: .whitespacesAndNewlines),
                !meetingURLString.isEmpty {
                 XCTAssertEqual(testOrig.absoluteString, meetingURLString)
             } else {
@@ -174,8 +174,8 @@ class SwiftBMLSDK_TestCase: XCTestCase {
             XCTAssertNil(inMeeting.virtualURL)
         }
         
-        if let virtualInfo = original["virtual_information"] as? [String: String],
-           let virtualComments = virtualInfo["info"],
+        if let virtualInfo = (original["virtual_information"] as? [String: String]),
+           let virtualComments = virtualInfo["info"]?.trimmingCharacters(in: .whitespacesAndNewlines),
            !virtualComments.isEmpty {
             XCTAssertEqual(virtualComments, inMeeting.virtualInfo)
         } else {
@@ -185,15 +185,15 @@ class SwiftBMLSDK_TestCase: XCTestCase {
         if let originalPhysicalLocation = original["physical_address"] as? [String: String],
            !originalPhysicalLocation.isEmpty,
            let meetingAddress = inMeeting.inPersonAddress {
-            XCTAssertEqual(originalPhysicalLocation["info"], inMeeting.locationInfo)
-            XCTAssertEqual(originalPhysicalLocation["name"], inMeeting.inPersonVenueName)
-            XCTAssertEqual(originalPhysicalLocation["street"] ?? "", meetingAddress.street)
-            XCTAssertEqual(originalPhysicalLocation["city"] ?? "", meetingAddress.city)
-            XCTAssertEqual(originalPhysicalLocation["province"] ?? "", meetingAddress.state)
-            XCTAssertEqual(originalPhysicalLocation["neighborhood"] ?? "", meetingAddress.subLocality)
-            XCTAssertEqual(originalPhysicalLocation["county"] ?? "", meetingAddress.subAdministrativeArea)
-            XCTAssertEqual(originalPhysicalLocation["postal_code"] ?? "", meetingAddress.postalCode)
-            XCTAssertEqual(originalPhysicalLocation["nation"] ?? "", meetingAddress.country)
+            XCTAssertEqual(originalPhysicalLocation["info"]?.trimmingCharacters(in: .whitespacesAndNewlines), inMeeting.locationInfo)
+            XCTAssertEqual(originalPhysicalLocation["name"]?.trimmingCharacters(in: .whitespacesAndNewlines), inMeeting.inPersonVenueName)
+            XCTAssertEqual((originalPhysicalLocation["street"])?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "", meetingAddress.street)
+            XCTAssertEqual((originalPhysicalLocation["city"])?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "", meetingAddress.city)
+            XCTAssertEqual((originalPhysicalLocation["province"])?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "", meetingAddress.state)
+            XCTAssertEqual((originalPhysicalLocation["neighborhood"])?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "", meetingAddress.subLocality)
+            XCTAssertEqual((originalPhysicalLocation["county"])?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "", meetingAddress.subAdministrativeArea)
+            XCTAssertEqual((originalPhysicalLocation["postal_code"])?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "", meetingAddress.postalCode)
+            XCTAssertEqual((originalPhysicalLocation["nation"])?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "", meetingAddress.country)
         } else {
             XCTAssertNil(inMeeting.locationInfo)
             XCTAssertNil(inMeeting.inPersonVenueName)
