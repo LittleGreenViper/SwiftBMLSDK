@@ -18,6 +18,7 @@
  */
 
 import XCTest
+import CoreLocation
 @testable import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
@@ -143,6 +144,52 @@ class SwiftBMLSDK_TestCase: XCTestCase {
             }
         } else {
             XCTAssertTrue(inMeeting.formats.isEmpty)
+        }
+        
+        // Now, start on the optional fields.
+        XCTAssertEqual(inMeeting.comments, (original["comments"] as? String ?? "").isEmpty ? nil : (original["comments"] as? String)!)
+        
+        if let latitude = original["latitude"] as? Double,
+           let longitude = original["longitude"] as? Double {
+            XCTAssertEqual(latitude, inMeeting.coords?.latitude)
+            XCTAssertEqual(longitude, inMeeting.coords?.longitude)
+        } else {
+            XCTAssertNil(inMeeting.coords)
+        }
+
+        if let virtualInfo = original["virtual_information"] as? [String: String],
+           !virtualInfo.isEmpty {
+            XCTAssertEqual(virtualInfo["phone_number"], inMeeting.virtualPhoneNumber)
+            XCTAssertEqual(virtualInfo["url"]?.removingPercentEncoding, inMeeting.virtualURL?.absoluteString.removingPercentEncoding) // Weird Zoom URL issue. Sometimes, the equals is encoded.
+        } else {
+            XCTAssertNil(inMeeting.virtualPhoneNumber)
+            XCTAssertNil(inMeeting.virtualURL)
+        }
+        
+        if let virtualInfo = original["virtual_information"] as? [String: String],
+           let virtualComments = virtualInfo["info"],
+           !virtualComments.isEmpty {
+            XCTAssertEqual(virtualComments, inMeeting.virtualInfo)
+        } else {
+            XCTAssertNil(inMeeting.virtualInfo)
+        }
+        
+        if let originalPhysicalLocation = original["physical_address"] as? [String: String],
+           !originalPhysicalLocation.isEmpty,
+           let meetingAddress = inMeeting.inPersonAddress {
+            XCTAssertEqual(originalPhysicalLocation["info"], inMeeting.locationInfo)
+            XCTAssertEqual(originalPhysicalLocation["name"], inMeeting.inPersonVenueName)
+            XCTAssertEqual(originalPhysicalLocation["street"] ?? "", meetingAddress.street)
+            XCTAssertEqual(originalPhysicalLocation["city"] ?? "", meetingAddress.city)
+            XCTAssertEqual(originalPhysicalLocation["province"] ?? "", meetingAddress.state)
+            XCTAssertEqual(originalPhysicalLocation["neighborhood"] ?? "", meetingAddress.subLocality)
+            XCTAssertEqual(originalPhysicalLocation["county"] ?? "", meetingAddress.subAdministrativeArea)
+            XCTAssertEqual(originalPhysicalLocation["postal_code"] ?? "", meetingAddress.postalCode)
+            XCTAssertEqual(originalPhysicalLocation["nation"] ?? "", meetingAddress.country)
+        } else {
+            XCTAssertNil(inMeeting.locationInfo)
+            XCTAssertNil(inMeeting.inPersonVenueName)
+            XCTAssertNil(inMeeting.inPersonAddress)
         }
     }
 }

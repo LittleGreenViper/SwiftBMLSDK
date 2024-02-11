@@ -26,24 +26,6 @@ import XCTest
 final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
     /* ################################################################## */
     /**
-     The 0-based index, within our test dump, of a virtual meeting.
-     */
-    static let virtualMeetingIndex = 104
-
-    /* ################################################################## */
-    /**
-     The 0-based index, within our test dump, of a hybrid meeting.
-     */
-    static let hybridMeetingIndex = 8600
-
-    /* ################################################################## */
-    /**
-     The 0-based index, within our test dump, of an in-person meeting (also, the last one).
-     */
-    static let inPersonMeetingIndex = 34357
-    
-    /* ################################################################## */
-    /**
      Just a basic sanity test, and we look at meta, here.
      */
     func testBasicMeetingMetrics() {
@@ -61,49 +43,16 @@ final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
 
     /* ################################################################## */
     /**
-     This fetches a single fully-virtual meeting, and tests it for correctness.
+     This fetches each meeting, and tests it for correctness.
      */
-    func testSingleVirtualMeeting() {
-        XCTAssertNotNil(Self.parser)
-        guard let meetingsCount = Self.parser?.meetings.count,
-              Self.virtualMeetingIndex < meetingsCount,
-              let meeting = Self.parser?.meetings[Self.virtualMeetingIndex]
-        else {
-            XCTFail("No Virtual Meeting!")
+    func testAllMeetings() {
+        XCTAssertFalse(Self.parser?.meetings.isEmpty ?? true)
+        guard let meetings = Self.parser?.meetings else {
+            XCTFail("No Meetings!")
             return
         }
-        validateMeeting(index: Self.virtualMeetingIndex, meeting: meeting)
-    }
-
-    /* ################################################################## */
-    /**
-     This fetches a single hybrid in-person-virtual meeting, and tests it for correctness.
-     */
-    func testSingleHybridMeeting() {
-        XCTAssertNotNil(Self.parser)
-        guard let meetingsCount = Self.parser?.meetings.count,
-              Self.hybridMeetingIndex < meetingsCount,
-              let meeting = Self.parser?.meetings[Self.hybridMeetingIndex]
-        else {
-            XCTFail("No Hybrid Meeting!")
-            return
+        for enumerated in meetings.enumerated() {
+            validateMeeting(index: enumerated.offset, meeting: enumerated.element)
         }
-        validateMeeting(index: Self.hybridMeetingIndex, meeting: meeting)
-    }
-
-    /* ################################################################## */
-    /**
-     This fetches a single in-person meeting, and tests it for correctness.
-     */
-    func testSingleInPersonMeeting() {
-        XCTAssertNotNil(Self.parser)
-        guard let meetingsCount = Self.parser?.meetings.count,
-              Self.inPersonMeetingIndex < meetingsCount,
-              let meeting = Self.parser?.meetings[Self.inPersonMeetingIndex]
-        else {
-            XCTFail("No In-Person Meeting!")
-            return
-        }
-        validateMeeting(index: Self.inPersonMeetingIndex, meeting: meeting)
     }
 }

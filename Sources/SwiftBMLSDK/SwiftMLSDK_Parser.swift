@@ -722,13 +722,9 @@ public struct SwiftMLSDK_Parser: Codable {
             } else {
                 self.timeZone = .current
             }
-
-            if let duration = inDictionary["duration"] as? Int,
-               (0..<86400).contains(duration) {
-                self.duration = TimeInterval(duration)
-            } else {
-                self.duration = TimeInterval(3600)
-            }
+            
+            let durationTemp = inDictionary["duration"] as? Int ?? 3600
+            self.duration = (0..<86400).contains(durationTemp) ? TimeInterval(durationTemp) : TimeInterval(3600)
 
             self.formats = (inDictionary["formats"] as? [[String: Any]] ?? []).compactMap { Format($0) }
 
@@ -769,7 +765,7 @@ public struct SwiftMLSDK_Parser: Codable {
             }
 
             if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
-                let urlStr = (virtualMeetingInfo["url"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                let urlStr = (virtualMeetingInfo["url"]?.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 if !urlStr.isEmpty,
                    let virtualURL = URL(string: urlStr) {
                     self.virtualURL = virtualURL

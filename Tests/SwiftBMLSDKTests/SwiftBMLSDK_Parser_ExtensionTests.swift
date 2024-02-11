@@ -28,25 +28,25 @@ final class SwiftBMLSDK_Parser_ExtensionTests: SwiftBMLSDK_TestCase {
     /**
      This is how many in-person (or hybrid) meetings we expect to be in the dump.
      */
-    static let numberOfInPersonMeetings = 30010
+    static let numberOfInPersonMeetings = 30029
 
     /* ################################################################## */
     /**
      This is how many in-person (no hybrid) meetings we expect to be in the dump.
      */
-    static let numberOfInPersonOnlyMeetings = 28690
+    static let numberOfInPersonOnlyMeetings = 28709
     
     /* ################################################################## */
     /**
      This is how many virtual (or hybrid) meetings we expect to be in the dump.
      */
-    static let numberOfVirtualMeetings = 5668
+    static let numberOfVirtualMeetings = 5666
 
     /* ################################################################## */
     /**
      This is how many virtual (no hybrid) meetings we expect to be in the dump.
      */
-    static let numberOfVirtualOnlyMeetings = 4348
+    static let numberOfVirtualOnlyMeetings = 4346
 
     /* ################################################################## */
     /**
@@ -126,7 +126,7 @@ final class SwiftBMLSDK_Parser_ExtensionTests: SwiftBMLSDK_TestCase {
         }
         XCTAssertEqual(jsonData.count, jsonDump.count)
         
-// Commented out, but this is how we created the reference JSON file. A "known good" dump was saved.
+ // Commented out, but this is how we created the reference JSON file. A "known good" dump was saved.
 //        guard let deskURL = (try? FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: false))?.appending(path: "SwiftBMLSDK_Meetings.json") else { return }
 //        try? jsonDump.write(to: deskURL)
     }
