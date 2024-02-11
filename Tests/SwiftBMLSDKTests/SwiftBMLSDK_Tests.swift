@@ -160,7 +160,12 @@ class SwiftBMLSDK_TestCase: XCTestCase {
         if let virtualInfo = original["virtual_information"] as? [String: String],
            !virtualInfo.isEmpty {
             XCTAssertEqual(virtualInfo["phone_number"], inMeeting.virtualPhoneNumber)
-            XCTAssertEqual(virtualInfo["url"]?.removingPercentEncoding, inMeeting.virtualURL?.absoluteString.removingPercentEncoding) // Weird Zoom URL issue. Sometimes, the equals is encoded.
+            if let originalURL = virtualInfo["url"]?.removingPercentEncoding,
+               let testOrig = URL(string: originalURL) {
+                XCTAssertEqual(testOrig.absoluteString.removingPercentEncoding, inMeeting.virtualURL?.absoluteString.removingPercentEncoding) // Weird Zoom URL issue. Sometimes, the equals is encoded.
+            } else {
+                XCTAssertNil(inMeeting.virtualURL)
+            }
         } else {
             XCTAssertNil(inMeeting.virtualPhoneNumber)
             XCTAssertNil(inMeeting.virtualURL)
