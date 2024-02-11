@@ -72,7 +72,7 @@ final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
             XCTFail("No Virtual Meeting!")
             return
         }
-        print(meeting.debugDescription)
+        validateMeeting(index: Self.virtualMeetingIndex, meeting: meeting)
     }
 
     /* ################################################################## */
@@ -88,7 +88,7 @@ final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
             XCTFail("No Hybrid Meeting!")
             return
         }
-        print(meeting.debugDescription)
+        validateMeeting(index: Self.hybridMeetingIndex, meeting: meeting)
     }
 
     /* ################################################################## */
@@ -104,6 +104,6 @@ final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
             XCTFail("No In-Person Meeting!")
             return
         }
-        print(meeting.debugDescription)
+        validateMeeting(index: Self.inPersonMeetingIndex, meeting: meeting)
     }
 }

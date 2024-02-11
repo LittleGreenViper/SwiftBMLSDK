@@ -232,6 +232,12 @@ public struct SwiftMLSDK_Parser: Codable {
                  This is the [ISO 639-2](https://www.loc.gov/standards/iso639-2/php/code_list.php) code for the language used for the name and description.
                  */
                 case language
+
+                /* ######################################### */
+                /**
+                 This is the local server ID of the format. We use a String, even though it comes as an Int.
+                 */
+                case id
             }
 
             /* ############################################# */
@@ -257,12 +263,18 @@ public struct SwiftMLSDK_Parser: Codable {
              This is the [ISO 639-2](https://www.loc.gov/standards/iso639-2/php/code_list.php) code for the language used for the name and description.
              */
             public let language: String
-            
+
+            /* ############################################# */
+            /**
+             This is the local server format ID.
+             */
+            public let id: String
+
             /* ############################################# */
             /**
              Returns the format, as single string, with values separarated by tabs.
              */
-            public var asString: String { "\(key)\t\(name)\t\(description)\t\(language)" }
+            public var asString: String { "\(key)\t\(name)\t\(description)\t\(language)\t\(id)" }
             
             // MARK: Initializers
             
@@ -276,11 +288,12 @@ public struct SwiftMLSDK_Parser: Codable {
                 - description: The longer format description
                 - language: The language code.
              */
-            public init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String) throws {
+            public init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) throws {
                 self.key = inKey
                 self.name = inName
                 self.description = inDescription
                 self.language = inLanguage
+                self.id = inID
             }
 
             /* ############################################# */
@@ -294,6 +307,7 @@ public struct SwiftMLSDK_Parser: Codable {
                 self.name = (inDictionary["name"] as? String) ?? ""
                 self.description = (inDictionary["description"] as? String) ?? ""
                 self.language = (inDictionary["language"] as? String) ?? ""
+                self.id = String((inDictionary["id"] as? Int) ?? 0)
             }
             
             // MARK: Codable Conformance
@@ -310,6 +324,7 @@ public struct SwiftMLSDK_Parser: Codable {
                 self.name = try container.decode(String.self, forKey: .name)
                 self.description = try container.decode(String.self, forKey: .description)
                 self.language = try container.decode(String.self, forKey: .language)
+                self.id = try container.decode(String.self, forKey: .id)
             }
             
             /* ############################################# */
@@ -324,13 +339,14 @@ public struct SwiftMLSDK_Parser: Codable {
                 try container.encode(name, forKey: .name)
                 try container.encode(description, forKey: .description)
                 try container.encode(language, forKey: .language)
+                try container.encode(id, forKey: .id)
             }
             
             /* ############################################# */
             /**
              CustomDebugStringConvertible Conformance
              */
-            public var debugDescription: String { "\t\t(\(key))\t\(name)\t(\(language))\n\t\t\t\t\(description)" }
+            public var debugDescription: String { "\t\t(\(key))\t\(name)\t(\(language))\n\t\t\t\t\(description)\n\t\t\t\t\(id)" }
         }
 
         /* ############################################################################################################################## */
@@ -801,11 +817,12 @@ public struct SwiftMLSDK_Parser: Codable {
             let splitFormats = [String](formatString.components(separatedBy: "\n"))
             let tempFormats = [Format](splitFormats.compactMap { singleFormatString in
                 let splitFormats = [String](singleFormatString.components(separatedBy: "\t"))
-                guard 4 == splitFormats.count else { return nil }
+                guard 5 == splitFormats.count else { return nil }
                 return try? Format(key: splitFormats[0],
                                    name: splitFormats[1],
                                    description: splitFormats[2],
-                                   language: splitFormats[3]
+                                   language: splitFormats[3],
+                                   id: splitFormats[4]
                 )
             })
             formats = tempFormats

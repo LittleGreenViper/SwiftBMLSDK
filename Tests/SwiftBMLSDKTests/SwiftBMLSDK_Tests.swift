@@ -26,6 +26,18 @@ import XCTest
 class SwiftBMLSDK_TestCase: XCTestCase {
     /* ################################################################## */
     /**
+     This will cache our original JSON data, so we don't have to keep reloading it.
+     */
+    private static var _originalJSONData: Data?
+
+    /* ################################################################## */
+    /**
+     This caches it as parsed JSON data, so we don't have to keep re-parsing.
+     */
+    private static var _parsedOriginalJSONData: NSDictionary?
+    
+    /* ################################################################## */
+    /**
      This is how many meetings we expect to be in the dump.
      */
     static let numberOfMeetingsInDump = 34358
@@ -49,8 +61,88 @@ class SwiftBMLSDK_TestCase: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         guard nil == Self.parser else { return }
-        guard let meetingDumpURL = testBundle.url(forResource: "MeetingDump", withExtension: "json") else { fatalError() }
-        let jsonData = try Data(contentsOf: meetingDumpURL)
+        if nil == Self._originalJSONData {
+            guard let meetingDumpURL = testBundle.url(forResource: "MeetingDump", withExtension: "json") else { fatalError() }
+            Self._originalJSONData = try Data(contentsOf: meetingDumpURL)
+            guard let jsonData = Self._originalJSONData,
+                  let simpleJSON = try? JSONSerialization.jsonObject(with: jsonData, options: [.allowFragments]) as? NSDictionary else { return }
+            Self._parsedOriginalJSONData = simpleJSON
+        }
+        guard let jsonData = Self._originalJSONData else { return }
         Self.parser = SwiftMLSDK_Parser(jsonData: jsonData)
+    }
+    
+    /* ################################################################## */
+    /**
+     This compares a parsed meeting instance, with the original JSON data for that meeting.
+     
+     - parameter index: The 0-based index of the meeting (used to extract the original data).
+     - parameter meeting: The parsed meeting instance.
+     */
+    func validateMeeting(index inIndex: Int, meeting inMeeting: SwiftMLSDK_Parser.Meeting) {
+        guard let meetingsJSON = Self._parsedOriginalJSONData?["meetings"] as? [[String: Any]],
+              (0..<meetingsJSON.count).contains(inIndex)
+        else {
+            XCTFail("Original JSON Not Available!")
+            return
+        }
+        
+        let original = meetingsJSON[inIndex]
+        
+        guard !original.isEmpty,
+              let originalServerID = original["server_id"] as? Int,
+              let originalLocalMeetingID = original["meeting_id"] as? Int,
+              let originalWeekdayIndex = original["weekday"] as? Int,
+              (1..<8).contains(originalWeekdayIndex),
+              let originalDuration = original["duration"] as? TimeInterval,
+              let originalTimezone = original["time_zone"] as? String,
+              let originalStartTimeString = original["start_time"] as? String,
+              let originalName = original["name"] as? String,
+              let originalOrganization = original["organization_key"] as? String
+        else {
+            XCTFail("Original Meeting JSON Not Available!")
+            return
+        }
+        
+        let originalFormats = original["formats"] as? [[String: Any]] ?? []
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm:ss"
+        let originalStartTime = dateFormatter.date(from: originalStartTimeString)
+        
+        // First, compare the required fields.
+        XCTAssertEqual(originalServerID, inMeeting.serverID)
+        XCTAssertEqual(originalLocalMeetingID, inMeeting.localMeetingID)
+        XCTAssertEqual(originalWeekdayIndex, inMeeting.weekday)
+        XCTAssertEqual(originalStartTime, inMeeting.startTime)
+        XCTAssertEqual(originalDuration, inMeeting.duration)
+        XCTAssertEqual(originalTimezone, inMeeting.timeZone.identifier)
+        XCTAssertEqual(originalName, inMeeting.name)
+        XCTAssertEqual(originalOrganization, inMeeting.organization.rawValue)
+        
+        if !originalFormats.isEmpty {
+            var index = 0
+            originalFormats.forEach{ format in
+                if let key = format["key"] as? String,
+                   !key.isEmpty,
+                   let name = format["name"] as? String,
+                   let description = format["description"] as? String,
+                   let language = format["language"] as? String,
+                   let id = format["id"] as? Int {
+                    let currentFormat = inMeeting.formats[index]
+                    XCTAssertEqual(currentFormat.key, key)
+                    XCTAssertEqual(currentFormat.name, name)
+                    XCTAssertEqual(currentFormat.description, description)
+                    XCTAssertEqual(currentFormat.language, language)
+                    XCTAssertEqual(currentFormat.id, String(id))
+                } else {
+                    XCTFail("Original Format Missing Required Field!")
+                }
+                
+                index += 1
+            }
+        } else {
+            XCTAssertTrue(inMeeting.formats.isEmpty)
+        }
     }
 }
