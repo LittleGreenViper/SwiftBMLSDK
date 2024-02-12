@@ -19,11 +19,18 @@
 
 import SwiftUI
 
-@main
-struct SwiftBMLSDK_Test_HarnessApp: App {
-    var body: some Scene {
-        WindowGroup {
-            SwiftMLSDK_MainTabView()
+struct SwiftMLSDK_SearchView: View {
+    var body: some View {
+        VStack {
+            Image(systemName: "magnifyingglass")
+                .imageScale(.large)
+                .foregroundStyle(.tint)
+            Text("Search")
         }
+        .padding()
     }
+}
+
+#Preview {
+    SwiftMLSDK_SearchView()
 }

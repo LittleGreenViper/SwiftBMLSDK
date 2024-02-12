@@ -19,11 +19,18 @@
 
 import SwiftUI
 
-@main
-struct SwiftBMLSDK_Test_HarnessApp: App {
-    var body: some Scene {
-        WindowGroup {
-            SwiftMLSDK_MainTabView()
+struct SwiftMLSDK_TextProcessView: View {
+    var body: some View {
+        VStack {
+            Image(systemName: "doc.plaintext")
+                .imageScale(.large)
+                .foregroundStyle(.tint)
+            Text("Text Processor")
         }
+        .padding()
     }
+}
+
+#Preview {
+    SwiftMLSDK_SearchView()
 }

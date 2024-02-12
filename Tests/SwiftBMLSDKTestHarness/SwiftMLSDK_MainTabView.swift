@@ -19,11 +19,22 @@
 
 import SwiftUI
 
-@main
-struct SwiftBMLSDK_Test_HarnessApp: App {
-    var body: some Scene {
-        WindowGroup {
-            SwiftMLSDK_MainTabView()
+struct SwiftMLSDK_MainTabView: View {
+    var body: some View {
+        TabView {
+            SwiftMLSDK_SearchView()
+                .tabItem {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
+
+            SwiftMLSDK_TextProcessView()
+                .tabItem {
+                    Label("Text Process", systemImage: "doc.plaintext")
+                }
         }
     }
+}
+
+#Preview {
+    SwiftMLSDK_MainTabView()
 }
