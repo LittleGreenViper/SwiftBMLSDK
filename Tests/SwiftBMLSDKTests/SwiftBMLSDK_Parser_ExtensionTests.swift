@@ -126,8 +126,8 @@ final class SwiftBMLSDK_Parser_ExtensionTests: SwiftBMLSDK_TestCase {
         }
         XCTAssertEqual(jsonData.count, jsonDump.count)
         
- // Commented out, but this is how we created the reference JSON file. A "known good" dump was saved.
-        guard let deskURL = (try? FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: false))?.appending(path: "SwiftBMLSDK_Meetings.json") else { return }
-        try? jsonDump.write(to: deskURL)
+// Commented out, but this is how we created the reference JSON file. A "known good" dump was saved.
+//        guard let deskURL = (try? FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: false))?.appending(path: "SwiftBMLSDK_Meetings.json") else { return }
+//        try? jsonDump.write(to: deskURL)
     }
 }
