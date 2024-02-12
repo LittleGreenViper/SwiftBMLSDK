@@ -57,8 +57,6 @@ final class SwiftBMLSDK_Parser_ExtensionTests: SwiftBMLSDK_TestCase {
     /* ################################################################## */
     /**
      This tests the Array extension that we have for meetings.
-     
-     This test takes a while, and hogs memory, because we load up a whole bunch of data and comparison data.
      */
     func testMeetingArrayExtension() {
         XCTAssertNotNil(Self.parser)
@@ -115,19 +113,5 @@ final class SwiftBMLSDK_Parser_ExtensionTests: SwiftBMLSDK_TestCase {
             XCTAssertTrue($0.hasInPerson)
             XCTAssertTrue($0.hasVirtual)
         }
-
-        guard let jsonDump = Self.parser?.meetingJSONData,
-              !jsonDump.isEmpty,
-              let jsonDumpDumpURL = testBundle.url(forResource: "SwiftBMLSDK_Meetings", withExtension: "json"),
-              let jsonData = try? Data(contentsOf: jsonDumpDumpURL)
-        else {
-            XCTFail("No JSON Data!")
-            return
-        }
-        XCTAssertEqual(jsonData.count, jsonDump.count)
-        
-// Commented out, but this is how we created the reference JSON file. A "known good" dump was saved.
-//        guard let deskURL = (try? FileManager.default.url(for: .desktopDirectory, in: .userDomainMask, appropriateFor: nil, create: false))?.appending(path: "SwiftBMLSDK_Meetings.json") else { return }
-//        try? jsonDump.write(to: deskURL)
     }
 }

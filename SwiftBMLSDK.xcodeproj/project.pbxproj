@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D4045C1A2B766A010086E1B7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4045C192B766A010086E1B7 /* Preview Assets.xcassets */; };
 		D4045C222B76895A0086E1B7 /* MeetingDump.json in Resources */ = {isa = PBXBuildFile; fileRef = D4045C202B76895A0086E1B7 /* MeetingDump.json */; };
-		D4045C232B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json in Resources */ = {isa = PBXBuildFile; fileRef = D4045C212B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json */; };
 		D41620402B73C17F00E6E0CA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
 		D4436A7C2B76688B00A40ECA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4436A762B76688B00A40ECA /* Assets.xcassets */; };
 		D4436A7E2B76688B00A40ECA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4436A7A2B76688B00A40ECA /* ContentView.swift */; };
@@ -60,7 +59,6 @@
 /* Begin PBXFileReference section */
 		D4045C192B766A010086E1B7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D4045C202B76895A0086E1B7 /* MeetingDump.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MeetingDump.json; sourceTree = "<group>"; };
-		D4045C212B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SwiftBMLSDK_Meetings.json; sourceTree = "<group>"; };
 		D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftBMLSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4436A762B76688B00A40ECA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -116,7 +114,6 @@
 			isa = PBXGroup;
 			children = (
 				D4045C202B76895A0086E1B7 /* MeetingDump.json */,
-				D4045C212B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -338,7 +335,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */,
-				D4045C232B76895A0086E1B7 /* SwiftBMLSDK_Meetings.json in Resources */,
 				D4045C222B76895A0086E1B7 /* MeetingDump.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
