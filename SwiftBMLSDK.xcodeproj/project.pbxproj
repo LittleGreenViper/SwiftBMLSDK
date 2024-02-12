@@ -25,6 +25,8 @@
 		D4B9834D2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B9834C2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift */; };
 		D4B9834F2B7A594700F28F03 /* SwiftMLSDK_SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B9834E2B7A594700F28F03 /* SwiftMLSDK_SearchView.swift */; };
 		D4B983512B7A5A0300F28F03 /* SwiftMLSDK_TextProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B983502B7A5A0300F28F03 /* SwiftMLSDK_TextProcessView.swift */; };
+		D4B983532B7A5D2C00F28F03 /* SwiftBMLSDK_Test_Harness_PersistentPrefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B983522B7A5D2B00F28F03 /* SwiftBMLSDK_Test_Harness_PersistentPrefs.swift */; };
+		D4B983562B7A5D4B00F28F03 /* RVS_Persistent_Prefs in Frameworks */ = {isa = PBXBuildFile; productRef = D4B983552B7A5D4B00F28F03 /* RVS_Persistent_Prefs */; };
 		D4C9C6242B750C65007FB793 /* SwiftMLSDK_Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */; };
 /* End PBXBuildFile section */
 
@@ -78,6 +80,7 @@
 		D4B9834C2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Query.swift; sourceTree = "<group>"; };
 		D4B9834E2B7A594700F28F03 /* SwiftMLSDK_SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_SearchView.swift; sourceTree = "<group>"; };
 		D4B983502B7A5A0300F28F03 /* SwiftMLSDK_TextProcessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_TextProcessView.swift; sourceTree = "<group>"; };
+		D4B983522B7A5D2B00F28F03 /* SwiftBMLSDK_Test_Harness_PersistentPrefs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Test_Harness_PersistentPrefs.swift; sourceTree = "<group>"; };
 		D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Parser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -101,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4B983562B7A5D4B00F28F03 /* RVS_Persistent_Prefs in Frameworks */,
 				D4436A812B7668E200A40ECA /* SwiftBMLSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -150,10 +154,11 @@
 				D4436A872B76693E00A40ECA /* Meta */,
 				D4045C182B766A010086E1B7 /* Preview */,
 				D4436A762B76688B00A40ECA /* Assets.xcassets */,
+				D4B983522B7A5D2B00F28F03 /* SwiftBMLSDK_Test_Harness_PersistentPrefs.swift */,
+				D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */,
 				D4436A7A2B76688B00A40ECA /* SwiftMLSDK_MainTabView.swift */,
 				D4B9834E2B7A594700F28F03 /* SwiftMLSDK_SearchView.swift */,
 				D4B983502B7A5A0300F28F03 /* SwiftMLSDK_TextProcessView.swift */,
-				D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */,
 			);
 			path = SwiftBMLSDKTestHarness;
 			sourceTree = "<group>";
@@ -277,6 +282,9 @@
 				D4436A842B7668E200A40ECA /* PBXTargetDependency */,
 			);
 			name = "SwiftBMLSDK Test Harness";
+			packageProductDependencies = (
+				D4B983552B7A5D4B00F28F03 /* RVS_Persistent_Prefs */,
+			);
 			productName = "SwiftBMLSDK Test Harness";
 			productReference = D4AC3AD22B76684200E314D8 /* SwiftBMLSDK Test Harness.app */;
 			productType = "com.apple.product-type.application";
@@ -311,6 +319,9 @@
 				Base,
 			);
 			mainGroup = D416202B2B73C17F00E6E0CA;
+			packageReferences = (
+				D4B983542B7A5D4B00F28F03 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */,
+			);
 			productRefGroup = D41620362B73C17F00E6E0CA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -378,6 +389,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4B9834F2B7A594700F28F03 /* SwiftMLSDK_SearchView.swift in Sources */,
+				D4B983532B7A5D2C00F28F03 /* SwiftBMLSDK_Test_Harness_PersistentPrefs.swift in Sources */,
 				D4436A7E2B76688B00A40ECA /* SwiftMLSDK_MainTabView.swift in Sources */,
 				D4B983512B7A5A0300F28F03 /* SwiftMLSDK_TextProcessView.swift in Sources */,
 				D4436A7F2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift in Sources */,
@@ -758,6 +770,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D4B983542B7A5D4B00F28F03 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RiftValleySoftware/RVS_PersistentPrefs";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D4B983552B7A5D4B00F28F03 /* RVS_Persistent_Prefs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4B983542B7A5D4B00F28F03 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */;
+			productName = RVS_Persistent_Prefs;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D416202C2B73C17F00E6E0CA /* Project object */;
 }

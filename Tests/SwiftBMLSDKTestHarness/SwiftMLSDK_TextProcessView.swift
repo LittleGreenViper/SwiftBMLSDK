@@ -19,7 +19,15 @@
 
 import SwiftUI
 
+/* ###################################################################################################################################### */
+// MARK: - Text ML Processor View -
+/* ###################################################################################################################################### */
+/**
+ */
 struct SwiftMLSDK_TextProcessView: View {
+    /* ################################################# */
+    /**
+     */
     var body: some View {
         VStack {
             Image(systemName: "doc.plaintext")
@@ -31,6 +39,9 @@ struct SwiftMLSDK_TextProcessView: View {
     }
 }
 
+/* ##################################################### */
+/**
+ */
 #Preview {
-    SwiftMLSDK_SearchView()
+    SwiftMLSDK_TextProcessView()
 }

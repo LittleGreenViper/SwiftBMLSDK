@@ -23,10 +23,6 @@
          location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/README.md">
       </FileRef>
    </Group>
-   <Group
-      location = "group:research"
-      name = "Research">
-   </Group>
    <FileRef
       location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/SwiftBMLSDK.xcodeproj">
    </FileRef>
