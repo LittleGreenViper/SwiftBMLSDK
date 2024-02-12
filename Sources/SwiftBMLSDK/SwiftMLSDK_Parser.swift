@@ -697,6 +697,56 @@ public struct SwiftMLSDK_Parser: Codable {
          - parameter inDictionary: The semi-parsed JSON record for the meeting.
          */
         public init?(_ inDictionary: [String: Any]) {
+            /* ########################################### */
+            /**
+             "Cleans" a URI.
+             
+             - parameter urlString: The URL, as a String. It can be optional.
+             
+             - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
+             */
+            func cleanURI(urlString inURLString: String?) -> String? {
+                /* ####################################### */
+                /**
+                 This tests a string to see if a given substring is present at the start.
+                 
+                 - Parameters:
+                 - inString: The string to test.
+                 - inSubstring: The substring to test for.
+                 
+                 - returns: true, if the string begins with the given substring.
+                 */
+                func string (_ inString: String, beginsWith inSubstring: String) -> Bool {
+                    var ret: Bool = false
+                    if let range = inString.range(of: inSubstring) {
+                        ret = (range.lowerBound == inString.startIndex)
+                    }
+                    return ret
+                }
+                
+                guard var ret: String = inURLString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed),
+                      let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
+                else { return nil }
+                
+                // We specifically look for tel URIs.
+                let wasTel = string(ret.lowercased(), beginsWith: "tel:")
+                
+                // Yeah, this is pathetic, but it's quick, simple, and works a charm.
+                ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
+                
+                if ret.isEmpty {
+                    return nil
+                }
+                
+                if wasTel {
+                    ret = "tel:" + ret
+                } else {
+                    ret = "https://" + ret
+                }
+                
+                return ret
+            }
+
             let dateFormatter = DateFormatter()
             dateFormatter.calendar = Calendar(identifier: .iso8601)
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
@@ -766,7 +816,7 @@ public struct SwiftMLSDK_Parser: Codable {
             }
 
             if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
-                let urlStr = virtualMeetingInfo["url"]?.trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? ""
+                let urlStr = cleanURI(urlString: virtualMeetingInfo["url"]) ?? ""
                 if !urlStr.isEmpty,
                    let virtualURL = URL(string: urlStr) {
                     self.virtualURL = virtualURL

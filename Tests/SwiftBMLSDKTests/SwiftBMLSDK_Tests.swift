@@ -81,6 +81,55 @@ class SwiftBMLSDK_TestCase: XCTestCase {
      - parameter meeting: The parsed meeting instance.
      */
     func validateMeeting(index inIndex: Int, meeting inMeeting: SwiftMLSDK_Parser.Meeting) {
+        /* ############################################################## */
+        /**
+         "Cleans" a URI.
+         
+         - parameter urlString: The URL, as a String. It can be optional.
+         
+         - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
+         */
+        func cleanURI(urlString inURLString: String?) -> String? {
+            /* ########################################################## */
+            /**
+             This tests a string to see if a given substring is present at the start.
+             
+             - Parameters:
+             - inString: The string to test.
+             - inSubstring: The substring to test for.
+             
+             - returns: true, if the string begins with the given substring.
+             */
+            func string (_ inString: String, beginsWith inSubstring: String) -> Bool {
+                var ret: Bool = false
+                if let range = inString.range(of: inSubstring) {
+                    ret = (range.lowerBound == inString.startIndex)
+                }
+                return ret
+            }
+            
+            guard var ret: String = inURLString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed),
+                  let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
+            else { return nil }
+            
+            // We specifically look for tel URIs.
+            let wasTel = string(ret.lowercased(), beginsWith: "tel:")
+            
+            // Yeah, this is pathetic, but it's quick, simple, and works a charm.
+            ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
+            
+            if ret.isEmpty {
+                return nil
+            }
+            
+            if wasTel {
+                ret = "tel:" + ret
+            } else {
+                ret = "https://" + ret
+            }
+            
+            return ret
+        }
         guard let meetingsJSON = Self._parsedOriginalJSONData?["meetings"] as? [[String: Any]],
               (0..<meetingsJSON.count).contains(inIndex)
         else {
@@ -160,7 +209,7 @@ class SwiftBMLSDK_TestCase: XCTestCase {
         if let virtualInfo = original["virtual_information"] as? [String: String],
            !virtualInfo.isEmpty {
             XCTAssertEqual(virtualInfo["phone_number"], inMeeting.virtualPhoneNumber)
-            if let originalURL = virtualInfo["url"]?.trimmingCharacters(in: .whitespacesAndNewlines).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed),
+            if let originalURL = cleanURI(urlString: virtualInfo["url"]),
                !originalURL.isEmpty,
                let testOrig = URL(string: originalURL),
                let meetingURLString = inMeeting.virtualURL?.absoluteString.trimmingCharacters(in: .whitespacesAndNewlines),

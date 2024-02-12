@@ -34,13 +34,13 @@ final class SwiftBMLSDK_Parser_ExtensionTests: SwiftBMLSDK_TestCase {
     /**
      This is how many in-person (no hybrid) meetings we expect to be in the dump.
      */
-    static let numberOfInPersonOnlyMeetings = 28709
+    static let numberOfInPersonOnlyMeetings = 28723
     
     /* ################################################################## */
     /**
      This is how many virtual (or hybrid) meetings we expect to be in the dump.
      */
-    static let numberOfVirtualMeetings = 5666
+    static let numberOfVirtualMeetings = 5652
 
     /* ################################################################## */
     /**
@@ -52,7 +52,7 @@ final class SwiftBMLSDK_Parser_ExtensionTests: SwiftBMLSDK_TestCase {
     /**
      This is how many hybrid meetings we expect to be in the dump.
      */
-    static let numberOfHybridMeetings = 1320
+    static let numberOfHybridMeetings = 1306
     
     /* ################################################################## */
     /**
