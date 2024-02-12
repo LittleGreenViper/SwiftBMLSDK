@@ -289,11 +289,11 @@ public struct SwiftMLSDK_Parser: Codable {
                 - language: The language code.
              */
             public init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) throws {
-                self.key = inKey
-                self.name = inName
-                self.description = inDescription
-                self.language = inLanguage
-                self.id = inID
+                key = inKey
+                name = inName
+                description = inDescription
+                language = inLanguage
+                id = inID
             }
 
             /* ############################################# */
@@ -303,11 +303,7 @@ public struct SwiftMLSDK_Parser: Codable {
              - parameter inDictionary: A simple String-keyed dictionary of partly-parsed values.
              */
             public init?(_ inDictionary: [String: Any]) {
-                self.key = (inDictionary["key"] as? String) ?? ""
-                self.name = (inDictionary["name"] as? String) ?? ""
-                self.description = (inDictionary["description"] as? String) ?? ""
-                self.language = (inDictionary["language"] as? String) ?? ""
-                self.id = String((inDictionary["id"] as? Int) ?? 0)
+                try? self.init(key: (inDictionary["key"] as? String) ?? "", name: (inDictionary["name"] as? String) ?? "", description: (inDictionary["description"] as? String) ?? "", language: (inDictionary["language"] as? String) ?? "", id: String((inDictionary["id"] as? Int) ?? 0))
             }
             
             // MARK: Codable Conformance
