@@ -41,6 +41,7 @@ struct SwiftMLSDK_SearchView: View {
 
 /* ##################################################### */
 /**
+ Just the preview generator.
  */
 #Preview {
     SwiftMLSDK_SearchView()

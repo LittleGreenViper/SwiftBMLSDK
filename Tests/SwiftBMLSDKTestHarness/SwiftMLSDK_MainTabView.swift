@@ -23,28 +23,61 @@ import SwiftUI
 // MARK: - Main App Tab View -
 /* ###################################################################################################################################### */
 /**
+ This view comprises the main app structure.
+ 
+ The app is a tabbed app, with each tab, providing context.
  */
 struct SwiftMLSDK_MainTabView: View {
     /* ################################################# */
     /**
+     This ensures that the selected tab is the last one we used.
+     */
+    @AppStorage("selectedTabIndex") var selectedTabIndex = Tabs.search
+
+    /* ################################################# */
+    /**
+     These are the enums that denote the various tabs.
+     */
+    enum Tabs: Int {
+        /* ############################################# */
+        /**
+         Search specification and review.
+         */
+        case search
+        
+        /* ############################################# */
+        /**
+         ML Text Processor.
+         */
+        case textProcess
+    }
+    
+    /* ################################################# */
+    /**
+     This provides the main tab bar for the app.
      */
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTabIndex) {
+            // The meeting search specification and review tab.
             SwiftMLSDK_SearchView()
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
+                .tag(Tabs.search)
 
+            // The text processor ML tab.
             SwiftMLSDK_TextProcessView()
                 .tabItem {
                     Label("Text Process", systemImage: "doc.plaintext")
                 }
+                .tag(Tabs.textProcess)
         }
     }
 }
 
 /* ##################################################### */
 /**
+ Just the preview generator.
  */
 #Preview {
     SwiftMLSDK_MainTabView()

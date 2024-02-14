@@ -28,6 +28,7 @@ import SwiftUI
 struct SwiftBMLSDK_Test_HarnessApp: App {
     /* ################################################# */
     /**
+     WE just create a tab view.
      */
     var body: some Scene {
         WindowGroup {

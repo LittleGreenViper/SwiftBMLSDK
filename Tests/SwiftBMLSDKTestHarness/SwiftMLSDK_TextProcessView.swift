@@ -41,6 +41,7 @@ struct SwiftMLSDK_TextProcessView: View {
 
 /* ##################################################### */
 /**
+ Just the preview generator.
  */
 #Preview {
     SwiftMLSDK_TextProcessView()
