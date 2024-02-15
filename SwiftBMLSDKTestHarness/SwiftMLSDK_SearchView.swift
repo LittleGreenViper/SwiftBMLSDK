@@ -18,7 +18,6 @@
  */
 
 import SwiftUI
-import RVS_Generic_Swift_Toolbox
 import CoreLocation
 
 /* ###################################################################################################################################### */
@@ -39,23 +38,23 @@ struct SwiftMLSDK_SearchView: View {
         NavigationStack {
             Form {
                 Section {
-                    Toggle("SLUG-TAB-0-LOCATION-TOGGLE".localizedVariant, isOn: $_locationSearch.animation())
+                    Toggle("SLUG-TAB-0-LOCATION-TOGGLE", isOn: $_locationSearch.animation())
                         .onChange(of: _locationSearch) {
                             locationTextChanged()
                         }
                     if _locationSearch {
-                        NavigationLink("SLUG-TAB-0-MAP".localizedVariant) {
+                        NavigationLink("SLUG-TAB-0-MAP") {
                             SwiftMLSDK_MapView()
                         }
-                        TextField("SLUG-TAB-0-LOCATION-LAT".localizedVariant, text: $_latitudeStr, prompt: Text("SLUG-TAB-0-LOCATION-PL-LAT".localizedVariant))
+                        TextField("SLUG-TAB-0-LOCATION-LAT", text: $_latitudeStr, prompt: Text("SLUG-TAB-0-LOCATION-PL-LAT"))
                             .onChange(of: _latitudeStr) {
                                 locationTextChanged()
                             }
-                        TextField("SLUG-TAB-0-LOCATION-LNG".localizedVariant, text: $_longitudeStr, prompt: Text("SLUG-TAB-0-LOCATION-PL-LNG".localizedVariant))
+                        TextField("SLUG-TAB-0-LOCATION-LNG", text: $_longitudeStr, prompt: Text("SLUG-TAB-0-LOCATION-PL-LNG"))
                             .onChange(of: _longitudeStr) {
                                 locationTextChanged()
                             }
-                        TextField("SLUG-TAB-0-LOCATION-DST".localizedVariant, text: $_radiusStr, prompt: Text("SLUG-TAB-0-LOCATION-PL-DST".localizedVariant))
+                        TextField("SLUG-TAB-0-LOCATION-DST", text: $_radiusStr, prompt: Text("SLUG-TAB-0-LOCATION-PL-DST"))
                             .onChange(of: _radiusStr) {
                                 locationTextChanged()
                             }

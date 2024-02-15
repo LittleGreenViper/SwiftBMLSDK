@@ -17,14 +17,28 @@
  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-"SLUG-TAB-0"                    =   "Search";
-"SLUG-TAB-1"                    =   "Text Process";
-"SLUG-TAB-0-LOCATION-TOGGLE"    =   "Location-Based Search";
-"SLUG-TAB-0-MAP"                =   "Map";
-"SLUG-TAB-0-LOCATION-LAT"       =   "Latitude";
-"SLUG-TAB-0-LOCATION-LNG"       =   "Longitude";
-"SLUG-TAB-0-LOCATION-DST"       =   "Radius";
-"SLUG-TAB-0-LOCATION-PL-LAT"    =   "Latitude";
-"SLUG-TAB-0-LOCATION-PL-LNG"    =   "Longitude";
-"SLUG-TAB-0-LOCATION-PL-DST"    =   "Search Radius, in Km";
+import SwiftUI
 
+/* ###################################################################################################################################### */
+// MARK: - Text Map Search Selection View -
+/* ###################################################################################################################################### */
+/**
+ */
+struct SwiftMLSDK_MapView: View {
+    /* ################################################# */
+    /**
+     */
+    var body: some View {
+        VStack {
+            Text("TBD")
+        }
+    }
+}
+
+/* ##################################################### */
+/**
+ Just the preview generator.
+ */
+#Preview {
+    SwiftMLSDK_MapView()
+}
