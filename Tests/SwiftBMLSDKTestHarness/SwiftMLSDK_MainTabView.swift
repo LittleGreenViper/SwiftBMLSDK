@@ -18,6 +18,7 @@
  */
 
 import SwiftUI
+import RVS_Generic_Swift_Toolbox
 
 /* ###################################################################################################################################### */
 // MARK: - Main App Tab View -
@@ -61,14 +62,14 @@ struct SwiftMLSDK_MainTabView: View {
             // The meeting search specification and review tab.
             SwiftMLSDK_SearchView()
                 .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
+                    Label("SLUG-TAB-0".localizedVariant, systemImage: "magnifyingglass")
                 }
                 .tag(Tabs.search)
-
+            
             // The text processor ML tab.
             SwiftMLSDK_TextProcessView()
                 .tabItem {
-                    Label("Text Process", systemImage: "doc.plaintext")
+                    Label("SLUG-TAB-1".localizedVariant, systemImage: "doc.plaintext")
                 }
                 .tag(Tabs.textProcess)
         }

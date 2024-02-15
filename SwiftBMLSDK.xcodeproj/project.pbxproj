@@ -10,11 +10,12 @@
 		D4045C1A2B766A010086E1B7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4045C192B766A010086E1B7 /* Preview Assets.xcassets */; };
 		D4045C222B76895A0086E1B7 /* MeetingDump.json in Resources */ = {isa = PBXBuildFile; fileRef = D4045C202B76895A0086E1B7 /* MeetingDump.json */; };
 		D41620402B73C17F00E6E0CA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
+		D41C85132B7E5FE500730887 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D41C85122B7E5FE500730887 /* Localizable.strings */; };
 		D4436A7C2B76688B00A40ECA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4436A762B76688B00A40ECA /* Assets.xcassets */; };
 		D4436A7E2B76688B00A40ECA /* SwiftMLSDK_MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4436A7A2B76688B00A40ECA /* SwiftMLSDK_MainTabView.swift */; };
 		D4436A7F2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */; };
-		D4436A812B7668E200A40ECA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
-		D4436A822B7668E200A40ECA /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D4436A812B7668E200A40ECA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; platformFilters = (ios, macos, tvos, ); };
+		D4436A822B7668E200A40ECA /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; platformFilters = (ios, macos, tvos, ); settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D45DB3A42B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A32B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift */; };
 		D45DB3A62B78031B00BAB475 /* SwiftBMLSDK_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */; };
 		D45DB3A82B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */; };
@@ -22,10 +23,10 @@
 		D4675D192B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift */; };
 		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
+		D489DF9B2B7E5B73001A73F4 /* RVS_Generic_Swift_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D489DF9A2B7E5B73001A73F4 /* RVS_Generic_Swift_Toolbox */; };
 		D4B9834D2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B9834C2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift */; };
 		D4B9834F2B7A594700F28F03 /* SwiftMLSDK_SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B9834E2B7A594700F28F03 /* SwiftMLSDK_SearchView.swift */; };
 		D4B983512B7A5A0300F28F03 /* SwiftMLSDK_TextProcessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B983502B7A5A0300F28F03 /* SwiftMLSDK_TextProcessView.swift */; };
-		D4B983562B7A5D4B00F28F03 /* RVS_Persistent_Prefs in Frameworks */ = {isa = PBXBuildFile; productRef = D4B983552B7A5D4B00F28F03 /* RVS_Persistent_Prefs */; };
 		D4C9C6242B750C65007FB793 /* SwiftMLSDK_Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,7 @@
 		D4045C202B76895A0086E1B7 /* MeetingDump.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MeetingDump.json; sourceTree = "<group>"; };
 		D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftBMLSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D41C85122B7E5FE500730887 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		D4436A762B76688B00A40ECA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D4436A7A2B76688B00A40ECA /* SwiftMLSDK_MainTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_MainTabView.swift; sourceTree = "<group>"; };
 		D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Test_HarnessApp.swift; sourceTree = "<group>"; };
@@ -102,7 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4B983562B7A5D4B00F28F03 /* RVS_Persistent_Prefs in Frameworks */,
+				D489DF9B2B7E5B73001A73F4 /* RVS_Generic_Swift_Toolbox in Frameworks */,
 				D4436A812B7668E200A40ECA /* SwiftBMLSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -146,12 +148,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D41C85112B7E5FC800730887 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D4045C182B766A010086E1B7 /* Preview */,
+				D4436A762B76688B00A40ECA /* Assets.xcassets */,
+				D41C85122B7E5FE500730887 /* Localizable.strings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		D4436A752B76688B00A40ECA /* SwiftBMLSDKTestHarness */ = {
 			isa = PBXGroup;
 			children = (
 				D4436A872B76693E00A40ECA /* Meta */,
-				D4045C182B766A010086E1B7 /* Preview */,
-				D4436A762B76688B00A40ECA /* Assets.xcassets */,
+				D41C85112B7E5FC800730887 /* Resources */,
 				D4436A7B2B76688B00A40ECA /* SwiftBMLSDK_Test_HarnessApp.swift */,
 				D4436A7A2B76688B00A40ECA /* SwiftMLSDK_MainTabView.swift */,
 				D4B9834E2B7A594700F28F03 /* SwiftMLSDK_SearchView.swift */,
@@ -280,7 +291,7 @@
 			);
 			name = "SwiftBMLSDK Test Harness";
 			packageProductDependencies = (
-				D4B983552B7A5D4B00F28F03 /* RVS_Persistent_Prefs */,
+				D489DF9A2B7E5B73001A73F4 /* RVS_Generic_Swift_Toolbox */,
 			);
 			productName = "SwiftBMLSDK Test Harness";
 			productReference = D4AC3AD22B76684200E314D8 /* SwiftBMLSDK Test Harness.app */;
@@ -317,7 +328,7 @@
 			);
 			mainGroup = D416202B2B73C17F00E6E0CA;
 			packageReferences = (
-				D4B983542B7A5D4B00F28F03 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */,
+				D489DF992B7E5B73001A73F4 /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */,
 			);
 			productRefGroup = D41620362B73C17F00E6E0CA /* Products */;
 			projectDirPath = "";
@@ -353,6 +364,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4045C1A2B766A010086E1B7 /* Preview Assets.xcassets in Resources */,
+				D41C85132B7E5FE500730887 /* Localizable.strings in Resources */,
 				D4436A7C2B76688B00A40ECA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -402,6 +414,11 @@
 		};
 		D4436A842B7668E200A40ECA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilters = (
+				ios,
+				macos,
+				tvos,
+			);
 			target = D41620342B73C17F00E6E0CA /* SwiftBMLSDK */;
 			targetProxy = D4436A832B7668E200A40ECA /* PBXContainerItemProxy */;
 		};
@@ -667,13 +684,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0000;
-				DEVELOPMENT_ASSET_PATHS = "Tests/SwiftBMLSDKTestHarness/Preview\"";
+				DEVELOPMENT_ASSET_PATHS = "Tests/SwiftBMLSDKTestHarness/Resources/Preview\"";
 				DEVELOPMENT_TEAM = P53V4JS928;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -685,6 +704,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3";
@@ -701,13 +721,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0000;
-				DEVELOPMENT_ASSET_PATHS = "Tests/SwiftBMLSDKTestHarness/Preview\"";
+				DEVELOPMENT_ASSET_PATHS = "Tests/SwiftBMLSDKTestHarness/Resources/Preview\"";
 				DEVELOPMENT_TEAM = P53V4JS928;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -719,6 +741,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3";
@@ -768,21 +791,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D4B983542B7A5D4B00F28F03 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */ = {
+		D489DF992B7E5B73001A73F4 /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/RiftValleySoftware/RVS_PersistentPrefs";
+			repositoryURL = "https://github.com/RiftValleySoftware/RVS_Generic_Swift_Toolbox";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.7;
+				minimumVersion = 1.13.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D4B983552B7A5D4B00F28F03 /* RVS_Persistent_Prefs */ = {
+		D489DF9A2B7E5B73001A73F4 /* RVS_Generic_Swift_Toolbox */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D4B983542B7A5D4B00F28F03 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */;
-			productName = RVS_Persistent_Prefs;
+			package = D489DF992B7E5B73001A73F4 /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */;
+			productName = RVS_Generic_Swift_Toolbox;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

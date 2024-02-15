@@ -18,6 +18,8 @@
  */
 
 import SwiftUI
+import RVS_Generic_Swift_Toolbox
+import CoreLocation
 
 /* ###################################################################################################################################### */
 // MARK: - Meeting Search View -
@@ -25,17 +27,27 @@ import SwiftUI
 /**
  */
 struct SwiftMLSDK_SearchView: View {
+    @State private var _latitudeStr: String = ""
+    @State private var _longitudeStr: String = ""
+    @State private var _radiusStr: String = ""
+    @State private var _locationSearch = false
+
     /* ################################################# */
     /**
      */
     var body: some View {
-        VStack {
-            Image(systemName: "magnifyingglass")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Search")
+        NavigationStack {
+            Form {
+                Section("SLUG-TAB-0-LOCATION-SECTION".localizedVariant) {
+                    Toggle("SLUG-TAB-0-LOCATION-TOGGLE".localizedVariant, isOn: $_locationSearch.animation())
+                    if _locationSearch {
+                        TextField("SLUG-TAB-0-LOCATION-LAT".localizedVariant, text: $_latitudeStr, prompt: Text("SLUG-TAB-0-LOCATION-PL-LAT".localizedVariant))
+                        TextField("SLUG-TAB-0-LOCATION-LNG".localizedVariant, text: $_longitudeStr, prompt: Text("SLUG-TAB-0-LOCATION-PL-LNG".localizedVariant))
+                        TextField("SLUG-TAB-0-LOCATION-DST".localizedVariant, text: $_radiusStr, prompt: Text("SLUG-TAB-0-LOCATION-PL-DST".localizedVariant))
+                    }
+                }
+            }
         }
-        .padding()
     }
 }
 
