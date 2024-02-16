@@ -17,6 +17,7 @@
 		D4BAD6712B7EC37800B2B62B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D4BAD6702B7EC37800B2B62B /* Localizable.strings */; };
 		D4BAD67E2B7EC7FD00B2B62B /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4BAD67D2B7EC7FD00B2B62B /* SwiftBMLSDK.framework */; };
 		D4BAD67F2B7EC7FD00B2B62B /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D4BAD67D2B7EC7FD00B2B62B /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D4BAD6832B7EDB5E00B2B62B /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4BAD6822B7EDB5E00B2B62B /* Warnings.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,6 +45,7 @@
 		D4BAD66E2B7EC2FE00B2B62B /* SwiftMLSDK_TextProcessView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_TextProcessView.swift; sourceTree = "<group>"; };
 		D4BAD6702B7EC37800B2B62B /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		D4BAD67D2B7EC7FD00B2B62B /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4BAD6822B7EDB5E00B2B62B /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Warnings.xcconfig; path = Meta/Warnings.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 		D4BAD64E2B7EC1CD00B2B62B = {
 			isa = PBXGroup;
 			children = (
+				D4BAD6812B7EDB5100B2B62B /* Meta */,
 				D4BAD6592B7EC1CD00B2B62B /* SwiftBMLSDKTestHarness */,
 				D4BAD6582B7EC1CD00B2B62B /* Products */,
 				D4BAD67C2B7EC7FD00B2B62B /* Frameworks */,
@@ -112,6 +115,14 @@
 				D4BAD67D2B7EC7FD00B2B62B /* SwiftBMLSDK.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D4BAD6812B7EDB5100B2B62B /* Meta */ = {
+			isa = PBXGroup;
+			children = (
+				D4BAD6822B7EDB5E00B2B62B /* Warnings.xcconfig */,
+			);
+			name = Meta;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,6 +189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4BAD6622B7EC1CD00B2B62B /* Preview Assets.xcassets in Resources */,
+				D4BAD6832B7EDB5E00B2B62B /* Warnings.xcconfig in Resources */,
 				D4BAD6712B7EC37800B2B62B /* Localizable.strings in Resources */,
 				D4BAD65F2B7EC1CD00B2B62B /* Assets.xcassets in Resources */,
 			);
@@ -203,6 +215,7 @@
 /* Begin XCBuildConfiguration section */
 		D4BAD6632B7EC1CD00B2B62B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D4BAD6822B7EDB5E00B2B62B /* Warnings.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -266,6 +279,7 @@
 		};
 		D4BAD6642B7EC1CD00B2B62B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D4BAD6822B7EDB5E00B2B62B /* Warnings.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -336,6 +350,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -365,6 +380,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

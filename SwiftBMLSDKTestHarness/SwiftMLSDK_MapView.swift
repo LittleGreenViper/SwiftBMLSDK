@@ -18,6 +18,12 @@
  */
 
 import SwiftUI
+import MapKit
+import CoreLocation
+
+extension CLLocationCoordinate2D {
+  static let centralPark = CLLocationCoordinate2D(latitude: 40.7826, longitude: -73.9656)
+}
 
 /* ###################################################################################################################################### */
 // MARK: - Text Map Search Selection View -
@@ -25,12 +31,18 @@ import SwiftUI
 /**
  */
 struct SwiftMLSDK_MapView: View {
-    /* ################################################# */
-    /**
-     */
     var body: some View {
         VStack {
-            Text("TBD")
+            Map(interactionModes: [.pan,.zoom]) {
+                Marker("Central Park", coordinate: .centralPark)
+            }
+            .mapStyle(
+                .hybrid(elevation: .realistic)
+            )
+            .mapControls {
+                MapScaleView()
+                MapCompass()
+            }
         }
     }
 }
