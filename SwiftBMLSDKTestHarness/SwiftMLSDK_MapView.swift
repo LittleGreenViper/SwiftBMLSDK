@@ -21,8 +21,15 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
+/* ###################################################################################################################################### */
+// MARK: - This Just Gives Us A Quick Starting Point -
+/* ###################################################################################################################################### */
 extension CLLocationCoordinate2D {
-  static let centralPark = CLLocationCoordinate2D(latitude: 40.7826, longitude: -73.9656)
+    /* ################################################# */
+    /**
+     We create a static constant for the position of NA World Services, in Chatsworth, CA
+     */
+    static let naws = CLLocationCoordinate2D(latitude: 34.235920, longitude: -118.563660)
 }
 
 /* ###################################################################################################################################### */
@@ -39,8 +46,9 @@ struct SwiftMLSDK_MapView: View {
     class MapViewModel: ObservableObject {
         /* ################################################# */
         /**
+         This gives us a state reference for the map camera position.
          */
-        @Published var cameraPosition: MapCameraPosition = .region(MKCoordinateRegion(center: .centralPark, span: MKCoordinateSpan(latitudeDelta: 0.0125, longitudeDelta: 0.0125)))
+        @Published var cameraPosition: MapCameraPosition = .region(MKCoordinateRegion(center: .naws, span: MKCoordinateSpan(latitudeDelta: CLLocationDegrees(0.0125), longitudeDelta: CLLocationDegrees(0.0125))))
     }
 
     /* ################################################################################################################################## */
@@ -101,7 +109,7 @@ struct SwiftMLSDK_MapView: View {
     /**
      */
     private let _locationCatcher: LocationCatcher
-
+    
     /* ################################################# */
     /**
      */
@@ -112,17 +120,17 @@ struct SwiftMLSDK_MapView: View {
      */
     var body: some View {
         VStack {
-            Map(position: $mapModel.cameraPosition, interactionModes: [.pan,.zoom]) {
-                Marker("Central Park", systemImage: "diamond.fill", coordinate: .centralPark)
-            }
-            .mapStyle(
-                .hybrid(elevation: .realistic)
-            )
-            .mapControls {
-                MapScaleView()
-            }
-            .onAppear {
-                _locationCatcher.startUpdating()
+            MapReader { proxy in
+                Map(position: $mapModel.cameraPosition, interactionModes: [.pan,.zoom])
+                .mapStyle(
+                    .hybrid(elevation: .realistic)
+                )
+                .mapControls {
+                    MapScaleView()
+                }
+                .onAppear {
+                    _locationCatcher.startUpdating()
+                }
             }
         }
     }
@@ -140,7 +148,7 @@ struct SwiftMLSDK_MapView: View {
 /**
  Just the preview generator.
  */
-struct MyView_Previews: PreviewProvider {
+struct SwiftMLSDK_MapView_Previews: PreviewProvider {
     /* ############################################# */
     /**
      */

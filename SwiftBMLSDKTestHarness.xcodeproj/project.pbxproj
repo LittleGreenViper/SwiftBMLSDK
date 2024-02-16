@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4965BA82B8017320071D112 /* SwiftMLSDK_MapResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4965BA72B8017320071D112 /* SwiftMLSDK_MapResultsView.swift */; };
 		D4BAD65B2B7EC1CD00B2B62B /* SwiftBMLSDKTestHarnessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BAD65A2B7EC1CD00B2B62B /* SwiftBMLSDKTestHarnessApp.swift */; };
 		D4BAD65F2B7EC1CD00B2B62B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4BAD65E2B7EC1CD00B2B62B /* Assets.xcassets */; };
 		D4BAD6622B7EC1CD00B2B62B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4BAD6612B7EC1CD00B2B62B /* Preview Assets.xcassets */; };
@@ -35,6 +36,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D4965BA72B8017320071D112 /* SwiftMLSDK_MapResultsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_MapResultsView.swift; sourceTree = "<group>"; };
 		D4BAD6572B7EC1CD00B2B62B /* SwiftBMLSDKTestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBMLSDKTestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4BAD65A2B7EC1CD00B2B62B /* SwiftBMLSDKTestHarnessApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDKTestHarnessApp.swift; sourceTree = "<group>"; };
 		D4BAD65E2B7EC1CD00B2B62B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				D4BAD6682B7EC22000B2B62B /* SwiftMLSDK_MainTabView.swift */,
 				D4BAD66A2B7EC28000B2B62B /* SwiftMLSDK_SearchView.swift */,
 				D4BAD66C2B7EC2BE00B2B62B /* SwiftMLSDK_MapView.swift */,
+				D4965BA72B8017320071D112 /* SwiftMLSDK_MapResultsView.swift */,
 				D4BAD66E2B7EC2FE00B2B62B /* SwiftMLSDK_TextProcessView.swift */,
 				D4BAD6752B7EC3F800B2B62B /* Resources */,
 				D4BAD6602B7EC1CD00B2B62B /* Preview Content */,
@@ -206,6 +209,7 @@
 				D4BAD66D2B7EC2BE00B2B62B /* SwiftMLSDK_MapView.swift in Sources */,
 				D4BAD6692B7EC22000B2B62B /* SwiftMLSDK_MainTabView.swift in Sources */,
 				D4BAD66B2B7EC28000B2B62B /* SwiftMLSDK_SearchView.swift in Sources */,
+				D4965BA82B8017320071D112 /* SwiftMLSDK_MapResultsView.swift in Sources */,
 				D4BAD65B2B7EC1CD00B2B62B /* SwiftBMLSDKTestHarnessApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
