@@ -31,19 +31,108 @@ extension CLLocationCoordinate2D {
 /**
  */
 struct SwiftMLSDK_MapView: View {
+    /* ################################################################################################################################## */
+    // MARK: Handles Storage of the Map Coordinate Region
+    /* ################################################################################################################################## */
+    /**
+     */
+    class MapViewModel: ObservableObject {
+        /* ################################################# */
+        /**
+         */
+        @Published var cameraPosition: MapCameraPosition = .region(MKCoordinateRegion(center: .centralPark, span: MKCoordinateSpan(latitudeDelta: 0.0125, longitudeDelta: 0.0125)))
+    }
+
+    /* ################################################################################################################################## */
+    // MARK: Used to Capture User Location
+    /* ################################################################################################################################## */
+    /**
+     */
+    class LocationCatcher: NSObject, CLLocationManagerDelegate {
+        /* ############################################# */
+        /**
+         */
+        private let _locationManager: CLLocationManager
+        
+        /* ################################################# */
+        /**
+         */
+        @ObservedObject var mapModel = MapViewModel()
+
+        /* ############################################# */
+        /**
+         */
+        override init() {
+            _locationManager = CLLocationManager()
+            super.init()
+            _locationManager.delegate = self
+            _locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        }
+        
+        /* ############################################# */
+        /**
+         */
+        func startUpdating() {
+            _locationManager.requestWhenInUseAuthorization()
+            _locationManager.startUpdatingLocation()
+        }
+        
+        /* ############################################# */
+        /**
+         */
+        func stopUpdating() {
+            _locationManager.stopUpdatingLocation()
+        }
+        
+        /* ############################################# */
+        /**
+         */
+        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+            stopUpdating()
+            guard let lastLocation = locations.last,
+                  let span = mapModel.cameraPosition.region?.span
+            else { return }
+            mapModel.cameraPosition = .region(MKCoordinateRegion(center: lastLocation.coordinate, span: span))
+            print(#function, lastLocation)
+        }
+    }
+
+    /* ################################################# */
+    /**
+     */
+    private let _locationCatcher: LocationCatcher
+
+    /* ################################################# */
+    /**
+     */
+    @ObservedObject var mapModel = MapViewModel()
+
+    /* ################################################# */
+    /**
+     */
     var body: some View {
         VStack {
-            Map(interactionModes: [.pan,.zoom]) {
-                Marker("Central Park", coordinate: .centralPark)
+            Map(position: $mapModel.cameraPosition, interactionModes: [.pan,.zoom]) {
+                Marker("Central Park", systemImage: "diamond.fill", coordinate: .centralPark)
             }
             .mapStyle(
                 .hybrid(elevation: .realistic)
             )
             .mapControls {
                 MapScaleView()
-                MapCompass()
+            }
+            .onAppear {
+                _locationCatcher.startUpdating()
             }
         }
+    }
+    
+    /* ################################################# */
+    /**
+     */
+    init() {
+        _locationCatcher = LocationCatcher()
+        _locationCatcher.mapModel = mapModel
     }
 }
 
@@ -51,6 +140,11 @@ struct SwiftMLSDK_MapView: View {
 /**
  Just the preview generator.
  */
-#Preview {
-    SwiftMLSDK_MapView()
+struct MyView_Previews: PreviewProvider {
+    /* ############################################# */
+    /**
+     */
+    static var previews: some View {
+        SwiftMLSDK_MapView()
+    }
 }
