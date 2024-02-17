@@ -118,21 +118,47 @@ struct SwiftMLSDK_MapView: View {
     /* ################################################# */
     /**
      */
+    @Environment(\.dismiss) var dismiss
+
+    /* ################################################# */
+    /**
+     */
     var body: some View {
         VStack {
-            MapReader { proxy in
-                Map(position: $mapModel.cameraPosition, interactionModes: [.pan,.zoom])
-                .mapStyle(
-                    .hybrid(elevation: .realistic)
-                )
-                .mapControls {
-                    MapScaleView()
+            ZStack {
+                MapReader { proxy in
+                    Map(position: $mapModel.cameraPosition, interactionModes: [.pan,.zoom])
+                        .mapStyle(
+                            .standard(elevation: .flat, emphasis: .muted)
+                        )
+                        .mapControls {
+                            MapScaleView()
+                        }
+                        .onAppear {
+                            _locationCatcher.startUpdating()
+                        }
                 }
-                .onAppear {
-                    _locationCatcher.startUpdating()
-                }
+                Circle()
+                    .fill(.foreground)
+                    .opacity(0.125)
+                    .allowsHitTesting(false)
+                Circle()
+                    .fill(.foreground)
+                    .frame(width: 10, height: 10)
+                    .allowsHitTesting(false)
+                Circle()
+                    .stroke(.foreground, lineWidth: 1.5)
+                    .allowsHitTesting(false)
             }
+            Button(
+                "Select",
+                action: { dismiss() }
+            )
+            .padding()
         }
+        .navigationBarTitle(Text("SLUG-TAB-0-MAP"))
+        .toolbar(.visible, for: .navigationBar)
+        .toolbar(.hidden, for: .tabBar)
     }
     
     /* ################################################# */

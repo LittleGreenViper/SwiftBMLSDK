@@ -36,6 +36,7 @@ struct SwiftMLSDK_SearchView: View {
      */
     var body: some View {
         NavigationStack {
+            Text("SLUG-TAB-0")
             Form {
                 Section {
                     Toggle("SLUG-TAB-0-LOCATION-TOGGLE", isOn: $_locationSearch.animation())
@@ -62,8 +63,9 @@ struct SwiftMLSDK_SearchView: View {
                 }
             }
         }
+        .toolbar(.hidden, for: .navigationBar)
     }
-    
+
     func locationTextChanged() {
         if _locationSearch {
             print("Location Search On:")
