@@ -22,17 +22,6 @@ import MapKit
 import CoreLocation
 
 /* ###################################################################################################################################### */
-// MARK: - This Just Gives Us A Quick Starting Point -
-/* ###################################################################################################################################### */
-extension CLLocationCoordinate2D {
-    /* ################################################# */
-    /**
-     We create a static constant for the position of NA World Services, in Chatsworth, CA
-     */
-    static let naws = CLLocationCoordinate2D(latitude: 34.235920, longitude: -118.563660)
-}
-
-/* ###################################################################################################################################### */
 // MARK: - Text Map Search Selection View -
 /* ###################################################################################################################################### */
 /**
@@ -48,7 +37,7 @@ struct SwiftMLSDK_MapView: View {
         /**
          This gives us a state reference for the map camera position.
          */
-        @Published var cameraPosition: MapCameraPosition = .region(MKCoordinateRegion(center: .naws, span: MKCoordinateSpan(latitudeDelta: CLLocationDegrees(0.0125), longitudeDelta: CLLocationDegrees(0.0125))))
+        @Published var cameraPosition: MapCameraPosition = .region(MKCoordinateRegion(center: kCLLocationCoordinate2DInvalid, span: MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)))
     }
 
     /* ################################################################################################################################## */
@@ -123,6 +112,11 @@ struct SwiftMLSDK_MapView: View {
     /* ################################################# */
     /**
      */
+    @EnvironmentObject var gSearchCriteria: SwiftBMLSDKTestHarnessApp.SearchCriteria
+
+    /* ################################################# */
+    /**
+     */
     var body: some View {
         VStack {
             ZStack {
@@ -135,6 +129,7 @@ struct SwiftMLSDK_MapView: View {
                             MapScaleView()
                         }
                         .onAppear {
+                            mapModel.cameraPosition = .region(MKCoordinateRegion(center: gSearchCriteria.locationPosition, span: MKCoordinateSpan(latitudeDelta: 0.0125, longitudeDelta: 0.0125)))
                             _locationCatcher.startUpdating()
                         }
                 }
@@ -152,11 +147,15 @@ struct SwiftMLSDK_MapView: View {
             }
             Button(
                 "Select",
-                action: { dismiss() }
+                action: {
+                    gSearchCriteria.locationPosition = mapModel.cameraPosition.region?.center ?? kCLLocationCoordinate2DInvalid
+                    dismiss()
+                }
             )
             .padding()
         }
         .navigationBarTitle(Text("SLUG-TAB-0-MAP"))
+        .navigationBarBackButtonHidden(true)
         .toolbar(.visible, for: .navigationBar)
         .toolbar(.hidden, for: .tabBar)
     }

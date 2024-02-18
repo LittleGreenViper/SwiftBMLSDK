@@ -51,7 +51,7 @@ struct SwiftMLSDK_MainTabView: View {
          */
         case textProcess
     }
-    
+
     /* ################################################# */
     /**
      This provides the main tab bar for the app.
@@ -64,7 +64,7 @@ struct SwiftMLSDK_MainTabView: View {
                     Label("SLUG-TAB-0", systemImage: "magnifyingglass")
                 }
                 .tag(Tabs.search)
-            
+
             // The text processor ML tab.
             SwiftMLSDK_TextProcessView()
                 .tabItem {

@@ -26,10 +26,30 @@ import CoreLocation
 /**
  */
 struct SwiftMLSDK_SearchView: View {
+    /* ################################################# */
+    /**
+     */
     @State private var _latitudeStr: String = ""
+
+    /* ################################################# */
+    /**
+     */
     @State private var _longitudeStr: String = ""
+
+    /* ################################################# */
+    /**
+     */
     @State private var _radiusStr: String = ""
+
+    /* ################################################# */
+    /**
+     */
     @State private var _locationSearch = false
+
+    /* ################################################# */
+    /**
+     */
+    @EnvironmentObject var gSearchCriteria: SwiftBMLSDKTestHarnessApp.SearchCriteria
 
     /* ################################################# */
     /**
@@ -61,11 +81,21 @@ struct SwiftMLSDK_SearchView: View {
                             }
                     }
                 }
+                .onAppear {
+                    _latitudeStr = String(gSearchCriteria.locationPosition.latitude)
+                    _longitudeStr = String(gSearchCriteria.locationPosition.longitude)
+                    _radiusStr = String(gSearchCriteria.locationSearchRadiusInMeters)
+                    _locationSearch = 0 < gSearchCriteria.locationSearchRadiusInMeters && CLLocationCoordinate2DIsValid(gSearchCriteria.locationPosition)
+                }
+
             }
         }
         .toolbar(.hidden, for: .navigationBar)
     }
 
+    /* ################################################# */
+    /**
+     */
     func locationTextChanged() {
         if _locationSearch {
             print("Location Search On:")
