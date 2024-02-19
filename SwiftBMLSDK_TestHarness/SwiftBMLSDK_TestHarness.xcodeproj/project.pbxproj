@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D406220E2B83B705009FFAB3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D40622102B83B705009FFAB3 /* Localizable.strings */; };
+		D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D40622152B83B73F009FFAB3 /* InfoPlist.strings */; };
+		D40622182B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D40622172B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox */; };
+		D406221A2B83BB16009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */; };
 		D488D2952B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */; };
 		D488D2972B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2962B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift */; };
-		D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_ViewController.swift */; };
+		D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */; };
 		D488D29C2B82CE3F000979D9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D488D29A2B82CE3F000979D9 /* Main.storyboard */; };
 		D488D29E2B82CE40000979D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D488D29D2B82CE40000979D9 /* Assets.xcassets */; };
 		D488D2A12B82CE40000979D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D488D29F2B82CE40000979D9 /* LaunchScreen.storyboard */; };
@@ -32,10 +36,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D406220F2B83B705009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D40622142B83B73F009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_BaseViewController.swift; sourceTree = "<group>"; };
 		D488D2912B82CE3F000979D9 /* SwiftBMLSDK_TestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBMLSDK_TestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_AppDelegate.swift; sourceTree = "<group>"; };
 		D488D2962B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_SceneDelegate.swift; sourceTree = "<group>"; };
-		D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_ViewController.swift; sourceTree = "<group>"; };
+		D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_TabBarController.swift; sourceTree = "<group>"; };
 		D488D29B2B82CE3F000979D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D488D29D2B82CE40000979D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D488D2A02B82CE40000979D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -48,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D40622182B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox in Frameworks */,
 				D488D2AB2B82CF3F000979D9 /* SwiftBMLSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,9 +85,11 @@
 			children = (
 				D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */,
 				D488D2962B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift */,
-				D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_ViewController.swift */,
+				D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */,
+				D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */,
 				D488D2A82B82CF01000979D9 /* Resources */,
 				D488D2A22B82CE40000979D9 /* Info.plist */,
+				D40622152B83B73F009FFAB3 /* InfoPlist.strings */,
 			);
 			path = SwiftBMLSDK_TestHarness;
 			sourceTree = "<group>";
@@ -90,6 +100,7 @@
 				D488D29A2B82CE3F000979D9 /* Main.storyboard */,
 				D488D29D2B82CE40000979D9 /* Assets.xcassets */,
 				D488D29F2B82CE40000979D9 /* LaunchScreen.storyboard */,
+				D40622102B83B705009FFAB3 /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -119,6 +130,9 @@
 			dependencies = (
 			);
 			name = SwiftBMLSDK_TestHarness;
+			packageProductDependencies = (
+				D40622172B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox */,
+			);
 			productName = SwiftBMLSDK_TestHarness;
 			productReference = D488D2912B82CE3F000979D9 /* SwiftBMLSDK_TestHarness.app */;
 			productType = "com.apple.product-type.application";
@@ -147,6 +161,9 @@
 				Base,
 			);
 			mainGroup = D488D2882B82CE3F000979D9;
+			packageReferences = (
+				D40622162B83BA1A009FFAB3 /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */,
+			);
 			productRefGroup = D488D2922B82CE3F000979D9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -162,6 +179,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D488D2A12B82CE40000979D9 /* LaunchScreen.storyboard in Resources */,
+				D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */,
+				D406220E2B83B705009FFAB3 /* Localizable.strings in Resources */,
 				D488D29E2B82CE40000979D9 /* Assets.xcassets in Resources */,
 				D488D29C2B82CE3F000979D9 /* Main.storyboard in Resources */,
 			);
@@ -174,7 +193,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_ViewController.swift in Sources */,
+				D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift in Sources */,
+				D406221A2B83BB16009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift in Sources */,
 				D488D2952B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift in Sources */,
 				D488D2972B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift in Sources */,
 			);
@@ -183,6 +203,23 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		D40622102B83B705009FFAB3 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D406220F2B83B705009FFAB3 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		D40622152B83B73F009FFAB3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D40622142B83B73F009FFAB3 /* en */,
+			);
+			name = InfoPlist.strings;
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		D488D29A2B82CE3F000979D9 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -332,6 +369,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftBMLSDK_TestHarness/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -361,6 +401,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftBMLSDK_TestHarness/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -401,6 +444,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D40622162B83BA1A009FFAB3 /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RiftValleySoftware/RVS_Generic_Swift_Toolbox";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.13.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D40622172B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D40622162B83BA1A009FFAB3 /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */;
+			productName = RVS_Generic_Swift_Toolbox;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D488D2892B82CE3F000979D9 /* Project object */;
 }

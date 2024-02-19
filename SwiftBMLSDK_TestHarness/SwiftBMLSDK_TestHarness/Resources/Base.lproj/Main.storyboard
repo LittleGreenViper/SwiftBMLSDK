@@ -1,43 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Mi4-Zb-5ST">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--SwiftBMLSDK Test Harness View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Navigation Controller-->
+        <scene sceneID="9kT-VH-xkX">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="SwiftBMLSDK_TestHarness_ViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                <navigationController id="Mi4-Zb-5ST" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="H0S-f7-MSE">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="1WZ-b1-PIK" kind="relationship" relationship="rootViewController" id="kCF-mj-OAL"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zo5-Be-HRq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1360" y="-970"/>
+        </scene>
+        <!--Text Process View Controller-->
+        <scene sceneID="yb6-nR-zdP">
+            <objects>
+                <viewController id="8ds-ES-398" userLabel="Text Process View Controller" customClass="SwiftBMLSDK_TestHarness_BaseViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="98f-wW-yZn">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HELOWRLD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vqe-Uq-DTk">
-                                <rect key="frame" x="151" y="415.66666666666669" width="91" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <viewLayoutGuide key="safeArea" id="NTI-Gb-Zqs"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="vqe-Uq-DTk" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="0cf-tX-2dJ"/>
-                            <constraint firstItem="vqe-Uq-DTk" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="I3r-ZK-Vu0"/>
-                        </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="SLUG-TAB-1-TITLE" image="rectangle.and.text.magnifyingglass.rtl" catalog="system" id="3Ka-Mc-F3W"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R4O-63-1LH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="132" y="-27"/>
+            <point key="canvasLocation" x="201" y="-561"/>
+        </scene>
+        <!--Search View Controller-->
+        <scene sceneID="axz-hb-eSA">
+            <objects>
+                <viewController id="QCj-Xx-X0G" userLabel="Search View Controller" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="kzT-at-KhI">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="jic-Ra-EqI"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="SLUG-TAB-0-TITLE" id="apn-f8-nMG">
+                        <imageReference key="image" image="magnifyingglass" catalog="system" symbolScale="large"/>
+                    </tabBarItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bMK-d2-nUt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="201" y="-1270"/>
+        </scene>
+        <!--SwiftBMLSDK Test Harness Tab Bar Controller-->
+        <scene sceneID="4Ch-Y8-VQX">
+            <objects>
+                <tabBarController id="1WZ-b1-PIK" customClass="SwiftBMLSDK_TestHarness_TabBarController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="H1P-Ne-0SF"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="QCJ-9p-8tu">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="QCj-Xx-X0G" kind="relationship" relationship="viewControllers" id="Cnu-j5-zKI"/>
+                        <segue destination="8ds-ES-398" kind="relationship" relationship="viewControllers" id="41Y-gR-yhF"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NfB-Ed-Ex7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-579" y="-970"/>
         </scene>
     </scenes>
     <resources>
+        <image name="magnifyingglass" catalog="system" width="128" height="117"/>
+        <image name="rectangle.and.text.magnifyingglass.rtl" catalog="system" width="128" height="90"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

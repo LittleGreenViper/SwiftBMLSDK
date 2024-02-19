@@ -18,42 +18,52 @@
  */
 
 import UIKit
+import RVS_Generic_Swift_Toolbox
 
 /* ###################################################################################################################################### */
-// MARK: - Main Application Delegate Class -
+// MARK: - Base View Controller For All Screens -
 /* ###################################################################################################################################### */
 /**
  */
-@main
-class SwiftBMLSDK_TestHarness_AppDelegate: UIResponder {
+class SwiftBMLSDK_TestHarness_BaseViewController: UIViewController {
 }
 
 /* ###################################################################################################################################### */
 // MARK: Computed Properties
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_AppDelegate {
+extension SwiftBMLSDK_TestHarness_BaseViewController {
     /* ################################################################## */
     /**
-     Quick accessor for the shared delegate instance.
+     Quick accessor for the main Tab Bar Controller.
      */
-    class var appDelegateInstance: SwiftBMLSDK_TestHarness_AppDelegate? { UIApplication.shared.delegate as? SwiftBMLSDK_TestHarness_AppDelegate }
+    var myTabController: SwiftBMLSDK_TestHarness_TabBarController? { tabBarController as? SwiftBMLSDK_TestHarness_TabBarController }
+    
+    /* ################################################################## */
+    /**
+     This returns the appropriate navigation item. In the home context of each tab, the tab bar's nav item is actually the one we see.
+     */
+    var myNavItem: UINavigationItem? {
+        guard 1 < (navigationController?.viewControllers.count ?? 0) else { return tabBarController?.navigationItem }
+        return navigationItem
+    }
+    
+    /* ################################################################## */
+    /**
+     Quick accessor for the shared application delegate instance.
+     */
+    var myAppDelegateInstance: SwiftBMLSDK_TestHarness_AppDelegate? { SwiftBMLSDK_TestHarness_AppDelegate.appDelegateInstance }
 }
 
 /* ###################################################################################################################################### */
-// MARK: UIApplicationDelegate Conformance
+// MARK: Base Class Overrides
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_AppDelegate: UIApplicationDelegate {
+extension SwiftBMLSDK_TestHarness_BaseViewController {
     /* ################################################################## */
     /**
+     Called when the view hierarchy has loaded.
      */
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        return true
-    }
-
-    /* ################################################################## */
-    /**
-     */
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
 }
+

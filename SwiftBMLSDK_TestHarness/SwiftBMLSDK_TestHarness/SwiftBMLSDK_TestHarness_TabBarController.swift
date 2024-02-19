@@ -18,42 +18,27 @@
  */
 
 import UIKit
+import RVS_Generic_Swift_Toolbox
 
 /* ###################################################################################################################################### */
-// MARK: - Main Application Delegate Class -
+// MARK: - Main Tab Bar Controller Class -
 /* ###################################################################################################################################### */
 /**
  */
-@main
-class SwiftBMLSDK_TestHarness_AppDelegate: UIResponder {
+class SwiftBMLSDK_TestHarness_TabBarController: UITabBarController {
 }
 
 /* ###################################################################################################################################### */
-// MARK: Computed Properties
+// MARK: Base Class Overrides
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_AppDelegate {
+extension SwiftBMLSDK_TestHarness_TabBarController {
     /* ################################################################## */
     /**
-     Quick accessor for the shared delegate instance.
+     Called when the view hierarchy has loaded.
      */
-    class var appDelegateInstance: SwiftBMLSDK_TestHarness_AppDelegate? { UIApplication.shared.delegate as? SwiftBMLSDK_TestHarness_AppDelegate }
-}
-
-/* ###################################################################################################################################### */
-// MARK: UIApplicationDelegate Conformance
-/* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_AppDelegate: UIApplicationDelegate {
-    /* ################################################################## */
-    /**
-     */
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        return true
-    }
-
-    /* ################################################################## */
-    /**
-     */
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tabBar.items?.forEach { $0.title = $0.title?.localizedVariant }
     }
 }
+
