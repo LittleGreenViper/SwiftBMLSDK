@@ -19,6 +19,8 @@
 		D488D2A12B82CE40000979D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D488D29F2B82CE40000979D9 /* LaunchScreen.storyboard */; };
 		D488D2AB2B82CF3F000979D9 /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; };
 		D488D2AC2B82CF3F000979D9 /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */; };
+		D4D5E1E12B840675002B769B /* SwiftBMLSDK_TestHarness_TextProcViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_TextProcViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,6 +50,8 @@
 		D488D2A02B82CE40000979D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D488D2A22B82CE40000979D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_SearchViewController.swift; sourceTree = "<group>"; };
+		D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_TextProcViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_TextProcViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +91,8 @@
 				D488D2962B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift */,
 				D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */,
 				D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */,
+				D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */,
+				D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_TextProcViewController.swift */,
 				D488D2A82B82CF01000979D9 /* Resources */,
 				D488D2A22B82CE40000979D9 /* Info.plist */,
 				D40622152B83B73F009FFAB3 /* InfoPlist.strings */,
@@ -197,6 +203,8 @@
 				D406221A2B83BB16009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift in Sources */,
 				D488D2952B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift in Sources */,
 				D488D2972B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift in Sources */,
+				D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift in Sources */,
+				D4D5E1E12B840675002B769B /* SwiftBMLSDK_TestHarness_TextProcViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

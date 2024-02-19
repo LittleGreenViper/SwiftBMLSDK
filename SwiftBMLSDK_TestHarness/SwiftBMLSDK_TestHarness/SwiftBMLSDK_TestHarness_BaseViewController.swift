@@ -60,10 +60,31 @@ extension SwiftBMLSDK_TestHarness_BaseViewController {
 extension SwiftBMLSDK_TestHarness_BaseViewController {
     /* ################################################################## */
     /**
-     Called when the view hierarchy has loaded.
+     Called when the view is about to appear.
+     
+     - parameter inIsAnimated: True, if the appearance is animated.
      */
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ inIsAnimated: Bool) {
+        super.viewWillAppear(inIsAnimated)
+        myNavItem?.title = navigationItem.title?.localizedVariant
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Base View Controller For Main Tab Screens -
+/* ###################################################################################################################################### */
+/**
+ */
+class SwiftBMLSDK_TestHarness_TabBaseViewController: SwiftBMLSDK_TestHarness_BaseViewController {
+    /* ################################################################## */
+    /**
+     Called when the view is about to appear.
+     
+     - parameter inIsAnimated: True, if the appearance is animated.
+     */
+    override func viewWillAppear(_ inIsAnimated: Bool) {
+        super.viewWillAppear(inIsAnimated)
+        myNavItem?.title = tabBarItem?.title?.localizedVariant
     }
 }
 
