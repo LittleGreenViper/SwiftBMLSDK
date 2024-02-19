@@ -26,12 +26,22 @@ import RVS_Generic_Swift_Toolbox
 /**
  */
 class SwiftBMLSDK_TestHarness_SearchViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
+    @IBOutlet weak var locationToggleLabelButton: UIButton?
+    @IBOutlet weak var locationToggleSwitch: UISwitch?
 }
 
 /* ###################################################################################################################################### */
-// MARK: Computed Properties
+// MARK: Callbacks
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_SearchViewController {
+    @IBAction func locationToggleChanged(_ inControl: UIControl) {
+        if inControl is UIButton {
+            locationToggleSwitch?.setOn(!(locationToggleSwitch?.isOn ?? false), animated: true)
+            locationToggleSwitch?.sendActions(for: .valueChanged)
+        } else if let toggle = inControl as? UISwitch {
+            
+        }
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -44,6 +54,7 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationToggleLabelButton?.setTitle("SLUG-LOCATION-SEARCH-TOGGLE".localizedVariant, for: .normal)
     }
 }
 

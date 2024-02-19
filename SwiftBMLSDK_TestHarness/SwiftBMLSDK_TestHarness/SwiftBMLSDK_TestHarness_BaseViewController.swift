@@ -85,6 +85,18 @@ class SwiftBMLSDK_TestHarness_TabBaseViewController: SwiftBMLSDK_TestHarness_Bas
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
         myNavItem?.title = tabBarItem?.title?.localizedVariant
+        
+        guard let rightItems = navigationItem.rightBarButtonItems,
+              !rightItems.isEmpty
+        else { return }
+        
+        myTabController?.navigationItem.setRightBarButtonItems(rightItems, animated: false)
+        
+        guard let leftItems = navigationItem.leftBarButtonItems,
+              !leftItems.isEmpty
+        else { return }
+        
+        myTabController?.navigationItem.setLeftBarButtonItems(leftItems, animated: false)
     }
 }
 

@@ -49,16 +49,85 @@
                     <view key="view" contentMode="scaleToFill" id="kzT-at-KhI">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MC7-fp-hiK">
+                                <rect key="frame" x="16" y="103" width="361" height="666"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="XpM-04-vV5" userLabel="Main Page Layout Vertical Stack View">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="666"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="qKo-fd-cn8" userLabel="Location Search Stack View">
+                                                <rect key="frame" x="0.0" y="0.0" width="361" height="666"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LQs-K7-Nsi" userLabel="Location Toggle Stack View">
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="666"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BZu-Eq-w4C">
+                                                                <rect key="frame" x="0.0" y="316" width="303.66666666666669" height="34.333333333333314"/>
+                                                                <state key="normal" title="Button"/>
+                                                                <buttonConfiguration key="configuration" style="plain" title="SLUG-LOCATION-SEARCH-TOGGLE"/>
+                                                                <connections>
+                                                                    <action selector="locationToggleChanged:" destination="QCj-Xx-X0G" eventType="touchUpInside" id="1eO-Eb-5zq"/>
+                                                                </connections>
+                                                            </button>
+                                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mxb-dU-3bI">
+                                                                <rect key="frame" x="311.66666666666669" y="317.66666666666669" width="51.333333333333314" height="31"/>
+                                                                <connections>
+                                                                    <action selector="locationToggleChanged:" destination="QCj-Xx-X0G" eventType="valueChanged" id="ho2-vY-GUo"/>
+                                                                </connections>
+                                                            </switch>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="fey-Mc-yqG"/>
+                                                        </constraints>
+                                                    </stackView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="LQs-K7-Nsi" secondAttribute="trailing" id="MXF-GO-nE6"/>
+                                                    <constraint firstItem="LQs-K7-Nsi" firstAttribute="leading" secondItem="qKo-fd-cn8" secondAttribute="leading" id="ocZ-d1-vrC"/>
+                                                </constraints>
+                                            </stackView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="qKo-fd-cn8" secondAttribute="trailing" id="5p4-fJ-r33"/>
+                                            <constraint firstItem="qKo-fd-cn8" firstAttribute="leading" secondItem="XpM-04-vV5" secondAttribute="leading" id="cJc-VH-KEb"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="XpM-04-vV5" firstAttribute="bottom" secondItem="S55-mT-kF9" secondAttribute="bottom" id="9wW-b3-VQr"/>
+                                    <constraint firstItem="XpM-04-vV5" firstAttribute="centerX" secondItem="MC7-fp-hiK" secondAttribute="centerX" id="ARF-BO-Jd4"/>
+                                    <constraint firstItem="XpM-04-vV5" firstAttribute="bottom" secondItem="JLo-Lw-och" secondAttribute="bottom" placeholder="YES" id="AaA-id-Jaa"/>
+                                    <constraint firstItem="XpM-04-vV5" firstAttribute="trailing" secondItem="S55-mT-kF9" secondAttribute="trailing" id="UOr-dH-OLS"/>
+                                    <constraint firstItem="XpM-04-vV5" firstAttribute="width" secondItem="JLo-Lw-och" secondAttribute="width" id="VA9-rL-aMX"/>
+                                    <constraint firstItem="XpM-04-vV5" firstAttribute="top" secondItem="S55-mT-kF9" secondAttribute="top" id="nMA-Ca-tox"/>
+                                    <constraint firstItem="XpM-04-vV5" firstAttribute="leading" secondItem="S55-mT-kF9" secondAttribute="leading" id="tQX-BO-k9c"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="S55-mT-kF9"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="JLo-Lw-och"/>
+                            </scrollView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="jic-Ra-EqI"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="MC7-fp-hiK" firstAttribute="leading" secondItem="jic-Ra-EqI" secondAttribute="leading" constant="16" id="7gw-u2-TJ2"/>
+                            <constraint firstItem="MC7-fp-hiK" firstAttribute="top" secondItem="jic-Ra-EqI" secondAttribute="top" id="Gg9-Xm-aNI"/>
+                            <constraint firstItem="jic-Ra-EqI" firstAttribute="trailing" secondItem="MC7-fp-hiK" secondAttribute="trailing" constant="16" id="Iux-21-p5O"/>
+                            <constraint firstItem="MC7-fp-hiK" firstAttribute="bottom" secondItem="jic-Ra-EqI" secondAttribute="bottom" id="jaH-ah-dzb"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="SLUG-TAB-0-TITLE" id="apn-f8-nMG">
                         <imageReference key="image" image="magnifyingglass" catalog="system" symbolScale="large"/>
                     </tabBarItem>
+                    <connections>
+                        <outlet property="locationToggleLabelButton" destination="BZu-Eq-w4C" id="bPQ-6v-VKU"/>
+                        <outlet property="locationToggleSwitch" destination="Mxb-dU-3bI" id="hhd-HC-npa"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bMK-d2-nUt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="201" y="-1270"/>
+            <point key="canvasLocation" x="200.76335877862596" y="-1270.4225352112676"/>
         </scene>
         <!--SwiftBMLSDK Test Harness Tab Bar Controller-->
         <scene sceneID="4Ch-Y8-VQX">
