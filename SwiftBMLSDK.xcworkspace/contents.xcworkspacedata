@@ -27,6 +27,6 @@
       location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/SwiftBMLSDK.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:SwiftBMLSDKTestHarness.xcodeproj">
+      location = "group:SwiftBMLSDK_TestHarness/SwiftBMLSDK_TestHarness.xcodeproj">
    </FileRef>
 </Workspace>
