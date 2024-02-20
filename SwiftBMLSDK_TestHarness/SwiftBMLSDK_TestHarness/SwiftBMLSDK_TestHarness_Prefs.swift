@@ -18,6 +18,7 @@
  */
 
 import CoreLocation
+import MapKit
 import RVS_Persistent_Prefs
 import RVS_Generic_Swift_Toolbox
 
@@ -54,6 +55,21 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
          Returns true, if the search is a valid location-based search.
          */
         var isLocationBasedSearch: Bool { 0 < maxLocationRadiusInMeters && CLLocationCoordinate2DIsValid(locationCenter) }
+        
+        /* ################################################################## */
+        /**
+         This returns the location search as a square region, centered on the location center.
+         */
+        var locationRegion: MKCoordinateRegion? {
+            guard isLocationBasedSearch else { return nil }
+            let multiplierX = MKMapPointsPerMeterAtLatitude(locationCenter.latitude)
+            let multiplierY = MKMapPointsPerMeterAtLatitude(0)
+            let regionCenter = MKMapPoint(locationCenter)
+            let regionWidth = (maxLocationRadiusInMeters * 2) * multiplierX
+            let regionHeight = (maxLocationRadiusInMeters * 2) * multiplierY
+            let mapRect = MKMapRect(x: regionCenter.x, y: regionCenter.y, width: regionWidth, height: regionHeight)
+            return MKCoordinateRegion(mapRect)
+        }
     }
     
     /* ################################################################################################################################## */
@@ -96,7 +112,7 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
     /**
      The maximum search radius, in meters.
      */
-    @objc dynamic var locationCenter_maxRadius: Double {
+    @objc dynamic var locationRadius: Double {
         get { values[Keys.locationCenter_maxRadius.rawValue] as? Double ?? 0 }
         set { values[Keys.locationCenter_maxRadius.rawValue] = newValue }
     }
