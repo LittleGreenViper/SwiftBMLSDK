@@ -36,6 +36,25 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
      This is a criteria for our search. It is designed to be mutated.
      */
     struct SearchCriteria {
+        /* ################################################################## */
+        /**
+         From [this SO answer](https://stackoverflow.com/a/35321619/879365)
+         
+         - parameter region: The region to convert to a map rect.
+         
+         - returns: The MkMapRect that corresponds to the input MKCoordinateRegion.
+         */
+        private static func _mKMapRectForCoordinateRegion(region inRegion: MKCoordinateRegion) -> MKMapRect {
+            let topLeft = CLLocationCoordinate2D(latitude: inRegion.center.latitude + (inRegion.span.latitudeDelta/2), longitude: inRegion.center.longitude - (inRegion.span.longitudeDelta/2))
+            let bottomRight = CLLocationCoordinate2D(latitude: inRegion.center.latitude - (inRegion.span.latitudeDelta/2), longitude: inRegion.center.longitude + (inRegion.span.longitudeDelta/2))
+
+            let a = MKMapPoint(topLeft)
+            let b = MKMapPoint(bottomRight)
+            
+            let squareSize = min(abs(a.x-b.x), abs(a.y-b.y))
+            return MKMapRect(origin: MKMapPoint(x: min(a.x, b.x), y: min(a.y, b.y)), size: MKMapSize(width: squareSize, height: squareSize))
+        }
+
         // MARK: Stored Properties
         /* ############################################################## */
         /**
@@ -59,16 +78,48 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
         /* ################################################################## */
         /**
          This returns the location search as a square region, centered on the location center.
+         It also stores the location, or clears it, if the input region is nil or invalid.
          */
         var locationRegion: MKCoordinateRegion? {
-            guard isLocationBasedSearch else { return nil }
-            let multiplierX = MKMapPointsPerMeterAtLatitude(locationCenter.latitude)
-            let multiplierY = MKMapPointsPerMeterAtLatitude(0)
-            let regionCenter = MKMapPoint(locationCenter)
-            let regionWidth = (maxLocationRadiusInMeters * 2) * multiplierX
-            let regionHeight = (maxLocationRadiusInMeters * 2) * multiplierY
-            let mapRect = MKMapRect(x: regionCenter.x, y: regionCenter.y, width: regionWidth, height: regionHeight)
-            return MKCoordinateRegion(mapRect)
+            get {
+                guard isLocationBasedSearch else { return nil }
+                let multiplierX = MKMapPointsPerMeterAtLatitude(locationCenter.latitude)
+                let multiplierY = MKMapPointsPerMeterAtLatitude(0)
+                let regionCenter = MKMapPoint(locationCenter)
+                let regionWidth = (maxLocationRadiusInMeters * 2) * multiplierX
+                let regionHeight = (maxLocationRadiusInMeters * 2) * multiplierY
+                let mapRect = MKMapRect(x: regionCenter.x, y: regionCenter.y, width: regionWidth, height: regionHeight)
+                return MKCoordinateRegion(mapRect)
+            }
+            set {
+                guard let newValue = newValue else { 
+                    locationCenter = kCLLocationCoordinate2DInvalid
+                    maxLocationRadiusInMeters = 0
+                    return
+                }
+                
+                let center = newValue.center
+                let span = newValue.span
+                
+                guard CLLocationCoordinate2DIsValid(center) else {
+                    locationCenter = kCLLocationCoordinate2DInvalid
+                    maxLocationRadiusInMeters = 0
+                    return
+                }
+                
+                let multiplierX = MKMapPointsPerMeterAtLatitude(center.latitude)
+                let mapRect = Self._mKMapRectForCoordinateRegion(region: newValue)
+                let radius = mapRect.width / multiplierX
+                
+                guard 0 < radius else {
+                    locationCenter = kCLLocationCoordinate2DInvalid
+                    maxLocationRadiusInMeters = 0
+                    return
+                }
+                
+                locationCenter = center
+                maxLocationRadiusInMeters = radius
+            }
         }
     }
     
