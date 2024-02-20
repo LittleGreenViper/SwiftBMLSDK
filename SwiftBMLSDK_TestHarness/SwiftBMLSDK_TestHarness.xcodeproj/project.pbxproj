@@ -11,6 +11,8 @@
 		D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D40622152B83B73F009FFAB3 /* InfoPlist.strings */; };
 		D40622182B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D40622172B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox */; };
 		D406221A2B83BB16009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */; };
+		D47C81722B85204800783B49 /* RVS_Persistent_Prefs in Frameworks */ = {isa = PBXBuildFile; productRef = D47C81712B85204800783B49 /* RVS_Persistent_Prefs */; };
+		D47C81742B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */; };
 		D488D2952B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */; };
 		D488D2972B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2962B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift */; };
 		D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */; };
@@ -41,6 +43,7 @@
 		D406220F2B83B705009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D40622142B83B73F009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_BaseViewController.swift; sourceTree = "<group>"; };
+		D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_Prefs.swift; sourceTree = "<group>"; };
 		D488D2912B82CE3F000979D9 /* SwiftBMLSDK_TestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBMLSDK_TestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_AppDelegate.swift; sourceTree = "<group>"; };
 		D488D2962B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D47C81722B85204800783B49 /* RVS_Persistent_Prefs in Frameworks */,
 				D40622182B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox in Frameworks */,
 				D488D2AB2B82CF3F000979D9 /* SwiftBMLSDK.framework in Frameworks */,
 			);
@@ -87,6 +91,7 @@
 		D488D2932B82CE3F000979D9 /* SwiftBMLSDK_TestHarness */ = {
 			isa = PBXGroup;
 			children = (
+				D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */,
 				D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */,
 				D488D2962B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift */,
 				D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */,
@@ -138,6 +143,7 @@
 			name = SwiftBMLSDK_TestHarness;
 			packageProductDependencies = (
 				D40622172B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox */,
+				D47C81712B85204800783B49 /* RVS_Persistent_Prefs */,
 			);
 			productName = SwiftBMLSDK_TestHarness;
 			productReference = D488D2912B82CE3F000979D9 /* SwiftBMLSDK_TestHarness.app */;
@@ -169,6 +175,7 @@
 			mainGroup = D488D2882B82CE3F000979D9;
 			packageReferences = (
 				D40622162B83BA1A009FFAB3 /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */,
+				D47C81702B85204800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */,
 			);
 			productRefGroup = D488D2922B82CE3F000979D9 /* Products */;
 			projectDirPath = "";
@@ -200,6 +207,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift in Sources */,
+				D47C81742B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift in Sources */,
 				D406221A2B83BB16009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift in Sources */,
 				D488D2952B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift in Sources */,
 				D488D2972B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift in Sources */,
@@ -462,6 +470,14 @@
 				minimumVersion = 1.13.1;
 			};
 		};
+		D47C81702B85204800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RiftValleySoftware/RVS_PersistentPrefs";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.7;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -469,6 +485,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D40622162B83BA1A009FFAB3 /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */;
 			productName = RVS_Generic_Swift_Toolbox;
+		};
+		D47C81712B85204800783B49 /* RVS_Persistent_Prefs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D47C81702B85204800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */;
+			productName = RVS_Persistent_Prefs;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

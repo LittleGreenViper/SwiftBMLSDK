@@ -181,6 +181,8 @@
 				D41620422B73C17F00E6E0CA /* PBXTargetDependency */,
 			);
 			name = SwiftBMLSDKTests;
+			packageProductDependencies = (
+			);
 			productName = SwiftMLSDKTests;
 			productReference = D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -213,6 +215,7 @@
 			);
 			mainGroup = D416202B2B73C17F00E6E0CA;
 			packageReferences = (
+				D47C816D2B85202800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */,
 			);
 			productRefGroup = D41620362B73C17F00E6E0CA /* Products */;
 			projectDirPath = "";
@@ -560,6 +563,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D47C816D2B85202800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RiftValleySoftware/RVS_PersistentPrefs";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = D416202C2B73C17F00E6E0CA /* Project object */;
 }
