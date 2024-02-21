@@ -36,25 +36,6 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
      This is a criteria for our search. It is designed to be mutated.
      */
     struct SearchCriteria {
-        /* ################################################################## */
-        /**
-         From [this SO answer](https://stackoverflow.com/a/35321619/879365)
-         
-         - parameter region: The region to convert to a map rect.
-         
-         - returns: The MkMapRect that corresponds to the input MKCoordinateRegion.
-         */
-        private static func _mKMapRectForCoordinateRegion(region inRegion: MKCoordinateRegion) -> MKMapRect {
-            let topLeft = CLLocationCoordinate2D(latitude: inRegion.center.latitude + (inRegion.span.latitudeDelta/2), longitude: inRegion.center.longitude - (inRegion.span.longitudeDelta/2))
-            let bottomRight = CLLocationCoordinate2D(latitude: inRegion.center.latitude - (inRegion.span.latitudeDelta/2), longitude: inRegion.center.longitude + (inRegion.span.longitudeDelta/2))
-
-            let a = MKMapPoint(topLeft)
-            let b = MKMapPoint(bottomRight)
-            
-            let squareSize = min(abs(a.x-b.x), abs(a.y-b.y))
-            return MKMapRect(origin: MKMapPoint(x: min(a.x, b.x), y: min(a.y, b.y)), size: MKMapSize(width: squareSize, height: squareSize))
-        }
-
         // MARK: Stored Properties
         /* ############################################################## */
         /**
@@ -77,6 +58,8 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
         
         /* ################################################################## */
         /**
+         Some cribbing from [this SO answer](https://stackoverflow.com/a/35321619/879365).
+         
          This returns the location search as a square region, centered on the location center.
          It also stores the location, or clears it, if the input region is nil or invalid.
          */
@@ -107,9 +90,15 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
                     return
                 }
                 
-                let multiplierX = MKMapPointsPerMeterAtLatitude(center.latitude)
-                let mapRect = Self._mKMapRectForCoordinateRegion(region: newValue)
-                let radius = mapRect.width / multiplierX
+                let topLeft = CLLocationCoordinate2D(latitude: newValue.center.latitude + (newValue.span.latitudeDelta/2), longitude: newValue.center.longitude - (newValue.span.longitudeDelta/2))
+                let bottomRight = CLLocationCoordinate2D(latitude: newValue.center.latitude - (newValue.span.latitudeDelta/2), longitude: newValue.center.longitude + (newValue.span.longitudeDelta/2))
+
+                let a = MKMapPoint(topLeft)
+                let b = MKMapPoint(bottomRight)
+                
+                let mapRect = MKMapRect(origin: MKMapPoint(x: min(a.x, b.x), y: min(a.y, b.y)), size: MKMapSize(width: abs(a.x-b.x), height: abs(a.y-b.y)))
+
+                let radius = (min(mapRect.width / MKMapPointsPerMeterAtLatitude(center.latitude), mapRect.height / MKMapPointsPerMeterAtLatitude(0))) / 2
                 
                 guard 0 < radius else {
                     locationCenter = kCLLocationCoordinate2DInvalid
