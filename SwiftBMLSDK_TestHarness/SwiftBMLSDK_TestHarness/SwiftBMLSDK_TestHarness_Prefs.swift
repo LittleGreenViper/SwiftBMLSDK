@@ -60,6 +60,9 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
         /**
          Some cribbing from [this SO answer](https://stackoverflow.com/a/35321619/879365).
          
+         This takes a map region, then cuts a square out of the middle of it, using the least axis to determine the size of the square.
+         It takes one side of the square, and cuts it in half, to create the radius.
+         
          This returns the location search as a square region, centered on the location center.
          It also stores the location, or clears it, if the input region is nil or invalid.
          */
@@ -81,10 +84,10 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
                     return
                 }
                 
-                let center = newValue.center
-                let span = newValue.span
-                
-                guard CLLocationCoordinate2DIsValid(center) else {
+                guard CLLocationCoordinate2DIsValid(newValue.center),
+                      0 < newValue.span.latitudeDelta,
+                      0 < newValue.span.longitudeDelta
+                else {
                     locationCenter = kCLLocationCoordinate2DInvalid
                     maxLocationRadiusInMeters = 0
                     return
@@ -96,9 +99,9 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
                 let a = MKMapPoint(topLeft)
                 let b = MKMapPoint(bottomRight)
                 
-                let mapRect = MKMapRect(origin: MKMapPoint(x: min(a.x, b.x), y: min(a.y, b.y)), size: MKMapSize(width: abs(a.x-b.x), height: abs(a.y-b.y)))
+                let mapRect = MKMapRect(origin: MKMapPoint(x: min(a.x, b.x), y: min(a.y, b.y)), size: MKMapSize(width: abs(a.x - b.x), height: abs(a.y - b.y)))
 
-                let radius = (min(mapRect.width / MKMapPointsPerMeterAtLatitude(center.latitude), mapRect.height / MKMapPointsPerMeterAtLatitude(0))) / 2
+                let radius = (min(mapRect.width / MKMapPointsPerMeterAtLatitude(newValue.center.latitude), mapRect.height / MKMapPointsPerMeterAtLatitude(0))) / 2
                 
                 guard 0 < radius else {
                     locationCenter = kCLLocationCoordinate2DInvalid
@@ -106,7 +109,7 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
                     return
                 }
                 
-                locationCenter = center
+                locationCenter = newValue.center
                 maxLocationRadiusInMeters = radius
             }
         }
