@@ -19,6 +19,7 @@
 
 import UIKit
 import RVS_Generic_Swift_Toolbox
+import CoreLocation
 
 /* ###################################################################################################################################### */
 // MARK: - Main Tab Bar Controller Class -
@@ -26,6 +27,11 @@ import RVS_Generic_Swift_Toolbox
 /**
  */
 class SwiftBMLSDK_TestHarness_TabBarController: UITabBarController {
+    /* ################################################################## */
+    /**
+     This is used to find the user's location.
+     */
+    var locationManager = CLLocationManager()
 }
 
 /* ###################################################################################################################################### */
@@ -38,7 +44,55 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationManager.delegate = self
         tabBar.items?.forEach { $0.title = $0.title?.localizedVariant }
+    }
+    /* ################################################################## */
+    /**
+     Called when the view is about to appear.
+     - parameter inIsAnimated: True, if the appearance is animated.
+     */
+    override func viewWillAppear(_ inIsAnimated: Bool) {
+        super.viewWillAppear(inIsAnimated)
+        startLookingUpMyLocation()
     }
 }
 
+/* ###################################################################################################################################### */
+// MARK: Instance Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_TabBarController {
+    /* ################################################################## */
+    /**
+     This simply starts looking for where the user is at.
+     */
+    func startLookingUpMyLocation() {
+        SwiftBMLSDK_TestHarness_Prefs().currentUserLocation = nil
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: CLLocationManagerDelegate Conformance
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_TabBarController: CLLocationManagerDelegate {
+    /* ################################################################## */
+    /**
+     Callback to handle found locations.
+     
+     - parameter inManager: The Location Manager object that had the event.
+     - parameter didUpdateLocations: an array of updated locations.
+     */
+    func locationManager(_ inManager: CLLocationManager, didUpdateLocations inLocations: [CLLocation]) {
+        // Ignore cached locations. Wait for the real.
+        DispatchQueue.main.async { [weak self] in
+            self?.locationManager.stopUpdatingLocation()
+            for location in inLocations where 1.0 > location.timestamp.timeIntervalSinceNow && CLLocationCoordinate2DIsValid(location.coordinate) {
+                SwiftBMLSDK_TestHarness_Prefs().currentUserLocation = location.coordinate
+                break
+            }
+        }
+    }
+}

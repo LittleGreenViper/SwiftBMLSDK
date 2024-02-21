@@ -17,6 +17,7 @@
  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import CoreLocation
 import UIKit
 import RVS_Generic_Swift_Toolbox
 
@@ -26,7 +27,24 @@ import RVS_Generic_Swift_Toolbox
 /**
  */
 class SwiftBMLSDK_TestHarness_SearchViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
+    /* ################################################################## */
+    /**
+     */
+    private static let _defaultRadiusInMeters: CLLocationDistance = 10000
+    
+    /* ################################################################## */
+    /**
+     */
+    private static let _defaultLocationCenter = CLLocationCoordinate2D(latitude: 34.2355342, longitude: -118.563597)
+    
+    /* ################################################################## */
+    /**
+     */
     @IBOutlet weak var locationToggleLabelButton: UIButton?
+    
+    /* ################################################################## */
+    /**
+     */
     @IBOutlet weak var locationToggleSwitch: UISwitch?
 }
 
@@ -39,7 +57,12 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
             locationToggleSwitch?.setOn(!(locationToggleSwitch?.isOn ?? false), animated: true)
             locationToggleSwitch?.sendActions(for: .valueChanged)
         } else if let toggle = inControl as? UISwitch {
-            
+            if toggle.isOn {
+                SwiftBMLSDK_TestHarness_Prefs().locationRadius = Self._defaultRadiusInMeters
+                SwiftBMLSDK_TestHarness_Prefs().locationCenter = SwiftBMLSDK_TestHarness_Prefs().currentUserLocation ?? Self._defaultLocationCenter
+            } else {
+                SwiftBMLSDK_TestHarness_Prefs().locationRadius = 0
+            }
         }
     }
 }
@@ -55,6 +78,7 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         locationToggleLabelButton?.setTitle("SLUG-LOCATION-SEARCH-TOGGLE".localizedVariant, for: .normal)
+        locationToggleSwitch?.isOn = SwiftBMLSDK_TestHarness_Prefs().isLocationBasedSearch
     }
 }
 
