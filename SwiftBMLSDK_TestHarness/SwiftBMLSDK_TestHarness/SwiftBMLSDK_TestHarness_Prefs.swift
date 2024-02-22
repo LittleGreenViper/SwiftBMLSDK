@@ -34,7 +34,7 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
      This is used to store the current user location.
      */
     private static var _currentUserLocation: CLLocationCoordinate2D?
-
+    
     /* ################################################################################################################################## */
     // MARK: RVS_PersistentPrefs Conformance
     /* ################################################################################################################################## */
@@ -65,10 +65,10 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
          These are all the keys, in an Array of String.
          */
         static var allKeys: [String] { [
-                locationCenter_maxRadius.rawValue,
-                locationCenter_latitude.rawValue,
-                locationCenter_longitude.rawValue
-            ]
+            locationCenter_maxRadius.rawValue,
+            locationCenter_latitude.rawValue,
+            locationCenter_longitude.rawValue
+        ]
         }
     }
     
@@ -78,12 +78,26 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
      We should use the enum for the keys (rawValue).
      */
     override var keys: [String] { Keys.allKeys }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Public Computed Properties
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_Prefs {
+    /* ################################################################## */
+    /**
+     This is used to store the current user location.
+     */
+    public var currentUserLocation: CLLocationCoordinate2D? {
+        get { Self._currentUserLocation }
+        set { Self._currentUserLocation = newValue }
+    }
 
     /* ################################################################## */
     /**
      The maximum search radius, in meters.
      */
-    var locationRadius: Double {
+    public var locationRadius: Double {
         get { values[Keys.locationCenter_maxRadius.rawValue] as? Double ?? 0 }
         set { values[Keys.locationCenter_maxRadius.rawValue] = newValue }
     }
@@ -92,7 +106,7 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
     /**
      The center of a location-based search.
      */
-    var locationCenter: CLLocationCoordinate2D {
+    public var locationCenter: CLLocationCoordinate2D {
         get {
             guard let lat = values[Keys.locationCenter_latitude.rawValue] as? Double,
                   let lng = values[Keys.locationCenter_longitude.rawValue] as? Double
@@ -105,13 +119,12 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
             values[Keys.locationCenter_longitude.rawValue] = newValue.longitude
         }
     }
-    
-    // MARK: Computed Properties
+
     /* ############################################################## */
     /**
      Returns true, if the search is a valid location-based search.
      */
-    var isLocationBasedSearch: Bool { 0 < locationRadius && CLLocationCoordinate2DIsValid(locationCenter) }
+    public var isLocationBasedSearch: Bool { 0 < locationRadius && CLLocationCoordinate2DIsValid(locationCenter) }
     
     /* ################################################################## */
     /**
@@ -123,7 +136,7 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
      This returns the location search as a square region, centered on the location center.
      It also stores the location, or clears it, if the input region is nil or invalid.
      */
-    var locationRegion: MKCoordinateRegion? {
+    public var locationRegion: MKCoordinateRegion? {
         get {
             guard isLocationBasedSearch else { return nil }
             let multiplierX = MKMapPointsPerMeterAtLatitude(locationCenter.latitude)
@@ -169,14 +182,5 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
             locationCenter = newValue.center
             locationRadius = radius
         }
-    }
-    
-    /* ################################################################## */
-    /**
-     This is used to store the current user location.
-     */
-    var currentUserLocation: CLLocationCoordinate2D? {
-        get { Self._currentUserLocation }
-        set { Self._currentUserLocation = newValue }
     }
 }

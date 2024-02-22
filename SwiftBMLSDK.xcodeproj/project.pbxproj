@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D4045C222B76895A0086E1B7 /* MeetingDump.json in Resources */ = {isa = PBXBuildFile; fileRef = D4045C202B76895A0086E1B7 /* MeetingDump.json */; };
 		D41620402B73C17F00E6E0CA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
-		D45DB3A42B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A32B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift */; };
 		D45DB3A62B78031B00BAB475 /* SwiftBMLSDK_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */; };
 		D45DB3A82B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */; };
 		D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */; };
@@ -34,7 +33,6 @@
 		D4045C202B76895A0086E1B7 /* MeetingDump.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MeetingDump.json; sourceTree = "<group>"; };
 		D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftBMLSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D45DB3A32B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Parser_Extensions.swift; sourceTree = "<group>"; };
 		D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Tests.swift; sourceTree = "<group>"; };
 		D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Parser_ExtensionTests.swift; sourceTree = "<group>"; };
 		D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftBMLSDK.docc; sourceTree = "<group>"; };
@@ -103,7 +101,6 @@
 			children = (
 				D4B9834C2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift */,
 				D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */,
-				D45DB3A32B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift */,
 				D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */,
 			);
 			path = SwiftBMLSDK;
@@ -253,7 +250,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4C9C6242B750C65007FB793 /* SwiftMLSDK_Parser.swift in Sources */,
-				D45DB3A42B77FF6900BAB475 /* SwiftMLSDK_Parser_Extensions.swift in Sources */,
 				D4B9834D2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift in Sources */,
 				D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */,
 			);
