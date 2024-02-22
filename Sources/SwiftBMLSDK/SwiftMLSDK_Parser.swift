@@ -1280,14 +1280,14 @@ extension SwiftMLSDK_Parser.Meeting {
      > NOTE: If the date is invalid, then the distant future will be returned.
      */
     mutating public func getNextStartDate(isAdjusted inAdjust: Bool = false) -> Date {
-        guard let dateComponents = dateComponents,
-              let adjustedCachedDate = inAdjust ? _cachedNextDate?._convert(from: timeZone, to: .current) : _cachedNextDate
-        else { return .distantFuture }
+        guard let dateComponents = dateComponents else { return .distantFuture }
         
         // We do this, to cast our current timezone to the meeting's.
         let adjustedNow: Date = .now._convert(from: .current, to: timeZone)
         
-        if adjustedCachedDate <= adjustedNow {
+        // We do it this way, in case we are not adjusting a meeting in another timezone.
+        if let cached = _cachedNextDate,
+           cached <= adjustedNow {
             _cachedNextDate = nil
         }
         
