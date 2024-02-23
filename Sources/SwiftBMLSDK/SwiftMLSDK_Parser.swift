@@ -240,6 +240,8 @@ public struct SwiftMLSDK_Parser: Codable {
                 case id
             }
 
+            // MARK: Public Instance Properties
+            
             /* ############################################# */
             /**
              This is the short format "key" string.
@@ -270,6 +272,8 @@ public struct SwiftMLSDK_Parser: Codable {
              */
             public let id: String
 
+            // MARK: Public Computed Properties
+            
             /* ############################################# */
             /**
              Returns the format, as single string, with values separarated by tabs.
@@ -690,6 +694,19 @@ public struct SwiftMLSDK_Parser: Codable {
             } else {
                 return .virtual
             }
+        }
+        
+        /* ################################################# */
+        /**
+         Returns the meeting location as a CLLocation.
+         > NOTE: This may return nil, as not all meetings have a location.
+         */
+        public var location: CLLocation? {
+            guard let lat = coords?.latitude,
+                  let lng = coords?.longitude,
+                  CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: lat, longitude: lng))
+            else { return nil }
+            return CLLocation(latitude: lat, longitude: lng)
         }
 
         // MARK: Initializer
@@ -1266,13 +1283,34 @@ extension SwiftMLSDK_Parser.Meeting {
         return ret
     }
 
+    // MARK: Non-Mutating Instance Methods
+    
+    /* ################################################################## */
+    /**
+     Returns the linear distance, in meters, between the input coordinate, and the meeting's coordinate.
+     
+     > NOTE: May return nil, as not all meetings have a valid coordinate.
+     
+     - parameter from: The coordinates of the location we are comparing to the meeting's location.
+     - returns: An optional (may be nil) float, with the exact distance between the meeting's location, and the input. It is always positive (or 0), if not nil.
+     */
+    public func distanceInMeters(from inFrom: CLLocationCoordinate2D) -> CLLocationDistance? {
+        guard let myLocation = location,
+              CLLocationCoordinate2DIsValid(inFrom)
+        else { return nil }
+        
+        return myLocation.distance(from: CLLocation(latitude: inFrom.latitude, longitude: inFrom.longitude))
+    }
+    
     // MARK: Mutating Instance Methods
     
     /* ################################################################## */
     /**
-     This is the start time of the next meeting, in the meeting's local timezone. By default, the date will have the meeting's timezone set, but it can adjust to our local timezone.
+     This is the start time of the next meeting, in the meeting's local timezone (unless `isAdjusted` is true).
      
-     The reason for the cache shenanigans, is because the `nextdate` function is REALLY EXPENSIVE, in terms of performance, so we try to minimize the number of times that it's called.
+     The meeting's start date is always compared to our local time, so that means, for example, if we are at Eastern Time (US), and the meeting is at Central Time (US), and starts at 8PM (local),
+     then, if we check at 8PM (Eastern), the next meeting start will be at 8PM, the same day (Central). If we are at Central Time, and the meeting is at Eastern Time, then checking at 8PM (Central),
+     will show us the meeting starting at 8PM, the next day (In the Eastern Time zone). If isAdjusted is true, then the result will be 9PM (today), and 7PM (tomorrow) (User local), respectively.
      
      - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
      - returns: The date of the next meeting.
@@ -1280,6 +1318,7 @@ extension SwiftMLSDK_Parser.Meeting {
      > NOTE: If the date is invalid, then the distant future will be returned.
      */
     mutating public func getNextStartDate(isAdjusted inAdjust: Bool = false) -> Date {
+        // The reason for the cache shenanigans, is because the Calendar.nextDate function is REALLY EXPENSIVE, in terms of performance, so we try to minimize the number of times that it's called.
         guard let dateComponents = dateComponents else { return .distantFuture }
         
         // We do this, to cast our current timezone to the meeting's.
@@ -1298,7 +1337,7 @@ extension SwiftMLSDK_Parser.Meeting {
     
     /* ################################################################## */
     /**
-     This is the start time of the previous meeting, in the meeting's local timezone. By default, the date will have the meeting's timezone set, but it can adjust to our local timezone.
+     This is the start time of the previous meeting, in the meeting's local timezone (unless `isAdjusted` is true).
      
      - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
      - returns: The date of the last meeting.
