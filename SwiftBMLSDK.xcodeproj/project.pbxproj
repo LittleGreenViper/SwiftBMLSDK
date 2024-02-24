@@ -15,6 +15,7 @@
 		D4675D192B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift */; };
 		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
+		D499278A2B8AB70F00EFE8E7 /* SwiftMLSDK_Parser_UIKit_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49927892B8AB70F00EFE8E7 /* SwiftMLSDK_Parser_UIKit_Extensions.swift */; };
 		D4B9834D2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B9834C2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift */; };
 		D4C9C6242B750C65007FB793 /* SwiftMLSDK_Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */; };
 /* End PBXBuildFile section */
@@ -38,6 +39,7 @@
 		D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftBMLSDK.docc; sourceTree = "<group>"; };
 		D4675D182B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_ParserTests.swift; sourceTree = "<group>"; };
 		D4675D202B73C57D00139CC3 /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
+		D49927892B8AB70F00EFE8E7 /* SwiftMLSDK_Parser_UIKit_Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Parser_UIKit_Extensions.swift; sourceTree = "<group>"; };
 		D4B9834C2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Query.swift; sourceTree = "<group>"; };
 		D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Parser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,6 +103,7 @@
 			children = (
 				D4B9834C2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift */,
 				D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */,
+				D49927892B8AB70F00EFE8E7 /* SwiftMLSDK_Parser_UIKit_Extensions.swift */,
 				D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */,
 			);
 			path = SwiftBMLSDK;
@@ -252,6 +255,7 @@
 				D4C9C6242B750C65007FB793 /* SwiftMLSDK_Parser.swift in Sources */,
 				D4B9834D2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift in Sources */,
 				D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */,
+				D499278A2B8AB70F00EFE8E7 /* SwiftMLSDK_Parser_UIKit_Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
