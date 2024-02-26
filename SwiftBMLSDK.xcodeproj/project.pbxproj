@@ -9,12 +9,11 @@
 /* Begin PBXBuildFile section */
 		D4045C222B76895A0086E1B7 /* MeetingDump.json in Resources */ = {isa = PBXBuildFile; fileRef = D4045C202B76895A0086E1B7 /* MeetingDump.json */; };
 		D41620402B73C17F00E6E0CA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
-		D45DB3A62B78031B00BAB475 /* SwiftBMLSDK_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */; };
 		D45DB3A82B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */; };
 		D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */; };
-		D4675D192B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4675D182B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift */; };
 		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
+		D472FEAF2B8C0F6800FACFE7 /* SwiftBMLSDK_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */; };
 		D499278A2B8AB70F00EFE8E7 /* SwiftMLSDK_Parser_UIKit_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49927892B8AB70F00EFE8E7 /* SwiftMLSDK_Parser_UIKit_Extensions.swift */; };
 		D4B9834D2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B9834C2B7A4F2700F28F03 /* SwiftMLSDK_Query.swift */; };
 		D4C9C6242B750C65007FB793 /* SwiftMLSDK_Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* SwiftMLSDK_Parser.swift */; };
@@ -263,8 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D45DB3A62B78031B00BAB475 /* SwiftBMLSDK_Tests.swift in Sources */,
-				D4675D192B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift in Sources */,
+				D472FEAF2B8C0F6800FACFE7 /* SwiftBMLSDK_Tests.swift in Sources */,
 				D45DB3A82B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
