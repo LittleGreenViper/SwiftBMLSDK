@@ -167,110 +167,108 @@ extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
          If the app is not installed on the phone, then nil is returned.
          */
         var directURL: URL? {
-            #if canImport(UIKit)
-                var ret: URL?
-                var confNum: String = ""
-                
-                switch self {
-                case .zoom(let inURL):
-                    guard let query = inURL?.query,
-                          !query.isEmpty else { return nil }
-                    
-                    let pwd = query.split(separator: "&").reduce("") { (current, next) in
-                        if current.isEmpty,
-                           next.starts(with: "pwd=") {
-                            return String(next[next.index(next.startIndex, offsetBy: 4)...])
-                        }
-                        
-                        return ""
-                    }
-                    
-                    guard let comp = inURL?.pathComponents,
-                          !comp.isEmpty else { return nil }
-                    
-                    // Primitive, but it will work. It gets an element that has a run of more than eight positive numeric characters, and assumes that is the conference code.
-                    // The conference code should come before the password (which might also be a string of numbers).
-                    // This cleans out query strings.
-                    let numStringArray: [String] = comp.compactMap {
-                        let str = String($0._decimalOnly)
-                        
-                        return str.isEmpty ? nil : str
-                    }
-                    
-                    for elem in numStringArray where 8 < elem.count {
-                        confNum = elem
-                        break
-                    }
-
-                    guard !confNum.isEmpty else { return nil }
-                    
-                    let retString = "\(_serviceProtocol)://\(_serviceURLHost)/join?confno=\(confNum)" + (!pwd.isEmpty ? "&pwd=\(pwd)" : "")
-
-                    ret = URL(string: retString)
-                    
-                case .bluejeans(let inURL):
-                    guard let comp = inURL?.pathComponents,
-                          !comp.isEmpty else { return nil }
-                    
-                    let numStringArray: [String] = comp.compactMap {
-                        let str = String($0._decimalOnly)
-                        
-                        return str.isEmpty ? nil : str
-                    }
-                    
-                    for elem in numStringArray where 8 < elem.count {
-                        confNum = elem
-                        break
-                    }
-
-                    guard !confNum.isEmpty else { return nil }
-                    
-                    let retString = "\(_serviceProtocol)://\(_serviceURLHost)/\(confNum)"
-
-                    ret = URL(string: retString)
-
-                case .gotomeeting(let inURL):
-                    guard let comp = inURL?.pathComponents,
-                          !comp.isEmpty else { return nil }
-                    
-                    let numStringArray: [String] = comp.compactMap {
-                        let str = String($0._decimalOnly)
-                        
-                        return str.isEmpty ? nil : str
-                    }
-                    
-                    for elem in numStringArray where 8 < elem.count {
-                        confNum = elem
-                        break
-                    }
-
-                    guard !confNum.isEmpty else { return nil }
-                    
-                    let retString = "\(_serviceProtocol)://\(_serviceURLHost)/join/\(confNum)"
-
-                    ret = URL(string: retString)
-
-                case .skype(let inURL):
-                    guard let comp = inURL?.pathComponents,
-                          !comp.isEmpty else { return nil }
-                    
-                    confNum = comp[0]
-
-                    guard !confNum.isEmpty else { return nil }
-                    
-                    let retString = "\(_serviceProtocol)://\(_serviceURLHost)/\(confNum)"
-
-                    ret = URL(string: retString)
-                }
+            var ret: URL?
+            var confNum: String = ""
             
+            switch self {
+            case .zoom(let inURL):
+                guard let query = inURL?.query,
+                      !query.isEmpty else { return nil }
+                
+                let pwd = query.split(separator: "&").reduce("") { (current, next) in
+                    if current.isEmpty,
+                       next.starts(with: "pwd=") {
+                        return String(next[next.index(next.startIndex, offsetBy: 4)...])
+                    }
+                    
+                    return ""
+                }
+                
+                guard let comp = inURL?.pathComponents,
+                      !comp.isEmpty else { return nil }
+                
+                // Primitive, but it will work. It gets an element that has a run of more than eight positive numeric characters, and assumes that is the conference code.
+                // The conference code should come before the password (which might also be a string of numbers).
+                // This cleans out query strings.
+                let numStringArray: [String] = comp.compactMap {
+                    let str = String($0._decimalOnly)
+                    
+                    return str.isEmpty ? nil : str
+                }
+                
+                for elem in numStringArray where 8 < elem.count {
+                    confNum = elem
+                    break
+                }
+
+                guard !confNum.isEmpty else { return nil }
+                
+                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/join?confno=\(confNum)" + (!pwd.isEmpty ? "&pwd=\(pwd)" : "")
+
+                ret = URL(string: retString)
+                
+            case .bluejeans(let inURL):
+                guard let comp = inURL?.pathComponents,
+                      !comp.isEmpty else { return nil }
+                
+                let numStringArray: [String] = comp.compactMap {
+                    let str = String($0._decimalOnly)
+                    
+                    return str.isEmpty ? nil : str
+                }
+                
+                for elem in numStringArray where 8 < elem.count {
+                    confNum = elem
+                    break
+                }
+
+                guard !confNum.isEmpty else { return nil }
+                
+                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/\(confNum)"
+
+                ret = URL(string: retString)
+
+            case .gotomeeting(let inURL):
+                guard let comp = inURL?.pathComponents,
+                      !comp.isEmpty else { return nil }
+                
+                let numStringArray: [String] = comp.compactMap {
+                    let str = String($0._decimalOnly)
+                    
+                    return str.isEmpty ? nil : str
+                }
+                
+                for elem in numStringArray where 8 < elem.count {
+                    confNum = elem
+                    break
+                }
+
+                guard !confNum.isEmpty else { return nil }
+                
+                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/join/\(confNum)"
+
+                ret = URL(string: retString)
+
+            case .skype(let inURL):
+                guard let comp = inURL?.pathComponents,
+                      !comp.isEmpty else { return nil }
+                
+                confNum = comp[0]
+
+                guard !confNum.isEmpty else { return nil }
+                
+                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/\(confNum)"
+
+                ret = URL(string: retString)
+            }
+            
+            #if canImport(UIKit)
                 guard let ret = ret,
                       UIApplication.shared.canOpenURL(ret)
                 else { return nil }
-            
-                return ret
-            #else
-                return nil
             #endif
+            
+            return ret
         }
         
         /* ############################################# */
