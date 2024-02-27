@@ -96,3 +96,34 @@ extension SwiftBMLSDK_TestHarness_TabBarController: CLLocationManagerDelegate {
         }
     }
 }
+
+/* ###################################################################################################################################### */
+// MARK: - Base View Controller For Main Tab Screens -
+/* ###################################################################################################################################### */
+/**
+ This is for the tab screens, which are slightly different from other screens.
+ */
+class SwiftBMLSDK_TestHarness_TabBaseViewController: SwiftBMLSDK_TestHarness_BaseViewController {
+    /* ################################################################## */
+    /**
+     Called when the view is about to appear.
+     
+     - parameter inIsAnimated: True, if the appearance is animated.
+     */
+    override func viewWillAppear(_ inIsAnimated: Bool) {
+        super.viewWillAppear(inIsAnimated)
+        myNavItem?.title = tabBarItem?.title?.localizedVariant
+        
+        guard let rightItems = navigationItem.rightBarButtonItems,
+              !rightItems.isEmpty
+        else { return }
+        
+        myTabController?.navigationItem.setRightBarButtonItems(rightItems, animated: false)
+        
+        guard let leftItems = navigationItem.leftBarButtonItems,
+              !leftItems.isEmpty
+        else { return }
+        
+        myTabController?.navigationItem.setLeftBarButtonItems(leftItems, animated: false)
+    }
+}

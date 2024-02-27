@@ -71,6 +71,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D42A9AAA2B8E156F002516E0 /* MainApp */ = {
+			isa = PBXGroup;
+			children = (
+				D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */,
+				D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */,
+				D488D2962B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift */,
+			);
+			path = MainApp;
+			sourceTree = "<group>";
+		};
+		D42A9AAB2B8E1587002516E0 /* Tabs */ = {
+			isa = PBXGroup;
+			children = (
+				D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */,
+				D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_TextProcViewController.swift */,
+			);
+			path = Tabs;
+			sourceTree = "<group>";
+		};
 		D488D2882B82CE3F000979D9 = {
 			isa = PBXGroup;
 			children = (
@@ -91,13 +110,10 @@
 		D488D2932B82CE3F000979D9 /* SwiftBMLSDK_TestHarness */ = {
 			isa = PBXGroup;
 			children = (
-				D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */,
-				D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */,
-				D488D2962B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift */,
-				D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */,
+				D42A9AAA2B8E156F002516E0 /* MainApp */,
 				D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */,
-				D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */,
-				D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_TextProcViewController.swift */,
+				D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */,
+				D42A9AAB2B8E1587002516E0 /* Tabs */,
 				D488D2A82B82CF01000979D9 /* Resources */,
 				D488D2A22B82CE40000979D9 /* Info.plist */,
 				D40622152B83B73F009FFAB3 /* InfoPlist.strings */,

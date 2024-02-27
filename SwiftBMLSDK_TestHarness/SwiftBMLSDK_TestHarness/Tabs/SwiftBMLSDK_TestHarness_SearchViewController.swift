@@ -25,6 +25,7 @@ import RVS_Generic_Swift_Toolbox
 // MARK: - Search Main Tab View Controller -
 /* ###################################################################################################################################### */
 /**
+ This manages the Search Tab.
  */
 class SwiftBMLSDK_TestHarness_SearchViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
@@ -52,6 +53,12 @@ class SwiftBMLSDK_TestHarness_SearchViewController: SwiftBMLSDK_TestHarness_TabB
 // MARK: Callbacks
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_SearchViewController {
+    /* ################################################################## */
+    /**
+     Called when either the label or toggle for the location search row is selected.
+     
+     - parameter inControl: The control that was selected.
+     */
     @IBAction func locationToggleChanged(_ inControl: UIControl) {
         if inControl is UIButton {
             locationToggleSwitch?.setOn(!(locationToggleSwitch?.isOn ?? false), animated: true)
