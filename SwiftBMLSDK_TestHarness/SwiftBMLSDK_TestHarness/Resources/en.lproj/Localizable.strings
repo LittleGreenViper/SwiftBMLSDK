@@ -19,3 +19,10 @@
 "SLUG-TAB-0-TITLE"                              =   "Search";
 "SLUG-TAB-1-TITLE"                              =   "Text Process";
 "SLUG-LOCATION-SEARCH-TOGGLE"                   =   "Location Search:";
+"SLUG-LOCATION-MAP-BUTTON"                      =   "Open Map >";
+"SLUG-LOCATION-LATITUDE-LABEL"                  =   "Latitude:";
+"SLUG-LOCATION-LONGITUDE-LABEL"                 =   "Longitude:";
+"SLUG-LOCATION-RADIUS-LABEL"                    =   "Radius:";
+"SLUG-LOCATION-LATITUDE-PLACEHOLDER"            =   "Enter Latitude";
+"SLUG-LOCATION-LONGITUDE-PLACEHOLDER"           =   "Enter Longitude";
+"SLUG-LOCATION-RADIUS-PLACEHOLDER"              =   "Enter Radius, in Meters";
