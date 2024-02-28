@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -87,6 +88,7 @@
                                                         <state key="normal" title="SLUG-LOCATION-MAP-BUTTON"/>
                                                         <connections>
                                                             <action selector="openMapButtonHit:" destination="QCj-Xx-X0G" eventType="touchUpInside" id="CIu-oF-6v3"/>
+                                                            <segue destination="ZbC-2V-hIk" kind="show" id="Kx9-Et-zQ1"/>
                                                         </connections>
                                                     </button>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LsP-XH-BIc">
@@ -222,6 +224,49 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bMK-d2-nUt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="200.76335877862596" y="-1270.4225352112676"/>
+        </scene>
+        <!--SwiftBMLSDK Test Harness Map View Controller-->
+        <scene sceneID="V0D-5X-icP">
+            <objects>
+                <viewController id="ZbC-2V-hIk" customClass="SwiftBMLSDK_TestHarness_MapViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2Ka-h1-xg4">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" rotateEnabled="NO" pitchEnabled="NO" showsUserLocation="YES" showsPointsOfInterest="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VY5-4B-m4G">
+                                <rect key="frame" x="0.0" y="103" width="393" height="749"/>
+                                <standardMapConfiguration key="preferredConfiguration" emphasisStyle="muted"/>
+                                <connections>
+                                    <outlet property="delegate" destination="ZbC-2V-hIk" id="Hvy-tS-CNl"/>
+                                </connections>
+                            </mapView>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lLA-NN-RHw">
+                                <rect key="frame" x="0.0" y="103" width="393" height="749"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="TQb-Wz-sml"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="VY5-4B-m4G" secondAttribute="bottom" id="5F3-aB-F6g"/>
+                            <constraint firstAttribute="trailing" secondItem="VY5-4B-m4G" secondAttribute="trailing" id="EBD-U3-8HR"/>
+                            <constraint firstItem="lLA-NN-RHw" firstAttribute="bottom" secondItem="VY5-4B-m4G" secondAttribute="bottom" id="HF3-t6-5o5"/>
+                            <constraint firstItem="lLA-NN-RHw" firstAttribute="leading" secondItem="VY5-4B-m4G" secondAttribute="leading" id="Lak-Em-kcS"/>
+                            <constraint firstItem="VY5-4B-m4G" firstAttribute="leading" secondItem="2Ka-h1-xg4" secondAttribute="leading" id="Mj7-bJ-AF3"/>
+                            <constraint firstItem="VY5-4B-m4G" firstAttribute="top" secondItem="TQb-Wz-sml" secondAttribute="top" id="XhT-GI-ezh"/>
+                            <constraint firstItem="lLA-NN-RHw" firstAttribute="trailing" secondItem="VY5-4B-m4G" secondAttribute="trailing" id="ex7-PZ-07t"/>
+                            <constraint firstItem="lLA-NN-RHw" firstAttribute="top" secondItem="VY5-4B-m4G" secondAttribute="top" id="iFL-Aj-3TJ"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Q5B-dk-UQM"/>
+                    <connections>
+                        <outlet property="circleOverlayView" destination="lLA-NN-RHw" id="Rh4-4Y-448"/>
+                        <outlet property="mapView" destination="VY5-4B-m4G" id="MPQ-SW-hfm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="31U-a3-Uur" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1226.7175572519084" y="-1270.4225352112676"/>
         </scene>
         <!--SwiftBMLSDK Test Harness Tab Bar Controller-->
         <scene sceneID="4Ch-Y8-VQX">

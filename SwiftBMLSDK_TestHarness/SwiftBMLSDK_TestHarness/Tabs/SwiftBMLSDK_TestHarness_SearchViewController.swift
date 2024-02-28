@@ -200,6 +200,15 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
         Self.setFloatingPointTextField(longitudeTextField, to: center.longitude)
         Self.setFloatingPointTextField(radiusTextField, to: radius)
     }
+    
+    /* ################################################################## */
+    /**
+     */
+    override func prepare(for inSegue: UIStoryboardSegue, sender: Any?) {
+        guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MapViewController else { return }
+        destination.center = SwiftBMLSDK_TestHarness_Prefs().locationCenter
+        destination.radius = SwiftBMLSDK_TestHarness_Prefs().locationRadius
+    }
 }
 
 /* ###################################################################################################################################### */
