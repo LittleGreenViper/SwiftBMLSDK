@@ -25,7 +25,13 @@ import RVS_Generic_Swift_Toolbox
 /* ###################################################################################################################################### */
 /**
  */
-class SwiftBMLSDK_TestHarness_BaseViewController: UIViewController { }
+class SwiftBMLSDK_TestHarness_BaseViewController: UIViewController {
+    /* ################################################################## */
+    /**
+     AQllows access top the central model.
+     */
+    let prefs = SwiftBMLSDK_TestHarness_Prefs()
+}
 
 /* ###################################################################################################################################### */
 // MARK: Computed Properties

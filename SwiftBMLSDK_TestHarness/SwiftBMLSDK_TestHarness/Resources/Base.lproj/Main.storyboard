@@ -236,31 +236,19 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" rotateEnabled="NO" pitchEnabled="NO" showsUserLocation="YES" showsPointsOfInterest="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VY5-4B-m4G">
                                 <rect key="frame" x="0.0" y="103" width="393" height="749"/>
                                 <standardMapConfiguration key="preferredConfiguration" emphasisStyle="muted"/>
-                                <connections>
-                                    <outlet property="delegate" destination="ZbC-2V-hIk" id="Hvy-tS-CNl"/>
-                                </connections>
                             </mapView>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lLA-NN-RHw">
-                                <rect key="frame" x="0.0" y="103" width="393" height="749"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="TQb-Wz-sml"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="VY5-4B-m4G" secondAttribute="bottom" id="5F3-aB-F6g"/>
                             <constraint firstAttribute="trailing" secondItem="VY5-4B-m4G" secondAttribute="trailing" id="EBD-U3-8HR"/>
-                            <constraint firstItem="lLA-NN-RHw" firstAttribute="bottom" secondItem="VY5-4B-m4G" secondAttribute="bottom" id="HF3-t6-5o5"/>
-                            <constraint firstItem="lLA-NN-RHw" firstAttribute="leading" secondItem="VY5-4B-m4G" secondAttribute="leading" id="Lak-Em-kcS"/>
                             <constraint firstItem="VY5-4B-m4G" firstAttribute="leading" secondItem="2Ka-h1-xg4" secondAttribute="leading" id="Mj7-bJ-AF3"/>
                             <constraint firstItem="VY5-4B-m4G" firstAttribute="top" secondItem="TQb-Wz-sml" secondAttribute="top" id="XhT-GI-ezh"/>
-                            <constraint firstItem="lLA-NN-RHw" firstAttribute="trailing" secondItem="VY5-4B-m4G" secondAttribute="trailing" id="ex7-PZ-07t"/>
-                            <constraint firstItem="lLA-NN-RHw" firstAttribute="top" secondItem="VY5-4B-m4G" secondAttribute="top" id="iFL-Aj-3TJ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Q5B-dk-UQM"/>
                     <connections>
-                        <outlet property="circleOverlayView" destination="lLA-NN-RHw" id="Rh4-4Y-448"/>
                         <outlet property="mapView" destination="VY5-4B-m4G" id="MPQ-SW-hfm"/>
                     </connections>
                 </viewController>

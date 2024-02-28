@@ -133,8 +133,8 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
         
         guard 0 < radius else { return }
         
-        SwiftBMLSDK_TestHarness_Prefs().locationCenter = center
-        SwiftBMLSDK_TestHarness_Prefs().locationRadius = radius
+        prefs.locationCenter = center
+        prefs.locationRadius = radius
     }
 
     /* ################################################################## */
@@ -149,8 +149,8 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
             locationToggleSwitch?.sendActions(for: .valueChanged)
         } else if let toggle = inControl as? UISwitch {
             if toggle.isOn {
-                var center = SwiftBMLSDK_TestHarness_Prefs().locationCenter
-                let radius = 0 < SwiftBMLSDK_TestHarness_Prefs().locationRadius ? SwiftBMLSDK_TestHarness_Prefs().locationRadius : Self._defaultRadiusInMeters
+                var center = prefs.locationCenter
+                let radius = 0 < prefs.locationRadius ? prefs.locationRadius : Self._defaultRadiusInMeters
                 
                 if !CLLocationCoordinate2DIsValid(center) {
                     center = Self._defaultLocationCenter
@@ -160,12 +160,12 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
                 Self.setFloatingPointTextField(longitudeTextField, to: center.longitude)
                 Self.setFloatingPointTextField(radiusTextField, to: radius)
                 
-                SwiftBMLSDK_TestHarness_Prefs().locationRadius = radius
-                SwiftBMLSDK_TestHarness_Prefs().locationCenter = center
+                prefs.locationRadius = radius
+                prefs.locationCenter = center
                 
                 locationItemsStackView?.isHidden = false
             } else {
-                SwiftBMLSDK_TestHarness_Prefs().locationRadius = 0
+                prefs.locationRadius = 0
                 locationItemsStackView?.isHidden = true
             }
         }
@@ -184,30 +184,31 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
         super.viewDidLoad()
         locationToggleLabelButton?.setTitle(locationToggleLabelButton?.title(for: .normal)?.localizedVariant, for: .normal)
         openMapButton?.setTitle(openMapButton?.title(for: .normal)?.localizedVariant, for: .normal)
-        locationToggleSwitch?.isOn = SwiftBMLSDK_TestHarness_Prefs().isLocationBasedSearch
-        locationItemsStackView?.isHidden = !SwiftBMLSDK_TestHarness_Prefs().isLocationBasedSearch
+        locationToggleSwitch?.isOn = prefs.isLocationBasedSearch
+        locationItemsStackView?.isHidden = !prefs.isLocationBasedSearch
         latitudeLabel?.text = latitudeLabel?.text?.localizedVariant
         latitudeTextField?.placeholder = latitudeTextField?.placeholder?.localizedVariant
         longitudeLabel?.text = longitudeLabel?.text?.localizedVariant
         longitudeTextField?.placeholder = longitudeTextField?.placeholder?.localizedVariant
         radiusLabel?.text = radiusLabel?.text?.localizedVariant
         radiusTextField?.placeholder = radiusTextField?.placeholder?.localizedVariant
-        
-        let center = SwiftBMLSDK_TestHarness_Prefs().currentUserLocation ?? Self._defaultLocationCenter
-        let radius = 0 < SwiftBMLSDK_TestHarness_Prefs().locationRadius ? SwiftBMLSDK_TestHarness_Prefs().locationRadius : Self._defaultRadiusInMeters
-        
-        Self.setFloatingPointTextField(latitudeTextField, to: center.latitude)
-        Self.setFloatingPointTextField(longitudeTextField, to: center.longitude)
-        Self.setFloatingPointTextField(radiusTextField, to: radius)
     }
     
     /* ################################################################## */
     /**
+     Called when the view is about to appear.
+     
+     - parameter inIsAnimated: True, if the appearance is to be animated.
      */
-    override func prepare(for inSegue: UIStoryboardSegue, sender: Any?) {
-        guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MapViewController else { return }
-        destination.center = SwiftBMLSDK_TestHarness_Prefs().locationCenter
-        destination.radius = SwiftBMLSDK_TestHarness_Prefs().locationRadius
+    override func viewWillAppear(_ inIsAnimated: Bool) {
+        super.viewWillAppear(inIsAnimated)
+        
+        let center = prefs.locationCenter
+        let radius = 0 < prefs.locationRadius ? prefs.locationRadius : Self._defaultRadiusInMeters
+        
+        Self.setFloatingPointTextField(latitudeTextField, to: center.latitude)
+        Self.setFloatingPointTextField(longitudeTextField, to: center.longitude)
+        Self.setFloatingPointTextField(radiusTextField, to: radius)
     }
 }
 
