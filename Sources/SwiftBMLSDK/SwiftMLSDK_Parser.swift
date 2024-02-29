@@ -292,7 +292,7 @@ public struct SwiftMLSDK_Parser: Codable {
                 - description: The longer format description
                 - language: The language code.
              */
-            public init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) throws {
+            public init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) {
                 key = inKey
                 name = inName
                 description = inDescription
@@ -306,8 +306,8 @@ public struct SwiftMLSDK_Parser: Codable {
              
              - parameter inDictionary: A simple String-keyed dictionary of partly-parsed values.
              */
-            public init?(_ inDictionary: [String: Any]) {
-                try? self.init(key: (inDictionary["key"] as? String) ?? "", name: (inDictionary["name"] as? String) ?? "", description: (inDictionary["description"] as? String) ?? "", language: (inDictionary["language"] as? String) ?? "", id: String((inDictionary["id"] as? Int) ?? 0))
+            public init(_ inDictionary: [String: Any]) {
+                self.init(key: (inDictionary["key"] as? String) ?? "", name: (inDictionary["name"] as? String) ?? "", description: (inDictionary["description"] as? String) ?? "", language: (inDictionary["language"] as? String) ?? "", id: String((inDictionary["id"] as? Int) ?? 0))
             }
             
             // MARK: Comparable Conformance
@@ -749,12 +749,13 @@ public struct SwiftMLSDK_Parser: Codable {
         /* ############################################# */
         /**
          Decodable initializer
+         > NOTE: This shouldn't actually be called, but we'll implement it, anyway.
          
          - parameter from: The decoder to use as a source of values.
          */
         public init(from inDecoder: Decoder) throws {
             let container: KeyedDecodingContainer<_CustomCodingKeys> = try inDecoder.container(keyedBy: _CustomCodingKeys.self)
-            serverID = try container.decode(Int.self, forKey: _CustomCodingKeys(stringValue: "serverID")!)  // It's safe to use an explicit reference, because we know that the stringValue init always returns an instance.
+            serverID = try container.decode(Int.self, forKey: _CustomCodingKeys(stringValue: "serverID")!)  // It's safe to use an explicit unwrap, because we know that the stringValue init always returns an instance.
             localMeetingID = try container.decode(Int.self, forKey: _CustomCodingKeys(stringValue: "localMeetingID")!)
             weekday = try container.decode(Int.self, forKey: _CustomCodingKeys(stringValue: "weekday")!)
             startTime = try container.decode(Date.self, forKey: _CustomCodingKeys(stringValue: "startTime")!)
@@ -764,18 +765,23 @@ public struct SwiftMLSDK_Parser: Codable {
             organization = Organization(rawValue: org) ?? .none
             name = try container.decode(String.self, forKey: _CustomCodingKeys(stringValue: "name")!)
             
-            let formatString = try container.decode(String.self, forKey: _CustomCodingKeys(stringValue: "formats")!)
-            let splitFormats = [String](formatString.components(separatedBy: "\n"))
-            let tempFormats = [Format](splitFormats.compactMap { singleFormatString in
-                let splitFormats = [String](singleFormatString.components(separatedBy: "\t"))
-                guard 5 == splitFormats.count else { return nil }
-                return try? Format(key: splitFormats[0],
-                                   name: splitFormats[1],
-                                   description: splitFormats[2],
-                                   language: splitFormats[3],
-                                   id: splitFormats[4]
-                )
-            })
+            var formatIndex = 0
+            var tempFormats = [Format]()
+            
+            while true {
+                if let formatString = try? container.decode(String.self, forKey: _CustomCodingKeys(stringValue: "format-\(formatIndex)")!) {
+                    formatIndex += 1
+                    let format = [String](formatString.components(separatedBy: "\t"))
+                    if 5 == format.count {
+                        tempFormats.append(Format(key: format[0], name: format[1], description: format[2], language: format[3], id: format[4]))
+                    } else {
+                        break
+                    }
+                } else {
+                    break
+                }
+            }
+            
             formats = tempFormats
             
             comments = (try? container.decode(String.self, forKey: _CustomCodingKeys(stringValue: "comments")!))
@@ -885,9 +891,16 @@ public struct SwiftMLSDK_Parser: Codable {
                 try container.encode(name, forKey: _CustomCodingKeys(stringValue: "name")!)
             }
             
-            let formatsString = formats.map { $0.asString }.joined(separator: "\n")
-            if !formatsString.isEmpty {
-                try container.encode(formatsString, forKey: _CustomCodingKeys(stringValue: "formats")!)
+            if !formats.isEmpty {
+                var formatIndex = 0
+                
+                try formats.forEach {
+                    let formatString = $0.asString
+                    if !formatString.isEmpty {
+                        try container.encode(formatString, forKey: _CustomCodingKeys(stringValue: "format-\(formatIndex)")!)
+                        formatIndex += 1
+                    }
+                }
             }
             
             if let comments = comments,
