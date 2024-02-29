@@ -32,6 +32,12 @@ class SwiftBMLSDK_TestHarness_TabBarController: UITabBarController {
      This is used to find the user's location.
      */
     var locationManager = CLLocationManager()
+    
+    /* ################################################################## */
+    /**
+     Allows access to the central model.
+     */
+    let prefs = SwiftBMLSDK_TestHarness_Prefs()
 }
 
 /* ###################################################################################################################################### */
@@ -71,6 +77,19 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    func updateEnablements() {
+        guard let count = tabBar.items?.count,
+              1 < count
+        else { return }
+        
+        for index in 1..<count {
+            tabBar.items?[index].isEnabled = !(prefs.searchResults?.meetings ?? []).isEmpty
+        }
     }
 }
 

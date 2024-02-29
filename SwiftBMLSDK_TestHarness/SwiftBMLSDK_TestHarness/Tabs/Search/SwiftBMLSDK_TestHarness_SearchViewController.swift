@@ -124,11 +124,11 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
     /**
      */
     @IBAction func performSearchButtonHit(_: Any) {
+        prefs.clearSearchResults()
+        myTabController?.updateEnablements()
         prefs.performSearch {
             guard let results = self.prefs.searchResults else { return }
-            guard let data = results.meetingJSONData,
-                  let jsonString = String(data: data, encoding: .utf8) else { return }
-            print(jsonString)
+            self.myTabController?.updateEnablements()
         }
     }
 

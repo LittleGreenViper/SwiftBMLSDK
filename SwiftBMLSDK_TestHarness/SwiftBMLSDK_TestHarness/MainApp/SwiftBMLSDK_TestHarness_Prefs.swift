@@ -217,9 +217,17 @@ extension SwiftBMLSDK_TestHarness_Prefs {
 extension SwiftBMLSDK_TestHarness_Prefs {
     /* ############################################################## */
     /**
+     Simply sets the search results to nil.
+     */
+    public func clearSearchResults() {
+        Self._searchResults = nil
+    }
+    
+    /* ############################################################## */
+    /**
      */
     public func performSearch(completion inCompletion: @escaping () -> Void) {
-        Self._searchResults = nil
+        clearSearchResults()
         queryInstance.meetingSearch(specification: SwiftMLSDK_Query.SearchSpecification(locationRadius: locationRadius, locationCenter: locationCenter)) { inSearchResults, inError in
             Self._searchResults = inSearchResults
             DispatchQueue.main.async { inCompletion() }

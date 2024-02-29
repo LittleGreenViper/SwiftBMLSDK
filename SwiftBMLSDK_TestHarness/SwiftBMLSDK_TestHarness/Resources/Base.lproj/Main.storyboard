@@ -37,11 +37,44 @@
                         <viewLayoutGuide key="safeArea" id="NTI-Gb-Zqs"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="SLUG-TAB-1-TITLE" image="rectangle.and.text.magnifyingglass.rtl" catalog="system" id="3Ka-Mc-F3W"/>
+                    <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-2-TITLE" image="rectangle.and.text.magnifyingglass.rtl" catalog="system" id="3Ka-Mc-F3W"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R4O-63-1LH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="201" y="-561"/>
+            <point key="canvasLocation" x="201" y="130"/>
+        </scene>
+        <!--SLUG-TAB-1-TITLE-->
+        <scene sceneID="Z7l-Ny-MDp">
+            <objects>
+                <viewController id="uVT-GP-ONa" customClass="SwiftBMLSDK_TestHarness_MapResultsViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8ZE-7U-pPx">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" rotateEnabled="NO" pitchEnabled="NO" showsPointsOfInterest="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jqj-pi-R5r">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <standardMapConfiguration key="preferredConfiguration" emphasisStyle="muted"/>
+                            </mapView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="2X5-Qh-ye2"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Jqj-pi-R5r" firstAttribute="leading" secondItem="8ZE-7U-pPx" secondAttribute="leading" id="Btw-Xk-jic"/>
+                            <constraint firstAttribute="trailing" secondItem="Jqj-pi-R5r" secondAttribute="trailing" id="R6N-uf-RaU"/>
+                            <constraint firstItem="Jqj-pi-R5r" firstAttribute="top" secondItem="8ZE-7U-pPx" secondAttribute="top" id="iFU-0R-IEz"/>
+                            <constraint firstAttribute="bottom" secondItem="Jqj-pi-R5r" secondAttribute="bottom" id="sJp-K4-li1"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-1-TITLE" id="kl0-Bc-U46">
+                        <imageReference key="image" image="map" catalog="system" symbolScale="large"/>
+                    </tabBarItem>
+                    <connections>
+                        <outlet property="mapView" destination="Jqj-pi-R5r" id="agL-28-8r2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="I2H-Mr-thq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="200.76335877862596" y="-582.3943661971831"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="axz-hb-eSA">
@@ -277,6 +310,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="QCj-Xx-X0G" kind="relationship" relationship="viewControllers" id="Cnu-j5-zKI"/>
+                        <segue destination="uVT-GP-ONa" kind="relationship" relationship="viewControllers" id="dpk-dr-gkC"/>
                         <segue destination="8ds-ES-398" kind="relationship" relationship="viewControllers" id="41Y-gR-yhF"/>
                     </connections>
                 </tabBarController>
@@ -287,6 +321,7 @@
     </scenes>
     <resources>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
+        <image name="map" catalog="system" width="128" height="112"/>
         <image name="rectangle.and.text.magnifyingglass.rtl" catalog="system" width="128" height="90"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

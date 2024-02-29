@@ -18,6 +18,7 @@
  */
 
 import Foundation
+import CoreLocation
 
 #if canImport(UIKit)
     import UIKit
@@ -305,5 +306,18 @@ extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
         else { return nil }
         
         return DirectVirtual.factory(url: virtualURL)?.directURL
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Array Extension, for Arrays of meetings -
+/* ###################################################################################################################################### */
+public extension Array where Element==SwiftMLSDK_Parser.Meeting {
+    /* ################################################# */
+    /**
+     This returns all of the in-person meeting coordinates in an array.
+     */
+    var allCoords: [CLLocationCoordinate2D] {
+        compactMap { $0.coords }
     }
 }
