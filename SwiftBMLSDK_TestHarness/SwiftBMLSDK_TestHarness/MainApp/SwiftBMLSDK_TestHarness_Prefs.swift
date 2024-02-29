@@ -21,6 +21,7 @@ import CoreLocation
 import MapKit
 import RVS_Persistent_Prefs
 import RVS_Generic_Swift_Toolbox
+import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
 // MARK: - Persistent Test Harness Settings -
@@ -35,6 +36,18 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
      */
     private static var _currentUserLocation: CLLocationCoordinate2D?
     
+    /* ################################################################## */
+    /**
+     This has the results of any search we did.
+     */
+    private static var _searchResults: SwiftMLSDK_Parser?
+    
+    /* ################################################################## */
+    /**
+     This is our query instance.
+     */
+    private static var _queryInstance = SwiftMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
+
     /* ################################################################################################################################## */
     // MARK: RVS_PersistentPrefs Conformance
     /* ################################################################################################################################## */
@@ -64,11 +77,12 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
         /**
          These are all the keys, in an Array of String.
          */
-        static var allKeys: [String] { [
-            locationCenter_maxRadius.rawValue,
-            locationCenter_latitude.rawValue,
-            locationCenter_longitude.rawValue
-        ]
+        static var allKeys: [String] {
+            [
+                locationCenter_maxRadius.rawValue,
+                locationCenter_latitude.rawValue,
+                locationCenter_longitude.rawValue
+            ]
         }
     }
     
@@ -92,6 +106,18 @@ extension SwiftBMLSDK_TestHarness_Prefs {
         get { Self._currentUserLocation }
         set { Self._currentUserLocation = newValue }
     }
+
+    /* ################################################################## */
+    /**
+     This has the results of any search we did.
+     */
+    public var searchResults: SwiftMLSDK_Parser? { Self._searchResults }
+    
+    /* ################################################################## */
+    /**
+     This is our query instance.
+     */
+    public var queryInstance: SwiftMLSDK_Query { Self._queryInstance }
 
     /* ################################################################## */
     /**
@@ -181,6 +207,22 @@ extension SwiftBMLSDK_TestHarness_Prefs {
             
             locationCenter = newValue.center
             locationRadius = radius
+        }
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Public Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_Prefs {
+    /* ############################################################## */
+    /**
+     */
+    public func performSearch(completion inCompletion: @escaping () -> Void) {
+        Self._searchResults = nil
+        queryInstance.meetingSearch(specification: SwiftMLSDK_Query.SearchSpecification(locationRadius: locationRadius, locationCenter: locationCenter)) { inSearchResults, inError in
+            Self._searchResults = inSearchResults
+            DispatchQueue.main.async { inCompletion() }
         }
     }
 }

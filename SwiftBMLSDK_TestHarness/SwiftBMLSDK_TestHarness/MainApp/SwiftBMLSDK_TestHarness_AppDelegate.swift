@@ -18,6 +18,7 @@
  */
 
 import UIKit
+import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
 // MARK: - Main Application Delegate Class -
@@ -25,8 +26,7 @@ import UIKit
 /**
  */
 @main
-class SwiftBMLSDK_TestHarness_AppDelegate: UIResponder {
-}
+class SwiftBMLSDK_TestHarness_AppDelegate: UIResponder { }
 
 /* ###################################################################################################################################### */
 // MARK: Computed Properties

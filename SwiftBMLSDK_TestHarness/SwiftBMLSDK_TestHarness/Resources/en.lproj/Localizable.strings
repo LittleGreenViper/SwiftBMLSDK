@@ -26,3 +26,4 @@
 "SLUG-LOCATION-LATITUDE-PLACEHOLDER"            =   "Enter Latitude";
 "SLUG-LOCATION-LONGITUDE-PLACEHOLDER"           =   "Enter Longitude";
 "SLUG-LOCATION-RADIUS-PLACEHOLDER"              =   "Enter Radius, in Meters";
+"SLUG-PERFORM-SEARCH"                           =   "SEARCH FOR MEETINGS";

@@ -27,13 +27,24 @@ import CoreLocation
  This struct is about generating queries to instances of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer), and returning the parsed results.
  */
 public struct SwiftMLSDK_Query {
+    /* ################################################# */
+    /**
+     This is the completion function for the query.
+     
+     > NOTE: The completion may be called in any thread!
+     
+     - parameter: The resultant server response. Can be nil.
+     - parameter: Any errors that occurred. Should usually be nil.
+     */
+    public typealias QueryResultCompletion = (_: SwiftMLSDK_Parser?, _: Error?) -> Void
+    
     /* ################################################################################################################################## */
     // MARK: Search Specification
     /* ################################################################################################################################## */
     /**
      This struct is what we use to prescribe the search spec.
      */
-    struct SearchSpecification {
+    public struct SearchSpecification {
         /* ############################################# */
         /**
          The number of results per page. If this is 0, then no results are returned, and only the meta is populated. If left out, or set to a negative number, then all results are returned in one page.
@@ -68,7 +79,7 @@ public struct SwiftMLSDK_Query {
             - locationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search.
             - locationCenter: The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search.
          */
-        init(pageSize inPageSize: Int = -1,
+        public init(pageSize inPageSize: Int = -1,
              page inPageNumber: Int = 0,
              locationRadius inLocationRadius: Double = 0,
              locationCenter inLocationCenter: CLLocationCoordinate2D = CLLocationCoordinate2D()
@@ -83,27 +94,33 @@ public struct SwiftMLSDK_Query {
         /**
          This returns the query portion of the search (needs to be appended to the server base URI).
          */
-        var urlQueryString: String {
-            var ret: [String] = []
+        var urlQueryItems: [URLQueryItem] {
+            var ret: [URLQueryItem] = [URLQueryItem(name: "query", value: nil)]
             
             if 0 <= pageSize {
-                ret.append("page_size=\(pageSize)")
+                ret.append(URLQueryItem(name: "page_size", value: String(pageSize)))
                 if 0 < pageSize,
                    0 < pageNumber {
-                    ret.append("page=\(pageNumber)")
+                    ret.append(URLQueryItem(name: "page", value: String(pageNumber)))
                 }
             }
             
             if CLLocationCoordinate2DIsValid(locationCenter),
                0 < locationRadius {
-                ret.append("geocenter_lng=\(locationCenter.longitude)")
-                ret.append("geocenter_lat=\(locationCenter.latitude)")
-                ret.append("geo_radius=\(locationRadius / 1000)")
+                ret.append(URLQueryItem(name: "geocenter_lng", value: String(locationCenter.longitude)))
+                ret.append(URLQueryItem(name: "geocenter_lat", value: String(locationCenter.latitude)))
+                ret.append(URLQueryItem(name: "geo_radius", value: String(locationRadius / 1000)))
             }
             
-            return ret.joined(separator: "&")
+            return ret
         }
     }
+    
+    /* ################################################# */
+    /**
+     The session that is used to manage interactions with the server.
+     */
+    private let _session = URLSession(configuration: .default)
     
     /* ################################################# */
     /**
@@ -117,7 +134,7 @@ public struct SwiftMLSDK_Query {
      
      - parameter serverBaseURI: The URL to the "base (main directory) of an instance of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer). Optional. Can be omitted.
      */
-    init(serverBaseURI inServerBaseURI: URL? = nil) {
+    public init(serverBaseURI inServerBaseURI: URL? = nil) {
         _serverBaseURI = inServerBaseURI
     }
 }
@@ -140,4 +157,53 @@ extension SwiftMLSDK_Query {
 // MARK: Instance Methods
 /* ###################################################################################################################################### */
 extension SwiftMLSDK_Query {
+    /* ################################################# */
+    /**
+     Perform a server-based search.
+     
+     - parameter specification: The search specification.
+     - parameter: completion: A tail completion proc.
+     */
+    public func meetingSearch(specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
+        guard let url = serverBaseURI?.appending(queryItems: inSpecification.urlQueryItems) else {
+            inCompletion(nil, nil)
+            
+            return
+        }
+        
+        let urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        
+        #if DEBUG
+            print("URL Request: \(urlRequest.url?.absoluteString ?? "ERROR")")
+        #endif
+
+        _session.dataTask(with: urlRequest) { inData, inResponse, inError in
+            guard let response = inResponse as? HTTPURLResponse,
+                  nil == inError
+            else {
+                inCompletion(nil, nil)
+                return
+            }
+            
+            if nil == inError {
+                switch response.statusCode {
+                case 200..<300:
+                    if let data = inData,
+                       "application/json" == response.mimeType {
+                        #if DEBUG
+                            print("Response Data: \(data.debugDescription)")
+                        #endif
+                        inCompletion(SwiftMLSDK_Parser(jsonData: data), nil)
+                    } else {
+                        fallthrough
+                    }
+                
+                default:
+                    inCompletion(nil, nil)
+                }
+            } else {
+                inCompletion(nil, inError)
+            }
+        }.resume()
+    }
 }

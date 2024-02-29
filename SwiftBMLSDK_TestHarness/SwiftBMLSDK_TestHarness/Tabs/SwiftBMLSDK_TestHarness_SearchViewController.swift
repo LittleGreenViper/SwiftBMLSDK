@@ -20,6 +20,7 @@
 import CoreLocation
 import UIKit
 import RVS_Generic_Swift_Toolbox
+import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
 // MARK: - Search Main Tab View Controller -
@@ -87,6 +88,11 @@ class SwiftBMLSDK_TestHarness_SearchViewController: SwiftBMLSDK_TestHarness_TabB
     /**
      */
     @IBOutlet weak var radiusTextField: UITextField?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var performSearchButton: UIButton?
 }
 
 /* ###################################################################################################################################### */
@@ -114,6 +120,18 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
     @IBAction func openMapButtonHit(_: Any) {
     }
     
+    /* ################################################################## */
+    /**
+     */
+    @IBAction func performSearchButtonHit(_: Any) {
+        prefs.performSearch {
+            guard let results = self.prefs.searchResults else { return }
+            guard let data = results.meetingJSONData,
+                  let jsonString = String(data: data, encoding: .utf8) else { return }
+            print(jsonString)
+        }
+    }
+
     /* ################################################################## */
     /**
      */
@@ -192,6 +210,7 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
         longitudeTextField?.placeholder = longitudeTextField?.placeholder?.localizedVariant
         radiusLabel?.text = radiusLabel?.text?.localizedVariant
         radiusTextField?.placeholder = radiusTextField?.placeholder?.localizedVariant
+        performSearchButton?.setTitle(performSearchButton?.title(for: .normal)?.localizedVariant, for: .normal)
     }
     
     /* ################################################################## */
