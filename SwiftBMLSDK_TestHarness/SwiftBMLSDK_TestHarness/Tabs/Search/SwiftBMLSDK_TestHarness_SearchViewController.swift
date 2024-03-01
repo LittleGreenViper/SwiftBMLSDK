@@ -224,13 +224,15 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
-        
+        myTabController?.updateEnablements()
         let center = prefs.locationCenter
         let radius = 0 < prefs.locationRadius ? prefs.locationRadius : Self._defaultRadiusInMeters
         
         Self.setFloatingPointTextField(latitudeTextField, to: center.latitude)
         Self.setFloatingPointTextField(longitudeTextField, to: center.longitude)
         Self.setFloatingPointTextField(radiusTextField, to: radius)
+
+        prefs.isDirty = false
     }
 }
 

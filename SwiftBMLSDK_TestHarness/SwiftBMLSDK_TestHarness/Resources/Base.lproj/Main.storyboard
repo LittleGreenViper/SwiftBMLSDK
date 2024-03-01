@@ -52,7 +52,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" rotateEnabled="NO" pitchEnabled="NO" showsPointsOfInterest="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jqj-pi-R5r">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="769"/>
+                                <rect key="frame" x="0.0" y="103" width="393" height="666"/>
                                 <standardMapConfiguration key="preferredConfiguration" emphasisStyle="muted"/>
                                 <connections>
                                     <outlet property="delegate" destination="uVT-GP-ONa" id="G0V-ah-frf"/>
@@ -64,8 +64,8 @@
                         <constraints>
                             <constraint firstItem="Jqj-pi-R5r" firstAttribute="leading" secondItem="8ZE-7U-pPx" secondAttribute="leading" id="Btw-Xk-jic"/>
                             <constraint firstAttribute="trailing" secondItem="Jqj-pi-R5r" secondAttribute="trailing" id="R6N-uf-RaU"/>
-                            <constraint firstItem="Jqj-pi-R5r" firstAttribute="top" secondItem="8ZE-7U-pPx" secondAttribute="top" id="iFU-0R-IEz"/>
                             <constraint firstItem="2X5-Qh-ye2" firstAttribute="bottom" secondItem="Jqj-pi-R5r" secondAttribute="bottom" id="sJp-K4-li1"/>
+                            <constraint firstItem="Jqj-pi-R5r" firstAttribute="top" secondItem="2X5-Qh-ye2" secondAttribute="top" id="vfH-4o-tjH"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-1-TITLE" id="kl0-Bc-U46">
@@ -320,6 +320,44 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NfB-Ed-Ex7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-579" y="-970"/>
+        </scene>
+        <!--SwiftMLSDK Map Annotation Popover View Controller-->
+        <scene sceneID="fWq-jz-Mwu">
+            <objects>
+                <viewController storyboardIdentifier="SwiftMLSDK_Map_AnnotationPopover_ViewController" id="dqB-hb-kau" customClass="SwiftMLSDK_Map_AnnotationPopover_ViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6zD-IM-eQH">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="256"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="30" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="DyP-aj-7SM">
+                                <rect key="frame" x="16" y="75" width="358" height="131"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="dqB-hb-kau" id="cnu-sd-7RW"/>
+                                    <outlet property="delegate" destination="dqB-hb-kau" id="VBT-hA-duV"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="3La-le-mAD"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="DyP-aj-7SM" firstAttribute="top" secondItem="3La-le-mAD" secondAttribute="top" constant="16" id="IhS-hc-LvU"/>
+                            <constraint firstItem="DyP-aj-7SM" firstAttribute="leading" secondItem="3La-le-mAD" secondAttribute="leading" constant="16" id="VBO-w3-3az"/>
+                            <constraint firstItem="3La-le-mAD" firstAttribute="trailing" secondItem="DyP-aj-7SM" secondAttribute="trailing" constant="16" id="iRZ-vP-9c7"/>
+                            <constraint firstItem="DyP-aj-7SM" firstAttribute="bottom" secondItem="3La-le-mAD" secondAttribute="bottom" constant="-16" id="jwP-qL-Wrc"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="390" height="256"/>
+                    <connections>
+                        <outlet property="tableView" destination="DyP-aj-7SM" id="L0k-Uy-WLc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZIP-0o-8Hf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1231" y="-793"/>
         </scene>
     </scenes>
     <resources>

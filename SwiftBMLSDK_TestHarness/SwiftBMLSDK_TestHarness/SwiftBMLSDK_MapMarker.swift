@@ -145,7 +145,7 @@ class SwiftBMLSDK_MapMarker: MKAnnotationView {
     @objc func markerTapped(_: UIGestureRecognizer) {
         guard let annotation = (annotation as? SwiftBMLSDK_MapAnnotation) else { return }
         
-//        annotation.myController?.annotationHit(meetings: annotation.meetings, view: self)
+        annotation.myController?.annotationHit(meetings: annotation.meetings, view: self)
     }
     
     /* ################################################################## */

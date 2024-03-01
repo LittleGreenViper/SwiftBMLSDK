@@ -92,6 +92,18 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
      We should use the enum for the keys (rawValue).
      */
     override var keys: [String] { Keys.allKeys }
+    
+    /* ################################################################## */
+    /**
+     Set to true, when changes are made. Set to false, when you want to set a baseline.
+     */
+    var isDirty: Bool = false {
+        didSet {
+            if isDirty {
+                Self._searchResults = nil
+            }
+        }
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -125,7 +137,10 @@ extension SwiftBMLSDK_TestHarness_Prefs {
      */
     public var locationRadius: Double {
         get { values[Keys.locationCenter_maxRadius.rawValue] as? Double ?? 0 }
-        set { values[Keys.locationCenter_maxRadius.rawValue] = newValue }
+        set {
+            isDirty = true
+            values[Keys.locationCenter_maxRadius.rawValue] = newValue
+        }
     }
     
     /* ################################################################## */
@@ -141,6 +156,7 @@ extension SwiftBMLSDK_TestHarness_Prefs {
             return CLLocationCoordinate2D(latitude: lat, longitude: lng)
         }
         set {
+            isDirty = true
             values[Keys.locationCenter_latitude.rawValue] = newValue.latitude
             values[Keys.locationCenter_longitude.rawValue] = newValue.longitude
         }

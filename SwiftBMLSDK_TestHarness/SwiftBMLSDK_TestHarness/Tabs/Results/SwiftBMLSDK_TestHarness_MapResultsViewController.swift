@@ -131,6 +131,7 @@ extension MKCoordinateRegion {
 // MARK: - Map Results Main Tab View Controller -
 /* ###################################################################################################################################### */
 /**
+ This manages the main tab controller for the search results.
  */
 class SwiftBMLSDK_TestHarness_MapResultsViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
@@ -138,6 +139,12 @@ class SwiftBMLSDK_TestHarness_MapResultsViewController: SwiftBMLSDK_TestHarness_
      The main map view
      */
     @IBOutlet weak var mapView: MKMapView?
+    
+    /* ################################################################## */
+    /**
+     True, once the first load is done.
+     */
+    var firstLoadDone: Bool = false
 }
 
 /* ###################################################################################################################################### */
@@ -154,23 +161,60 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
     
     /* ################################################################## */
     /**
+     Called just before the view is displayed.
+     
+     - parameter inIsAnimated: True, if the appearance is animated.
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
-        
-        guard let allCoords = prefs.searchResults?.meetings.allCoords,
-              !allCoords.isEmpty
-        else { return }
-        
-        guard let mapRegion = MKCoordinateRegion(coordinates: allCoords),
-              let newRegion = mapView?.regionThatFits(mapRegion) else { return }
-        
-        mapView?.region = newRegion
+        firstLoadDone = false
     }
 }
 
 /* ###################################################################################################################################### */
-// MARK: Base Class Overrides
+// MARK: Callbacks
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_MapResultsViewController {
+    /* ################################################################## */
+    /**
+     Called to show a user page.
+     
+     - parameter inMeeting: The meeting instance.
+     */
+    func selectMeeting(_ inMeeting: SwiftMLSDK_Parser.Meeting) {
+    }
+    
+    /* ################################################################## */
+    /**
+     This is called when one of the annotations is tapped.
+     
+     - parameter users: The array of users, associated with the annotation.
+     - parameter view: The annotation marker view (anchor for the popover).
+     */
+    func annotationHit(meetings inMeetings: [SwiftMLSDK_Parser.Meeting], view inView: UIView) {
+        guard let view = inView as? SwiftBMLSDK_MapMarker else { return }
+        makeAMarkerPopover(view)
+    }
+    
+    /* ################################################################## */
+    /**
+     Creates an instance of a map marker popover controller (blank) for presentation.
+     */
+    func makeAMarkerPopover(_ inMarker: SwiftBMLSDK_MapMarker) {
+        if let annotation = inMarker.annotation as? SwiftBMLSDK_MapAnnotation,
+           let popover = storyboard?.instantiateViewController(withIdentifier: SwiftMLSDK_Map_AnnotationPopover_ViewController.storyboardID) as? SwiftMLSDK_Map_AnnotationPopover_ViewController {
+            popover.meetings = annotation.meetings.sorted { a, b in a.name.lowercased() < b.name.lowercased() }
+            popover.myController = self
+            popover.modalPresentationStyle = .popover
+            popover.popoverPresentationController?.delegate = self
+            popover.popoverPresentationController?.sourceView = inMarker
+            present(popover, animated: true)
+        }
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Instance Methods
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_MapResultsViewController {
     /* ################################################################## */
@@ -258,6 +302,22 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
              return ret
          }
      }
+    
+    /* ################################################################## */
+    /**
+     This sets the map to a region enclosing all the results, and creates the annotations.
+     */
+    func setMapToResults() {
+        firstLoadDone = true
+        guard let allCoords = prefs.searchResults?.meetings.allCoords,
+              !allCoords.isEmpty
+        else { return }
+        
+        guard let mapRegion = MKCoordinateRegion(coordinates: allCoords),
+              let newRegion = mapView?.regionThatFits(mapRegion) else { return }
+        
+        mapView?.setRegion(newRegion, animated: true)
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -284,11 +344,58 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController: MKMapViewDelegate {
     
     /* ################################################################## */
     /**
-     This is called when the map region changes.
+     This is called when the map has changed its region.
+     
+     - parameter inMapView: The map view
+     - parameter regionDidChangeAnimated: True, if the change is animated (ignored)
+     */
+    func mapView(_ inMapView: MKMapView, regionDidChangeAnimated: Bool) {
+        createAnnotations()
+    }
+    
+    /* ################################################################## */
+    /**
+     This is called when the map has completed loading.
      
      - parameter: The map view (ignored)
      */
-    func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
-        createAnnotations()
+    func mapViewDidFinishLoadingMap(_: MKMapView) {
+        if !firstLoadDone {
+            setMapToResults()
+        }
     }
+}
+
+/* ###################################################################################################################################### */
+// MARK: UIPopoverPresentationControllerDelegate Conformance
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_MapResultsViewController: UIPopoverPresentationControllerDelegate {
+    /* ################################################################## */
+    /**
+     Called to ask if there's any possibility of this being displayed in another way.
+     
+     - parameter for: The presentation controller we're talking about.
+     - returns: No way, Jose.
+     */
+    func adaptivePresentationStyle(for: UIPresentationController) -> UIModalPresentationStyle { .none }
+    
+    /* ################################################################## */
+    /**
+     Called to ask if there's any possibility of this being displayed in another way (when the screen is rotated).
+     
+     - parameter for: The presentation controller we're talking about.
+     - parameter traitCollection: The traits, describing the new orientation.
+     - returns: No way, Jose.
+     */
+    func adaptivePresentationStyle(for: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle { .none }
+
+    /* ################################################################## */
+    /**
+     Called to allow us to do something before dismissing a popover.
+     
+     - parameter: ignored.
+     
+     - returns: True (all the time).
+     */
+    func popoverPresentationControllerShouldDismissPopover(_: UIPopoverPresentationController) -> Bool { true }
 }
