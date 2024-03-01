@@ -52,8 +52,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" rotateEnabled="NO" pitchEnabled="NO" showsPointsOfInterest="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jqj-pi-R5r">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="769"/>
                                 <standardMapConfiguration key="preferredConfiguration" emphasisStyle="muted"/>
+                                <connections>
+                                    <outlet property="delegate" destination="uVT-GP-ONa" id="G0V-ah-frf"/>
+                                </connections>
                             </mapView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2X5-Qh-ye2"/>
@@ -62,7 +65,7 @@
                             <constraint firstItem="Jqj-pi-R5r" firstAttribute="leading" secondItem="8ZE-7U-pPx" secondAttribute="leading" id="Btw-Xk-jic"/>
                             <constraint firstAttribute="trailing" secondItem="Jqj-pi-R5r" secondAttribute="trailing" id="R6N-uf-RaU"/>
                             <constraint firstItem="Jqj-pi-R5r" firstAttribute="top" secondItem="8ZE-7U-pPx" secondAttribute="top" id="iFU-0R-IEz"/>
-                            <constraint firstAttribute="bottom" secondItem="Jqj-pi-R5r" secondAttribute="bottom" id="sJp-K4-li1"/>
+                            <constraint firstItem="2X5-Qh-ye2" firstAttribute="bottom" secondItem="Jqj-pi-R5r" secondAttribute="bottom" id="sJp-K4-li1"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-1-TITLE" id="kl0-Bc-U46">

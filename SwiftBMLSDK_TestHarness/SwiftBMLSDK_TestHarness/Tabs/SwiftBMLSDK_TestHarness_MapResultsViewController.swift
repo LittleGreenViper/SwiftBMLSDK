@@ -23,6 +23,111 @@ import RVS_UIKit_Toolbox
 import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
+// MARK: - Region Extension For Transforming Array of Coordinates to A Region -
+/* ###################################################################################################################################### */
+/**
+ Inspired by [this GitHub gist](https://gist.github.com/dionc/46f7e7ee9db7dbd7bddec56bd5418ca6).
+ 
+ This takes the set of coordinates, and makes a map of them, on either side of the globe, and chooses to use the version that has the smallest spans.
+ */
+extension MKCoordinateRegion {
+    /* ################################################################## */
+    /**
+     This defines the function that we use to "normalize" coordinates that might have negative numbers.
+     */
+    private typealias _Transform = (CLLocationCoordinate2D) -> (CLLocationCoordinate2D)
+    
+    /* ################################################################## */
+    /**
+     This is used to "normalize" longitudes that might be negative.
+     
+     We want our coordinates to all be positive.
+     
+     This remaps negative longitudes to be over 180.
+     
+     - parameter c: The coordinate to normalize.
+     - returns: The normalized coordinate.
+     */
+    private static func _transform(c inCoord: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
+        guard 0 > inCoord.longitude else { return inCoord }
+
+        return CLLocationCoordinate2D(latitude: inCoord.latitude, longitude: 360 + inCoord.longitude)
+    }
+    
+    /* ################################################################## */
+    /**
+     This is used to "invert" longitudes that might be over 180.
+     
+     We revert longitudes over 180, back to their original negative values.
+     
+     - parameter c: The coordinate to normalize.
+     - returns: The normalized coordinate.
+     */
+    private static func _inverseTransform(c inCoord: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
+        guard 180 < inCoord.longitude else { return inCoord }
+
+        return CLLocationCoordinate2D(latitude: inCoord.latitude, longitude: -360 + inCoord.longitude)
+    }
+    
+    /* ################################################################## */
+    /**
+     This is the basic workhorse function for the extension.
+     
+     - parameters:
+        - for: The array of corrdinates to be used to generate the region
+        - transform: The function to "normalize" all longitudes into the positive number set.
+        - inverseTransform: The function to invert the normalization.
+     - returns: A new coordinate region, enclosing all the given coordinates.
+     */
+    private static func _region(for inCoordinateArray: [CLLocationCoordinate2D], transform inTransform: _Transform, inverseTransform inInverseTransform: _Transform) -> MKCoordinateRegion? {
+        // We must have two or more.
+        guard 1 < inCoordinateArray.count else { return nil }
+        
+        let transformed = inCoordinateArray.map(inTransform)
+        
+        // find the span
+        guard let minLat = transformed.min(by: { $0.latitude < $1.latitude })?.latitude,
+              let maxLat = transformed.max(by: { $0.latitude < $1.latitude })?.latitude,
+              let minLon = transformed.min(by: { $0.longitude < $1.longitude })?.longitude,
+              let maxLon = transformed.max(by: { $0.longitude < $1.longitude })?.longitude
+        else { return nil }
+        
+        let span = MKCoordinateSpan(latitudeDelta: maxLat - minLat, longitudeDelta: maxLon - minLon)
+        
+        // find the center of the span. We invert the region, so we get the correct center.
+        let center = inInverseTransform(CLLocationCoordinate2D(latitude: (maxLat - span.latitudeDelta / 2), longitude: maxLon - span.longitudeDelta / 2))
+        
+        return MKCoordinateRegion(center: center, span: span)
+    }
+
+    /* ################################################################## */
+    /**
+     This initializes a region to encompass all of the given coordinates.
+     
+     - parameter coordinates: This is an array of long/lat coordinates.
+     */
+    public init?(coordinates inCoordinateArray: [CLLocationCoordinate2D]) {
+        // first create a region centered around the Prime Meridian (longitude 0). We don't transform.
+        let primeRegion = MKCoordinateRegion._region(for: inCoordinateArray, transform: { $0 }, inverseTransform: { $0 })
+        // next create a region centered around the International Date Line (longitude 180). We transform.
+        let transformedRegion = MKCoordinateRegion._region(for: inCoordinateArray, transform: MKCoordinateRegion._transform, inverseTransform: MKCoordinateRegion._inverseTransform)
+        // We might now have two regions, that stretch across two parts of the globe.
+        // If we have two regions, then return the region that has the smallest longitude delta
+        if let a = primeRegion,
+           let b = transformedRegion,
+           let min = [a, b].min(by: { $0.span.longitudeDelta < $1.span.longitudeDelta }) {
+            self = min
+        } else if let a = primeRegion { // Otherwise, if we only have one region, we return that.
+            self = a
+        } else if let b = transformedRegion {
+            self = b
+        } else {
+            return nil
+        }
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - Map Results Main Tab View Controller -
 /* ###################################################################################################################################### */
 /**
@@ -30,14 +135,9 @@ import SwiftBMLSDK
 class SwiftBMLSDK_TestHarness_MapResultsViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
     /**
+     The main map view
      */
     @IBOutlet weak var mapView: MKMapView?
-}
-
-/* ###################################################################################################################################### */
-// MARK: Computed Properties
-/* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_MapResultsViewController {
 }
 
 /* ###################################################################################################################################### */
@@ -70,84 +170,125 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - Region Extension For Transforming Array of Coordinates to A Region -
+// MARK: Base Class Overrides
 /* ###################################################################################################################################### */
-/**
- Inspired by [this GitHub gist](https://gist.github.com/dionc/46f7e7ee9db7dbd7bddec56bd5418ca6).
- */
-extension MKCoordinateRegion {
+extension SwiftBMLSDK_TestHarness_MapResultsViewController {
     /* ################################################################## */
     /**
+     This just clears the original markers.
      */
-    private typealias _Transform = (CLLocationCoordinate2D) -> (CLLocationCoordinate2D)
-    
-    /* ################################################################## */
-    /**
-     Latitude -180...180 -> 0...360
-     */
-    private static func _transform(c inCoords: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
-        guard 0 > inCoords.longitude else { return inCoords }
-
-        return CLLocationCoordinate2D(latitude: inCoords.latitude, longitude: 360 + inCoords.longitude)
+    func clearAnnotations() {
+        guard let annotations = mapView?.annotations,
+              !annotations.isEmpty
+        else { return }
+        
+        mapView?.removeAnnotations(annotations)
     }
-    
-    /* ################################################################## */
-    /**
-     Latitude 0...360 -> -180...180
-     */
-    private static func _inverseTransform(c inCoords: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
-        guard 180 < inCoords.longitude else { return inCoords }
 
-        return CLLocationCoordinate2D(latitude: inCoords.latitude, longitude: -360 + inCoords.longitude)
-    }
-    
     /* ################################################################## */
     /**
+     This creates all the annotations (which become markers).
      */
-    private static func _region(for inCoordinateArray: [CLLocationCoordinate2D], transform inTransform: _Transform, inverseTransform inInverseTransform: _Transform) -> MKCoordinateRegion? {
-        // handle empty array
-        guard !inCoordinateArray.isEmpty else { return nil }
-        // handle single coordinate
-        guard 1 < inCoordinateArray.count else {
-            return MKCoordinateRegion(center: inCoordinateArray[0], span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
+    func createAnnotations() {
+        clearAnnotations()
+        
+        var annotations = [SwiftBMLSDK_MapAnnotation]()
+        
+        let filteredSearchResults = prefs.searchResults?.meetings ?? []
+        
+        if !filteredSearchResults.isEmpty {
+            annotations.append(contentsOf: createMeetingAnnotations(filteredSearchResults))
         }
         
-        let transformed = inCoordinateArray.map(inTransform)
-        
-        // find the span
-        guard let minLat = transformed.min(by: { $0.latitude < $1.latitude })?.latitude,
-              let maxLat = transformed.max(by: { $0.latitude < $1.latitude })?.latitude,
-              let minLon = transformed.min(by: { $0.longitude < $1.longitude })?.longitude,
-              let maxLon = transformed.max(by: { $0.longitude < $1.longitude })?.longitude
-        else { return nil }
-        
-        let span = MKCoordinateSpan(latitudeDelta: maxLat - minLat, longitudeDelta: maxLon - minLon)
-        
-        // find the center of the span
-        let center = inInverseTransform(CLLocationCoordinate2D(latitude: (maxLat - span.latitudeDelta / 2), longitude: maxLon - span.longitudeDelta / 2))
-        
-        return MKCoordinateRegion(center: center, span: span)
+        mapView?.addAnnotations(annotations)
     }
-
+    
     /* ################################################################## */
     /**
+     This creates annotations for the meeting search results.
+     
+     - returns: An array of annotations (may be empty).
      */
-    public init?(coordinates inCoordinateArray: [CLLocationCoordinate2D]) {
-        // first create a region centered around the prime meridian
-        let primeRegion = MKCoordinateRegion._region(for: inCoordinateArray, transform: { $0 }, inverseTransform: { $0 })
-        // next create a region centered around the 180th meridian
-        let transformedRegion = MKCoordinateRegion._region(for: inCoordinateArray, transform: MKCoordinateRegion._transform, inverseTransform: MKCoordinateRegion._inverseTransform)
-        // return the region that has the smallest longitude delta
-        if let a = primeRegion,
-           let b = transformedRegion,
-           let min = [a, b].min(by: { $0.span.longitudeDelta < $1.span.longitudeDelta }) {
-            self = min
-        } else if let a = primeRegion {
-            self = a
-        } else if let b = transformedRegion {
-            self = b
-        } else {
+    func createMeetingAnnotations(_ inMeetings: [SwiftMLSDK_Parser.Meeting]) -> [SwiftBMLSDK_MapAnnotation] {
+        clusterAnnotations(inMeetings.compactMap {
+            if let location = $0.coords {
+                return SwiftBMLSDK_MapAnnotation(coordinate: location, meetings: [$0], myController: self)
+            }
+            
             return nil
+        })
+    }
+    
+     /* ################################################################## */
+     /**
+      This creates clusters (multi) annotations, where markers would be close together.
+      
+      - parameter inAnnotations: The annotations to test.
+      - returns: A new set of annotations, including any clusters.
+      */
+     func clusterAnnotations(_ inAnnotations: [SwiftBMLSDK_MapAnnotation]) -> [SwiftBMLSDK_MapAnnotation] {
+         guard let mapRect = mapView?.visibleMapRect,
+               let mapBounds = mapView?.bounds,
+               let centerLat = mapView?.centerCoordinate.latitude
+         else { return [] }
+       
+         let thresholdDistanceInMeters = (SwiftBMLSDK_MapMarker.sMarkerSizeInDisplayUnits / 2) * ((MKMetersPerMapPointAtLatitude(centerLat) * mapRect.size.width) / mapBounds.size.width)
+         
+         guard 0 < thresholdDistanceInMeters else { return [] }
+         
+         return inAnnotations.reduce([SwiftBMLSDK_MapAnnotation]()) { current, next in
+             var ret = current
+             var append = true
+             
+             let nextLocation = CLLocation(latitude: next.coordinate.latitude, longitude: next.coordinate.longitude)
+             
+             var count = -1
+             
+             for annotation in ret where thresholdDistanceInMeters >= CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude).distance(from: nextLocation) {
+                 annotation.meetings.append(contentsOf: next.meetings)
+                 count += 1
+                 append = false
+                 break
+             }
+             
+             if append {
+                 ret.append(next)
+             }
+             
+             return ret
+         }
+     }
+}
+
+/* ###################################################################################################################################### */
+// MARK: MKMapViewDelegate Conformance
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_MapResultsViewController: MKMapViewDelegate {
+    /* ################################################################## */
+    /**
+     This is called to fetch an annotation (marker) for the map.
+     
+     - parameter: The map view (ignored)
+     - parameter viewFor: The annotation we're getting the marker for.
+     - returns: The marker view for the annotation.
+     */
+    func mapView(_: MKMapView, viewFor inAnnotation: MKAnnotation) -> MKAnnotationView? {
+        var ret: MKAnnotationView?
+        
+        if let myAnnotation = inAnnotation as? SwiftBMLSDK_MapAnnotation {
+            ret = SwiftBMLSDK_MapMarker(annotation: myAnnotation, reuseIdentifier: SwiftBMLSDK_MapMarker.reuseID)
         }
+        
+        return ret
+    }
+    
+    /* ################################################################## */
+    /**
+     This is called when the map region changes.
+     
+     - parameter: The map view (ignored)
+     */
+    func mapView(_: MKMapView, regionDidChangeAnimated: Bool) {
+        createAnnotations()
     }
 }

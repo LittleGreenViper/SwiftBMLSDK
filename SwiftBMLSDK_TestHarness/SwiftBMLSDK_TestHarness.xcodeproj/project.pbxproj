@@ -13,6 +13,7 @@
 		D406221A2B83BB16009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */; };
 		D42740162B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42740152B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift */; };
 		D42740192B913C220019DC48 /* RVS_UIKit_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D42740182B913C220019DC48 /* RVS_UIKit_Toolbox */; };
+		D476D4532B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */; };
 		D47C81722B85204800783B49 /* RVS_Persistent_Prefs in Frameworks */ = {isa = PBXBuildFile; productRef = D47C81712B85204800783B49 /* RVS_Persistent_Prefs */; };
 		D47C81742B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */; };
 		D488D2952B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */; };
@@ -47,6 +48,7 @@
 		D40622142B83B73F009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_BaseViewController.swift; sourceTree = "<group>"; };
 		D42740152B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_MapResultsViewController.swift; sourceTree = "<group>"; };
+		D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_MapMarker.swift; sourceTree = "<group>"; };
 		D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_Prefs.swift; sourceTree = "<group>"; };
 		D488D2912B82CE3F000979D9 /* SwiftBMLSDK_TestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBMLSDK_TestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_AppDelegate.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				D42A9AAA2B8E156F002516E0 /* MainApp */,
 				D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */,
 				D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */,
+				D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */,
 				D42A9AAB2B8E1587002516E0 /* Tabs */,
 				D488D2A82B82CF01000979D9 /* Resources */,
 				D488D2A22B82CE40000979D9 /* Info.plist */,
@@ -247,6 +250,7 @@
 				D488D2952B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift in Sources */,
 				D488D2972B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift in Sources */,
 				D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift in Sources */,
+				D476D4532B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift in Sources */,
 				D4D5E1E12B840675002B769B /* SwiftBMLSDK_TestHarness_TextProcViewController.swift in Sources */,
 				D42740162B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift in Sources */,
 			);
