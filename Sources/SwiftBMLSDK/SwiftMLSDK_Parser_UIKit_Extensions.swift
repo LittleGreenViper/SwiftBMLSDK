@@ -97,9 +97,15 @@ extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
         
         /* ############################################# */
         /**
+         Google Meet
+         */
+        case meet(_: URL? = nil)
+
+        /* ############################################# */
+        /**
          CaseIterable Conformance
          */
-        static var allCases: [SwiftMLSDK_Parser.Meeting.DirectVirtual] { [.zoom(nil), .bluejeans(nil), .gotomeeting(nil), .skype(nil)] }
+        static var allCases: [SwiftMLSDK_Parser.Meeting.DirectVirtual] { [.zoom(nil), .bluejeans(nil), .gotomeeting(nil), .skype(nil), .meet(nil)] }
         
         /* ############################################# */
         /**
@@ -118,6 +124,9 @@ extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
 
             case .skype:
                 return "skype"
+
+            case .meet:
+                return "gmeet"
             }
         }
         
@@ -138,6 +147,9 @@ extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
 
             case .skype:
                 return "skype.com"
+
+            case .meet:
+                return "meet.google.com"
             }
         }
 
@@ -158,6 +170,9 @@ extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
 
             case .skype:
                 return "SLUG-DIRECT-URI-SKYPE"
+
+            case .meet:
+                return "SLUG-DIRECT-URI-MEET"
             }
         }
 
@@ -251,6 +266,18 @@ extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
                 ret = URL(string: retString)
 
             case .skype(let inURL):
+                guard let comp = inURL?.pathComponents,
+                      !comp.isEmpty else { return nil }
+                
+                confNum = comp[0]
+
+                guard !confNum.isEmpty else { return nil }
+                
+                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/\(confNum)"
+
+                ret = URL(string: retString)
+
+            case .meet(let inURL):
                 guard let comp = inURL?.pathComponents,
                       !comp.isEmpty else { return nil }
                 
