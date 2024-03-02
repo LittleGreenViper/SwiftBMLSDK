@@ -29,7 +29,7 @@ import CoreLocation
 public struct SwiftMLSDK_Query {
     /* ################################################# */
     /**
-     This is the completion function for the query.
+     This is the completion function for the meeting search query.
      
      > NOTE: The completion may be called in any thread!
      
@@ -37,9 +37,126 @@ public struct SwiftMLSDK_Query {
      - parameter: Any errors that occurred. Should usually be nil.
      */
     public typealias QueryResultCompletion = (_: SwiftMLSDK_Parser?, _: Error?) -> Void
+
+    /* ################################################# */
+    /**
+     This is the completion function for the server info query.
+     
+     > NOTE: The completion may be called in any thread!
+     
+     - parameter: The resultant server response. Can be nil.
+     - parameter: Any errors that occurred. Should usually be nil.
+     */
+    public typealias ServerInfoResultCompletion = (_: ServerInfo?, _: Error?) -> Void
+
+    /* ################################################################################################################################## */
+    // MARK: Server Info Struct
+    /* ################################################################################################################################## */
+    /**
+     This is the response to the general info query. It contains information about all the servers that can be aggregated by the server.
+     */
+    public struct ServerInfo {
+        /* ############################################################################################################################## */
+        // MARK: Organization Info Struct
+        /* ############################################################################################################################## */
+        /**
+         This breaks down all the organizations that can be fetched by the aggregator.
+         */
+        public struct Organizations {
+            /* ######################################### */
+            /**
+             All of the meetings, in all of the organizations.
+             */
+            let totalMeetings: Int
+
+            /* ######################################### */
+            /**
+             A breakdown of how many meetings per organization.
+             The key is the organization key, and the value is how many meetings belong to that organization.
+             */
+            let perOrganization: [String: Int]
+        }
+        
+        /* ############################################################################################################################## */
+        // MARK: Service Info Struct
+        /* ############################################################################################################################## */
+        /**
+         This breaks down the information for each type of service.
+         */
+        public struct Service {
+            /* ########################################################################################################################## */
+            // MARK: Server Info Struct
+            /* ########################################################################################################################## */
+            /**
+             This is the information for each server that provides the service.
+             */
+           public struct Server {
+               /* ##################################### */
+               /**
+                The ID of the server.
+                */
+               let id: Int
+
+               /* ##################################### */
+               /**
+                The name of the server.
+                */
+               let name: String
+
+               /* ##################################### */
+               /**
+                The URI of the server access entrypoint.
+                */
+               let entryPointURI: URL
+
+               /* ##################################### */
+               /**
+                The number of meetings provided by this server.
+                */
+               let numberOfMeetings: Int
+
+               /* ##################################### */
+               /**
+                The organization breakdown for this server.
+                The key is the organization key, and the value is how many meetings belong to that organization.
+                */
+               let organizations: [String: Int]
+            }
+
+            /* ######################################### */
+            /**
+             The name of the service.
+             */
+            let name: String
+
+            /* ######################################### */
+            /**
+             An array of servers that are provided by this service.
+             */
+            let servers: [Server]
+        }
+        
+        /* ############################################# */
+        /**
+         The version of the aggregator server.
+         */
+        let server_version: String
+        
+        /* ############################################# */
+        /**
+         The last time the aggregator ran an update.
+         */
+        let lastUpdate: Date
+        
+        /* ############################################# */
+        /**
+         The services provided by the aggregator.
+         */
+        let services: [Service]
+    }
     
     /* ################################################################################################################################## */
-    // MARK: Search Specification
+    // MARK: Search Specification Struct
     /* ################################################################################################################################## */
     /**
      This struct is what we use to prescribe the search spec.
@@ -157,6 +274,14 @@ extension SwiftMLSDK_Query {
 // MARK: Instance Methods
 /* ###################################################################################################################################### */
 extension SwiftMLSDK_Query {
+    /* ################################################# */
+    /**
+     - parameter: completion: A tail completion proc.
+     */
+    public func serverInfo(completion inCompletion: @escaping ServerInfoResultCompletion) {
+        
+    }
+    
     /* ################################################# */
     /**
      Perform a server-based search.
