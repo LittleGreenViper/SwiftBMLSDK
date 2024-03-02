@@ -167,6 +167,7 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
+        mapView?.region = MKCoordinateRegion()
         firstLoadDone = false
     }
 }

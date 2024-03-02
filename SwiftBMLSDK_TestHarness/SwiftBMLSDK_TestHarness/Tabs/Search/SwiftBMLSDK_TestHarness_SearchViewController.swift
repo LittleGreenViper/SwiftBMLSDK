@@ -93,6 +93,11 @@ class SwiftBMLSDK_TestHarness_SearchViewController: SwiftBMLSDK_TestHarness_TabB
     /**
      */
     @IBOutlet weak var performSearchButton: UIButton?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var throbberView: UIView?
 }
 
 /* ###################################################################################################################################### */
@@ -126,7 +131,9 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
     @IBAction func performSearchButtonHit(_: Any) {
         prefs.clearSearchResults()
         myTabController?.updateEnablements()
+        throbberView?.isHidden = false
         prefs.performSearch {
+            self.throbberView?.isHidden = true
             guard let results = self.prefs.searchResults else { return }
             self.myTabController?.updateEnablements()
             if !results.meetings.isEmpty {
@@ -214,6 +221,8 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
         radiusLabel?.text = radiusLabel?.text?.localizedVariant
         radiusTextField?.placeholder = radiusTextField?.placeholder?.localizedVariant
         performSearchButton?.setTitle(performSearchButton?.title(for: .normal)?.localizedVariant, for: .normal)
+        throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
+        throbberView?.isHidden = true
     }
     
     /* ################################################################## */

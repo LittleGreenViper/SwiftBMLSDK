@@ -239,14 +239,31 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="S55-mT-kF9"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="JLo-Lw-och"/>
                             </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XsO-vw-PHG">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="hMu-HB-3vv">
+                                        <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="hMu-HB-3vv" firstAttribute="centerY" secondItem="XsO-vw-PHG" secondAttribute="centerY" id="1Jg-he-eoo"/>
+                                    <constraint firstItem="hMu-HB-3vv" firstAttribute="centerX" secondItem="XsO-vw-PHG" secondAttribute="centerX" id="mjo-c8-d1Q"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="jic-Ra-EqI"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="XsO-vw-PHG" secondAttribute="trailing" id="7Ae-aK-bBO"/>
                             <constraint firstItem="MC7-fp-hiK" firstAttribute="leading" secondItem="jic-Ra-EqI" secondAttribute="leading" constant="16" id="7gw-u2-TJ2"/>
                             <constraint firstItem="MC7-fp-hiK" firstAttribute="top" secondItem="jic-Ra-EqI" secondAttribute="top" id="Gg9-Xm-aNI"/>
                             <constraint firstItem="jic-Ra-EqI" firstAttribute="trailing" secondItem="MC7-fp-hiK" secondAttribute="trailing" constant="16" id="Iux-21-p5O"/>
+                            <constraint firstAttribute="bottom" secondItem="XsO-vw-PHG" secondAttribute="bottom" id="Rou-Nk-KRE"/>
+                            <constraint firstItem="XsO-vw-PHG" firstAttribute="top" secondItem="kzT-at-KhI" secondAttribute="top" id="dPN-gE-iJ5"/>
                             <constraint firstItem="MC7-fp-hiK" firstAttribute="bottom" secondItem="jic-Ra-EqI" secondAttribute="bottom" id="jaH-ah-dzb"/>
+                            <constraint firstItem="XsO-vw-PHG" firstAttribute="leading" secondItem="kzT-at-KhI" secondAttribute="leading" id="leW-iS-vyv"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="SLUG-TAB-0-TITLE" id="apn-f8-nMG">
@@ -264,6 +281,7 @@
                         <outlet property="performSearchButton" destination="m83-0C-6PB" id="qkk-iT-t1i"/>
                         <outlet property="radiusLabel" destination="Edd-FN-LNP" id="DQ0-eJ-ce8"/>
                         <outlet property="radiusTextField" destination="qAh-RW-nQh" id="E17-H7-HZK"/>
+                        <outlet property="throbberView" destination="XsO-vw-PHG" id="FHQ-OS-za2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bMK-d2-nUt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
