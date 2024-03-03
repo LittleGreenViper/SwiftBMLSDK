@@ -52,7 +52,6 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
         super.viewDidLoad()
         locationManager.delegate = self
         tabBar.items?.forEach { $0.title = $0.title?.localizedVariant }
-        selectedIndex = 1
     }
     
     /* ################################################################## */

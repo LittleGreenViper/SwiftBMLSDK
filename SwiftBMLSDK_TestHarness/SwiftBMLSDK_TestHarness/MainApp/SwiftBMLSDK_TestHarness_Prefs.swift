@@ -44,6 +44,12 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
     
     /* ################################################################## */
     /**
+     This has the results of a server info query.
+     */
+    private static var _serverInfo: SwiftMLSDK_Query.ServerInfo?
+
+    /* ################################################################## */
+    /**
      This is our query instance.
      */
     private static var _queryInstance = SwiftMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
@@ -125,6 +131,12 @@ extension SwiftBMLSDK_TestHarness_Prefs {
      */
     public var searchResults: SwiftMLSDK_Parser? { Self._searchResults }
     
+    /* ################################################################## */
+    /**
+     This has the results of a server info query.
+     */
+    public var serverInfo: SwiftMLSDK_Query.ServerInfo? { Self._serverInfo }
+
     /* ################################################################## */
     /**
      This is our query instance.
@@ -241,6 +253,9 @@ extension SwiftBMLSDK_TestHarness_Prefs {
     
     /* ############################################################## */
     /**
+     This fetches the meetings from the aggregator, using the current settings. This populates the `searchResults` property.
+     
+     - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.
      */
     public func performSearch(completion inCompletion: @escaping () -> Void) {
         clearSearchResults()
@@ -252,9 +267,14 @@ extension SwiftBMLSDK_TestHarness_Prefs {
     
     /* ############################################################## */
     /**
+     This fetches the server info from the aggregator. This populates the `serverInfo` property.
+     
+     - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.
      */
     public func getServerInfo(completion inCompletion: @escaping () -> Void) {
-        queryInstance.serverInfo { _ , _ in
+        Self._serverInfo = nil
+        queryInstance.serverInfo { inServerInfo , inError in
+            Self._serverInfo = inServerInfo
             DispatchQueue.main.async { inCompletion() }
         }
     }

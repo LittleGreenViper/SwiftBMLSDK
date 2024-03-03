@@ -307,7 +307,53 @@ extension SwiftMLSDK_Query {
                         #if DEBUG
                             print("Response Data: \(data.debugDescription)")
                         #endif
-                        inCompletion(nil, nil)
+                        if let data = inData,
+                           "application/json" == response.mimeType {
+                            #if DEBUG
+                                print("Response Data: \(data.debugDescription)")
+                            #endif
+                            guard let simpleJSON = try? JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? NSDictionary,
+                                  let version = simpleJSON["server_version"] as? String,
+                                  let lastUpdate = simpleJSON["last_update_timestamp"] as? Int,
+                                  let servicesWrapper = simpleJSON["services"] as? NSDictionary,
+                                  let servicesKeys = servicesWrapper.allKeys as? [String]
+                            else {
+                                inCompletion(nil, nil)
+                                return
+                            }
+                            let services: [ServerInfo.Service] = servicesKeys.sorted().compactMap { inName in
+                                guard let object = servicesWrapper[inName] as? NSDictionary,
+                                      let service = object as? [String: Any],
+                                      let name = service["service_name"] as? String,
+                                      !name.isEmpty,
+                                      let serversTemp = service["servers"] as? NSDictionary
+                                else { return nil }
+                                
+                                let keys = (serversTemp.allKeys as? [String] ?? []).compactMap({ Int($0) }).sorted()
+
+                                let servers = keys.compactMap { inIntServerKey in
+                                    let strID = "\(inIntServerKey)"
+                                    if let server = serversTemp[strID] as? NSDictionary,
+                                       let name = server["name"] as? String,
+                                       let numMeetings = server["num_meetings"] as? Int,
+                                       let uriString = server["url"] as? String,
+                                       let uri = URL(string: uriString),
+                                       let orgs = server["organizations"] as? NSDictionary,
+                                       let organizations = orgs as? [String: Int],
+                                       !organizations.isEmpty {
+                                        return ServerInfo.Service.Server(id: inIntServerKey, name: name, entryPointURI: uri, numberOfMeetings: numMeetings, organizations: organizations)
+                                    }
+                                    return nil
+                                }
+                                
+                                return ServerInfo.Service(name: name, servers: servers)
+                            }
+                            
+                            let serverInfo = ServerInfo(server_version: version, lastUpdate: Date(timeIntervalSince1970: TimeInterval(lastUpdate)), services: services)
+                            inCompletion(serverInfo, nil)
+                        } else {
+                            fallthrough
+                        }
                     } else {
                         fallthrough
                     }
