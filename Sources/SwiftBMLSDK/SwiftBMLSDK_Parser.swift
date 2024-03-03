@@ -32,7 +32,7 @@ import Contacts     // For the in-person address
  
  The parser then automatically populates a `meta` instance, that reports the page metadata from the server, and a `meetings` array, of all meeting instances, and some functional interfaces.
  
- This parser has no dependencies, other than the Foundation, CoreLocation, and Contacts SDKs, provided by Apple. It is Codable, but should really be decoded, as opposed to encoded.
+ This parser has no dependencies, other than the Foundation, CoreLocation, and Contacts SDKs, provided by Apple.
  */
 public struct SwiftBMLSDK_Parser: Encodable {
     // MARK: - Internal Private Functionality -
