@@ -16,9 +16,10 @@
  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-"SLUG-TAB-0-TITLE"                              =   "Search";
-"SLUG-TAB-1-TITLE"                              =   "Results";
-"SLUG-TAB-2-TITLE"                              =   "Text Process";
+"SLUG-TAB-0-TITLE"                              =   "Server Info";
+"SLUG-TAB-1-TITLE"                              =   "Search";
+"SLUG-TAB-2-TITLE"                              =   "Results";
+"SLUG-TAB-3-TITLE"                              =   "Text Process";
 "SLUG-LOCATION-SEARCH-TOGGLE"                   =   "Location Search:";
 "SLUG-LOCATION-MAP-BUTTON"                      =   "Open Map >";
 "SLUG-LOCATION-LATITUDE-LABEL"                  =   "Latitude:";

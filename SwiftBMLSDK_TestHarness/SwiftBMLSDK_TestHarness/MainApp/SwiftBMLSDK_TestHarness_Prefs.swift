@@ -249,4 +249,13 @@ extension SwiftBMLSDK_TestHarness_Prefs {
             DispatchQueue.main.async { inCompletion() }
         }
     }
+    
+    /* ############################################################## */
+    /**
+     */
+    public func getServerInfo(completion inCompletion: @escaping () -> Void) {
+        queryInstance.serverInfo { _ , _ in
+            DispatchQueue.main.async { inCompletion() }
+        }
+    }
 }

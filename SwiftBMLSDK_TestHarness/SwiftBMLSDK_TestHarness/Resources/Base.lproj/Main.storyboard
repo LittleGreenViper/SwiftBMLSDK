@@ -37,16 +37,16 @@
                         <viewLayoutGuide key="safeArea" id="NTI-Gb-Zqs"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-2-TITLE" image="rectangle.and.text.magnifyingglass.rtl" catalog="system" id="3Ka-Mc-F3W"/>
+                    <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-3-TITLE" image="rectangle.and.text.magnifyingglass.rtl" catalog="system" id="3Ka-Mc-F3W"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R4O-63-1LH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="201" y="130"/>
         </scene>
-        <!--SLUG-TAB-1-TITLE-->
+        <!--Map Results Tab-->
         <scene sceneID="Z7l-Ny-MDp">
             <objects>
-                <viewController id="uVT-GP-ONa" customClass="SwiftBMLSDK_TestHarness_MapResultsViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="uVT-GP-ONa" userLabel="Map Results Tab" customClass="SwiftBMLSDK_TestHarness_MapResultsViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8ZE-7U-pPx">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -68,7 +68,7 @@
                             <constraint firstItem="Jqj-pi-R5r" firstAttribute="top" secondItem="2X5-Qh-ye2" secondAttribute="top" id="vfH-4o-tjH"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-1-TITLE" id="kl0-Bc-U46">
+                    <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-2-TITLE" id="kl0-Bc-U46">
                         <imageReference key="image" image="map" catalog="system" symbolScale="large"/>
                     </tabBarItem>
                     <connections>
@@ -78,6 +78,48 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I2H-Mr-thq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="200.76335877862596" y="-582.3943661971831"/>
+        </scene>
+        <!--Server Info Tab-->
+        <scene sceneID="fFI-c5-sRo">
+            <objects>
+                <viewController id="Obb-XM-qfi" userLabel="Server Info Tab" customClass="SwiftBMLSDK_TestHarness_InfoViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yoJ-qW-SIj">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uQq-t9-mNO">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="QIr-rF-nNq">
+                                        <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="QIr-rF-nNq" firstAttribute="centerY" secondItem="uQq-t9-mNO" secondAttribute="centerY" id="3Uo-HH-WZi"/>
+                                    <constraint firstItem="QIr-rF-nNq" firstAttribute="centerX" secondItem="uQq-t9-mNO" secondAttribute="centerX" id="c95-R7-li9"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Cc9-nQ-S7v"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="uQq-t9-mNO" secondAttribute="trailing" id="91u-VL-KkU"/>
+                            <constraint firstItem="uQq-t9-mNO" firstAttribute="top" secondItem="yoJ-qW-SIj" secondAttribute="top" id="Ad3-v0-12a"/>
+                            <constraint firstAttribute="bottom" secondItem="uQq-t9-mNO" secondAttribute="bottom" id="I77-tM-PsL"/>
+                            <constraint firstItem="uQq-t9-mNO" firstAttribute="leading" secondItem="yoJ-qW-SIj" secondAttribute="leading" id="h1X-Ch-3Wa"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="SLUG-TAB-0-TITLE" id="OJD-zL-x7E">
+                        <imageReference key="image" image="questionmark.circle.fill" catalog="system" symbolScale="large"/>
+                    </tabBarItem>
+                    <connections>
+                        <outlet property="throbberView" destination="uQq-t9-mNO" id="Zq4-yJ-1wE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="csp-3G-fg1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="207" y="-1955"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="axz-hb-eSA">
@@ -266,7 +308,7 @@
                             <constraint firstItem="XsO-vw-PHG" firstAttribute="leading" secondItem="kzT-at-KhI" secondAttribute="leading" id="leW-iS-vyv"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="SLUG-TAB-0-TITLE" id="apn-f8-nMG">
+                    <tabBarItem key="tabBarItem" title="SLUG-TAB-1-TITLE" id="apn-f8-nMG">
                         <imageReference key="image" image="magnifyingglass" catalog="system" symbolScale="large"/>
                     </tabBarItem>
                     <connections>
@@ -330,6 +372,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
+                        <segue destination="Obb-XM-qfi" kind="relationship" relationship="viewControllers" id="lD4-hR-eSK"/>
                         <segue destination="QCj-Xx-X0G" kind="relationship" relationship="viewControllers" id="Cnu-j5-zKI"/>
                         <segue destination="uVT-GP-ONa" kind="relationship" relationship="viewControllers" id="dpk-dr-gkC"/>
                         <segue destination="8ds-ES-398" kind="relationship" relationship="viewControllers" id="41Y-gR-yhF"/>
@@ -381,6 +424,7 @@
     <resources>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
         <image name="map" catalog="system" width="128" height="112"/>
+        <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
         <image name="rectangle.and.text.magnifyingglass.rtl" catalog="system" width="128" height="90"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -52,6 +52,7 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
         super.viewDidLoad()
         locationManager.delegate = self
         tabBar.items?.forEach { $0.title = $0.title?.localizedVariant }
+        selectedIndex = 1
     }
     
     /* ################################################################## */
@@ -85,10 +86,10 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
      */
     func updateEnablements() {
         guard let count = tabBar.items?.count,
-              1 < count
+              2 < count
         else { return }
         
-        for index in 1..<count {
+        for index in 2..<count {
             tabBar.items?[index].isEnabled = !(prefs.searchResults?.meetings ?? []).isEmpty
         }
     }

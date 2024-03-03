@@ -74,7 +74,7 @@ public struct SwiftMLSDK_Query {
              A breakdown of how many meetings per organization.
              The key is the organization key, and the value is how many meetings belong to that organization.
              */
-            let perOrganization: [String: Int]
+            let organizations: [String: Int]
         }
         
         /* ############################################################################################################################## */
@@ -279,7 +279,46 @@ extension SwiftMLSDK_Query {
      - parameter: completion: A tail completion proc.
      */
     public func serverInfo(completion inCompletion: @escaping ServerInfoResultCompletion) {
+        guard let baseURLString = serverBaseURI?.absoluteString,
+              let url = URL(string: "\(baseURLString)?info")
+        else {
+            inCompletion(nil, nil)
+            return
+        }
         
+        let urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        
+        #if DEBUG
+            print("URL Request: \(urlRequest.url?.absoluteString ?? "ERROR")")
+        #endif
+        _session.dataTask(with: urlRequest) { inData, inResponse, inError in
+            guard let response = inResponse as? HTTPURLResponse,
+                  nil == inError
+            else {
+                inCompletion(nil, nil)
+                return
+            }
+            
+            if nil == inError {
+                switch response.statusCode {
+                case 200..<300:
+                    if let data = inData,
+                       "application/json" == response.mimeType {
+                        #if DEBUG
+                            print("Response Data: \(data.debugDescription)")
+                        #endif
+                        inCompletion(nil, nil)
+                    } else {
+                        fallthrough
+                    }
+                
+                default:
+                    inCompletion(nil, nil)
+                }
+            } else {
+                inCompletion(nil, inError)
+            }
+        }.resume()
     }
     
     /* ################################################# */
