@@ -57,27 +57,6 @@ public struct SwiftMLSDK_Query {
      */
     public struct ServerInfo {
         /* ############################################################################################################################## */
-        // MARK: Organization Info Struct
-        /* ############################################################################################################################## */
-        /**
-         This breaks down all the organizations that can be fetched by the aggregator.
-         */
-        public struct Organizations {
-            /* ######################################### */
-            /**
-             All of the meetings, in all of the organizations.
-             */
-            let totalMeetings: Int
-
-            /* ######################################### */
-            /**
-             A breakdown of how many meetings per organization.
-             The key is the organization key, and the value is how many meetings belong to that organization.
-             */
-            let organizations: [String: Int]
-        }
-        
-        /* ############################################################################################################################## */
         // MARK: Service Info Struct
         /* ############################################################################################################################## */
         /**
@@ -95,64 +74,92 @@ public struct SwiftMLSDK_Query {
                /**
                 The ID of the server.
                 */
-               let id: Int
+               public let id: Int
 
                /* ##################################### */
                /**
                 The name of the server.
                 */
-               let name: String
+               public let name: String
 
                /* ##################################### */
                /**
                 The URI of the server access entrypoint.
                 */
-               let entryPointURI: URL
+               public let entryPointURI: URL
 
                /* ##################################### */
                /**
                 The number of meetings provided by this server.
                 */
-               let numberOfMeetings: Int
+               public let numberOfMeetings: Int
 
                /* ##################################### */
                /**
                 The organization breakdown for this server.
                 The key is the organization key, and the value is how many meetings belong to that organization.
                 */
-               let organizations: [String: Int]
+               public let organizations: [String: Int]
             }
 
             /* ######################################### */
             /**
              The name of the service.
              */
-            let name: String
+            public let name: String
 
             /* ######################################### */
             /**
              An array of servers that are provided by this service.
              */
-            let servers: [Server]
+            public let servers: [Server]
         }
         
         /* ############################################# */
         /**
          The version of the aggregator server.
          */
-        let server_version: String
+        public let server_version: String
         
         /* ############################################# */
         /**
          The last time the aggregator ran an update.
          */
-        let lastUpdate: Date
+        public let lastUpdate: Date
         
         /* ############################################# */
         /**
          The services provided by the aggregator.
          */
-        let services: [Service]
+        public let services: [Service]
+        
+        /* ############################################# */
+        /**
+         The aggregate organization breakdown.
+         */
+        public let organizationTotals: [String: Int]
+        
+        /* ############################################# */
+        /**
+         The total number of meetings in the server.
+         */
+        public var totalMeetings: Int {
+            services.reduce(0) { current, next in
+                current + next.servers.reduce(0) { cur, nxt in
+                    return cur + nxt.numberOfMeetings
+                }
+            }
+        }
+        
+        /* ############################################# */
+        /**
+         The total number of servers reached by the server.
+         */
+        public var totalServers: Int {
+            services.reduce(0) { current, next in
+                current + next.servers.count
+            }
+        }
     }
     
     /* ################################################################################################################################## */
@@ -316,11 +323,16 @@ extension SwiftMLSDK_Query {
                                   let version = simpleJSON["server_version"] as? String,
                                   let lastUpdate = simpleJSON["last_update_timestamp"] as? Int,
                                   let servicesWrapper = simpleJSON["services"] as? NSDictionary,
-                                  let servicesKeys = servicesWrapper.allKeys as? [String]
+                                  let servicesKeys = servicesWrapper.allKeys as? [String],
+                                  let organizationTemp = simpleJSON["organizations"] as? NSDictionary,
+                                  var organizationsSrc = organizationTemp as? [String: Int]
                             else {
                                 inCompletion(nil, nil)
                                 return
                             }
+                            
+                            organizationsSrc.removeValue(forKey: "total_meetings")
+ 
                             let services: [ServerInfo.Service] = servicesKeys.sorted().compactMap { inName in
                                 guard let object = servicesWrapper[inName] as? NSDictionary,
                                       let service = object as? [String: Any],
@@ -349,7 +361,7 @@ extension SwiftMLSDK_Query {
                                 return ServerInfo.Service(name: name, servers: servers)
                             }
                             
-                            let serverInfo = ServerInfo(server_version: version, lastUpdate: Date(timeIntervalSince1970: TimeInterval(lastUpdate)), services: services)
+                            let serverInfo = ServerInfo(server_version: version, lastUpdate: Date(timeIntervalSince1970: TimeInterval(lastUpdate)), services: services, organizationTotals: organizationsSrc)
                             inCompletion(serverInfo, nil)
                         } else {
                             fallthrough

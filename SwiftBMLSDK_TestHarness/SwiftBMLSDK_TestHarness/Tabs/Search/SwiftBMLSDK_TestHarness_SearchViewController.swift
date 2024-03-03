@@ -137,7 +137,7 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
             guard let results = self.prefs.searchResults else { return }
             self.myTabController?.updateEnablements()
             if !results.meetings.isEmpty {
-                self.myTabController?.selectedIndex = 1
+                self.myTabController?.selectedIndex = 2
             }
         }
     }
@@ -163,6 +163,7 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
         
         prefs.locationCenter = center
         prefs.locationRadius = radius
+        myTabController?.updateEnablements()
     }
 
     /* ################################################################## */

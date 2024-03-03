@@ -19,6 +19,7 @@
 
 import UIKit
 import RVS_Generic_Swift_Toolbox
+import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
 // MARK: - Server Info Main Tab View Controller -
@@ -26,6 +27,41 @@ import RVS_Generic_Swift_Toolbox
 /**
  */
 class SwiftBMLSDK_TestHarness_InfoViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
+    /* ################################################################## */
+    /**
+     */
+    var organizationContainers: [UIStackView] = []
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var mainContainerView: UIStackView?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var numberOfMeetingsPromptLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var numberOfMeetingsLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var numberOfServersPromptLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var numberOfServersLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var organizationListPromptLabel: UILabel?
+    
     /* ################################################################## */
     /**
      */
@@ -50,6 +86,10 @@ extension SwiftBMLSDK_TestHarness_InfoViewController {
         super.viewDidLoad()
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
         throbberView?.isHidden = true
+        mainContainerView?.isHidden = false
+        numberOfMeetingsPromptLabel?.text = numberOfMeetingsPromptLabel?.text?.localizedVariant
+        numberOfServersPromptLabel?.text = numberOfServersPromptLabel?.text?.localizedVariant
+        organizationListPromptLabel?.text = organizationListPromptLabel?.text?.localizedVariant
     }
     
     /* ################################################################## */
@@ -73,8 +113,30 @@ extension SwiftBMLSDK_TestHarness_InfoViewController {
      */
     func getServerInfo() {
         throbberView?.isHidden = false
+        mainContainerView?.isHidden = true
+        organizationContainers.forEach { $0.removeFromSuperview() }
+        organizationContainers = []
         prefs.getServerInfo {
             self.throbberView?.isHidden = true
+            self.numberOfMeetingsLabel?.text = String(self.prefs.serverInfo?.totalMeetings ?? 0)
+            self.numberOfServersLabel?.text = String(self.prefs.serverInfo?.totalServers ?? 0)
+            self.prefs.serverInfo?.organizationTotals.forEach {
+                let container = UIStackView()
+                container.axis = .horizontal
+                container.distribution = .fillEqually
+                container.spacing = 8
+                let key = UILabel()
+                key.textAlignment = .right
+                key.font = .systemFont(ofSize: 17, weight: .bold)
+                key.text = "\($0.key):"
+                container.addArrangedSubview(key)
+                let value = UILabel()
+                value.text = String($0.value)
+                container.addArrangedSubview(value)
+                self.organizationContainers.append(container)
+                self.mainContainerView?.addArrangedSubview(container)
+            }
+            self.mainContainerView?.isHidden = false
         }
     }
 }

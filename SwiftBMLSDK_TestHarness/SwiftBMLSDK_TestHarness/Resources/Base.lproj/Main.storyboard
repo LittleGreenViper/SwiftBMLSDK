@@ -87,6 +87,57 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="g4B-bf-dUa">
+                                <rect key="frame" x="16" y="103" width="361" height="77"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="r7o-vc-IQU">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="20.333333333333332"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SLUG-NUMBER-OF-MEETINGS-PROMPT" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Q1-CF-pH9">
+                                                <rect key="frame" x="0.0" y="0.0" width="176.66666666666666" height="20.333333333333332"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oXh-Oz-j9O">
+                                                <rect key="frame" x="184.66666666666663" y="0.0" width="176.33333333333337" height="20.333333333333332"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="0KA-Dh-HgQ"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NSS-me-0rM">
+                                        <rect key="frame" x="0.0" y="28.333333333333343" width="361" height="20.333333333333329"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SLUG-NUMBER-OF-SERVERS-PROMPT" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0KT-hO-k7e">
+                                                <rect key="frame" x="0.0" y="0.0" width="176.66666666666666" height="20.333333333333332"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L2J-IE-yNo">
+                                                <rect key="frame" x="184.66666666666663" y="0.0" width="176.33333333333337" height="20.333333333333332"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="ZNG-GH-vts"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SLUG-ORGANIZATIONS-LIST-PROMPT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6kS-57-fVj">
+                                        <rect key="frame" x="22" y="56.666666666666664" width="317" height="20.333333333333336"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uQq-t9-mNO">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
@@ -104,22 +155,31 @@
                         <viewLayoutGuide key="safeArea" id="Cc9-nQ-S7v"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Cc9-nQ-S7v" firstAttribute="trailing" secondItem="g4B-bf-dUa" secondAttribute="trailing" constant="16" id="6qW-nC-fBg"/>
                             <constraint firstAttribute="trailing" secondItem="uQq-t9-mNO" secondAttribute="trailing" id="91u-VL-KkU"/>
                             <constraint firstItem="uQq-t9-mNO" firstAttribute="top" secondItem="yoJ-qW-SIj" secondAttribute="top" id="Ad3-v0-12a"/>
                             <constraint firstAttribute="bottom" secondItem="uQq-t9-mNO" secondAttribute="bottom" id="I77-tM-PsL"/>
+                            <constraint firstItem="g4B-bf-dUa" firstAttribute="top" secondItem="Cc9-nQ-S7v" secondAttribute="top" id="JeS-xP-TPy"/>
                             <constraint firstItem="uQq-t9-mNO" firstAttribute="leading" secondItem="yoJ-qW-SIj" secondAttribute="leading" id="h1X-Ch-3Wa"/>
+                            <constraint firstItem="g4B-bf-dUa" firstAttribute="leading" secondItem="Cc9-nQ-S7v" secondAttribute="leading" constant="16" id="tDK-Zv-AwG"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="SLUG-TAB-0-TITLE" id="OJD-zL-x7E">
                         <imageReference key="image" image="questionmark.circle.fill" catalog="system" symbolScale="large"/>
                     </tabBarItem>
                     <connections>
+                        <outlet property="mainContainerView" destination="g4B-bf-dUa" id="HIY-fI-LJ6"/>
+                        <outlet property="numberOfMeetingsLabel" destination="oXh-Oz-j9O" id="PUE-ht-khc"/>
+                        <outlet property="numberOfMeetingsPromptLabel" destination="4Q1-CF-pH9" id="SID-0v-ZZd"/>
+                        <outlet property="numberOfServersLabel" destination="L2J-IE-yNo" id="Tnv-eJ-pH8"/>
+                        <outlet property="numberOfServersPromptLabel" destination="0KT-hO-k7e" id="PqG-Kr-4CE"/>
+                        <outlet property="organizationListPromptLabel" destination="6kS-57-fVj" id="xJZ-Ev-hJ6"/>
                         <outlet property="throbberView" destination="uQq-t9-mNO" id="Zq4-yJ-1wE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="csp-3G-fg1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="207" y="-1955"/>
+            <point key="canvasLocation" x="206.87022900763358" y="-1955.6338028169016"/>
         </scene>
         <!--Search View Controller-->
         <scene sceneID="axz-hb-eSA">

@@ -20,6 +20,11 @@
 "SLUG-TAB-1-TITLE"                              =   "Search";
 "SLUG-TAB-2-TITLE"                              =   "Results";
 "SLUG-TAB-3-TITLE"                              =   "Text Process";
+
+"SLUG-NUMBER-OF-MEETINGS-PROMPT"                =   "Total Number of Meetings:";
+"SLUG-NUMBER-OF-SERVERS-PROMPT"                 =   "Total Number of Servers:";
+"SLUG-ORGANIZATIONS-LIST-PROMPT"                =   "Organizations:";
+
 "SLUG-LOCATION-SEARCH-TOGGLE"                   =   "Location Search:";
 "SLUG-LOCATION-MAP-BUTTON"                      =   "Open Map >";
 "SLUG-LOCATION-LATITUDE-LABEL"                  =   "Latitude:";
