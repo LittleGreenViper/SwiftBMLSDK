@@ -19,6 +19,7 @@
 
 import UIKit
 import RVS_Generic_Swift_Toolbox
+import CreateML
 
 /* ###################################################################################################################################### */
 // MARK: - Text Processor Main Tab View Controller -
@@ -26,6 +27,17 @@ import RVS_Generic_Swift_Toolbox
 /**
  */
 class SwiftBMLSDK_TestHarness_TextProcViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
+    /* ################################################################## */
+    /**
+     The data table for our training.
+     */
+    var dataTable: MLDataTable?
+    
+    /* ################################################################## */
+    /**
+     The "busy throbber" view.
+     */
+    @IBOutlet weak var throbberView: UIView?
 }
 
 /* ###################################################################################################################################### */
@@ -44,6 +56,27 @@ extension SwiftBMLSDK_TestHarness_TextProcViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        throbberView?.isHidden = false
+    }
+    
+    /* ################################################################## */
+    /**
+     Called when the view has appeared.
+     
+     - parameter inIsAnimated: True, if the appearance was animated.
+     */
+    override func viewDidAppear(_ inIsAnimated: Bool) {
+        super.viewDidAppear(inIsAnimated)
+        guard let resultJSON = prefs.searchResults?.meetingJSONData else { return }
+        let url = URL.documentsDirectory.appending(path: "meetingsData.json")
+        do {
+            try resultJSON.write(to: url, options: [.atomic, .completeFileProtection])
+            dataTable = try MLDataTable(contentsOf: url)
+        } catch {
+            print(error.localizedDescription)
+        }
+        throbberView?.isHidden = true
+        print("We have MLDataTable!")
     }
 }
 

@@ -34,10 +34,34 @@
                     <view key="view" contentMode="scaleToFill" id="98f-wW-yZn">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="COP-Wi-FL8">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="fqY-Rd-b1O">
+                                        <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="fqY-Rd-b1O" firstAttribute="centerX" secondItem="COP-Wi-FL8" secondAttribute="centerX" id="PUf-l1-nh5"/>
+                                    <constraint firstItem="fqY-Rd-b1O" firstAttribute="centerY" secondItem="COP-Wi-FL8" secondAttribute="centerY" id="fpf-Te-W4t"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="NTI-Gb-Zqs"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="COP-Wi-FL8" secondAttribute="bottom" id="46H-ef-ebD"/>
+                            <constraint firstAttribute="trailing" secondItem="COP-Wi-FL8" secondAttribute="trailing" id="7aG-hg-t5Q"/>
+                            <constraint firstItem="COP-Wi-FL8" firstAttribute="top" secondItem="98f-wW-yZn" secondAttribute="top" id="8Ic-Hk-VJX"/>
+                            <constraint firstItem="COP-Wi-FL8" firstAttribute="leading" secondItem="98f-wW-yZn" secondAttribute="leading" id="QQu-km-vzR"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-3-TITLE" image="rectangle.and.text.magnifyingglass.rtl" catalog="system" id="3Ka-Mc-F3W"/>
+                    <connections>
+                        <outlet property="throbberView" destination="COP-Wi-FL8" id="Dnj-rh-7J7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R4O-63-1LH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

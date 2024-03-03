@@ -136,9 +136,6 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
             self.throbberView?.isHidden = true
             guard let results = self.prefs.searchResults else { return }
             self.myTabController?.updateEnablements()
-            if !results.meetings.isEmpty {
-                self.myTabController?.selectedIndex = 2
-            }
         }
     }
 

@@ -112,6 +112,8 @@ extension SwiftBMLSDK_TestHarness_InfoViewController {
     /**
      */
     func getServerInfo() {
+        prefs.clearSearchResults()
+        myTabController?.updateEnablements()
         throbberView?.isHidden = false
         mainContainerView?.isHidden = true
         organizationContainers.forEach { $0.removeFromSuperview() }

@@ -81,7 +81,13 @@ extension MKCoordinateRegion {
      */
     private static func _region(for inCoordinateArray: [CLLocationCoordinate2D], transform inTransform: _Transform, inverseTransform inInverseTransform: _Transform) -> MKCoordinateRegion? {
         // We must have two or more.
-        guard 1 < inCoordinateArray.count else { return nil }
+        guard 1 < inCoordinateArray.count else {
+            if 1 == inCoordinateArray.count {   // If just one, we center a 1Km-square region around it.
+                return MKCoordinateRegion(center: inCoordinateArray[0], latitudinalMeters: 1000, longitudinalMeters: 1000)
+            } else {
+                return nil
+            }
+        }
         
         let transformed = inCoordinateArray.map(inTransform)
         
@@ -167,6 +173,16 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
+    }
+    
+    /* ################################################################## */
+    /**
+     Called just before the view is displayed.
+     
+     - parameter inIsAnimated: True, if the appearance is animated.
+     */
+    override func viewDidAppear(_ inIsAnimated: Bool) {
+        super.viewDidAppear(inIsAnimated)
         mapView?.region = MKCoordinateRegion()
         firstLoadDone = false
     }

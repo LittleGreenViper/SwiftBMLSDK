@@ -273,6 +273,7 @@ extension SwiftBMLSDK_TestHarness_Prefs {
      */
     public func getServerInfo(completion inCompletion: @escaping () -> Void) {
         Self._serverInfo = nil
+        clearSearchResults()
         queryInstance.serverInfo { inServerInfo , inError in
             Self._serverInfo = inServerInfo
             DispatchQueue.main.async { inCompletion() }

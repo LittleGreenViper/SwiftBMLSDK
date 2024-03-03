@@ -89,7 +89,11 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
         else { return }
         
         for index in 2..<count {
-            tabBar.items?[index].isEnabled = !(prefs.searchResults?.meetings ?? []).isEmpty
+            if 2 == index {
+                tabBar.items?[index].isEnabled = !(prefs.searchResults?.meetings ?? []).isEmpty && 1000 > (prefs.searchResults?.meetings.count ?? 1000)
+            } else {
+                tabBar.items?[index].isEnabled = !(prefs.searchResults?.meetings ?? []).isEmpty
+            }
         }
     }
 }
