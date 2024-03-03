@@ -34,7 +34,7 @@ import Contacts     // For the in-person address
  
  This parser has no dependencies, other than the Foundation, CoreLocation, and Contacts SDKs, provided by Apple. It is Codable, but should really be decoded, as opposed to encoded.
  */
-public struct SwiftMLSDK_Parser: Encodable {
+public struct SwiftBMLSDK_Parser: Encodable {
     // MARK: - Internal Private Functionality -
 
     /* ################################################# */
@@ -946,7 +946,7 @@ public struct SwiftMLSDK_Parser: Encodable {
          - parameter lhs: The left-hand side of the comparison.
          - parameter rhs: The right-hand side of the comparison.
          */
-        public static func == (lhs: SwiftMLSDK_Parser.Meeting, rhs: SwiftMLSDK_Parser.Meeting) -> Bool { lhs.id == rhs.id }
+        public static func == (lhs: SwiftBMLSDK_Parser.Meeting, rhs: SwiftBMLSDK_Parser.Meeting) -> Bool { lhs.id == rhs.id }
         
         /* ############################################# */
         /**
@@ -987,7 +987,7 @@ fileprivate extension Date {
 /**
  This extension adds some basic filtering and conversion options to the parser.
  */
-public extension SwiftMLSDK_Parser {
+public extension SwiftBMLSDK_Parser {
     /* ################################################# */
     /**
      This returns the entire meeting list as a simple, 2-dimensional, JSON Data instance. The data is a simple sequence of single-dimension dictionaries.
@@ -1000,7 +1000,7 @@ public extension SwiftMLSDK_Parser {
     /**
      Returns meetings that have an in-person component.
      */
-    var inPersonMeetings: [SwiftMLSDK_Parser.Meeting] {
+    var inPersonMeetings: [SwiftBMLSDK_Parser.Meeting] {
         meetings.compactMap { .hybrid == $0.meetingType || .inPerson == $0.meetingType ? $0 : nil }
     }
     
@@ -1008,7 +1008,7 @@ public extension SwiftMLSDK_Parser {
     /**
      Returns meetings that are only in-person.
      */
-    var inPersonOnlyMeetings: [SwiftMLSDK_Parser.Meeting] {
+    var inPersonOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] {
         meetings.compactMap { .inPerson == $0.meetingType ? $0 : nil }
     }
 
@@ -1016,7 +1016,7 @@ public extension SwiftMLSDK_Parser {
     /**
      Returns meetings that have a virtual component.
      */
-    var virtualMeetings: [SwiftMLSDK_Parser.Meeting] {
+    var virtualMeetings: [SwiftBMLSDK_Parser.Meeting] {
         meetings.compactMap { .hybrid == $0.meetingType || .virtual == $0.meetingType ? $0 : nil }
     }
 
@@ -1024,7 +1024,7 @@ public extension SwiftMLSDK_Parser {
     /**
      Returns meetings that are only virtual.
      */
-    var virtualOnlyMeetings: [SwiftMLSDK_Parser.Meeting] {
+    var virtualOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] {
         meetings.compactMap { .virtual == $0.meetingType ? $0 : nil }
     }
 
@@ -1032,7 +1032,7 @@ public extension SwiftMLSDK_Parser {
     /**
      Returns meetings that are only hybrid.
      */
-    var hybridMeetings: [SwiftMLSDK_Parser.Meeting] {
+    var hybridMeetings: [SwiftBMLSDK_Parser.Meeting] {
         meetings.compactMap { .hybrid == $0.meetingType ? $0 : nil }
     }
 }
@@ -1043,7 +1043,7 @@ public extension SwiftMLSDK_Parser {
 /**
  This extension adds some basic interpretation methods to the base class.
  */
-extension SwiftMLSDK_Parser.Meeting {
+extension SwiftBMLSDK_Parser.Meeting {
     // MARK: Computed Properties
     
     /* ################################################################## */

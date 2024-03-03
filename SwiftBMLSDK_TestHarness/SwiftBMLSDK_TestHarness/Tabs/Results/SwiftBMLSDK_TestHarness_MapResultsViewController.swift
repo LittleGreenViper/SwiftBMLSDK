@@ -182,7 +182,7 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      
      - parameter inMeeting: The meeting instance.
      */
-    func selectMeeting(_ inMeeting: SwiftMLSDK_Parser.Meeting) {
+    func selectMeeting(_ inMeeting: SwiftBMLSDK_Parser.Meeting) {
     }
     
     /* ################################################################## */
@@ -192,7 +192,7 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      - parameter users: The array of users, associated with the annotation.
      - parameter view: The annotation marker view (anchor for the popover).
      */
-    func annotationHit(meetings inMeetings: [SwiftMLSDK_Parser.Meeting], view inView: UIView) {
+    func annotationHit(meetings inMeetings: [SwiftBMLSDK_Parser.Meeting], view inView: UIView) {
         guard let view = inView as? SwiftBMLSDK_MapMarker else { return }
         makeAMarkerPopover(view)
     }
@@ -254,7 +254,7 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      
      - returns: An array of annotations (may be empty).
      */
-    func createMeetingAnnotations(_ inMeetings: [SwiftMLSDK_Parser.Meeting]) -> [SwiftBMLSDK_MapAnnotation] {
+    func createMeetingAnnotations(_ inMeetings: [SwiftBMLSDK_Parser.Meeting]) -> [SwiftBMLSDK_MapAnnotation] {
         clusterAnnotations(inMeetings.compactMap {
             if let location = $0.coords {
                 return SwiftBMLSDK_MapAnnotation(coordinate: location, meetings: [$0], myController: self)

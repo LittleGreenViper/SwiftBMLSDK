@@ -53,7 +53,7 @@ class SwiftBMLSDK_TestCase: XCTestCase {
     /**
      This will cache our parser, so we don't have to keep reloading it.
      */
-    static var parser: SwiftMLSDK_Parser?
+    static var parser: SwiftBMLSDK_Parser?
 
     /* ################################################################## */
     /**
@@ -70,7 +70,7 @@ class SwiftBMLSDK_TestCase: XCTestCase {
             Self._parsedOriginalJSONData = simpleJSON
         }
         guard let jsonData = Self._originalJSONData else { return }
-        Self.parser = SwiftMLSDK_Parser(jsonData: jsonData)
+        Self.parser = SwiftBMLSDK_Parser(jsonData: jsonData)
     }
     
     /* ################################################################## */
@@ -80,7 +80,7 @@ class SwiftBMLSDK_TestCase: XCTestCase {
      - parameter index: The 0-based index of the meeting (used to extract the original data).
      - parameter meeting: The parsed meeting instance.
      */
-    func validateMeeting(index inIndex: Int, meeting inMeeting: SwiftMLSDK_Parser.Meeting) {
+    func validateMeeting(index inIndex: Int, meeting inMeeting: SwiftBMLSDK_Parser.Meeting) {
         /* ############################################################## */
         /**
          "Cleans" a URI.

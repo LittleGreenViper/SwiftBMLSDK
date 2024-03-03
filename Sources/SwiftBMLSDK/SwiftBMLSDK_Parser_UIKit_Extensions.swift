@@ -49,7 +49,7 @@ fileprivate extension StringProtocol {
 /**
  We have special properties that apply only to specific runtime environments.
  */
-public protocol SwiftMLSDK_Meeting {
+public protocol SwiftBMLSDK_Meeting {
     /* ################################################# */
     /**
      If the URL for the virtual meeting is one that can open an app on the user's device, a direct URL scheme version of the URL is returned.
@@ -63,7 +63,7 @@ public protocol SwiftMLSDK_Meeting {
 /**
  This extension uses UIKit to determine the proper app for app-specific URIs.
  */
-extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
+extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
     /* ################################################################################################################################## */
     // MARK: - Enum For Virtual Direct URLs -
     /* ################################################################################################################################## */
@@ -105,7 +105,7 @@ extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
         /**
          CaseIterable Conformance
          */
-        static var allCases: [SwiftMLSDK_Parser.Meeting.DirectVirtual] { [.zoom(nil), .bluejeans(nil), .gotomeeting(nil), .skype(nil), .meet(nil)] }
+        static var allCases: [SwiftBMLSDK_Parser.Meeting.DirectVirtual] { [.zoom(nil), .bluejeans(nil), .gotomeeting(nil), .skype(nil), .meet(nil)] }
         
         /* ############################################# */
         /**
@@ -339,7 +339,7 @@ extension SwiftMLSDK_Parser.Meeting: SwiftMLSDK_Meeting {
 /* ###################################################################################################################################### */
 // MARK: - Array Extension, for Arrays of meetings -
 /* ###################################################################################################################################### */
-public extension Array where Element==SwiftMLSDK_Parser.Meeting {
+public extension Array where Element==SwiftBMLSDK_Parser.Meeting {
     /* ################################################# */
     /**
      This returns all of the in-person meeting coordinates in an array.

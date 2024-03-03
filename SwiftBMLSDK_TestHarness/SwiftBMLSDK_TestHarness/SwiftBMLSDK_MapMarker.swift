@@ -29,7 +29,7 @@ class SwiftBMLSDK_MapAnnotation: NSObject, MKAnnotation {
     /**
      This is any meetings associated with this instance. This can be modified after instantiation.
      */
-    var meetings: [SwiftMLSDK_Parser.Meeting]
+    var meetings: [SwiftBMLSDK_Parser.Meeting]
     
     /* ################################################################## */
     /**
@@ -38,7 +38,7 @@ class SwiftBMLSDK_MapAnnotation: NSObject, MKAnnotation {
      - parameter coordinate: the coordinate for this annotation.
      */
     init(coordinate inCoordinate: CLLocationCoordinate2D,
-         meetings inMeetings: [SwiftMLSDK_Parser.Meeting],
+         meetings inMeetings: [SwiftBMLSDK_Parser.Meeting],
          myController inMyController: SwiftBMLSDK_TestHarness_MapResultsViewController? = nil) {
         coordinate = inCoordinate
         meetings = inMeetings
@@ -173,5 +173,5 @@ extension SwiftBMLSDK_MapMarker {
     /**
      This is any user associated with this instance
      */
-    var meetings: [SwiftMLSDK_Parser.Meeting] { (annotation as? SwiftBMLSDK_MapAnnotation)?.meetings ?? [] }
+    var meetings: [SwiftBMLSDK_Parser.Meeting] { (annotation as? SwiftBMLSDK_MapAnnotation)?.meetings ?? [] }
 }

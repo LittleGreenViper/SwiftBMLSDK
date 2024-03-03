@@ -40,19 +40,19 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
     /**
      This has the results of any search we did.
      */
-    private static var _searchResults: SwiftMLSDK_Parser?
+    private static var _searchResults: SwiftBMLSDK_Parser?
     
     /* ################################################################## */
     /**
      This has the results of a server info query.
      */
-    private static var _serverInfo: SwiftMLSDK_Query.ServerInfo?
+    private static var _serverInfo: SwiftBMLSDK_Query.ServerInfo?
 
     /* ################################################################## */
     /**
      This is our query instance.
      */
-    private static var _queryInstance = SwiftMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
+    private static var _queryInstance = SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
 
     /* ################################################################################################################################## */
     // MARK: RVS_PersistentPrefs Conformance
@@ -129,19 +129,19 @@ extension SwiftBMLSDK_TestHarness_Prefs {
     /**
      This has the results of any search we did.
      */
-    public var searchResults: SwiftMLSDK_Parser? { Self._searchResults }
+    public var searchResults: SwiftBMLSDK_Parser? { Self._searchResults }
     
     /* ################################################################## */
     /**
      This has the results of a server info query.
      */
-    public var serverInfo: SwiftMLSDK_Query.ServerInfo? { Self._serverInfo }
+    public var serverInfo: SwiftBMLSDK_Query.ServerInfo? { Self._serverInfo }
 
     /* ################################################################## */
     /**
      This is our query instance.
      */
-    public var queryInstance: SwiftMLSDK_Query { Self._queryInstance }
+    public var queryInstance: SwiftBMLSDK_Query { Self._queryInstance }
 
     /* ################################################################## */
     /**
@@ -259,7 +259,7 @@ extension SwiftBMLSDK_TestHarness_Prefs {
      */
     public func performSearch(completion inCompletion: @escaping () -> Void) {
         clearSearchResults()
-        queryInstance.meetingSearch(specification: SwiftMLSDK_Query.SearchSpecification(locationRadius: locationRadius, locationCenter: locationCenter)) { inSearchResults, inError in
+        queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(locationRadius: locationRadius, locationCenter: locationCenter)) { inSearchResults, inError in
             Self._searchResults = inSearchResults
             DispatchQueue.main.async { inCompletion() }
         }

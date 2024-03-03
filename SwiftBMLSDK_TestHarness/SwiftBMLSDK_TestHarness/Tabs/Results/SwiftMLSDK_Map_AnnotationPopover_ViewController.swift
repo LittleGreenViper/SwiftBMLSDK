@@ -49,7 +49,7 @@ class SwiftMLSDK_Map_AnnotationPopover_ViewController: UIViewController {
     /**
      The users associated with this popover.
      */
-    var meetings: [SwiftMLSDK_Parser.Meeting] = []
+    var meetings: [SwiftBMLSDK_Parser.Meeting] = []
     
     /* ################################################################## */
     /**

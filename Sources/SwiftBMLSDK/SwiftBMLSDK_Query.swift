@@ -26,7 +26,7 @@ import CoreLocation
 /**
  This struct is about generating queries to instances of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer), and returning the parsed results.
  */
-public struct SwiftMLSDK_Query {
+public struct SwiftBMLSDK_Query {
     /* ################################################# */
     /**
      This is the completion function for the meeting search query.
@@ -36,7 +36,7 @@ public struct SwiftMLSDK_Query {
      - parameter: The resultant server response. Can be nil.
      - parameter: Any errors that occurred. Should usually be nil.
      */
-    public typealias QueryResultCompletion = (_: SwiftMLSDK_Parser?, _: Error?) -> Void
+    public typealias QueryResultCompletion = (_: SwiftBMLSDK_Parser?, _: Error?) -> Void
 
     /* ################################################# */
     /**
@@ -266,7 +266,7 @@ public struct SwiftMLSDK_Query {
 /* ###################################################################################################################################### */
 // MARK: Computed Properties
 /* ###################################################################################################################################### */
-extension SwiftMLSDK_Query {
+extension SwiftBMLSDK_Query {
     /* ################################################# */
     /**
      Accessor for the base URI.
@@ -280,7 +280,7 @@ extension SwiftMLSDK_Query {
 /* ###################################################################################################################################### */
 // MARK: Instance Methods
 /* ###################################################################################################################################### */
-extension SwiftMLSDK_Query {
+extension SwiftBMLSDK_Query {
     /* ################################################# */
     /**
      - parameter: completion: A tail completion proc.
@@ -415,7 +415,7 @@ extension SwiftMLSDK_Query {
                         #if DEBUG
                             print("Response Data: \(data.debugDescription)")
                         #endif
-                        inCompletion(SwiftMLSDK_Parser(jsonData: data), nil)
+                        inCompletion(SwiftBMLSDK_Parser(jsonData: data), nil)
                     } else {
                         fallthrough
                     }
