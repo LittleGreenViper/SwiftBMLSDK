@@ -20,6 +20,7 @@
 import UIKit
 import RVS_Generic_Swift_Toolbox
 import CreateML
+import TabularData
 
 /* ###################################################################################################################################### */
 // MARK: - Text Processor Main Tab View Controller -
@@ -27,12 +28,6 @@ import CreateML
 /**
  */
 class SwiftBMLSDK_TestHarness_TextProcViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
-    /* ################################################################## */
-    /**
-     The data table for our training.
-     */
-    var dataTable: MLDataTable?
-    
     /* ################################################################## */
     /**
      The "busy throbber" view.
@@ -71,7 +66,10 @@ extension SwiftBMLSDK_TestHarness_TextProcViewController {
         let url = URL.documentsDirectory.appending(path: "meetingsData.json")
         do {
             try resultJSON.write(to: url, options: [.atomic, .completeFileProtection])
-            dataTable = try MLDataTable(contentsOf: url)
+            let dataFrame = try DataFrame(contentsOfJSONFile: url)
+            let classifier = try MLTextClassifier(trainingData: dataFrame, textColumn: "", labelColumn: "")
+            let metaData = MLModelMetadata(author: "LGV", shortDescription: "Predicts possible meetings", version: "1.0")
+            try classifier.write(toFile: "~/Desktop/Meetings.mlmodel", metadata: metaData)
         } catch {
             print(error.localizedDescription)
         }
