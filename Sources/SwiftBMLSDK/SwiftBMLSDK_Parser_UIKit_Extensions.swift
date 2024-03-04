@@ -348,3 +348,79 @@ public extension Array where Element==SwiftBMLSDK_Parser.Meeting {
         compactMap { $0.coords }
     }
 }
+
+/* ###################################################################################################################################### */
+// MARK: - Parser Extension -
+/* ###################################################################################################################################### */
+/**
+ This extension adds a specialization for machine learning.
+ */
+public extension SwiftBMLSDK_Parser {
+    /* ################################################# */
+    /**
+     This returns the entire meeting list as an ML text processor dataset.
+     The meeting is described in a single line of text, and the labels are the meeting type (virtual, in-person, and hybrid).
+     */
+    var textProcessorJSONData: Data? {
+        /* ############################################ */
+        /**
+         This returns an English string, describing the meeting, in a natural language manner.
+         
+         - parameter meeting: The meeting instance we're describing.
+         */
+        func makeMeetingDescription(meeting inMeeting: Meeting) -> String {
+            /* ######################################## */
+            /**
+             Gets a localized version of the weekday name from an index.
+             
+             [Cribbed from Here](http://stackoverflow.com/questions/7330420/how-do-i-get-the-name-of-a-day-of-the-week-in-the-users-locale#answer-34289913)
+             
+             - parameter inWeekdayNumber: 1-based index (1 - 7)
+             - parameter isShort: Optional. If true, then the shortened version of the name will be returned. Default is false.
+             
+             - returns: The localized, full-length weekday name. Nil, if there's a problem.
+             */
+            func weekdayNameFromWeekdayNumber(_ inWeekdayNumber: Int, isShort inIsShort: Bool = false) -> String? {
+                /* #################################### */
+                /**
+                 This returns the weekday, unadjusted for a differing week start.
+                 
+                 - parameter inWeekdayNumber: 1-based index (1 - 7)
+                 
+                 - returns: The unadjusted weekday index (1-based). 0, if there was an out-of-range issue.
+                 */
+                func unAdjustedWeekdayNumber(_ inWeekdayNumber: Int) -> Int {
+                    guard (1..<8).contains(inWeekdayNumber) else { return 0 }
+                    let index = Calendar.current.firstWeekday + (inWeekdayNumber - 1)
+                    return 7 < index ? index - 7 : index
+                }
+
+                let weekdayIndex = unAdjustedWeekdayNumber(inWeekdayNumber) - 1
+                let weekdaySymbols = inIsShort ? Calendar.current.veryShortWeekdaySymbols: Calendar.current.weekdaySymbols
+                guard  (0..<weekdaySymbols.count).contains(weekdayIndex) else { return nil }
+                return weekdaySymbols[weekdayIndex]
+            }
+            
+            guard let weekday = weekdayNameFromWeekdayNumber(inMeeting.weekday),
+                  let localizedTZName = inMeeting.timeZone.localizedName(for: .standard, locale: .current)
+            else { return "" }
+            let df = DateFormatter()
+            df.dateFormat = "HH:mm"
+            let startTimeString = df.string(from: inMeeting.startTime)
+            let duration = Int(round(inMeeting.duration / 60))
+            var meetingString = "\(inMeeting.name) is an \(inMeeting.organization.rawValue.uppercased()) meeting, which starts at \(startTimeString), \(localizedTZName), every \(weekday), and lasts for \(duration) minutes."
+            
+            return meetingString
+        }
+        
+        var jsonString: [[String: String]] = []
+        
+        meetings.forEach { meeting in
+            let label = meeting.meetingType.rawValue
+            let description = makeMeetingDescription(meeting: meeting)
+            jsonString.append(["label": label, "meeting": description])
+        }
+        
+        return try? JSONEncoder().encode(jsonString)
+    }
+}
