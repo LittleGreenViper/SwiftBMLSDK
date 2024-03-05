@@ -19,6 +19,7 @@
 
 import Foundation
 import CoreLocation
+import Contacts
 
 #if canImport(UIKit)
     import UIKit
@@ -408,8 +409,52 @@ public extension SwiftBMLSDK_Parser {
             df.dateFormat = "HH:mm"
             let startTimeString = df.string(from: inMeeting.startTime)
             let duration = Int(round(inMeeting.duration / 60))
-            let meetingString = "\(inMeeting.name) is an \(inMeeting.organization.rawValue.uppercased()) meeting, which starts at \(startTimeString), \(localizedTZName), every \(weekday), and lasts for \(duration) minutes."
+            var meetingString = "\"\(inMeeting.name)\" is an \(inMeeting.organization.rawValue.uppercased()) meeting, which starts at \(startTimeString), \(localizedTZName), every \(weekday), and lasts for \(duration) minutes."
+            if let physicalLocation = inMeeting.inPersonAddress {
+                let addressFormatter = CNPostalAddressFormatter()
+                addressFormatter.style = .mailingAddress
+                
+                var venue = ""
+                
+                if let venueName = inMeeting.inPersonVenueName,
+                   !venueName.isEmpty {
+                    venue = venueName + "\n"
+                }
+                
+                meetingString += "\nIt meets in-person, at \(venue)\(addressFormatter.string(from: physicalLocation))."
+            } else if let venueName = inMeeting.inPersonVenueName,
+                      !venueName.isEmpty {
+                meetingString += "\nIt meets in-person, at \(venueName)."
+            }
             
+            if let locationAdd = inMeeting.locationInfo,
+               !locationAdd.isEmpty {
+                meetingString += "\nAdditional Location Information: \(locationAdd)."
+            }
+
+            if let coords = inMeeting.coords,
+               CLLocationCoordinate2DIsValid(coords) {
+                let latitude = round(coords.latitude * 100000) / 100000
+                let longitude = round(coords.longitude * 100000) / 100000
+                meetingString += "\nThe meeting coordinates are (\(latitude), \(longitude))."
+            }
+            
+            if let virtualURL = inMeeting.virtualURL {
+                meetingString += "\nThe meeting is accessible as a virtual meeting. The URL for the meeting is \(virtualURL.absoluteString)."
+            }
+            
+            if let virtualInfo = inMeeting.virtualInfo,
+               !virtualInfo.isEmpty {
+                meetingString += "\nAdditional Virtual Instructions: \(virtualInfo)."
+            }
+            
+            if let virtualPhoneNumber = inMeeting.virtualPhoneNumber {
+                meetingString += "\nThe meeting is accessible as a phone meeting. The Phone number for the meeting is \(virtualPhoneNumber)."
+            }
+            
+            #if DEBUG
+                print(meetingString)
+            #endif
             return meetingString
         }
         
