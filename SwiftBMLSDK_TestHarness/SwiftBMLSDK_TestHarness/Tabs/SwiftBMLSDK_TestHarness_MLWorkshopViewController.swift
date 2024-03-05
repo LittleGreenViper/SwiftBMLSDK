@@ -27,7 +27,7 @@ import TabularData
 /* ###################################################################################################################################### */
 /**
  */
-class SwiftBMLSDK_TestHarness_TextProcViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
+class SwiftBMLSDK_TestHarness_MLWorkshopViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
     /**
      The "busy throbber" view.
@@ -38,13 +38,13 @@ class SwiftBMLSDK_TestHarness_TextProcViewController: SwiftBMLSDK_TestHarness_Ta
 /* ###################################################################################################################################### */
 // MARK: Computed Properties
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_TextProcViewController {
+extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
 }
 
 /* ###################################################################################################################################### */
 // MARK: Base Class Overrides
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_TextProcViewController {
+extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
     /* ################################################################## */
     /**
      Called when the view hierarchy has loaded.
@@ -67,9 +67,15 @@ extension SwiftBMLSDK_TestHarness_TextProcViewController {
         do {
             try resultJSON.write(to: url, options: [.atomic, .completeFileProtection])
             let dataFrame = try DataFrame(contentsOfJSONFile: url)
-            let classifier = try MLTextClassifier(trainingData: dataFrame, textColumn: "meeting", labelColumn: "label")
-            let metaData = MLModelMetadata(author: "LGV", shortDescription: "Predicts possible meetings", version: "1.0")
-            try classifier.write(toFile: "~/Desktop/Meetings.mlmodel", metadata: metaData)
+            DispatchQueue.global().async {
+                do {
+                    let classifier = try MLTextClassifier(trainingData: dataFrame, textColumn: "meeting", labelColumn: "label")
+                    let metaData = MLModelMetadata(author: "LGV", shortDescription: "Predicts possible meetings", version: "1.0")
+                    try classifier.write(toFile: "~/Desktop/Meetings.mlmodel", metadata: metaData)
+                } catch {
+                    print("ERROR! \(error.localizedDescription)")
+                }
+            }
         } catch {
             print(error.localizedDescription)
         }

@@ -134,7 +134,6 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
         throbberView?.isHidden = false
         prefs.performSearch {
             self.throbberView?.isHidden = true
-            guard let results = self.prefs.searchResults else { return }
             self.myTabController?.updateEnablements()
         }
     }

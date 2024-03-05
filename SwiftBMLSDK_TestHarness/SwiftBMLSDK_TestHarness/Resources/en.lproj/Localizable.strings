@@ -19,7 +19,7 @@
 "SLUG-TAB-0-TITLE"                              =   "Server Info";
 "SLUG-TAB-1-TITLE"                              =   "Search";
 "SLUG-TAB-2-TITLE"                              =   "Map Results";
-"SLUG-TAB-3-TITLE"                              =   "Text Process";
+"SLUG-TAB-3-TITLE"                              =   "ML Testing";
 
 "SLUG-NUMBER-OF-MEETINGS-PROMPT"                =   "Total Number of Meetings:";
 "SLUG-NUMBER-OF-SERVERS-PROMPT"                 =   "Total Number of Servers:";

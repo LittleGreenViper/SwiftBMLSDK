@@ -408,7 +408,7 @@ public extension SwiftBMLSDK_Parser {
             df.dateFormat = "HH:mm"
             let startTimeString = df.string(from: inMeeting.startTime)
             let duration = Int(round(inMeeting.duration / 60))
-            var meetingString = "\(inMeeting.name) is an \(inMeeting.organization.rawValue.uppercased()) meeting, which starts at \(startTimeString), \(localizedTZName), every \(weekday), and lasts for \(duration) minutes."
+            let meetingString = "\(inMeeting.name) is an \(inMeeting.organization.rawValue.uppercased()) meeting, which starts at \(startTimeString), \(localizedTZName), every \(weekday), and lasts for \(duration) minutes."
             
             return meetingString
         }
