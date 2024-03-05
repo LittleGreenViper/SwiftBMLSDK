@@ -452,6 +452,10 @@ public extension SwiftBMLSDK_Parser {
                 meetingString += "\nThe meeting is accessible as a phone meeting. The Phone number for the meeting is \(virtualPhoneNumber)."
             }
             
+            inMeeting.formats.forEach {
+                meetingString += "\n\($0.description)."
+            }
+            
             #if DEBUG
                 print(meetingString)
             #endif

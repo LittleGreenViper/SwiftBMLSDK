@@ -656,8 +656,9 @@ public struct SwiftBMLSDK_Parser: Encodable {
             self.localMeetingID = localMeetingID
             self.organization = Organization(rawValue: organizationStr) ?? .none
 
-            if let timezoneStr = inDictionary["time_zone"] as? String ?? TimeZone.current.localizedName(for: .standard, locale: .current) {
-                self.timeZone = TimeZone(identifier: timezoneStr) ?? .current
+            if let timezoneStr = inDictionary["time_zone"] as? String,
+               let tz = TimeZone(identifier: timezoneStr) {
+                self.timeZone = tz
             } else {
                 self.timeZone = .current
             }
