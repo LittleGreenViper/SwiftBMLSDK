@@ -67,9 +67,9 @@ extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
             let dataFrame = try DataFrame(jsonData: resultJSON)
             DispatchQueue.global().async {
                 do {
-                    let classifier = try MLTextClassifier(trainingData: dataFrame, textColumn: "meeting", labelColumn: "label")
-                    let metaData = MLModelMetadata(author: "LGV", shortDescription: "Predicts possible meetings", version: "1.0")
-                    try classifier.write(to: URL.documentsDirectory.appending(path: "Meetings.mlmodel"), metadata: metaData)
+                    let classifier = try MLTextClassifier(trainingData: dataFrame, textColumn: "meeting", labelColumn: "type")
+                    let metaData = MLModelMetadata(author: "LGV", shortDescription: "Meeting Data Text Processor", version: "1.0")
+                    try classifier.write(to: URL.documentsDirectory.appending(path: "TextProcessor.mlmodel"), metadata: metaData)
                 } catch {
                     print("ERROR! \(error.localizedDescription)")
                 }
@@ -78,7 +78,7 @@ extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
             print(error.localizedDescription)
         }
         throbberView?.isHidden = true
-        print("Saved model to \(URL.documentsDirectory.absoluteString)Meetings.mlmodel")
+        print("Saved model to \(URL.documentsDirectory.absoluteString)TextProcessor.mlmodel")
     }
 }
 

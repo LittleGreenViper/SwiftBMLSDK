@@ -655,13 +655,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
             self.serverID = serverID
             self.localMeetingID = localMeetingID
             self.organization = Organization(rawValue: organizationStr) ?? .none
-
-            if let timezoneStr = inDictionary["time_zone"] as? String,
-               let tz = TimeZone(identifier: timezoneStr) {
-                self.timeZone = tz
-            } else {
-                self.timeZone = .current
-            }
             
             let durationTemp = inDictionary["duration"] as? Int ?? 3600
             self.duration = (0..<86400).contains(durationTemp) ? TimeInterval(durationTemp) : TimeInterval(3600)
@@ -676,6 +669,13 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 self.coords = CLLocationCoordinate2D(latitude: lat, longitude: long)
             } else {
                 self.coords = nil
+            }
+
+            if let timezoneStr = inDictionary["time_zone"] as? String,
+               let tz = TimeZone(identifier: timezoneStr) {
+                self.timeZone = tz
+            } else {
+                self.timeZone = .current
             }
 
             if let comments = inDictionary["comments"] as? String,
