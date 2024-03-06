@@ -414,8 +414,8 @@ extension SwiftBMLSDK_Query {
                        "application/json" == response.mimeType {
                         #if DEBUG
                             print("Response Data: \(data.debugDescription)")
-                            try? data.write(to: URL.documentsDirectory.appending(path:  "meetingData.json"))
-                            print("Meeting Data Saved to \(URL.documentsDirectory.absoluteString)meetingData.json")
+                            try? data.write(to: URL.documentsDirectory.appending(path:  "initialMeetingData.json"))
+                            print("Meeting Data Saved to \(URL.documentsDirectory.absoluteString)initialMeetingData.json")
                         #endif
                         inCompletion(SwiftBMLSDK_Parser(jsonData: data), nil)
                     } else {

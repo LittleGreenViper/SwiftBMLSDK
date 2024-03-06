@@ -64,12 +64,19 @@ extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
         super.viewDidAppear(inIsAnimated)
         guard let resultJSON = prefs.searchResults?.textProcessorJSONData else { return }
         do {
+            #if DEBUG
+                try? resultJSON.write(to: URL.documentsDirectory.appending(path:  "textProcessor.json"))
+                print("Processor Data Saved to \(URL.documentsDirectory.absoluteString)textProcessor.json")
+            #endif
             let dataFrame = try DataFrame(jsonData: resultJSON)
             DispatchQueue.global().async {
                 do {
                     let classifier = try MLTextClassifier(trainingData: dataFrame, textColumn: "meeting", labelColumn: "type")
                     let metaData = MLModelMetadata(author: "LGV", shortDescription: "Meeting Data Text Processor", version: "1.0")
-                    try classifier.write(to: URL.documentsDirectory.appending(path: "TextProcessor.mlmodel"), metadata: metaData)
+                    try classifier.write(to: URL.documentsDirectory.appending(path: "TextClassifier.mlmodel"), metadata: metaData)
+                    #if DEBUG
+                        print("Saved model to \(URL.documentsDirectory.absoluteString)TextClassifier.mlmodel")
+                    #endif
                 } catch {
                     print("ERROR! \(error.localizedDescription)")
                 }
@@ -78,7 +85,6 @@ extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
             print(error.localizedDescription)
         }
         throbberView?.isHidden = true
-        print("Saved model to \(URL.documentsDirectory.absoluteString)TextProcessor.mlmodel")
     }
 }
 
