@@ -297,6 +297,16 @@ public extension SwiftBMLSDK_Parser {
     var textProcessorJSONData: Data? {
         /* ############################################ */
         /**
+         This holds one line of the ML JSON data.
+         */
+        struct LineVal: Codable {
+            let id: UInt64
+            let type: String
+            let summary: String
+        }
+
+        /* ############################################ */
+        /**
          This returns an English string, describing the meeting, in a natural language manner.
          
          - parameter meeting: The meeting instance we're describing.
@@ -394,15 +404,8 @@ public extension SwiftBMLSDK_Parser {
             return meetingString
         }
         
-        var jsonString: [[String: String]] = []
+        let jsonArray = meetings.map { meeting in LineVal(id: meeting.id, type: meeting.meetingType.rawValue, summary: makeMeetingDescription(meeting: meeting)) }
         
-        meetings.forEach { meeting in
-            let type = meeting.meetingType.rawValue
-            let id = String(meeting.id)
-            let description = makeMeetingDescription(meeting: meeting)
-            jsonString.append(["id": id, "type": type, "meeting": description])
-        }
-        
-        return try? JSONEncoder().encode(jsonString)
+        return try? JSONEncoder().encode(jsonArray)
     }
 }

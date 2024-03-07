@@ -69,22 +69,23 @@ extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
                 print("Processor Data Saved to \(URL.documentsDirectory.absoluteString)textProcessor.json")
             #endif
             let dataFrame = try DataFrame(jsonData: resultJSON)
-            DispatchQueue.global().async {
-                do {
-                    let classifier = try MLTextClassifier(trainingData: dataFrame, textColumn: "meeting", labelColumn: "type")
-                    let metaData = MLModelMetadata(author: "LGV", shortDescription: "Meeting Data Text Processor", version: "1.0")
-                    try classifier.write(to: URL.documentsDirectory.appending(path: "TextClassifier.mlmodel"), metadata: metaData)
-                    #if DEBUG
-                        print("Saved model to \(URL.documentsDirectory.absoluteString)TextClassifier.mlmodel")
-                    #endif
-                } catch {
-                    print("ERROR! \(error.localizedDescription)")
-                }
-            }
+            let metaData = MLModelMetadata(author: "LGV", shortDescription: "Meeting Data Model", version: "1.0")
+            var regressor: MLLinearRegressor? = try MLLinearRegressor(trainingData: dataFrame, targetColumn: "id", featureColumns: ["summary", "type"])
+            try regressor?.write(to: URL.documentsDirectory.appending(path: "Regressor.mlmodel"), metadata: metaData)
+            #if DEBUG
+                print("Saved regressor model to \(URL.documentsDirectory.absoluteString)Regressor.mlmodel")
+            #endif
+            regressor = nil
+            var classifier: MLTextClassifier? = try MLTextClassifier(trainingData: dataFrame, textColumn: "summary", labelColumn: "type")
+            try classifier?.write(to: URL.documentsDirectory.appending(path: "TextClassifier.mlmodel"), metadata: metaData)
+            #if DEBUG
+                print("Saved classifier model to \(URL.documentsDirectory.absoluteString)TextClassifier.mlmodel")
+            #endif
+            classifier = nil
+            throbberView?.isHidden = true
         } catch {
             print(error.localizedDescription)
         }
-        throbberView?.isHidden = true
     }
 }
 
