@@ -43,16 +43,14 @@ class SwiftBMLSDK_TestHarness_MLWorkshopViewController: SwiftBMLSDK_TestHarness_
      */
     @IBAction func goButtonHit(_: Any) {
         throbberView?.isHidden = false
-        guard let resultJSON = prefs.searchResults?.textProcessorJSONData else { return }
-        guard let dataFrame = try? DataFrame(jsonData: resultJSON) else { return }
         let metaData = MLModelMetadata(author: "LGV", shortDescription: "Meeting Data Model", version: "1.0")
         
         switch mlTypeSwitch?.selectedSegmentIndex ?? 0 {
         case 0:
-            makeTextClassifier(dataFrame: dataFrame, meta: metaData) { self.throbberView?.isHidden = true }
+            makeTextClassifier(meta: metaData) { self.throbberView?.isHidden = true }
 
         default:
-            makeRegressor(dataFrame: dataFrame, meta: metaData) { self.throbberView?.isHidden = true }
+            makeRegressor(meta: metaData) { self.throbberView?.isHidden = true }
         }
     }
     
@@ -61,12 +59,6 @@ class SwiftBMLSDK_TestHarness_MLWorkshopViewController: SwiftBMLSDK_TestHarness_
      The "busy throbber" view.
      */
     @IBOutlet weak var throbberView: UIView?
-}
-
-/* ###################################################################################################################################### */
-// MARK: Computed Properties
-/* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
 }
 
 /* ###################################################################################################################################### */
@@ -93,32 +85,36 @@ extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
     /* ################################################################## */
     /**
      */
-    func makeRegressor(dataFrame inDataFrame: DataFrame, meta inMeta: MLModelMetadata, completion inCompletion: @escaping () -> Void) {
+    func makeTextClassifier(meta inMeta: MLModelMetadata, completion inCompletion: @escaping () -> Void) {
         DispatchQueue.global().async {
-            guard let regressor = try? MLRandomForestRegressor(trainingData: inDataFrame, targetColumn: "id", featureColumns: ["summary", "type"]) else {
-                DispatchQueue.main.async { inCompletion() }
-                return
-            }
-            try? regressor.write(to: URL.documentsDirectory.appending(path: "Regressor.mlmodel"), metadata: inMeta)
-            #if DEBUG
-                print("Saved regressor model to \(URL.documentsDirectory.absoluteString)Regressor.mlmodel")
-            #endif
-            DispatchQueue.main.async { inCompletion() }
-        }
-    }
-    
-    /* ################################################################## */
-    /**
-     */
-    func makeTextClassifier(dataFrame inDataFrame: DataFrame, meta inMeta: MLModelMetadata, completion inCompletion: @escaping () -> Void) {
-        DispatchQueue.global().async {
-            guard let classifier = try? MLTextClassifier(trainingData: inDataFrame, textColumn: "summary", labelColumn: "type") else {
+            guard let resultJSON = self.prefs.searchResults?.textProcessorJSONData,
+                  let dataFrame = try? DataFrame(jsonData: resultJSON),
+                  let classifier = try? MLTextClassifier(trainingData: dataFrame, textColumn: "summary", labelColumn: "type") else {
                 DispatchQueue.main.async { inCompletion() }
                 return
             }
             try? classifier.write(to: URL.documentsDirectory.appending(path: "TextClassifier.mlmodel"), metadata: inMeta)
             #if DEBUG
                 print("Saved classifier model to \(URL.documentsDirectory.absoluteString)TextClassifier.mlmodel")
+            #endif
+            DispatchQueue.main.async { inCompletion() }
+        }
+    }
+
+    /* ################################################################## */
+    /**
+     */
+    func makeRegressor(meta inMeta: MLModelMetadata, completion inCompletion: @escaping () -> Void) {
+        DispatchQueue.global().async {
+            guard let resultJSON = self.prefs.searchResults?.textProcessorJSONData,
+                  let dataFrame = try? DataFrame(jsonData: resultJSON),
+                  let regressor = try? MLRandomForestRegressor(trainingData: dataFrame, targetColumn: "id", featureColumns: ["summary", "type"]) else {
+                DispatchQueue.main.async { inCompletion() }
+                return
+            }
+            try? regressor.write(to: URL.documentsDirectory.appending(path: "Regressor.mlmodel"), metadata: inMeta)
+            #if DEBUG
+                print("Saved regressor model to \(URL.documentsDirectory.absoluteString)Regressor.mlmodel")
             #endif
             DispatchQueue.main.async { inCompletion() }
         }
