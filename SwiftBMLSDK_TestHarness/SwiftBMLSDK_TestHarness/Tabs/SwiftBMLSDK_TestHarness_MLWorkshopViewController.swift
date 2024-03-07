@@ -30,6 +30,34 @@ import TabularData
 class SwiftBMLSDK_TestHarness_MLWorkshopViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
     /**
+     */
+    @IBOutlet weak var mlTypeSwitch: UISegmentedControl?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var goButton: UIButton?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBAction func goButtonHit(_: Any) {
+        throbberView?.isHidden = false
+        guard let resultJSON = prefs.searchResults?.textProcessorJSONData else { return }
+        guard let dataFrame = try? DataFrame(jsonData: resultJSON) else { return }
+        let metaData = MLModelMetadata(author: "LGV", shortDescription: "Meeting Data Model", version: "1.0")
+        
+        switch mlTypeSwitch?.selectedSegmentIndex ?? 0 {
+        case 0:
+            makeTextClassifier(dataFrame: dataFrame, meta: metaData) { self.throbberView?.isHidden = true }
+
+        default:
+            makeRegressor(dataFrame: dataFrame, meta: metaData) { self.throbberView?.isHidden = true }
+        }
+    }
+    
+    /* ################################################################## */
+    /**
      The "busy throbber" view.
      */
     @IBOutlet weak var throbberView: UIView?
@@ -51,40 +79,48 @@ extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        throbberView?.isHidden = false
+        goButton?.setTitle(goButton?.title(for: .normal)?.localizedVariant, for: .normal)
+        for index in 0..<(mlTypeSwitch?.numberOfSegments ?? 0) {
+            mlTypeSwitch?.setTitle(mlTypeSwitch?.titleForSegment(at: index)?.localizedVariant, forSegmentAt: index)
+        }
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Instance Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_MLWorkshopViewController {
+    /* ################################################################## */
+    /**
+     */
+    func makeRegressor(dataFrame inDataFrame: DataFrame, meta inMeta: MLModelMetadata, completion inCompletion: @escaping () -> Void) {
+        DispatchQueue.global().async {
+            guard let regressor = try? MLRandomForestRegressor(trainingData: inDataFrame, targetColumn: "id", featureColumns: ["summary", "type"]) else {
+                DispatchQueue.main.async { inCompletion() }
+                return
+            }
+            try? regressor.write(to: URL.documentsDirectory.appending(path: "Regressor.mlmodel"), metadata: inMeta)
+            #if DEBUG
+                print("Saved regressor model to \(URL.documentsDirectory.absoluteString)Regressor.mlmodel")
+            #endif
+            DispatchQueue.main.async { inCompletion() }
+        }
     }
     
     /* ################################################################## */
     /**
-     Called when the view has appeared.
-     
-     - parameter inIsAnimated: True, if the appearance was animated.
      */
-    override func viewDidAppear(_ inIsAnimated: Bool) {
-        super.viewDidAppear(inIsAnimated)
-        guard let resultJSON = prefs.searchResults?.textProcessorJSONData else { return }
-        do {
-            #if DEBUG
-                try? resultJSON.write(to: URL.documentsDirectory.appending(path:  "textProcessor.json"))
-                print("Processor Data Saved to \(URL.documentsDirectory.absoluteString)textProcessor.json")
-            #endif
-            let dataFrame = try DataFrame(jsonData: resultJSON)
-            let metaData = MLModelMetadata(author: "LGV", shortDescription: "Meeting Data Model", version: "1.0")
-            var regressor: MLLinearRegressor? = try MLLinearRegressor(trainingData: dataFrame, targetColumn: "id", featureColumns: ["summary", "type"])
-            try regressor?.write(to: URL.documentsDirectory.appending(path: "Regressor.mlmodel"), metadata: metaData)
-            #if DEBUG
-                print("Saved regressor model to \(URL.documentsDirectory.absoluteString)Regressor.mlmodel")
-            #endif
-            regressor = nil
-            var classifier: MLTextClassifier? = try MLTextClassifier(trainingData: dataFrame, textColumn: "summary", labelColumn: "type")
-            try classifier?.write(to: URL.documentsDirectory.appending(path: "TextClassifier.mlmodel"), metadata: metaData)
+    func makeTextClassifier(dataFrame inDataFrame: DataFrame, meta inMeta: MLModelMetadata, completion inCompletion: @escaping () -> Void) {
+        DispatchQueue.global().async {
+            guard let classifier = try? MLTextClassifier(trainingData: inDataFrame, textColumn: "summary", labelColumn: "type") else {
+                DispatchQueue.main.async { inCompletion() }
+                return
+            }
+            try? classifier.write(to: URL.documentsDirectory.appending(path: "TextClassifier.mlmodel"), metadata: inMeta)
             #if DEBUG
                 print("Saved classifier model to \(URL.documentsDirectory.absoluteString)TextClassifier.mlmodel")
             #endif
-            classifier = nil
-            throbberView?.isHidden = true
-        } catch {
-            print(error.localizedDescription)
+            DispatchQueue.main.async { inCompletion() }
         }
     }
 }

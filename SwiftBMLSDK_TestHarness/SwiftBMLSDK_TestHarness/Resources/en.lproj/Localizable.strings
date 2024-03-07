@@ -34,3 +34,10 @@
 "SLUG-LOCATION-LONGITUDE-PLACEHOLDER"           =   "Enter Longitude";
 "SLUG-LOCATION-RADIUS-PLACEHOLDER"              =   "Enter Radius, in Meters";
 "SLUG-PERFORM-SEARCH"                           =   "SEARCH FOR MEETINGS";
+
+"SLUG-MLW-0"                                    =   "Classifier";
+"SLUG-MLW-1"                                    =   "Regressor";
+"SLUG-ML-GO-BUTTON"                             =   "TIME FOR SCHOOL!";
+
+// Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
+"SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";

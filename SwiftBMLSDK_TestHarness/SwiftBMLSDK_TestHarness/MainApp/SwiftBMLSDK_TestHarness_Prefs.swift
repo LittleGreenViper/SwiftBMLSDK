@@ -300,8 +300,22 @@ public extension SwiftBMLSDK_Parser {
          This holds one line of the ML JSON data.
          */
         struct LineVal: Codable {
+            /* ######################################## */
+            /**
+             The meeting ID (unique in the found set).
+             */
             let id: UInt64
+
+            /* ######################################## */
+            /**
+             The meeting type (virtual, in-person, hybrid).
+             */
             let type: String
+
+            /* ######################################## */
+            /**
+             A natural-language meeting summary.
+             */
             let summary: String
         }
 
@@ -351,7 +365,7 @@ public extension SwiftBMLSDK_Parser {
             df.dateFormat = "HH:mm"
             let startTimeString = df.string(from: inMeeting.startTime)
             let duration = Int(round(inMeeting.duration / 60))
-            var meetingString = "\"\(inMeeting.name)\" is an \(inMeeting.organization.rawValue.uppercased()) meeting, which starts at \(startTimeString), \(localizedTZName), every \(weekday), and lasts for \(duration) minutes."
+            var meetingString = String(format: "SLUG-ML-PARSE-SUMMARY-0-FORMAT".localizedVariant, inMeeting.name, inMeeting.organization.rawValue.uppercased(), startTimeString, localizedTZName, weekday, duration)
             if let physicalLocation = inMeeting.inPersonAddress {
                 let addressFormatter = CNPostalAddressFormatter()
                 addressFormatter.style = .mailingAddress

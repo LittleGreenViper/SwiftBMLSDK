@@ -412,11 +412,6 @@ extension SwiftBMLSDK_Query {
                 case 200..<300:
                     if let data = inData,
                        "application/json" == response.mimeType {
-                        #if DEBUG
-                            print("Response Data: \(data.debugDescription)")
-                            try? data.write(to: URL.documentsDirectory.appending(path:  "initialMeetingData.json"))
-                            print("Meeting Data Saved to \(URL.documentsDirectory.absoluteString)initialMeetingData.json")
-                        #endif
                         inCompletion(SwiftBMLSDK_Parser(jsonData: data), nil)
                     } else {
                         fallthrough
