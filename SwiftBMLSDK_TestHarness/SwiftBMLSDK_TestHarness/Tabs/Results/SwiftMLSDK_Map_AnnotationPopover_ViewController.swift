@@ -65,6 +65,35 @@ class SwiftMLSDK_Map_AnnotationPopover_ViewController: UIViewController {
 }
 
 /* ###################################################################################################################################### */
+// MARK: Static Functions
+/* ###################################################################################################################################### */
+extension SwiftMLSDK_Map_AnnotationPopover_ViewController {
+    /* ################################################################## */
+    /**
+     Performs a reverse geocode.
+     
+     - parameter inCoords: The coordinate to reverse.
+     - parameter completion: The tail completion proc, with a list of placemarks, and any error that occurred. This may be called in any thread.
+     */
+    static func reverseGeocode(_ inCoords: CLLocationCoordinate2D, completion inCompletion: @escaping (_: [CLPlacemark]?, _: Error?) -> Void)  {
+        guard CLLocationCoordinate2DIsValid(inCoords)
+        else {
+            inCompletion(nil, nil)
+            return
+        }
+        CLGeocoder().reverseGeocodeLocation(CLLocation(latitude: inCoords.latitude, longitude: inCoords.longitude)) { inPlacemark, inError in
+            guard let placemark = inPlacemark,
+                  nil == inError
+            else {
+                inCompletion(nil, inError)
+                return
+            }
+            inCompletion(placemark, nil)
+        }
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: Base Class Overrides
 /* ###################################################################################################################################### */
 extension SwiftMLSDK_Map_AnnotationPopover_ViewController {

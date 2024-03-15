@@ -17,9 +17,6 @@
          location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/PRIVACY.md">
       </FileRef>
       <FileRef
-         location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/PrivacyInfo.xcprivacy">
-      </FileRef>
-      <FileRef
          location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/README.md">
       </FileRef>
    </Group>

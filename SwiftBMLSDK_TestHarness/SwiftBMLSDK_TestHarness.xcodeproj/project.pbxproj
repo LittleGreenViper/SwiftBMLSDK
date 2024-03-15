@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4011DAA2BA4A77F002C3292 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D4011DA92BA4A77F002C3292 /* PrivacyInfo.xcprivacy */; };
 		D406220E2B83B705009FFAB3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D40622102B83B705009FFAB3 /* Localizable.strings */; };
 		D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D40622152B83B73F009FFAB3 /* InfoPlist.strings */; };
 		D40622182B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D40622172B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox */; };
@@ -46,6 +47,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D4011DA92BA4A77F002C3292 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D406220F2B83B705009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D40622142B83B73F009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_BaseViewController.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 		D488D2882B82CE3F000979D9 = {
 			isa = PBXGroup;
 			children = (
+				D4011DA92BA4A77F002C3292 /* PrivacyInfo.xcprivacy */,
 				D488D2932B82CE3F000979D9 /* SwiftBMLSDK_TestHarness */,
 				D488D2922B82CE3F000979D9 /* Products */,
 				D488D2A92B82CF3F000979D9 /* Frameworks */,
@@ -242,6 +245,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4011DAA2BA4A77F002C3292 /* PrivacyInfo.xcprivacy in Resources */,
 				D488D2A12B82CE40000979D9 /* LaunchScreen.storyboard in Resources */,
 				D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */,
 				D406220E2B83B705009FFAB3 /* Localizable.strings in Resources */,

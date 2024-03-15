@@ -14,6 +14,7 @@
 		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D472FEAF2B8C0F6800FACFE7 /* SwiftBMLSDK_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */; };
+		D498E19E2BA4C289007F88F3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D498E19D2BA4C289007F88F3 /* PrivacyInfo.xcprivacy */; };
 		D499278A2B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UIKit_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49927892B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UIKit_Extensions.swift */; };
 		D4B9834D2B7A4F2700F28F03 /* SwiftBMLSDK_Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B9834C2B7A4F2700F28F03 /* SwiftBMLSDK_Query.swift */; };
 		D4C9C6242B750C65007FB793 /* SwiftBMLSDK_Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* SwiftBMLSDK_Parser.swift */; };
@@ -38,6 +39,7 @@
 		D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftBMLSDK.docc; sourceTree = "<group>"; };
 		D4675D182B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_ParserTests.swift; sourceTree = "<group>"; };
 		D4675D202B73C57D00139CC3 /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
+		D498E19D2BA4C289007F88F3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D49927892B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UIKit_Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Parser_UIKit_Extensions.swift; sourceTree = "<group>"; };
 		D4B9834C2B7A4F2700F28F03 /* SwiftBMLSDK_Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Query.swift; sourceTree = "<group>"; };
 		D4C9C6232B750C65007FB793 /* SwiftBMLSDK_Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Parser.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 		D416202B2B73C17F00E6E0CA = {
 			isa = PBXGroup;
 			children = (
+				D498E19D2BA4C289007F88F3 /* PrivacyInfo.xcprivacy */,
 				D4675D1C2B73C54800139CC3 /* Meta */,
 				D4675D102B73C1CD00139CC3 /* Sources */,
 				D4675D162B73C1E400139CC3 /* Tests */,
@@ -231,6 +234,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D498E19E2BA4C289007F88F3 /* PrivacyInfo.xcprivacy in Resources */,
 				D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -568,7 +572,7 @@
 			repositoryURL = "https://github.com/RiftValleySoftware/RVS_PersistentPrefs";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.7;
+				minimumVersion = 1.3.9;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
