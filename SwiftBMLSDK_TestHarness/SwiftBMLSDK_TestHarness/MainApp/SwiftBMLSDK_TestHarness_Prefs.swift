@@ -25,12 +25,56 @@ import SwiftBMLSDK
 import Contacts
 
 /* ###################################################################################################################################### */
+// MARK: - Array Extension for Our Population Center Type -
+/* ###################################################################################################################################### */
+extension Array where Element == SwiftBMLSDK_TestHarness_Prefs.PopCenterDataEntity {
+    /* ################################################################## */
+    /**
+     - returns: A simple description string, of the whole Array.
+     */
+    var description: String { map{ $0.description }.joined(separator: "\n") }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - Persistent Test Harness Settings -
 /* ###################################################################################################################################### */
 /**
  This stores our various parameters, and also acts as a namespace, for our "global" types.
  */
 class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
+    /* ################################################################################################################################## */
+    // MARK: Population Center List Entity
+    /* ################################################################################################################################## */
+    /**
+     */
+    struct PopCenterDataEntity {
+        /* ############################################################## */
+        /**
+         */
+        let name: String
+
+        /* ############################################################## */
+        /**
+         */
+        let country: String
+
+        /* ############################################################## */
+        /**
+         */
+        let coords: CLLocationCoordinate2D
+
+        /* ############################################################## */
+        /**
+         */
+        let popIndex: Int
+        
+        /* ############################################################## */
+        /**
+         - returns: A simple description string
+         */
+        var description: String { "Name: \"\(name)\", Country: \"\(country)\", Location: \(coords), Pop Index: \(popIndex)" }
+    }
+
     /* ################################################################## */
     /**
      This is used to store the current user location.
@@ -54,6 +98,40 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
      This is our query instance.
      */
     private static var _queryInstance = SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
+
+    /* ################################################################## */
+    /**
+     This caches our population center data.
+     */
+    private static var _popData: [PopCenterDataEntity] = []
+
+    /* ################################################################## */
+    /**
+     This actually reads the population center data from the bundle.
+     
+     - returns: An array of population center data objects.
+     */
+    private static func _readPopData() -> [PopCenterDataEntity] {
+        if let fileURL = Bundle.main.url(forResource: "PopData", withExtension: "json"),
+           let data = try? Data(contentsOf: fileURL, options: .mappedIfSafe),
+           let jsonResult = try? JSONSerialization.jsonObject(with: data, options: .mutableLeaves) {
+            if let jsonArray = jsonResult as? [[String: Any]],
+               !jsonArray.isEmpty {
+                return jsonArray.compactMap {
+                    if let name = $0["name"] as? String,
+                       let country = $0["country"] as? String,
+                       let latitude = $0["latitude"] as? Double,
+                       let longitude = $0["longitude"] as? Double,
+                       let popIndex = $0["popIndex"] as? Int {
+                        return PopCenterDataEntity(name: name, country: country, coords: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), popIndex: popIndex)
+                    }
+                    return nil
+                }
+            }
+        }
+        
+        return []
+    }
 
     /* ################################################################################################################################## */
     // MARK: RVS_PersistentPrefs Conformance
@@ -117,6 +195,18 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
 // MARK: Public Computed Properties
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_Prefs {
+    /* ################################################################## */
+    /**
+     This is our population center data.
+     */
+    public var popData: [PopCenterDataEntity] {
+        guard Self._popData.isEmpty else { return Self._popData }
+        
+        Self._popData = Self._readPopData()
+        
+        return Self._popData
+    }
+
     /* ################################################################## */
     /**
      This is used to store the current user location.

@@ -142,12 +142,20 @@ extension SwiftMLSDK_Map_AnnotationPopover_ViewController: UITableViewDataSource
         let ret = UITableViewCell()
         ret.backgroundColor = .clear
         guard (0..<meetings.count).contains(inIndexPath.row) else { return ret }
-        let user = meetings[inIndexPath.row]
-        ret.textLabel?.text = user.name
+        let meeting = meetings[inIndexPath.row]
+        ret.textLabel?.text = meeting.name
         ret.textLabel?.adjustsFontSizeToFitWidth = true
         ret.textLabel?.minimumScaleFactor = 0.5
         ret.textLabel?.lineBreakMode = .byTruncatingTail
         ret.backgroundColor = (1 == inIndexPath.row % 2) ? UIColor.label.withAlphaComponent(Self._alternateRowOpacity) : UIColor.clear
+        if let coords = meeting.coords {
+            Self.reverseGeocode(coords) { inPlacemarks, inError in
+                print("Placemarks:\n")
+                inPlacemarks?.forEach {
+                    print($0.description)
+                }
+            }
+        }
         return ret
     }
 }
