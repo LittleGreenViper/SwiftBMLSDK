@@ -26,7 +26,6 @@
 		D488D2A12B82CE40000979D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D488D29F2B82CE40000979D9 /* LaunchScreen.storyboard */; };
 		D488D2AB2B82CF3F000979D9 /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; };
 		D488D2AC2B82CF3F000979D9 /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D498E1A02BA4C5C1007F88F3 /* PopData.json in Resources */ = {isa = PBXBuildFile; fileRef = D498E19F2BA4C5C1007F88F3 /* PopData.json */; };
 		D4D4B7992B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */; };
 		D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */; };
 		D4D5E1E12B840675002B769B /* SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift */; };
@@ -65,7 +64,6 @@
 		D488D2A02B82CE40000979D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D488D2A22B82CE40000979D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D498E19F2BA4C5C1007F88F3 /* PopData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PopData.json; sourceTree = "<group>"; };
 		D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_InfoViewController.swift; sourceTree = "<group>"; };
 		D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_SearchViewController.swift; sourceTree = "<group>"; };
 		D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift; sourceTree = "<group>"; };
@@ -162,7 +160,6 @@
 		D488D2A82B82CF01000979D9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D498E19F2BA4C5C1007F88F3 /* PopData.json */,
 				D488D29A2B82CE3F000979D9 /* Main.storyboard */,
 				D488D29D2B82CE40000979D9 /* Assets.xcassets */,
 				D488D29F2B82CE40000979D9 /* LaunchScreen.storyboard */,
@@ -254,7 +251,6 @@
 				D406220E2B83B705009FFAB3 /* Localizable.strings in Resources */,
 				D488D29E2B82CE40000979D9 /* Assets.xcassets in Resources */,
 				D488D29C2B82CE3F000979D9 /* Main.storyboard in Resources */,
-				D498E1A02BA4C5C1007F88F3 /* PopData.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

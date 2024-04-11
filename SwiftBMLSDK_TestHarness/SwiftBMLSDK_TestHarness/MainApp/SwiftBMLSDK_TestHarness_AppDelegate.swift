@@ -47,7 +47,6 @@ extension SwiftBMLSDK_TestHarness_AppDelegate: UIApplicationDelegate {
     /**
      */
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        _ = SwiftBMLSDK_TestHarness_Prefs().popData
         return true
     }
 
