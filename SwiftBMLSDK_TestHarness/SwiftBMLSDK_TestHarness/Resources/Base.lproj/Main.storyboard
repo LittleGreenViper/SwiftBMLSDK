@@ -3,10 +3,9 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -27,76 +26,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zo5-Be-HRq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1360" y="-970"/>
-        </scene>
-        <!--Text Process View Controller-->
-        <scene sceneID="yb6-nR-zdP">
-            <objects>
-                <viewController id="8ds-ES-398" userLabel="Text Process View Controller" customClass="SwiftBMLSDK_TestHarness_MLWorkshopViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="98f-wW-yZn">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="c7i-pD-T6D">
-                                <rect key="frame" x="16" y="103" width="361" height="666"/>
-                                <subviews>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jlz-g9-7cY">
-                                        <rect key="frame" x="76" y="0.0" width="209" height="625"/>
-                                        <segments>
-                                            <segment title="SLUG-MLW-0"/>
-                                            <segment title="SLUG-MLW-1"/>
-                                        </segments>
-                                        <color key="selectedSegmentTintColor" name="AccentColor"/>
-                                    </segmentedControl>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2e4-yH-8UK">
-                                        <rect key="frame" x="99" y="636" width="163" height="30"/>
-                                        <color key="tintColor" name="AccentColor"/>
-                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" title="SLUG-ML-GO-BUTTON">
-                                            <color key="titleColor" name="AccentColor"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="goButtonHit:" destination="8ds-ES-398" eventType="touchUpInside" id="08V-v4-ivz"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                            </stackView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="COP-Wi-FL8">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                                <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="fqY-Rd-b1O">
-                                        <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
-                                    </activityIndicatorView>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstItem="fqY-Rd-b1O" firstAttribute="centerX" secondItem="COP-Wi-FL8" secondAttribute="centerX" id="PUf-l1-nh5"/>
-                                    <constraint firstItem="fqY-Rd-b1O" firstAttribute="centerY" secondItem="COP-Wi-FL8" secondAttribute="centerY" id="fpf-Te-W4t"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="NTI-Gb-Zqs"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstAttribute="bottom" secondItem="COP-Wi-FL8" secondAttribute="bottom" id="46H-ef-ebD"/>
-                            <constraint firstAttribute="trailing" secondItem="COP-Wi-FL8" secondAttribute="trailing" id="7aG-hg-t5Q"/>
-                            <constraint firstItem="COP-Wi-FL8" firstAttribute="top" secondItem="98f-wW-yZn" secondAttribute="top" id="8Ic-Hk-VJX"/>
-                            <constraint firstItem="COP-Wi-FL8" firstAttribute="leading" secondItem="98f-wW-yZn" secondAttribute="leading" id="QQu-km-vzR"/>
-                            <constraint firstItem="c7i-pD-T6D" firstAttribute="top" secondItem="NTI-Gb-Zqs" secondAttribute="top" id="aFd-TK-XTg"/>
-                            <constraint firstItem="NTI-Gb-Zqs" firstAttribute="trailing" secondItem="c7i-pD-T6D" secondAttribute="trailing" constant="16" id="dDP-Jf-lbR"/>
-                            <constraint firstItem="c7i-pD-T6D" firstAttribute="bottom" secondItem="NTI-Gb-Zqs" secondAttribute="bottom" placeholder="YES" id="dyD-gC-zlg"/>
-                            <constraint firstItem="c7i-pD-T6D" firstAttribute="leading" secondItem="NTI-Gb-Zqs" secondAttribute="leading" constant="16" id="kqC-mg-Rn3"/>
-                        </constraints>
-                    </view>
-                    <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-3-TITLE" image="rectangle.and.text.magnifyingglass.rtl" catalog="system" id="3Ka-Mc-F3W"/>
-                    <connections>
-                        <outlet property="goButton" destination="2e4-yH-8UK" id="W27-CK-rTJ"/>
-                        <outlet property="mlTypeSwitch" destination="jlz-g9-7cY" id="bvV-OF-bUG"/>
-                        <outlet property="throbberView" destination="COP-Wi-FL8" id="Dnj-rh-7J7"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="R4O-63-1LH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="200.76335877862596" y="129.57746478873241"/>
         </scene>
         <!--Map Results Tab-->
         <scene sceneID="Z7l-Ny-MDp">
@@ -490,7 +419,6 @@
                         <segue destination="Obb-XM-qfi" kind="relationship" relationship="viewControllers" id="lD4-hR-eSK"/>
                         <segue destination="QCj-Xx-X0G" kind="relationship" relationship="viewControllers" id="Cnu-j5-zKI"/>
                         <segue destination="uVT-GP-ONa" kind="relationship" relationship="viewControllers" id="dpk-dr-gkC"/>
-                        <segue destination="8ds-ES-398" kind="relationship" relationship="viewControllers" id="41Y-gR-yhF"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NfB-Ed-Ex7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -540,10 +468,6 @@
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="rectangle.and.text.magnifyingglass.rtl" catalog="system" width="128" height="90"/>
-        <namedColor name="AccentColor">
-            <color red="0.31400001049041748" green="0.37999999523162842" blue="0.89399999380111694" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

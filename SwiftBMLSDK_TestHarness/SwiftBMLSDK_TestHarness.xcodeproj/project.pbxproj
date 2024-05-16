@@ -28,7 +28,6 @@
 		D488D2AC2B82CF3F000979D9 /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4D4B7992B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */; };
 		D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */; };
-		D4D5E1E12B840675002B769B /* SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift */; };
 		D4E0AFA52B8FAD4C00676B6B /* SwiftBMLSDK_TestHarness_MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E0AFA42B8FAD4C00676B6B /* SwiftBMLSDK_TestHarness_MapViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -66,7 +65,6 @@
 		D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_InfoViewController.swift; sourceTree = "<group>"; };
 		D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_SearchViewController.swift; sourceTree = "<group>"; };
-		D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift; sourceTree = "<group>"; };
 		D4E0AFA42B8FAD4C00676B6B /* SwiftBMLSDK_TestHarness_MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,7 +108,6 @@
 				D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */,
 				D42740142B9134480019DC48 /* Search */,
 				D4596F4F2B9285B1008B7D12 /* Results */,
-				D4D5E1E02B840675002B769B /* SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
@@ -270,7 +267,6 @@
 				D4596F4E2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift in Sources */,
 				D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift in Sources */,
 				D476D4532B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift in Sources */,
-				D4D5E1E12B840675002B769B /* SwiftBMLSDK_TestHarness_MLWorkshopViewController.swift in Sources */,
 				D4D4B7992B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift in Sources */,
 				D42740162B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift in Sources */,
 			);
