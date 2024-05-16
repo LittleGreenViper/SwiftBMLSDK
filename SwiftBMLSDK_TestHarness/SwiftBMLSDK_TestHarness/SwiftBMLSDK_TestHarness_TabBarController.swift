@@ -61,7 +61,7 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
-        startLookingUpMyLocation()
+//        startLookingUpMyLocation()
     }
 }
 
