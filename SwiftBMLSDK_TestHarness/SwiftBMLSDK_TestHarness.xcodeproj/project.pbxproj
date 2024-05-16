@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D4011DAA2BA4A77F002C3292 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D4011DA92BA4A77F002C3292 /* PrivacyInfo.xcprivacy */; };
+		D4026F952BF6A8CC00649E81 /* SwiftBMLSDK_TestHarness_VirtualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4026F932BF6A8CC00649E81 /* SwiftBMLSDK_TestHarness_VirtualViewController.swift */; };
 		D406220E2B83B705009FFAB3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D40622102B83B705009FFAB3 /* Localizable.strings */; };
 		D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D40622152B83B73F009FFAB3 /* InfoPlist.strings */; };
 		D40622182B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D40622172B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox */; };
@@ -27,7 +28,7 @@
 		D488D2AB2B82CF3F000979D9 /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; };
 		D488D2AC2B82CF3F000979D9 /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4D4B7992B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */; };
-		D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */; };
+		D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift */; };
 		D4E0AFA52B8FAD4C00676B6B /* SwiftBMLSDK_TestHarness_MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E0AFA42B8FAD4C00676B6B /* SwiftBMLSDK_TestHarness_MapViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +48,7 @@
 
 /* Begin PBXFileReference section */
 		D4011DA92BA4A77F002C3292 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		D4026F932BF6A8CC00649E81 /* SwiftBMLSDK_TestHarness_VirtualViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_VirtualViewController.swift; sourceTree = "<group>"; };
 		D406220F2B83B705009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D40622142B83B73F009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_BaseViewController.swift; sourceTree = "<group>"; };
@@ -64,7 +66,7 @@
 		D488D2A22B82CE40000979D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_InfoViewController.swift; sourceTree = "<group>"; };
-		D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_SearchViewController.swift; sourceTree = "<group>"; };
+		D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_LocationSearchViewController.swift; sourceTree = "<group>"; };
 		D4E0AFA42B8FAD4C00676B6B /* SwiftBMLSDK_TestHarness_MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_MapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,13 +85,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D42740142B9134480019DC48 /* Search */ = {
+		D4026F942BF6A8CC00649E81 /* Virtual */ = {
 			isa = PBXGroup;
 			children = (
-				D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift */,
+				D4026F932BF6A8CC00649E81 /* SwiftBMLSDK_TestHarness_VirtualViewController.swift */,
+			);
+			path = Virtual;
+			sourceTree = "<group>";
+		};
+		D42740142B9134480019DC48 /* LocationSearch */ = {
+			isa = PBXGroup;
+			children = (
+				D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift */,
 				D4E0AFA42B8FAD4C00676B6B /* SwiftBMLSDK_TestHarness_MapViewController.swift */,
 			);
-			path = Search;
+			path = LocationSearch;
 			sourceTree = "<group>";
 		};
 		D42A9AAA2B8E156F002516E0 /* MainApp */ = {
@@ -106,19 +116,20 @@
 			isa = PBXGroup;
 			children = (
 				D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */,
-				D42740142B9134480019DC48 /* Search */,
-				D4596F4F2B9285B1008B7D12 /* Results */,
+				D42740142B9134480019DC48 /* LocationSearch */,
+				D4596F4F2B9285B1008B7D12 /* MapResults */,
+				D4026F942BF6A8CC00649E81 /* Virtual */,
 			);
 			path = Tabs;
 			sourceTree = "<group>";
 		};
-		D4596F4F2B9285B1008B7D12 /* Results */ = {
+		D4596F4F2B9285B1008B7D12 /* MapResults */ = {
 			isa = PBXGroup;
 			children = (
 				D42740152B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift */,
 				D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */,
 			);
-			path = Results;
+			path = MapResults;
 			sourceTree = "<group>";
 		};
 		D488D2882B82CE3F000979D9 = {
@@ -258,6 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4026F952BF6A8CC00649E81 /* SwiftBMLSDK_TestHarness_VirtualViewController.swift in Sources */,
 				D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift in Sources */,
 				D47C81742B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift in Sources */,
 				D406221A2B83BB16009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift in Sources */,
@@ -265,7 +277,7 @@
 				D488D2952B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift in Sources */,
 				D488D2972B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_SceneDelegate.swift in Sources */,
 				D4596F4E2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift in Sources */,
-				D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_SearchViewController.swift in Sources */,
+				D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift in Sources */,
 				D476D4532B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift in Sources */,
 				D4D4B7992B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift in Sources */,
 				D42740162B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift in Sources */,

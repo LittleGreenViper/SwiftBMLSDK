@@ -28,7 +28,7 @@ import SwiftBMLSDK
 /**
  This manages the Search Tab.
  */
-class SwiftBMLSDK_TestHarness_SearchViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
+class SwiftBMLSDK_TestHarness_LocationSearchViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
     /**
      */
@@ -103,7 +103,7 @@ class SwiftBMLSDK_TestHarness_SearchViewController: SwiftBMLSDK_TestHarness_TabB
 /* ###################################################################################################################################### */
 // MARK: Static Functions
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_SearchViewController {
+extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
     /* ################################################################## */
     /**
      */
@@ -115,7 +115,7 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
 /* ###################################################################################################################################### */
 // MARK: Callbacks
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_SearchViewController {
+extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
     /* ################################################################## */
     /**
      Called when the open map button is hit
@@ -200,7 +200,7 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
 /* ###################################################################################################################################### */
 // MARK: Base Class Overrides
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_SearchViewController {
+extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
     /* ################################################################## */
     /**
      Called when the view hierarchy has loaded.
@@ -245,7 +245,7 @@ extension SwiftBMLSDK_TestHarness_SearchViewController {
 /* ###################################################################################################################################### */
 // MARK: UITextFieldDelegate Conformance
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_SearchViewController: UITextFieldDelegate {
+extension SwiftBMLSDK_TestHarness_LocationSearchViewController: UITextFieldDelegate {
     /* ################################################################## */
     /**
      */

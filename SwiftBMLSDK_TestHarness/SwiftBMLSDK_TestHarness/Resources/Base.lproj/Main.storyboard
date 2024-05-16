@@ -63,6 +63,24 @@
             </objects>
             <point key="canvasLocation" x="200.76335877862596" y="-582.3943661971831"/>
         </scene>
+        <!--SLUG-TAB-3-TITLE-->
+        <scene sceneID="lEr-RR-FBN">
+            <objects>
+                <viewController id="AFa-qM-puy" customClass="SwiftBMLSDK_TestHarness_VirtualViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Spx-Pr-P9v">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="BNm-4O-p2Z"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="SLUG-TAB-3-TITLE" id="lXQ-wu-KBf">
+                        <imageReference key="image" image="globe" catalog="system" symbolScale="large"/>
+                    </tabBarItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WqF-VG-vYG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="207" y="109"/>
+        </scene>
         <!--Server Info Tab-->
         <scene sceneID="fFI-c5-sRo">
             <objects>
@@ -168,7 +186,7 @@
         <!--Search View Controller-->
         <scene sceneID="axz-hb-eSA">
             <objects>
-                <viewController id="QCj-Xx-X0G" userLabel="Search View Controller" customClass="SwiftBMLSDK_TestHarness_SearchViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="QCj-Xx-X0G" userLabel="Search View Controller" customClass="SwiftBMLSDK_TestHarness_LocationSearchViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kzT-at-KhI">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -419,6 +437,7 @@
                         <segue destination="Obb-XM-qfi" kind="relationship" relationship="viewControllers" id="lD4-hR-eSK"/>
                         <segue destination="QCj-Xx-X0G" kind="relationship" relationship="viewControllers" id="Cnu-j5-zKI"/>
                         <segue destination="uVT-GP-ONa" kind="relationship" relationship="viewControllers" id="dpk-dr-gkC"/>
+                        <segue destination="AFa-qM-puy" kind="relationship" relationship="viewControllers" id="y2l-tv-8e0"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NfB-Ed-Ex7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -465,6 +484,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="globe" catalog="system" width="128" height="123"/>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
