@@ -38,6 +38,11 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
      Once a meeting search has been done, we cache, here.
      */
     private var _cachedMeetings: [SwiftBMLSDK_Parser.Meeting] = []
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var throbberView: UIView?
 }
 
 /* ###################################################################################################################################### */
@@ -61,6 +66,12 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        throbberView?.isHidden = false
+        findMeetings() { inResults in
+            DispatchQueue.main.async {
+                self.throbberView?.isHidden = true
+            }
+        }
     }
 }
 
