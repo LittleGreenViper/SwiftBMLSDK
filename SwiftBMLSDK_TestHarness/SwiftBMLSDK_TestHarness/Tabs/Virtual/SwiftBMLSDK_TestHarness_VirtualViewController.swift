@@ -29,26 +29,26 @@ import SwiftBMLSDK
 class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
     /**
+     This is our query instance.
+     */
+    private static var _queryInstance = SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
+
+    /* ################################################################## */
+    /**
      Once a meeting search has been done, we cache, here.
      */
     private var _cachedMeetings: [SwiftBMLSDK_Parser.Meeting] = []
-    
-    /* ################################################################## */
-    /**
-     */
-    var meetings: [SwiftBMLSDK_Parser.Meeting] {
-        if _cachedMeetings.isEmpty {
-            myAppDelegateInstance?.
-        }
-        
-        return _cachedMeetings
-    }
 }
 
 /* ###################################################################################################################################### */
 // MARK: Computed Properties
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_VirtualViewController {
+    /* ################################################################## */
+    /**
+     The meetings from the last search.
+     */
+    var meetings: [SwiftBMLSDK_Parser.Meeting] { _cachedMeetings }
 }
 
 /* ###################################################################################################################################### */
@@ -71,5 +71,18 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /* ################################################################## */
     /**
      */
+    func findMeetings(onlyVirtual inOnlyVirtual: Bool = false, completion inCompletion: ((_: [SwiftBMLSDK_Parser.Meeting]) -> Void)?) {
+        _cachedMeetings = []
+        Self._queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .virtual(isExclusive: inOnlyVirtual))){ inSearchResults, inError in
+            guard nil == inError else {
+                inCompletion?([])
+                return
+            }
+            
+            self._cachedMeetings = inSearchResults?.meetings ?? []
+            
+            inCompletion?(self._cachedMeetings)
+        }
+    }
 }
 
