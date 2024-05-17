@@ -179,16 +179,16 @@ public struct SwiftBMLSDK_Query {
             /* ############################################# */
             /**
              This returns only meetings that have a physical address.
-             - parameter isExclusive: If true, then hybrid meetings are not included.
+             - parameter isExclusive: If true, then hybrid meetings are not included. Default is false.
              */
-            case inPerson(isExclusive: Bool)
+            case inPerson(isExclusive: Bool = false)
             
             /* ############################################# */
             /**
              This returns only meetings that have a virtual component.
-             - parameter isExclusive: If true, then hybrid meetings are not included.
+             - parameter isExclusive: If true, then hybrid meetings are not included. Default is false.
              */
-            case virtual(isExclusive: Bool)
+            case virtual(isExclusive: Bool = false)
             
             /* ############################################# */
             /**
@@ -217,13 +217,13 @@ public struct SwiftBMLSDK_Query {
         
         /* ############################################# */
         /**
-         The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search.
+         The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Ignored if the type is exclusive virtual.
          */
         let locationRadius: Double
 
         /* ############################################# */
         /**
-         The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search.
+         The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search. Ignored if the type is exclusive virtual.
          */
         let locationCenter: CLLocationCoordinate2D
         
