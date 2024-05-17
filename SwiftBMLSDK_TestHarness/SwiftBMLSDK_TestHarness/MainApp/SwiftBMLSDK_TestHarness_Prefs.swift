@@ -268,6 +268,19 @@ extension SwiftBMLSDK_TestHarness_Prefs {
     
     /* ############################################################## */
     /**
+     This fetches the meetings from the aggregator, using the current settings. This populates the `searchResults` property.
+     
+     - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.
+     */
+    public func performVirtualSearch(completion inCompletion: @escaping () -> Void) {
+        queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(locationRadius: locationRadius, locationCenter: locationCenter)) { inSearchResults, inError in
+            Self._searchResults = inSearchResults
+            DispatchQueue.main.async { inCompletion() }
+        }
+    }
+
+    /* ############################################################## */
+    /**
      This fetches the server info from the aggregator. This populates the `serverInfo` property.
      
      - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.

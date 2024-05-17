@@ -27,6 +27,22 @@ import SwiftBMLSDK
 /**
  */
 class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
+    /* ################################################################## */
+    /**
+     Once a meeting search has been done, we cache, here.
+     */
+    private var _cachedMeetings: [SwiftBMLSDK_Parser.Meeting] = []
+    
+    /* ################################################################## */
+    /**
+     */
+    var meetings: [SwiftBMLSDK_Parser.Meeting] {
+        if _cachedMeetings.isEmpty {
+            myAppDelegateInstance?.
+        }
+        
+        return _cachedMeetings
+    }
 }
 
 /* ###################################################################################################################################### */

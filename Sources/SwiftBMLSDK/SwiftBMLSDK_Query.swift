@@ -169,6 +169,34 @@ public struct SwiftBMLSDK_Query {
      This struct is what we use to prescribe the search spec.
      */
     public struct SearchSpecification {
+        public enum MeetingType {
+            /* ############################################# */
+            /**
+             This does not discriminate on any type of meeting. All available meetings are returned.
+             */
+            case any
+            
+            /* ############################################# */
+            /**
+             This returns only meetings that have a physical address.
+             - parameter isExclusive: If true, then hybrid meetings are not included.
+             */
+            case inPerson(isExclusive: Bool)
+            
+            /* ############################################# */
+            /**
+             This returns only meetings that have a virtual component.
+             - parameter isExclusive: If true, then hybrid meetings are not included.
+             */
+            case virtual(isExclusive: Bool)
+            
+            /* ############################################# */
+            /**
+             This returns only meetings that have both a physical and a virtual component.
+             */
+            case hybrid
+        }
+        
         /* ############################################# */
         /**
          The number of results per page. If this is 0, then no results are returned, and only the meta is populated. If left out, or set to a negative number, then all results are returned in one page.
@@ -180,6 +208,12 @@ public struct SwiftBMLSDK_Query {
          The page number (0-based). If `pageSize` is 0 or less, this is ignored. If over the maximum number of pages, an empty page is returned.
          */
         let pageNumber: Int
+        
+        /* ############################################# */
+        /**
+         The type of meeting.
+         */
+        let type: MeetingType
         
         /* ############################################# */
         /**
@@ -200,16 +234,19 @@ public struct SwiftBMLSDK_Query {
          - parameters:
             - pageSize: The number of results per page. If this is 0, then no results are returned, and only the meta is populated. If left out, or set to a negative number, then all results are returned in one page.
             - page: The page number (0-based). If `pageSize` is 0 or less, this is ignored. If over the maximum number of pages, an empty page is returned.
-            - locationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search.
-            - locationCenter: The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search.
+            - type: The meeting type. Default is any type.
+            - locationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Ignored if the type is exclusive virtual.
+            - locationCenter: The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search. Ignored if the type is exclusive virtual.
          */
         public init(pageSize inPageSize: Int = -1,
-             page inPageNumber: Int = 0,
-             locationRadius inLocationRadius: Double = 0,
-             locationCenter inLocationCenter: CLLocationCoordinate2D = CLLocationCoordinate2D()
+                    page inPageNumber: Int = 0,
+                    type inType: MeetingType = .any,
+                    locationRadius inLocationRadius: Double = 0,
+                    locationCenter inLocationCenter: CLLocationCoordinate2D = CLLocationCoordinate2D()
         ) {
             pageSize = inPageSize
             pageNumber = inPageNumber
+            type = inType
             locationRadius = inLocationRadius
             locationCenter = inLocationCenter
         }
@@ -218,7 +255,7 @@ public struct SwiftBMLSDK_Query {
         /**
          This returns the query portion of the search (needs to be appended to the server base URI).
          */
-        var urlQueryItems: [URLQueryItem] {
+        public var urlQueryItems: [URLQueryItem] {
             var ret: [URLQueryItem] = [URLQueryItem(name: "query", value: nil)]
             
             if 0 <= pageSize {
@@ -227,6 +264,23 @@ public struct SwiftBMLSDK_Query {
                    0 < pageNumber {
                     ret.append(URLQueryItem(name: "page", value: String(pageNumber)))
                 }
+            }
+            
+            switch type {
+            case .any:
+                break
+                
+            case .inPerson(let isExclusive):
+                ret.append(URLQueryItem(name: "type", value: String(isExclusive ? 2 : 1)))
+                
+            case .virtual(let isExclusive):
+                ret.append(URLQueryItem(name: "type", value: String(isExclusive ? -2 : -1)))
+                if isExclusive {
+                    return ret
+                }
+            
+            case .hybrid:
+                ret.append(URLQueryItem(name: "type", value: String(3)))
             }
             
             if CLLocationCoordinate2DIsValid(locationCenter),
