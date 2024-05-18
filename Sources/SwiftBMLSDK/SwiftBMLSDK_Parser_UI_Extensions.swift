@@ -79,12 +79,6 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
         
         /* ############################################# */
         /**
-         Verizon BlueJeans
-         */
-        case bluejeans(_: URL? = nil)
-        
-        /* ############################################# */
-        /**
          GoToMeeting
          */
         case gotomeeting(_: URL? = nil)
@@ -105,20 +99,17 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
         /**
          CaseIterable Conformance
          */
-        static var allCases: [SwiftBMLSDK_Parser.Meeting.DirectVirtual] { [.zoom(nil), .bluejeans(nil), .gotomeeting(nil), .skype(nil), .meet(nil)] }
+        static var allCases: [SwiftBMLSDK_Parser.Meeting.DirectVirtual] { [.zoom(nil), .gotomeeting(nil), .skype(nil), .meet(nil)] }
         
         /* ############################################# */
         /**
-         This returns the protocol for the given service.
+         This returns the bundle ID (for Mac apps) for the given service.
          */
-        private var _serviceProtocol: String {
+        private var _appBundleID: String {
             switch self {
             case .zoom:
                 return "zoomus"
                 
-            case .bluejeans:
-                return "bjn"
-
             case .gotomeeting:
                 return "lmi-g2m"
 
@@ -132,15 +123,32 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
         
         /* ############################################# */
         /**
+         This returns the protocol for the given service.
+         */
+        private var _serviceProtocol: String {
+            switch self {
+            case .zoom:
+                return "zoomus"
+
+            case .gotomeeting:
+                return "lmi-g2m"
+
+            case .skype:
+                return "skype"
+
+            case .meet:
+                return "gmeet"
+            }
+        }
+
+        /* ############################################# */
+        /**
          This returns the host for the given service.
          */
         private var _serviceURLHost: String {
             switch self {
             case .zoom:
                 return "zoom.us"
-                
-            case .bluejeans:
-                return "bluejeans.com"
 
             case .gotomeeting:
                 return "gotomeeting.com"
@@ -161,9 +169,6 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
             switch self {
             case .zoom:
                 return "SLUG-DIRECT-URI-ZOOM"
-                
-            case .bluejeans:
-                return "SLUG-DIRECT-URI-BLUEJEANS"
 
             case .gotomeeting:
                 return "SLUG-DIRECT-URI-GOTOMEETING"
@@ -222,27 +227,6 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
                 let retString = "\(_serviceProtocol)://\(_serviceURLHost)/join?confno=\(confNum)" + (!pwd.isEmpty ? "&pwd=\(pwd)" : "")
 
                 ret = URL(string: retString)
-                
-            case .bluejeans(let inURL):
-                guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty else { return nil }
-                
-                let numStringArray: [String] = comp.compactMap {
-                    let str = String($0._decimalOnly)
-                    
-                    return str.isEmpty ? nil : str
-                }
-                
-                for elem in numStringArray where 8 < elem.count {
-                    confNum = elem
-                    break
-                }
-
-                guard !confNum.isEmpty else { return nil }
-                
-                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/\(confNum)"
-
-                ret = URL(string: retString)
 
             case .gotomeeting(let inURL):
                 guard let comp = inURL?.pathComponents,
@@ -295,7 +279,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
                       UIApplication.shared.canOpenURL(ret)
                 else { return nil }
             #endif
-            
+
             return ret
         }
         
@@ -311,8 +295,6 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
             
             if inURL.host?.contains(DirectVirtual.zoom(nil)._serviceURLHost) ?? false {
                 ret = DirectVirtual.zoom(inURL)
-            } else if inURL.host?.contains(DirectVirtual.bluejeans(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.bluejeans(inURL)
             } else if inURL.host?.contains(DirectVirtual.gotomeeting(nil)._serviceURLHost) ?? false {
                 ret = DirectVirtual.gotomeeting(inURL)
             } else if inURL.host?.contains(DirectVirtual.skype(nil)._serviceURLHost) ?? false {

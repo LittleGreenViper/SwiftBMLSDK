@@ -11,11 +11,9 @@
 		D41620402B73C17F00E6E0CA /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */; };
 		D45DB3A82B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */; };
 		D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */; };
-		D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
-		D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D4675D202B73C57D00139CC3 /* Warnings.xcconfig */; };
 		D472FEAF2B8C0F6800FACFE7 /* SwiftBMLSDK_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */; };
 		D498E19E2BA4C289007F88F3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D498E19D2BA4C289007F88F3 /* PrivacyInfo.xcprivacy */; };
-		D499278A2B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UIKit_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49927892B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UIKit_Extensions.swift */; };
+		D499278A2B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UI_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49927892B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UI_Extensions.swift */; };
 		D4B9834D2B7A4F2700F28F03 /* SwiftBMLSDK_Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B9834C2B7A4F2700F28F03 /* SwiftBMLSDK_Query.swift */; };
 		D4C9C6242B750C65007FB793 /* SwiftBMLSDK_Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* SwiftBMLSDK_Parser.swift */; };
 /* End PBXBuildFile section */
@@ -40,7 +38,7 @@
 		D4675D182B73C1E400139CC3 /* SwiftBMLSDK_ParserTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_ParserTests.swift; sourceTree = "<group>"; };
 		D4675D202B73C57D00139CC3 /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		D498E19D2BA4C289007F88F3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		D49927892B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UIKit_Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Parser_UIKit_Extensions.swift; sourceTree = "<group>"; };
+		D49927892B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UI_Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Parser_UI_Extensions.swift; sourceTree = "<group>"; };
 		D4B9834C2B7A4F2700F28F03 /* SwiftBMLSDK_Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Query.swift; sourceTree = "<group>"; };
 		D4C9C6232B750C65007FB793 /* SwiftBMLSDK_Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Parser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -105,7 +103,7 @@
 			children = (
 				D4B9834C2B7A4F2700F28F03 /* SwiftBMLSDK_Query.swift */,
 				D4C9C6232B750C65007FB793 /* SwiftBMLSDK_Parser.swift */,
-				D49927892B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UIKit_Extensions.swift */,
+				D49927892B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UI_Extensions.swift */,
 				D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */,
 			);
 			path = SwiftBMLSDK;
@@ -197,7 +195,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					D41620342B73C17F00E6E0CA = {
 						CreatedOnToolsVersion = 15.2;
@@ -235,7 +233,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D498E19E2BA4C289007F88F3 /* PrivacyInfo.xcprivacy in Resources */,
-				D4675D212B73C57D00139CC3 /* Warnings.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,7 +240,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4675D222B73C57D00139CC3 /* Warnings.xcconfig in Resources */,
 				D4045C222B76895A0086E1B7 /* MeetingDump.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,7 +254,7 @@
 				D4C9C6242B750C65007FB793 /* SwiftBMLSDK_Parser.swift in Sources */,
 				D4B9834D2B7A4F2700F28F03 /* SwiftBMLSDK_Query.swift in Sources */,
 				D4675D142B73C1CD00139CC3 /* SwiftBMLSDK.docc in Sources */,
-				D499278A2B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UIKit_Extensions.swift in Sources */,
+				D499278A2B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UI_Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +314,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -386,6 +383,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -413,9 +411,11 @@
 		D416204A2B73C17F00E6E0CA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = P53V4JS928;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -452,9 +452,11 @@
 		D416204B2B73C17F00E6E0CA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = NO;
 				DEVELOPMENT_TEAM = P53V4JS928;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -494,6 +496,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = P53V4JS928;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -517,6 +520,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = P53V4JS928;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;

@@ -35,5 +35,10 @@
 "SLUG-LOCATION-RADIUS-PLACEHOLDER"              =   "Enter Radius, in Meters";
 "SLUG-PERFORM-SEARCH"                           =   "SEARCH FOR MEETINGS";
 
+"SLUG-DIRECT-URI-ZOOM"                          =   "Zoom";
+"SLUG-DIRECT-URI-GOTOMEETING"                   =   "GotoMeeting";
+"SLUG-DIRECT-URI-SKYPE"                         =   "Skype";
+"SLUG-DIRECT-URI-MEET"                          =   "Google Meet";
+
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";
