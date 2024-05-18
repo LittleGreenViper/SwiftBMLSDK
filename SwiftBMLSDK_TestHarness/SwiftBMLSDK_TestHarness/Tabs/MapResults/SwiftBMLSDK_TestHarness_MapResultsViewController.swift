@@ -49,8 +49,8 @@ extension MKCoordinateRegion {
      - returns: The normalized coordinate.
      */
     private static func _transform(c inCoord: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
-        guard 0 > inCoord.longitude else { return inCoord }
-
+        guard 0 >= inCoord.longitude else { return inCoord }
+        
         return CLLocationCoordinate2D(latitude: inCoord.latitude, longitude: 360 + inCoord.longitude)
     }
     
@@ -64,8 +64,8 @@ extension MKCoordinateRegion {
      - returns: The normalized coordinate.
      */
     private static func _inverseTransform(c inCoord: CLLocationCoordinate2D) -> CLLocationCoordinate2D {
-        guard 180 < inCoord.longitude else { return inCoord }
-
+        guard 180 <= inCoord.longitude else { return inCoord }
+        
         return CLLocationCoordinate2D(latitude: inCoord.latitude, longitude: -360 + inCoord.longitude)
     }
     
@@ -74,9 +74,9 @@ extension MKCoordinateRegion {
      This is the basic workhorse function for the extension.
      
      - parameters:
-        - for: The array of corrdinates to be used to generate the region
-        - transform: The function to "normalize" all longitudes into the positive number set.
-        - inverseTransform: The function to invert the normalization.
+     - for: The array of corrdinates to be used to generate the region
+     - transform: The function to "normalize" all longitudes into the positive number set.
+     - inverseTransform: The function to invert the normalization.
      - returns: A new coordinate region, enclosing all the given coordinates.
      */
     private static func _region(for inCoordinateArray: [CLLocationCoordinate2D], transform inTransform: _Transform, inverseTransform inInverseTransform: _Transform) -> MKCoordinateRegion? {
@@ -105,7 +105,7 @@ extension MKCoordinateRegion {
         
         return MKCoordinateRegion(center: center, span: span)
     }
-
+    
     /* ################################################################## */
     /**
      This initializes a region to encompass all of the given coordinates.
@@ -130,6 +130,22 @@ extension MKCoordinateRegion {
         } else {
             return nil
         }
+    }
+    
+    /* ################################################################## */
+    /**
+     Adapted from here: https://stackoverflow.com/a/35321619/879365
+     
+     This simply returns the coordinate region as a MKMapRect
+     */
+    var asRect: MKMapRect {
+        let topLeft = CLLocationCoordinate2D(latitude: center.latitude + (span.latitudeDelta / 2), longitude: center.longitude - (span.longitudeDelta / 2))
+        let bottomRight = CLLocationCoordinate2D(latitude: center.latitude - (span.latitudeDelta / 2), longitude: center.longitude + (span.longitudeDelta / 2))
+
+        let a = MKMapPoint(topLeft)
+        let b = MKMapPoint(bottomRight)
+        
+        return MKMapRect(origin: MKMapPoint(x: min(a.x, b.x), y: min(a.y, b.y)), size: MKMapSize(width: abs(a.x - b.x), height: abs(a.y - b.y)))
     }
 }
 
@@ -253,15 +269,11 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
     func createAnnotations() {
         clearAnnotations()
         
-        var annotations = [SwiftBMLSDK_MapAnnotation]()
+        guard let searchResults = prefs.searchResults?.inPersonMeetings,
+              !searchResults.isEmpty
+        else { return }
         
-        let filteredSearchResults = prefs.searchResults?.meetings ?? []
-        
-        if !filteredSearchResults.isEmpty {
-            annotations.append(contentsOf: createMeetingAnnotations(filteredSearchResults))
-        }
-        
-        mapView?.addAnnotations(annotations)
+        mapView?.addAnnotations(createMeetingAnnotations(searchResults))
     }
     
     /* ################################################################## */
@@ -326,14 +338,14 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      */
     func setMapToResults() {
         firstLoadDone = true
-        guard let allCoords = prefs.searchResults?.meetings.allCoords,
+        guard let allCoords = prefs.searchResults?.inPersonMeetings.allCoords,
               !allCoords.isEmpty
         else { return }
         
         guard let mapRegion = MKCoordinateRegion(coordinates: allCoords),
               let newRegion = mapView?.regionThatFits(mapRegion) else { return }
         
-        mapView?.setRegion(newRegion, animated: true)
+        mapView?.setVisibleMapRect(newRegion.asRect, animated: false)
     }
 }
 

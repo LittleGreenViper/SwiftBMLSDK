@@ -273,6 +273,7 @@ extension SwiftBMLSDK_TestHarness_Prefs {
      - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.
      */
     public func performVirtualSearch(completion inCompletion: @escaping () -> Void) {
+        clearSearchResults()
         queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(locationRadius: locationRadius, locationCenter: locationCenter)) { inSearchResults, inError in
             Self._searchResults = inSearchResults
             DispatchQueue.main.async { inCompletion() }
