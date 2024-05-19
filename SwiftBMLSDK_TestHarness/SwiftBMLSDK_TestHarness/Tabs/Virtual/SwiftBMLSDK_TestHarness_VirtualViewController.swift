@@ -66,6 +66,18 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    /* ################################################################## */
+    /**
+     Called just before the view is displayed.
+     
+     - parameter inIsAnimated: True, if the appearance is animated.
+     */
+    override func viewWillAppear(_ inIsAnimated: Bool) {
+        super.viewWillAppear(inIsAnimated)
+        prefs.clearSearchResults()
+        myTabController?.updateEnablements()
         throbberView?.isHidden = false
         findMeetings() { inResults in
             DispatchQueue.main.async {

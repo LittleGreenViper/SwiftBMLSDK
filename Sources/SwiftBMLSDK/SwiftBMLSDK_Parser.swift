@@ -194,7 +194,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
     /**
      This struct holds a single parsed meeting instance.
      */
-    public struct Meeting: Encodable, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
+    public struct Meeting: Encodable, Hashable, CustomStringConvertible, CustomDebugStringConvertible {
         /* ############################################################################################################################## */
         // MARK: Format Information Container
         /* ############################################################################################################################## */

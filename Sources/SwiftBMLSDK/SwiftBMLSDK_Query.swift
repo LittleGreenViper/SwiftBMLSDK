@@ -169,7 +169,7 @@ public struct SwiftBMLSDK_Query {
      This struct is what we use to prescribe the search spec.
      */
     public struct SearchSpecification {
-        public enum MeetingType {
+        public enum SearchForMeetingType {
             /* ############################################# */
             /**
              This does not discriminate on any type of meeting. All available meetings are returned.
@@ -213,7 +213,7 @@ public struct SwiftBMLSDK_Query {
         /**
          The type of meeting.
          */
-        let type: MeetingType
+        let type: SearchForMeetingType
         
         /* ############################################# */
         /**
@@ -240,7 +240,7 @@ public struct SwiftBMLSDK_Query {
          */
         public init(pageSize inPageSize: Int = -1,
                     page inPageNumber: Int = 0,
-                    type inType: MeetingType = .any,
+                    type inType: SearchForMeetingType = .any,
                     locationRadius inLocationRadius: Double = 0,
                     locationCenter inLocationCenter: CLLocationCoordinate2D = CLLocationCoordinate2D()
         ) {

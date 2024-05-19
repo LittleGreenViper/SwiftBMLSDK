@@ -187,16 +187,6 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      
      - parameter inIsAnimated: True, if the appearance is animated.
      */
-    override func viewWillAppear(_ inIsAnimated: Bool) {
-        super.viewWillAppear(inIsAnimated)
-    }
-    
-    /* ################################################################## */
-    /**
-     Called just before the view is displayed.
-     
-     - parameter inIsAnimated: True, if the appearance is animated.
-     */
     override func viewDidAppear(_ inIsAnimated: Bool) {
         super.viewDidAppear(inIsAnimated)
         mapView?.region = MKCoordinateRegion()
