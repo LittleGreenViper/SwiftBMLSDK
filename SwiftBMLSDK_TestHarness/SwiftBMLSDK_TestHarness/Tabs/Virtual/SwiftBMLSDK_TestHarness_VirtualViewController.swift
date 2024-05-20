@@ -29,15 +29,31 @@ import SwiftBMLSDK
 class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
     /**
+     The background transparency, for alternating rows.
+     */
+    static private let _alternateRowOpacity = CGFloat(0.05)
+
+    /* ################################################################## */
+    /**
      This is our query instance.
      */
-    private static var _queryInstance = SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
+    static private var _queryInstance = SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
 
     /* ################################################################## */
     /**
      Once a meeting search has been done, we cache, here.
      */
-    private var _cachedMeetings: [SwiftBMLSDK_Parser.Meeting] = []
+    private var _cachedMeetings: SwiftBMLSDK_Parser?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var typeSegmentedSwitch: UISegmentedControl?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var meetingsTableView: UITableView?
     
     /* ################################################################## */
     /**
@@ -53,7 +69,31 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      The meetings from the last search.
      */
-    var meetings: [SwiftBMLSDK_Parser.Meeting] { _cachedMeetings }
+    var meetings: SwiftBMLSDK_Parser? { _cachedMeetings }
+    
+    /* ################################################################## */
+    /**
+     The meetings from the last search.
+     */
+    var tableFood: [SwiftBMLSDK_Parser.Meeting] {
+        guard let selected = typeSegmentedSwitch?.selectedSegmentIndex else { return [] }
+        
+        switch selected {
+        case 0:
+            return _cachedMeetings?.meetings ?? []
+            
+        case 1:
+            return _cachedMeetings?.hybridMeetings ?? []
+
+        case 2:
+            return _cachedMeetings?.virtualOnlyMeetings ?? []
+
+        default:
+            break
+        }
+        
+        return []
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -66,6 +106,11 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let switchMan = typeSegmentedSwitch else { return }
+        
+        for index in 0..<switchMan.numberOfSegments {
+            switchMan.setTitle(switchMan.titleForSegment(at: index)?.localizedVariant, forSegmentAt: index)
+        }
     }
     
     /* ################################################################## */
@@ -76,14 +121,28 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
+        _cachedMeetings = nil
         prefs.clearSearchResults()
         myTabController?.updateEnablements()
         throbberView?.isHidden = false
-        findMeetings() { inResults in
+        findMeetings() { _ in
             DispatchQueue.main.async {
                 self.throbberView?.isHidden = true
+                self.meetingsTableView?.reloadData()
             }
         }
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Callbacks
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualViewController {
+    /* ################################################################## */
+    /**
+     */
+    @IBAction func typeSegmentedSwitchChanged(_ inSwitch: UISegmentedControl) {
+        meetingsTableView?.reloadData()
     }
 }
 
@@ -94,18 +153,46 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /* ################################################################## */
     /**
      */
-    func findMeetings(onlyVirtual inOnlyVirtual: Bool = false, completion inCompletion: ((_: [SwiftBMLSDK_Parser.Meeting]) -> Void)?) {
-        _cachedMeetings = []
+    func findMeetings(onlyVirtual inOnlyVirtual: Bool = false, completion inCompletion: ((_: SwiftBMLSDK_Parser?) -> Void)?) {
+        _cachedMeetings = nil
         Self._queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .virtual(isExclusive: inOnlyVirtual))){ inSearchResults, inError in
             guard nil == inError else {
-                inCompletion?([])
+                inCompletion?(nil)
                 return
             }
             
-            self._cachedMeetings = inSearchResults?.meetings ?? []
+            self._cachedMeetings = inSearchResults
             
             inCompletion?(self._cachedMeetings)
         }
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: UITableViewDataSource Conformance
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
+    /* ################################################################## */
+    /**
+     */
+    func tableView(_: UITableView, numberOfRowsInSection: Int) -> Int {
+        tableFood.count
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    func tableView(_ tableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
+        let ret = UITableViewCell()
+        ret.backgroundColor = .clear
+        guard (0..<tableFood.count).contains(inIndexPath.row) else { return ret }
+        let meeting = tableFood[inIndexPath.row]
+        ret.textLabel?.text = meeting.name
+        ret.textLabel?.adjustsFontSizeToFitWidth = true
+        ret.textLabel?.minimumScaleFactor = 0.5
+        ret.textLabel?.lineBreakMode = .byTruncatingTail
+        ret.backgroundColor = (1 == inIndexPath.row % 2) ? UIColor.label.withAlphaComponent(Self._alternateRowOpacity) : UIColor.clear
+        return ret
     }
 }
 

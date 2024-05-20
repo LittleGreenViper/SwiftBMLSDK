@@ -71,6 +71,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="swC-ix-ezY">
+                                <rect key="frame" x="16" y="103" width="361" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="elK-7H-C1J"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="SLUG-VIRTUAL-SWITCH-0"/>
+                                    <segment title="SLUG-VIRTUAL-SWITCH-1"/>
+                                    <segment title="SLUG-VIRTUAL-SWITCH-2"/>
+                                </segments>
+                                <connections>
+                                    <action selector="typeSegmentedSwitchChanged:" destination="AFa-qM-puy" eventType="valueChanged" id="xAB-98-P6F"/>
+                                </connections>
+                            </segmentedControl>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="rzY-XX-r8j">
+                                <rect key="frame" x="16" y="133" width="361" height="636"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="AFa-qM-puy" id="iHG-Zo-d1Q"/>
+                                    <outlet property="delegate" destination="AFa-qM-puy" id="kW0-Tg-nod"/>
+                                </connections>
+                            </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NGB-3X-6Go">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
@@ -89,8 +111,15 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="NGB-3X-6Go" secondAttribute="bottom" id="7Ma-hN-wE1"/>
+                            <constraint firstItem="swC-ix-ezY" firstAttribute="top" secondItem="BNm-4O-p2Z" secondAttribute="top" id="Bwp-3J-evn"/>
                             <constraint firstItem="NGB-3X-6Go" firstAttribute="top" secondItem="Spx-Pr-P9v" secondAttribute="top" id="GyL-oz-DIa"/>
+                            <constraint firstItem="swC-ix-ezY" firstAttribute="leading" secondItem="BNm-4O-p2Z" secondAttribute="leading" constant="16" id="Jer-Na-ij6"/>
+                            <constraint firstItem="rzY-XX-r8j" firstAttribute="leading" secondItem="BNm-4O-p2Z" secondAttribute="leading" constant="16" id="M5q-oj-iWE"/>
                             <constraint firstItem="NGB-3X-6Go" firstAttribute="leading" secondItem="Spx-Pr-P9v" secondAttribute="leading" id="byJ-Gl-Flc"/>
+                            <constraint firstItem="rzY-XX-r8j" firstAttribute="bottom" secondItem="BNm-4O-p2Z" secondAttribute="bottom" id="jtg-9Y-Lil"/>
+                            <constraint firstItem="BNm-4O-p2Z" firstAttribute="trailing" secondItem="swC-ix-ezY" secondAttribute="trailing" constant="16" id="kFi-KS-Dtc"/>
+                            <constraint firstItem="rzY-XX-r8j" firstAttribute="top" secondItem="swC-ix-ezY" secondAttribute="bottom" id="sh3-lO-AXM"/>
+                            <constraint firstItem="BNm-4O-p2Z" firstAttribute="trailing" secondItem="rzY-XX-r8j" secondAttribute="trailing" constant="16" id="x2v-a0-uSE"/>
                             <constraint firstAttribute="trailing" secondItem="NGB-3X-6Go" secondAttribute="trailing" id="xCd-I0-JNP"/>
                         </constraints>
                     </view>
@@ -98,12 +127,14 @@
                         <imageReference key="image" image="globe" catalog="system" symbolScale="large"/>
                     </tabBarItem>
                     <connections>
+                        <outlet property="meetingsTableView" destination="rzY-XX-r8j" id="9I0-6F-UTe"/>
                         <outlet property="throbberView" destination="NGB-3X-6Go" id="ilz-t8-XK9"/>
+                        <outlet property="typeSegmentedSwitch" destination="swC-ix-ezY" id="Cxr-O0-uTR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WqF-VG-vYG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="207" y="109"/>
+            <point key="canvasLocation" x="206.87022900763358" y="108.45070422535211"/>
         </scene>
         <!--Server Info Tab-->
         <scene sceneID="fFI-c5-sRo">

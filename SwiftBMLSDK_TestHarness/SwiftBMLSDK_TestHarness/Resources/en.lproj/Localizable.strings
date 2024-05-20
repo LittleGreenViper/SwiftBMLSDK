@@ -40,5 +40,9 @@
 "SLUG-DIRECT-URI-SKYPE"                         =   "Skype";
 "SLUG-DIRECT-URI-MEET"                          =   "Google Meet";
 
+"SLUG-VIRTUAL-SWITCH-0"                         =   "All";
+"SLUG-VIRTUAL-SWITCH-1"                         =   "Hybrid";
+"SLUG-VIRTUAL-SWITCH-2"                         =   "Virtual Only";
+
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";
