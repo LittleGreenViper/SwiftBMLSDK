@@ -57,6 +57,7 @@
                     </tabBarItem>
                     <connections>
                         <outlet property="mapView" destination="Jqj-pi-R5r" id="agL-28-8r2"/>
+                        <segue destination="y7V-0G-Fls" kind="show" identifier="show-meeting" id="qZN-aA-zsS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I2H-Mr-thq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -130,6 +131,7 @@
                         <outlet property="meetingsTableView" destination="rzY-XX-r8j" id="9I0-6F-UTe"/>
                         <outlet property="throbberView" destination="NGB-3X-6Go" id="ilz-t8-XK9"/>
                         <outlet property="typeSegmentedSwitch" destination="swC-ix-ezY" id="Cxr-O0-uTR"/>
+                        <segue destination="y7V-0G-Fls" kind="show" identifier="show-meeting" id="zvc-aD-Atf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WqF-VG-vYG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -541,7 +543,26 @@
             </objects>
             <point key="canvasLocation" x="1231" y="-793"/>
         </scene>
+        <!--SwiftBMLSDK Test Harness Meeting View Controller-->
+        <scene sceneID="0SE-P3-oJB">
+            <objects>
+                <viewController id="y7V-0G-Fls" customClass="SwiftBMLSDK_TestHarness_MeetingViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NnY-6A-lXo">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="YtI-pP-otc"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="SdB-iC-N5X"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ce4-gR-FHA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1234" y="-319"/>
+        </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="qZN-aA-zsS"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="globe" catalog="system" width="128" height="123"/>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>

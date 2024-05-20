@@ -13,6 +13,7 @@
 		D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D40622152B83B73F009FFAB3 /* InfoPlist.strings */; };
 		D40622182B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D40622172B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox */; };
 		D406221A2B83BB16009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */; };
+		D40823412BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40823402BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift */; };
 		D42740162B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42740152B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift */; };
 		D42740192B913C220019DC48 /* RVS_UIKit_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D42740182B913C220019DC48 /* RVS_UIKit_Toolbox */; };
 		D4596F4E2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */; };
@@ -52,6 +53,7 @@
 		D406220F2B83B705009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D40622142B83B73F009FFAB3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_BaseViewController.swift; sourceTree = "<group>"; };
+		D40823402BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftBMLSDK_TestHarness_MeetingViewController.swift; path = Tabs/Virtual/SwiftBMLSDK_TestHarness_MeetingViewController.swift; sourceTree = "<group>"; };
 		D42740152B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_MapResultsViewController.swift; sourceTree = "<group>"; };
 		D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Map_AnnotationPopover_ViewController.swift; sourceTree = "<group>"; };
 		D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_MapMarker.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */,
 				D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */,
 				D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */,
+				D40823402BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift */,
 				D42A9AAB2B8E1587002516E0 /* Tabs */,
 				D488D2A82B82CF01000979D9 /* Resources */,
 				D488D2A22B82CE40000979D9 /* Info.plist */,
@@ -270,6 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4026F952BF6A8CC00649E81 /* SwiftBMLSDK_TestHarness_VirtualViewController.swift in Sources */,
+				D40823412BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift in Sources */,
 				D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift in Sources */,
 				D47C81742B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift in Sources */,
 				D406221A2B83BB16009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift in Sources */,

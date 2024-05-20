@@ -158,6 +158,12 @@ extension MKCoordinateRegion {
 class SwiftBMLSDK_TestHarness_MapResultsViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
     /**
+     The ID for the segue to display a single meeting
+     */
+    private static let _showMeetingSegueID = "show-meeting"
+    
+    /* ################################################################## */
+    /**
      The main map view
      */
     @IBOutlet weak var mapView: MKMapView?
@@ -192,6 +198,21 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
         mapView?.region = MKCoordinateRegion()
         firstLoadDone = false
     }
+    
+    /* ################################################################## */
+    /**
+     Called before we switch to the meeting inspector.
+     
+     - parameter for: The segue we are executing.
+     - parameter sender: The meeting instance.
+     */
+    override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
+        guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
+              let meetingInstance = inMeeting as? SwiftBMLSDK_Parser.Meeting
+        else { return }
+        
+        destination.meeting = meetingInstance
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -205,6 +226,7 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      - parameter inMeeting: The meeting instance.
      */
     func selectMeeting(_ inMeeting: SwiftBMLSDK_Parser.Meeting) {
+        performSegue(withIdentifier: Self._showMeetingSegueID, sender: inMeeting)
     }
     
     /* ################################################################## */

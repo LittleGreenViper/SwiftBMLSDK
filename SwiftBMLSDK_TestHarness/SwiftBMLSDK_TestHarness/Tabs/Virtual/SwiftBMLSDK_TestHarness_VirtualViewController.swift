@@ -29,6 +29,12 @@ import SwiftBMLSDK
 class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
     /**
+     The ID for the segue to display a single meeting
+     */
+    private static let _showMeetingSegueID = "show-meeting"
+    
+    /* ################################################################## */
+    /**
      The background transparency, for alternating rows.
      */
     static private let _alternateRowOpacity = CGFloat(0.05)
@@ -132,6 +138,21 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
             }
         }
     }
+    
+    /* ################################################################## */
+    /**
+     Called before we switch to the meeting inspector.
+     
+     - parameter for: The segue we are executing.
+     - parameter sender: The meeting instance.
+     */
+    override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
+        guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
+              let meetingInstance = inMeeting as? SwiftBMLSDK_Parser.Meeting
+        else { return }
+        
+        destination.meeting = meetingInstance
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -150,6 +171,16 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
 // MARK: Instance Methods
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_VirtualViewController {
+    /* ################################################################## */
+    /**
+     Called to show a user page.
+     
+     - parameter inMeeting: The meeting instance.
+     */
+    func selectMeeting(_ inMeeting: SwiftBMLSDK_Parser.Meeting) {
+        performSegue(withIdentifier: Self._showMeetingSegueID, sender: inMeeting)
+    }
+    
     /* ################################################################## */
     /**
      */
