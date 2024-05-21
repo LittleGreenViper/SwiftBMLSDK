@@ -65,6 +65,25 @@ extension SwiftBMLSDK_TestHarness_BaseViewController {
 extension SwiftBMLSDK_TestHarness_BaseViewController {
     /* ################################################################## */
     /**
+     Called when the view hierarchy has loaded.
+     */
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        guard let backgroundImage = UIImage(named: "BackgroundGradient"),
+              let view = view
+        else { return }
+        let backgroundView = UIImageView(image: backgroundImage)
+        backgroundView.contentMode = .scaleToFill
+        view.insertSubview(backgroundView, at: 0)
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        backgroundView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        backgroundView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        backgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+    }
+
+    /* ################################################################## */
+    /**
      Called when the view is about to appear.
      
      - parameter inIsAnimated: True, if the appearance is animated.
