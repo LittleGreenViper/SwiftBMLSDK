@@ -57,7 +57,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
         super.viewDidLoad()
         
         guard let meeting = meeting else { return }
-        navigationItem.title = meeting.name
+        myNavItem?.title = meeting.name
     }
     
     /* ################################################################## */

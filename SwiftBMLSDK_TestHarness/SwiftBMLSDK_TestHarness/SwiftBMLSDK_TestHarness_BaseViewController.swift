@@ -72,6 +72,8 @@ extension SwiftBMLSDK_TestHarness_BaseViewController {
         guard let backgroundImage = UIImage(named: "BackgroundGradient"),
               let view = view
         else { return }
+        navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
+        view.overrideUserInterfaceStyle = .dark
         let backgroundView = UIImageView(image: backgroundImage)
         backgroundView.contentMode = .scaleToFill
         view.insertSubview(backgroundView, at: 0)

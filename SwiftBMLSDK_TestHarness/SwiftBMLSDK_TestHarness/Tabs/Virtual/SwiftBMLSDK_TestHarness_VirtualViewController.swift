@@ -227,3 +227,23 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
     }
 }
 
+
+/* ###################################################################################################################################### */
+// MARK: UITableViewDelegate Conformance
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDelegate {
+    /* ################################################################## */
+    /**
+     Called when a cell is selected. We will use this to open the user viewer.
+     
+     - parameter: The table view (ignored)
+     - parameter willSelectRowAt: The index path of the cell we are selecting.
+     - returns: nil (all the time).
+     */
+    func tableView(_: UITableView, willSelectRowAt inIndexPath: IndexPath) -> IndexPath? {
+        if (0..<tableFood.count).contains(inIndexPath.row) {
+            selectMeeting(tableFood[inIndexPath.row])
+        }
+        return nil
+    }
+}
