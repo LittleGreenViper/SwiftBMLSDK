@@ -960,29 +960,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - File Private Date Extension -
-/* ###################################################################################################################################### */
-/**
- This extension allows us to convert a date to a certain time zone.
- */
-fileprivate extension Date {
-    /* ################################################################## */
-    /**
-     Convert a date between two timezones.
-     
-     Inspired by [this SO answer](https://stackoverflow.com/a/54064820/879365)
-     
-     - parameter from: The source timezone.
-     - paremeter to: The destination timezone.
-     
-     - returns: The converted date
-     */
-    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date {
-        addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self)))
-    }
-}
-
-/* ###################################################################################################################################### */
 // MARK: - Parser Extensions -
 /* ###################################################################################################################################### */
 /**
@@ -991,51 +968,33 @@ fileprivate extension Date {
 public extension SwiftBMLSDK_Parser {
     /* ################################################# */
     /**
-     This returns the entire meeting list as a simple, 2-dimensional, JSON Data instance. The data is a simple sequence of single-dimension dictionaries.
-     
-     This is different from the input JSON, as it has the organization and "cleaning" provided by the parser. It also keeps it at 2 dimensions, for easy integration into ML stuff.
-     */
-    var meetingJSONData: Data? { try? JSONEncoder().encode(meetings) }
-    
-    /* ################################################# */
-    /**
      Returns meetings that have an in-person component.
      */
-    var inPersonMeetings: [SwiftBMLSDK_Parser.Meeting] {
-        meetings.compactMap { .hybrid == $0.meetingType || .inPerson == $0.meetingType ? $0 : nil }
-    }
+    var inPersonMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: false)] }
     
     /* ################################################# */
     /**
      Returns meetings that are only in-person.
      */
-    var inPersonOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] {
-        meetings.compactMap { .inPerson == $0.meetingType ? $0 : nil }
-    }
+    var inPersonOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: true)] }
 
     /* ################################################# */
     /**
      Returns meetings that have a virtual component.
      */
-    var virtualMeetings: [SwiftBMLSDK_Parser.Meeting] {
-        meetings.compactMap { .hybrid == $0.meetingType || .virtual == $0.meetingType ? $0 : nil }
-    }
+    var virtualMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: false)] }
 
     /* ################################################# */
     /**
      Returns meetings that are only virtual.
      */
-    var virtualOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] {
-        meetings.compactMap { .virtual == $0.meetingType ? $0 : nil }
-    }
+    var virtualOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: true)] }
 
     /* ################################################# */
     /**
      Returns meetings that are only hybrid.
      */
-    var hybridMeetings: [SwiftBMLSDK_Parser.Meeting] {
-        meetings.compactMap { .hybrid == $0.meetingType ? $0 : nil }
-    }
+    var hybridMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.hybrid] }
 }
 
 /* ###################################################################################################################################### */
@@ -1152,4 +1111,142 @@ extension SwiftBMLSDK_Parser.Meeting {
         guard .distantFuture > getNextStartDate(isAdjusted: inAdjust) else { return .distantPast }
         return getNextStartDate().addingTimeInterval(-(60 * 60 * 24 * 7))
     }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - File Private Date Extension -
+/* ###################################################################################################################################### */
+/**
+ This extension allows us to convert a date to a certain time zone.
+ */
+fileprivate extension Date {
+    /* ################################################################## */
+    /**
+     Convert a date between two timezones.
+     
+     Inspired by [this SO answer](https://stackoverflow.com/a/54064820/879365)
+     
+     - parameter from: The source timezone.
+     - paremeter to: The destination timezone.
+     
+     - returns: The converted date
+     */
+    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date {
+        addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self)))
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Array Extension -
+/* ###################################################################################################################################### */
+/**
+ This extension allows us to perform additional operations on an Array of meetings.
+ */
+extension Array where Element == SwiftBMLSDK_Parser.Meeting {
+    /* ################################################################################################################################## */
+    // MARK: Weekday Filtering Enum
+    /* ################################################################################################################################## */
+    /**
+     This defines a 1-based weekday specification.
+     */
+    enum Weekdays: Int {
+        /* ############################################# */
+        /**
+         Sunday
+         */
+        case sunday = 1
+        
+        /* ############################################# */
+        /**
+         Monday
+         */
+        case monday
+        
+        /* ############################################# */
+        /**
+         Tuesday
+         */
+        case tuesday
+        
+        /* ############################################# */
+        /**
+         Wednesday
+         */
+        case wednesday
+
+        /* ############################################# */
+        /**
+         Thursday
+         */
+        case thursday
+
+        /* ############################################# */
+        /**
+         Friday
+         */
+        case friday
+
+        /* ############################################# */
+        /**
+         Saturday
+         */
+        case saturday
+        
+        /* ############################################# */
+        /**
+         This allows us to set the weekday as adjusted from our locale.
+         */
+        init?(rawValue inRawValue: Int, isAdjusted inIsAdjusted: Bool = false) {
+            var rawVal = inRawValue
+            
+            if inIsAdjusted {
+                rawVal = rawVal - Calendar.current.firstWeekday + 1
+                if 1 > rawVal {
+                    rawVal += 7
+                }
+            }
+            
+            self.init(rawValue: rawVal)
+        }
+    }
+    
+    /* ################################################# */
+    /**
+     Subscript that allows us to specify a particular meeting type.
+     */
+    subscript(_ inMeetingType: SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType) -> [SwiftBMLSDK_Parser.Meeting] {
+        switch inMeetingType {
+        case .hybrid:
+            return compactMap { .hybrid == $0.meetingType ? $0 : nil }
+            
+        case .virtual(let isExclusive):
+            return compactMap { .virtual == $0.meetingType ? $0 : (isExclusive ? nil : (.hybrid == $0.meetingType ? $0 : nil)) }
+            
+        case .inPerson(let isExclusive):
+            return compactMap { .inPerson == $0.meetingType ? $0 : (isExclusive ? nil : (.hybrid == $0.meetingType ? $0 : nil)) }
+
+        default:
+            return self
+        }
+    }
+
+    /* ################################################# */
+    /**
+     Subscript that allows us to filter for certain weekdays.
+     */
+    subscript(_ inWeekdaySet: Set<Weekdays>) -> [SwiftBMLSDK_Parser.Meeting] {
+        guard !inWeekdaySet.isEmpty else { return self }
+        return compactMap {
+            guard let meetingWeekday = Weekdays(rawValue: $0.weekday) else { return nil }
+            return inWeekdaySet.contains(meetingWeekday) ? $0 : nil
+        }
+    }
+    
+    /* ################################################# */
+    /**
+     This returns the entire meeting list as a simple, 2-dimensional, JSON Data instance. The data is a simple sequence of single-dimension dictionaries.
+     
+     This is different from the input JSON, as it has the organization and "cleaning" provided by the parser. It also keeps it at 2 dimensions, for easy integration into ML stuff.
+     */
+    var asJSONData: Data? { try? JSONEncoder().encode(self) }
 }

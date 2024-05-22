@@ -34,13 +34,11 @@
                         <constraints>
                             <constraint firstItem="5f5-ji-vJx" firstAttribute="width" relation="lessThanOrEqual" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.6" id="0SO-BX-CC2"/>
                             <constraint firstItem="5f5-ji-vJx" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="4qG-fU-VKF"/>
-                            <constraint firstItem="5f5-ji-vJx" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" priority="750" id="6bK-Nu-ucy"/>
                             <constraint firstItem="Bp9-tg-JnV" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="O8M-Wn-KIb"/>
                             <constraint firstAttribute="bottom" secondItem="Bp9-tg-JnV" secondAttribute="bottom" id="XRk-Kl-nI6"/>
                             <constraint firstAttribute="trailing" secondItem="Bp9-tg-JnV" secondAttribute="trailing" id="bZT-pF-mL1"/>
                             <constraint firstItem="5f5-ji-vJx" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="eFm-GX-v4a"/>
                             <constraint firstItem="Bp9-tg-JnV" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="p0W-Mb-bMy"/>
-                            <constraint firstItem="5f5-ji-vJx" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" priority="750" id="qNP-fI-6ly"/>
                             <constraint firstItem="5f5-ji-vJx" firstAttribute="height" relation="lessThanOrEqual" secondItem="Ze5-6b-2t3" secondAttribute="height" multiplier="0.6" id="xaw-da-cVV"/>
                         </constraints>
                     </view>
