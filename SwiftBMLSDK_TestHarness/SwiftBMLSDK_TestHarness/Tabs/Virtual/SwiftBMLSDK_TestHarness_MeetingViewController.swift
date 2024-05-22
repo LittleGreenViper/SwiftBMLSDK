@@ -22,6 +22,54 @@ import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
+// MARK: - Date Extension for Localized Strings -
+/* ###################################################################################################################################### */
+fileprivate extension Date {
+    /* ################################################################## */
+    /**
+     Localizes the time (not the date).
+     */
+    var localizedTime: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateStyle = .none
+
+        var ret = ""
+        
+        let hour = Calendar.current.component(.hour, from: self)
+        let minute = Calendar.current.component(.minute, from: self)
+
+        if let am = dateFormatter.amSymbol {
+            if 0 == hour {
+                if 0 == minute {
+                    ret = "SLUG-MIDNIGHT-TIME".localizedVariant
+                } else {
+                    ret = String(format: "12:%02d %@", minute, am)
+                }
+            } else if 12 == hour,
+                      0 == minute {
+                ret = "SLUG-NOON-TIME".localizedVariant
+            } else {
+                ret = dateFormatter.string(from: self)
+            }
+        } else {
+            if 12 == hour,
+               0 == minute {
+                ret = "SLUG-NOON-TIME".localizedVariant
+            } else if 0 == hour,
+                      0 == minute {
+                ret = "SLUG-MIDNIGHT-TIME".localizedVariant
+            } else {
+                ret = String(format: "%d:%02d", hour, minute)
+            }
+        }
+        
+        return ret
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - Server Single Meeting Inspector View Controller -
 /* ###################################################################################################################################### */
 /**
@@ -37,6 +85,16 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /**
      */
     var meeting: SwiftBMLSDK_Parser.Meeting?
+    
+    /* ################################################################## */
+    /**
+     */
+    var isNormalizedTime: Bool = false
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var timeZoneLabel: UILabel?
 }
 
 /* ###################################################################################################################################### */
@@ -68,6 +126,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
+        setMeetingTimeZone()
     }
 }
 
@@ -81,4 +140,25 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
 // MARK: Instance Methods
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_MeetingViewController {
+    /* ################################################################## */
+    /**
+     */
+    func setMeetingTimeZone() {
+        guard var meetingInstance = meeting else { return }
+        let nativeTime = meetingInstance.getNextStartDate(isAdjusted: false)
+        
+        if let myCurrentTimezoneName = TimeZone.current.localizedName(for: .standard, locale: .current),
+           let zoneName = meetingInstance.timeZone.localizedName(for: .standard, locale: .current),
+           !zoneName.isEmpty,
+           myCurrentTimezoneName != zoneName {
+            timeZoneLabel?.isHidden = false
+            if isNormalizedTime {
+                timeZoneLabel?.text = String(format: "SLUG-TIMEZONE-FORMAT".localizedVariant, zoneName, nativeTime.localizedTime)
+            } else {
+                timeZoneLabel?.text = String(format: "SLUG-TIMEZONE-NO-TIME-FORMAT".localizedVariant, zoneName)
+            }
+        } else {
+            timeZoneLabel?.isHidden = true
+        }
+    }
 }

@@ -50,7 +50,13 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
      Once a meeting search has been done, we cache, here.
      */
     private var _cachedMeetings: SwiftBMLSDK_Parser?
-    
+
+    /* ################################################################## */
+    /**
+     This prevents a reload, when coming back from a meeting inspector.
+     */
+    private var _dontReload: Bool = false
+
     /* ################################################################## */
     /**
      */
@@ -127,14 +133,16 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
-        _cachedMeetings = nil
-        prefs.clearSearchResults()
-        myTabController?.updateEnablements()
-        throbberView?.isHidden = false
-        findMeetings() { _ in
-            DispatchQueue.main.async {
-                self.throbberView?.isHidden = true
-                self.meetingsTableView?.reloadData()
+        if !_dontReload {
+            _cachedMeetings = nil
+            prefs.clearSearchResults()
+            myTabController?.updateEnablements()
+            throbberView?.isHidden = false
+            findMeetings() { _ in
+                DispatchQueue.main.async {
+                    self.throbberView?.isHidden = true
+                    self.meetingsTableView?.reloadData()
+                }
             }
         }
     }
@@ -150,7 +158,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
               let meetingInstance = inMeeting as? SwiftBMLSDK_Parser.Meeting
         else { return }
-        
+        _dontReload = true
+        destination.isNormalizedTime = true
         destination.meeting = meetingInstance
     }
 }
