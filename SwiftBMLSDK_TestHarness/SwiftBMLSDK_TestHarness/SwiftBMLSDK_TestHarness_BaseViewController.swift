@@ -70,6 +70,7 @@ extension SwiftBMLSDK_TestHarness_BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let backgroundImage = UIImage(named: "BackgroundGradient"),
+              let logoImage = UIImage(named: "Logo"),
               let view = view
         else { return }
         navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
@@ -82,6 +83,17 @@ extension SwiftBMLSDK_TestHarness_BaseViewController {
         backgroundView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         backgroundView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         backgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        let logoView = UIImageView(image: logoImage)
+        logoView.contentMode = .scaleAspectFit
+        logoView.layer.opacity = 0.1
+        logoView.tintColor = .white
+        view.insertSubview(logoView, at: 1)
+        logoView.translatesAutoresizingMaskIntoConstraints = false
+        logoView.widthAnchor.constraint(equalTo: logoView.heightAnchor).isActive = true
+        logoView.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, multiplier: 0.6).isActive = true
+        logoView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.6).isActive = true
+        logoView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        logoView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
 
     /* ################################################################## */
