@@ -145,6 +145,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
                 }
             }
         }
+        _dontReload = false
     }
     
     /* ################################################################## */

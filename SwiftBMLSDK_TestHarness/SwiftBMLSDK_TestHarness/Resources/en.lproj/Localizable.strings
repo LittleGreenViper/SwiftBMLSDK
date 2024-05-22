@@ -47,6 +47,10 @@
 "SLUG-MIDNIGHT-TIME"                            =   "Midnight";
 "SLUG-TIMEZONE-FORMAT"                          =   "Time Zone: %@ (%@)";
 "SLUG-TIMEZONE-NO-TIME-FORMAT"                  =   "Time Zone: %@";
+"SLUG-MEETING-DAY-AND-TIME-LABEL-FORMAT"        =   "%@s %@";
+"SLUG-MEETING-DAY-AND-TIME-RANGE-LABEL-FORMAT"  =   "%@s %@ - %@";
+"SLUG-MEETING-TODAY-LABEL-FORMAT"               =   "Today %@";
+"SLUG-MEETING-TODAY-RANGE-LABEL-FORMAT"         =   "Today %@ - %@";
 
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";

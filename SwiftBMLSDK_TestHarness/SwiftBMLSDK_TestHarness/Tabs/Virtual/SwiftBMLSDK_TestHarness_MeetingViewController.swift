@@ -94,6 +94,11 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /* ################################################################## */
     /**
      */
+    @IBOutlet weak var timeDayLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
     @IBOutlet weak var timeZoneLabel: UILabel?
 }
 
@@ -126,6 +131,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
+        setTimeAndDay()
         setMeetingTimeZone()
     }
 }
@@ -140,6 +146,42 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
 // MARK: Instance Methods
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_MeetingViewController {
+    /* ################################################################## */
+    /**
+     Set the time and day label.
+     */
+    func setTimeAndDay() {
+        guard var meeting = meeting else { return }
+        
+        let nextStart = meeting.getNextStartDate(isAdjusted: isNormalizedTime)
+        var nextEnd: Date?
+        var displayString: String = ""
+        
+        if 0 < meeting.duration {
+            nextEnd = nextStart.addingTimeInterval(TimeInterval(meeting.duration))
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        dateFormatter.setLocalizedDateFormatFromTemplate("EEEE")
+        let weekday = dateFormatter.string(from: nextStart)
+
+        if let nextEnd = nextEnd {
+            let startTime = nextStart.localizedTime
+            let endTime = nextEnd.localizedTime
+            displayString = String(format: "SLUG-MEETING-DAY-AND-TIME-RANGE-LABEL-FORMAT".localizedVariant, weekday, startTime, endTime)
+        } else {
+            let startTime = nextStart.localizedTime
+            displayString = String(format: "SLUG-MEETING-DAY-AND-TIME-LABEL-FORMAT".localizedVariant, weekday, startTime)
+        }
+        
+        if !displayString.isEmpty {
+            timeDayLabel?.text = displayString
+        } else {
+            timeDayLabel?.isHidden = true
+        }
+    }
+
     /* ################################################################## */
     /**
      */

@@ -557,8 +557,14 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xvz-mT-MiO">
                                         <rect key="frame" x="16" y="0.0" width="361" height="715"/>
                                         <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="2xZ-Ji-bZb">
+                                                <rect key="frame" x="155.66666666666666" y="0.0" width="50" height="48.666666666666664"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oa9-Ry-glJ">
-                                                <rect key="frame" x="155.66666666666666" y="0.0" width="50" height="715"/>
+                                                <rect key="frame" x="155.66666666666666" y="48.666666666666686" width="50" height="666.33333333333326"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -580,7 +586,8 @@
                             </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="YtI-pP-otc"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="kdJ-fu-ayT" firstAttribute="leading" secondItem="YtI-pP-otc" secondAttribute="leading" id="KiS-IN-Cus"/>
                             <constraint firstItem="kdJ-fu-ayT" firstAttribute="trailing" secondItem="YtI-pP-otc" secondAttribute="trailing" id="Oei-xJ-Qk9"/>
@@ -590,6 +597,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="SdB-iC-N5X"/>
                     <connections>
+                        <outlet property="timeDayLabel" destination="2xZ-Ji-bZb" id="wzQ-el-xGF"/>
                         <outlet property="timeZoneLabel" destination="oa9-Ry-glJ" id="2yQ-VO-GEK"/>
                     </connections>
                 </viewController>
