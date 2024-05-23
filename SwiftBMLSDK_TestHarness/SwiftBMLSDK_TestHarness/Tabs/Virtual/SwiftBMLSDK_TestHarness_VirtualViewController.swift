@@ -118,6 +118,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
+        throbberView?.isHidden = true
         guard let switchMan = typeSegmentedSwitch else { return }
         
         for index in 0..<switchMan.numberOfSegments {

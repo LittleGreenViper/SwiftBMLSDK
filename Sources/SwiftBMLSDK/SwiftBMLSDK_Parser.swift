@@ -21,6 +21,29 @@ import CoreLocation // For coordinates.
 import Contacts     // For the in-person address
 
 /* ###################################################################################################################################### */
+// MARK: - File Private Date Extension -
+/* ###################################################################################################################################### */
+/**
+ This extension allows us to convert a date to a certain time zone.
+ */
+fileprivate extension Date {
+    /* ################################################################## */
+    /**
+     Convert a date between two timezones.
+     
+     Inspired by [this SO answer](https://stackoverflow.com/a/54064820/879365)
+     
+     - parameter from: The source timezone.
+     - paremeter to: The destination timezone.
+     
+     - returns: The converted date
+     */
+    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date {
+        addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self)))
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - Baseline Meeting JSON Page Parser -
 /* ###################################################################################################################################### */
 /**
@@ -427,15 +450,21 @@ public struct SwiftBMLSDK_Parser: Encodable {
             case na
         }
         
-        // MARK: Private Property
+        // MARK: Private Properties
         
         /* ################################################# */
         /**
          This is actually meant to be used by the `getNextStartDate()` extension method, but Swift [wisely] doesn't let stored properties get declared in extensions.
          */
         private var _cachedNextDate: Date?
-
-        // MARK: Required Instance Properties
+        
+        /* ################################################# */
+        /**
+         This is how many seconds there are, in a week.
+         */
+        private let _oneWeekInSeconds = TimeInterval(604800)
+        
+        // MARK: Public Required Instance Properties
         
         /* ################################################# */
         /**
@@ -491,7 +520,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          */
         public let formats: [Format]
 
-        // MARK: Optional Instance Properties
+        // MARK: Public Optional Instance Properties
         
         /* ################################################# */
         /**
@@ -541,7 +570,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          */
         public let virtualInfo: String?
         
-        // MARK: Computed Properties
+        // MARK: Public Computed Properties
         
         /* ################################################# */
         /**
@@ -577,7 +606,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
             return CLLocation(latitude: lat, longitude: lng)
         }
 
-        // MARK: Initializer
+        // MARK: Public Initializer
                 
         /* ################################################# */
         /**
@@ -656,8 +685,8 @@ public struct SwiftBMLSDK_Parser: Encodable {
             self.localMeetingID = localMeetingID
             self.organization = Organization(rawValue: organizationStr) ?? .none
             
-            let durationTemp = inDictionary["duration"] as? Int ?? 3600
-            self.duration = (0..<86400).contains(durationTemp) ? TimeInterval(durationTemp) : TimeInterval(3600)
+            let durationTemp = inDictionary["duration"] as? Int ?? 3600 // One hour default.
+            self.duration = (0..<86400).contains(durationTemp) ? TimeInterval(durationTemp) : TimeInterval(3600)    // Can't be greater than 24 hours.
 
             self.formats = (inDictionary["formats"] as? [[String: Any]] ?? []).compactMap { Format($0) }.sorted()
 
@@ -730,7 +759,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
             }
         }
         
-        // MARK: Codable Conformance
+        // MARK: Public Codable Conformance
         
         /* ############################################# */
         /**
@@ -874,7 +903,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
         /* ############################################# */
         /**
-         CustomStringConvertible Conformance
+         Public CustomStringConvertible Conformance
          */
         public var description: String {
             let formatter = DateFormatter()
@@ -936,13 +965,13 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
         /* ############################################# */
         /**
-         CustomDebugStringConvertible Conformance
+         Public CustomDebugStringConvertible Conformance
          */
         public var debugDescription: String { description }
 
         /* ############################################# */
         /**
-         Equatable Conformance
+         Public Equatable Conformance
          
          - parameter lhs: The left-hand side of the comparison.
          - parameter rhs: The right-hand side of the comparison.
@@ -951,7 +980,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ############################################# */
         /**
-         Hashable Conformance
+         Public Hashable Conformance
          
          - parameter into: (INOUT) -The hasher to be loaded.
          */
@@ -1004,7 +1033,7 @@ public extension SwiftBMLSDK_Parser {
  This extension adds some basic interpretation methods to the base class.
  */
 extension SwiftBMLSDK_Parser.Meeting {
-    // MARK: Computed Properties
+    // MARK: Public Computed Properties
     
     /* ################################################################## */
     /**
@@ -1017,6 +1046,22 @@ extension SwiftBMLSDK_Parser.Meeting {
      True, if the meeting has an in-person component.
      */
     public var hasInPerson: Bool { .inPerson == meetingType || .hybrid == meetingType }
+    
+    /* ################################################# */
+    /**
+     This returns the start time as seconds from midnight.
+     
+     It returns -1, if there was a problem.
+     */
+    public var startTimeInSecondsFromMidnight: TimeInterval {
+        let components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
+        guard let startHour = components.hour,
+              let startMinute = components.minute,
+              (0..<24).contains(startHour),
+              (0..<60).contains(startMinute)
+        else { return -1 }
+        return TimeInterval(startHour * 3600 + startMinute * 60)
+    }
     
     /* ################################################# */
     /**
@@ -1046,7 +1091,7 @@ extension SwiftBMLSDK_Parser.Meeting {
         return ret
     }
 
-    // MARK: Non-Mutating Instance Methods
+    // MARK: Public Non-Mutating Instance Methods
     
     /* ################################################################## */
     /**
@@ -1065,7 +1110,7 @@ extension SwiftBMLSDK_Parser.Meeting {
         return myLocation.distance(from: CLLocation(latitude: inFrom.latitude, longitude: inFrom.longitude))
     }
     
-    // MARK: Mutating Instance Methods
+    // MARK: Public Mutating Instance Methods
     
     /* ################################################################## */
     /**
@@ -1109,30 +1154,7 @@ extension SwiftBMLSDK_Parser.Meeting {
      */
     mutating public func getPreviousStartDate(isAdjusted inAdjust: Bool = false) -> Date {
         guard .distantFuture > getNextStartDate(isAdjusted: inAdjust) else { return .distantPast }
-        return getNextStartDate().addingTimeInterval(-(60 * 60 * 24 * 7))
-    }
-}
-
-/* ###################################################################################################################################### */
-// MARK: - File Private Date Extension -
-/* ###################################################################################################################################### */
-/**
- This extension allows us to convert a date to a certain time zone.
- */
-fileprivate extension Date {
-    /* ################################################################## */
-    /**
-     Convert a date between two timezones.
-     
-     Inspired by [this SO answer](https://stackoverflow.com/a/54064820/879365)
-     
-     - parameter from: The source timezone.
-     - paremeter to: The destination timezone.
-     
-     - returns: The converted date
-     */
-    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date {
-        addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self)))
+        return getNextStartDate().addingTimeInterval(-_oneWeekInSeconds)
     }
 }
 
@@ -1142,12 +1164,13 @@ fileprivate extension Date {
 /**
  This extension allows us to perform additional operations on an Array of meetings.
  */
-extension Array where Element == SwiftBMLSDK_Parser.Meeting {
+public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
     /* ################################################################################################################################## */
     // MARK: Weekday Filtering Enum
     /* ################################################################################################################################## */
     /**
-     This defines a 1-based weekday specification.
+     This defines a 1-based Gregorian weekday specification.
+     All meetings consider 1 to be Sunday, so the local week start should be converted (see init, below).
      */
     enum Weekdays: Int {
         /* ############################################# */
@@ -1195,8 +1218,10 @@ extension Array where Element == SwiftBMLSDK_Parser.Meeting {
         /* ############################################# */
         /**
          This allows us to set the weekday as adjusted from our locale.
+         - parameter rawValue: 1 -> 7, with 1 being the first day of the week.
+         - parameter isAdjusted: Optional (default is true), telling the initializer to adjust from the current locale week start, to the 1 == Sunday start, required by the meeting instance.
          */
-        init?(rawValue inRawValue: Int, isAdjusted inIsAdjusted: Bool = false) {
+        init?(rawValue inRawValue: Int, isAdjusted inIsAdjusted: Bool = true) {
             var rawVal = inRawValue
             
             if inIsAdjusted {
@@ -1213,6 +1238,7 @@ extension Array where Element == SwiftBMLSDK_Parser.Meeting {
     /* ################################################# */
     /**
      Subscript that allows us to specify a particular meeting type.
+     - parameter inMeetingType: The type of meeting we are looking for.
      */
     subscript(_ inMeetingType: SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType) -> [SwiftBMLSDK_Parser.Meeting] {
         switch inMeetingType {
@@ -1232,7 +1258,8 @@ extension Array where Element == SwiftBMLSDK_Parser.Meeting {
 
     /* ################################################# */
     /**
-     Subscript that allows us to filter for certain weekdays.
+     Subscript that allows us to filter for multiple weekdays.
+     - parameter inWeekdaySet: The weekdays to filter for. This is in the local meeting timezone.
      */
     subscript(_ inWeekdaySet: Set<Weekdays>) -> [SwiftBMLSDK_Parser.Meeting] {
         guard !inWeekdaySet.isEmpty else { return self }
@@ -1241,7 +1268,27 @@ extension Array where Element == SwiftBMLSDK_Parser.Meeting {
             return inWeekdaySet.contains(meetingWeekday) ? $0 : nil
         }
     }
-    
+
+    /* ################################################# */
+    /**
+     Subscript that allows us to filter for a single weekday. This is in the local meeting timezone.
+     - parameter inWeekday: The weekday to filter for. This is in the local meeting timezone.
+     */
+    subscript(_ inWeekday: Weekdays) -> [SwiftBMLSDK_Parser.Meeting] { self[Set<Weekdays>([inWeekday])] }
+
+    /* ################################################# */
+    /**
+     Subscript that allows us to filter for meetings that start within a certain time range. This is in the local meeting timezone.
+     
+     - parameter inStartTimeRangeInSecondsFromMidnight: An open range, of start times, 0..<86400.
+     */
+    subscript(_ inStartTimeRangeInSecondsFromMidnight: Range<TimeInterval>) -> [SwiftBMLSDK_Parser.Meeting] {
+        guard 0 <= inStartTimeRangeInSecondsFromMidnight.lowerBound,
+              86400 >= inStartTimeRangeInSecondsFromMidnight.upperBound
+        else { return [] }
+        return compactMap { inStartTimeRangeInSecondsFromMidnight.contains($0.startTimeInSecondsFromMidnight) ? $0 : nil }
+    }
+
     /* ################################################# */
     /**
      This returns the entire meeting list as a simple, 2-dimensional, JSON Data instance. The data is a simple sequence of single-dimension dictionaries.
