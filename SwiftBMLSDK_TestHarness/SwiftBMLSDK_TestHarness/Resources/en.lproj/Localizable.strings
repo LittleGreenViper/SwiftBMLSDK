@@ -62,6 +62,7 @@
 "SLUG-STARTS-IN-HOURS-FORMAT"                   =   "STARTS IN %d HOURS";
 "SLUG-STARTS-IN-HOURS-ONE-MINUTE-FORMAT"        =   "STARTS IN %d HOURS AND 1 MINUTE";
 "SLUG-STARTS-IN-HOURS-MINUTES-FORMAT"           =   "STARTS IN %d HOURS AND %d MINUTES";
+"SLUG-WEEKDAY-TIME-FORMAT"                      =   "%@s, at %@";
 
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";

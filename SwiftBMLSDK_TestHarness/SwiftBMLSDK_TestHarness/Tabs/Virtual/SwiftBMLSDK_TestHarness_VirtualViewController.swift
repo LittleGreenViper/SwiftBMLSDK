@@ -229,8 +229,16 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
         let ret = UITableViewCell()
         ret.backgroundColor = .clear
         guard (0..<tableFood.count).contains(inIndexPath.row) else { return ret }
-        let meeting = tableFood[inIndexPath.row]
-        ret.textLabel?.text = meeting.name
+        var meeting = tableFood[inIndexPath.row]
+        let nextDate = meeting.getNextStartDate(isAdjusted: true)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        let weekday = formatter.string(from: nextDate)
+        formatter.dateFormat = "h:mm a"
+        let time = formatter.string(from: nextDate)
+        let dayTime = String(format: "SLUG-WEEKDAY-TIME-FORMAT".localizedVariant, weekday, time)
+        ret.textLabel?.text = meeting.name + "\n" + dayTime
+        ret.textLabel?.numberOfLines = 0
         ret.textLabel?.adjustsFontSizeToFitWidth = true
         ret.textLabel?.minimumScaleFactor = 0.5
         ret.textLabel?.lineBreakMode = .byTruncatingTail
