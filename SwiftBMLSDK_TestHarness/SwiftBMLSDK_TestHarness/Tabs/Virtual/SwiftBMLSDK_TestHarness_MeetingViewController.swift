@@ -83,6 +83,12 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     
     /* ################################################################## */
     /**
+     The amount of time before we are no longer interested in the meeting.
+     */
+    private static let _meetingStartPaddingInSeconds = TimeInterval(15 * 60)
+    
+    /* ################################################################## */
+    /**
      */
     var meeting: SwiftBMLSDK_Parser.Meeting?
     
@@ -100,6 +106,11 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /**
      */
     @IBOutlet weak var timeZoneLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var meetsNextLabel: UILabel?
 }
 
 /* ###################################################################################################################################### */
@@ -133,6 +144,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
         super.viewWillAppear(inIsAnimated)
         setTimeAndDay()
         setMeetingTimeZone()
+        setMeetsNext()
     }
 }
 
@@ -179,6 +191,67 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
             timeDayLabel?.text = displayString
         } else {
             timeDayLabel?.isHidden = true
+        }
+    }
+
+    /* ################################################################## */
+    /**
+     Set the next meeting label.
+     */
+    func setMeetsNext() {
+        guard var meeting = meeting else { return }
+
+        var newText = ""
+        
+        let nextStart = Int(meeting.meetingStartsIn(isAdjusted: isNormalizedTime, paddingInSeconds: Self._meetingStartPaddingInSeconds) / 60)
+        switch nextStart {
+        case -Int(Self._meetingStartPaddingInSeconds / 60)..<(-1):
+            newText = String(format: "SLUG-STARTED-MINUTES-FORMAT".localizedVariant, abs(nextStart))
+
+        case -1:
+            newText = "SLUG-STARTED-MINUTE".localizedVariant
+
+        case 0:
+            newText = "SLUG-STARTING-NOW".localizedVariant
+
+        case 1:
+            newText = "SLUG-STARTS-IN-ONE-MINUTE".localizedVariant
+
+        case 2..<60:
+            newText = String(format: "SLUG-STARTS-IN-MINUTES-FORMAT".localizedVariant, nextStart)
+
+        case 60:
+            newText = "SLUG-STARTS-IN-ONE-HOUR".localizedVariant
+
+        case 61:
+            newText = "SLUG-STARTS-IN-ONE-HOUR-ONE-MINUTE".localizedVariant
+
+        case 61..<120:
+            let hours = Int(nextStart / 60)
+            let minutes = Int(nextStart) - (hours * 60)
+            newText = String(format: "SLUG-STARTS-IN-ONE-HOUR-MINUTES-FORMAT".localizedVariant, minutes)
+
+        case 120..<1440:
+            let hours = Int(nextStart / 60)
+            let minutes = Int(nextStart) - (hours * 60)
+            if 0 == minutes {
+                newText = String(format: "SLUG-STARTS-IN-HOURS-FORMAT".localizedVariant, hours)
+            } else {
+                newText = String(format: "SLUG-STARTS-IN-HOURS-MINUTES-FORMAT".localizedVariant, hours, minutes)
+            }
+
+        default:
+            break
+        }
+        
+        if newText.isEmpty {
+            meetsNextLabel?.isHidden = true
+        } else {
+            meetsNextLabel?.isHidden = false
+            if let currentText = meetsNextLabel?.text,
+               currentText != newText {
+                meetsNextLabel?.text = newText
+            }
         }
     }
 

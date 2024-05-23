@@ -1111,6 +1111,29 @@ extension SwiftBMLSDK_Parser.Meeting {
     }
     
     // MARK: Public Mutating Instance Methods
+
+    /* ################################################################## */
+    /**
+     Returns the number of minutes until the meeting starts.
+     
+     - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
+     - parameter paddingInSeconds: This is "leeway," where we don't go to the next one, if the meeting is already under way.
+     - returns: The number of seconds, before the next start.
+     */
+    mutating public func meetingStartsIn(isAdjusted inAdjust: Bool = false, paddingInSeconds inPaddingInSeconds: TimeInterval = 0) -> TimeInterval {
+        let meetingStartTime = getNextStartDate(isAdjusted: inAdjust)
+        let prevStart = getPreviousStartDate(isAdjusted: inAdjust)
+        let lastAcceptable = prevStart.addingTimeInterval(inPaddingInSeconds)
+        var ret = Date.now.distance(to: Date.now <= lastAcceptable ? lastAcceptable : meetingStartTime)
+        
+        if 0 < ret {
+            ret = ceil(ret)
+        } else if 0 > ret {
+            ret = floor(ret)
+        }
+    
+        return ret
+    }
     
     /* ################################################################## */
     /**

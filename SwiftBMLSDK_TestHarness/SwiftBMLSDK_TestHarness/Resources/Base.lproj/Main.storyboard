@@ -561,13 +561,19 @@
                                         <rect key="frame" x="16" y="0.0" width="361" height="715"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="2xZ-Ji-bZb">
-                                                <rect key="frame" x="155.66666666666666" y="0.0" width="50" height="50"/>
+                                                <rect key="frame" x="155.66666666666666" y="0.0" width="50" height="48"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oa9-Ry-glJ">
-                                                <rect key="frame" x="155.66666666666666" y="50" width="50" height="665"/>
+                                                <rect key="frame" x="155.66666666666666" y="48" width="50" height="619"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ikG-VJ-Bv5">
+                                                <rect key="frame" x="155.66666666666666" y="667" width="50" height="48"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -589,7 +595,6 @@
                             </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="YtI-pP-otc"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="kdJ-fu-ayT" firstAttribute="leading" secondItem="YtI-pP-otc" secondAttribute="leading" id="KiS-IN-Cus"/>
@@ -600,6 +605,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="SdB-iC-N5X"/>
                     <connections>
+                        <outlet property="meetsNextLabel" destination="ikG-VJ-Bv5" id="djx-pH-mxB"/>
                         <outlet property="timeDayLabel" destination="2xZ-Ji-bZb" id="wzQ-el-xGF"/>
                         <outlet property="timeZoneLabel" destination="oa9-Ry-glJ" id="2yQ-VO-GEK"/>
                     </connections>

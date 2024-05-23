@@ -51,6 +51,17 @@
 "SLUG-MEETING-DAY-AND-TIME-RANGE-LABEL-FORMAT"  =   "%@s %@ - %@";
 "SLUG-MEETING-TODAY-LABEL-FORMAT"               =   "Today %@";
 "SLUG-MEETING-TODAY-RANGE-LABEL-FORMAT"         =   "Today %@ - %@";
+"SLUG-STARTING-NOW"                             =   "STARTING NOW";
+"SLUG-STARTED-MINUTE"                           =   "STARTED 1 MINUTE AGO";
+"SLUG-STARTED-MINUTES-FORMAT"                   =   "STARTED %d MINUTES AGO";
+"SLUG-STARTS-IN-ONE-MINUTE"                     =   "STARTS IN 1 MINUTE";
+"SLUG-STARTS-IN-MINUTES-FORMAT"                 =   "STARTS IN %d MINUTES";
+"SLUG-STARTS-IN-ONE-HOUR"                       =   "STARTS IN 1 HOUR";
+"SLUG-STARTS-IN-ONE-HOUR-ONE-MINUTE"            =   "STARTS IN 1 HOUR AND 1 MINUTE";
+"SLUG-STARTS-IN-ONE-HOUR-MINUTES-FORMAT"        =   "STARTS IN 1 HOUR AND %d MINUTES";
+"SLUG-STARTS-IN-HOURS-FORMAT"                   =   "STARTS IN %d HOURS";
+"SLUG-STARTS-IN-HOURS-ONE-MINUTE-FORMAT"        =   "STARTS IN %d HOURS AND 1 MINUTE";
+"SLUG-STARTS-IN-HOURS-MINUTES-FORMAT"           =   "STARTS IN %d HOURS AND %d MINUTES";
 
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";
