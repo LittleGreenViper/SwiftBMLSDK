@@ -463,7 +463,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         /**
          This is how many seconds there are, in a week.
          */
-        private let _oneWeekInSeconds = TimeInterval(604800)
+        private static let _oneWeekInSeconds = TimeInterval(604800)
         
         // MARK: Public Required Instance Properties
         
@@ -1150,14 +1150,14 @@ extension SwiftBMLSDK_Parser.Meeting {
      > NOTE: If the date is invalid, then the distant future will be returned.
      */
     mutating public func getNextStartDate(isAdjusted inAdjust: Bool = false) -> Date {
-        guard let rawComponents = dateComponents else { return Date.distantFuture }
-        
         let adjustedNow = Date.now._convert(from: .current, to: timeZone)
 
         if let cachedDate = _cachedNextDate,
            adjustedNow > cachedDate {
             _cachedNextDate = nil
         }
+        
+        guard let rawComponents = dateComponents else { return Date.distantFuture }
         
         // The reason for all the cache shenanigans, is because `Calendar.current.nextDate` is REALLY EXPENSIVE, in regards to performance, so we try to use a cache, where possible.
         if let nextDate = _cachedNextDate ?? Calendar.current.nextDate(after: adjustedNow, matching: rawComponents, matchingPolicy: .nextTimePreservingSmallerComponents) {
@@ -1179,7 +1179,7 @@ extension SwiftBMLSDK_Parser.Meeting {
      */
     mutating public func getPreviousStartDate(isAdjusted inAdjust: Bool = false) -> Date {
         guard .distantFuture > getNextStartDate(isAdjusted: inAdjust) else { return .distantPast }
-        return getNextStartDate().addingTimeInterval(-_oneWeekInSeconds)
+        return getNextStartDate().addingTimeInterval(-Self._oneWeekInSeconds)
     }
 }
 
