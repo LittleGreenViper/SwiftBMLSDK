@@ -248,10 +248,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
             meetsNextLabel?.isHidden = true
         } else {
             meetsNextLabel?.isHidden = false
-            if let currentText = meetsNextLabel?.text,
-               currentText != newText {
-                meetsNextLabel?.text = newText
-            }
+            meetsNextLabel?.text = newText
         }
     }
 

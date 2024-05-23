@@ -455,6 +455,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         /* ################################################# */
         /**
          This is actually meant to be used by the `getNextStartDate()` extension method, but Swift [wisely] doesn't let stored properties get declared in extensions.
+         This will always be in the meeting's timezone (no adjustment to local).
          */
         private var _cachedNextDate: Date?
         
@@ -1149,21 +1150,22 @@ extension SwiftBMLSDK_Parser.Meeting {
      > NOTE: If the date is invalid, then the distant future will be returned.
      */
     mutating public func getNextStartDate(isAdjusted inAdjust: Bool = false) -> Date {
-        // The reason for the cache shenanigans, is because the Calendar.nextDate function is REALLY EXPENSIVE, in terms of performance, so we try to minimize the number of times that it's called.
-        guard let dateComponents = dateComponents else { return .distantFuture }
+        guard let rawComponents = dateComponents else { return Date.distantFuture }
         
-        // We do this, to cast our current timezone to the meeting's.
-        let adjustedNow: Date = .now._convert(from: .current, to: timeZone)
-        
-        // We do it this way, in case we are not adjusting a meeting in another timezone.
-        if let cached = _cachedNextDate,
-           cached <= adjustedNow {
+        let adjustedNow = Date.now._convert(from: .current, to: timeZone)
+
+        if let cachedDate = _cachedNextDate,
+           adjustedNow > cachedDate {
             _cachedNextDate = nil
         }
         
-        _cachedNextDate = _cachedNextDate ?? Calendar.current.nextDate(after: adjustedNow, matching: dateComponents, matchingPolicy: .nextTimePreservingSmallerComponents)
+        // The reason for all the cache shenanigans, is because `Calendar.current.nextDate` is REALLY EXPENSIVE, in regards to performance, so we try to use a cache, where possible.
+        if let nextDate = _cachedNextDate ?? Calendar.current.nextDate(after: adjustedNow, matching: rawComponents, matchingPolicy: .nextTimePreservingSmallerComponents) {
+            _cachedNextDate = nextDate
+            return inAdjust ? nextDate._convert(from: timeZone, to: .current) : nextDate
+        }
         
-        return inAdjust && (nil != _cachedNextDate) ? _cachedNextDate!._convert(from: timeZone, to: .current) : _cachedNextDate ?? .distantFuture
+        return Date.distantFuture
     }
     
     /* ################################################################## */
