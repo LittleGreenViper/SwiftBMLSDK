@@ -96,12 +96,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
     
     // MARK: - Exported Public Interface -
     
-    /* ################################################# */
-    /**
-     The search spec provided to the query object, that resulted in this (nil, if this was not the result of a search).
-     */
-    public let searchSpec: SwiftBMLSDK_Query.SearchSpecification?
-    
     // MARK: Public Initializer
     
     /* ################################################# */
@@ -110,9 +104,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
      
      - parameter jsonData: A Data instance, with the raw JSON dump.
      */
-    public init?(jsonData inJSONData: Data, searchSpec inSearchSpec: SwiftBMLSDK_Query.SearchSpecification? = nil) {
-        self.searchSpec = inSearchSpec
-        
+    public init?(jsonData inJSONData: Data) {
         guard let simpleJSON = try? JSONSerialization.jsonObject(with: inJSONData, options: [.allowFragments]) as? NSDictionary,
               let metaJSON = simpleJSON["meta"] as? [String: Any],
               let meta = Self._parseMeta(metaJSON),

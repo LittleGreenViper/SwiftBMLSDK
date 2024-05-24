@@ -470,7 +470,7 @@ extension SwiftBMLSDK_Query {
                 case 200..<300:
                     if let data = inData,
                        "application/json" == response.mimeType {
-                        inCompletion(SwiftBMLSDK_Parser(jsonData: data, searchSpec: inSpecification), nil)
+                        inCompletion(SwiftBMLSDK_Parser(jsonData: data), nil)
                     } else {
                         fallthrough
                     }
