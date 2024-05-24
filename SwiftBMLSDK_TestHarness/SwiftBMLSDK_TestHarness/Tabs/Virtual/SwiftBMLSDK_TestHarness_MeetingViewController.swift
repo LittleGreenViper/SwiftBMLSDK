@@ -254,6 +254,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
 
     /* ################################################################## */
     /**
+     This sets the label that displays the meeting timezone.
      */
     func setMeetingTimeZone() {
         guard var meetingInstance = meeting else { return }

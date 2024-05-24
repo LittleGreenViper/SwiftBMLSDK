@@ -100,6 +100,7 @@
 			children = (
 				D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift */,
 				D4E0AFA42B8FAD4C00676B6B /* SwiftBMLSDK_TestHarness_MapViewController.swift */,
+				D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */,
 			);
 			path = LocationSearch;
 			sourceTree = "<group>";
@@ -129,7 +130,6 @@
 			isa = PBXGroup;
 			children = (
 				D42740152B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift */,
-				D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */,
 			);
 			path = MapResults;
 			sourceTree = "<group>";

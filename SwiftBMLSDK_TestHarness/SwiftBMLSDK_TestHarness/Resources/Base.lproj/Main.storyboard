@@ -516,9 +516,54 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="30" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="DyP-aj-7SM">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="DyP-aj-7SM">
                                 <rect key="frame" x="16" y="75" width="358" height="131"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell" id="gBe-Pp-Abh" customClass="SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="358" height="38.333332061767578"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gBe-Pp-Abh" id="5O4-9z-QRs">
+                                            <rect key="frame" x="0.0" y="0.0" width="358" height="38.333332061767578"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="VxM-98-hcP">
+                                                    <rect key="frame" x="0.0" y="0.0" width="358" height="38.333333333333336"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Meeting Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="5om-WV-y8a">
+                                                            <rect key="frame" x="0.0" y="0.0" width="358" height="20.333333333333332"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" text="Start Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YmA-t7-GPD">
+                                                            <rect key="frame" x="0.0" y="20.333333333333332" width="358" height="17.999999999999996"/>
+                                                            <fontDescription key="fontDescription" type="italicSystem" pointSize="15"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="YmA-t7-GPD" secondAttribute="trailing" id="BK9-tK-SJK"/>
+                                                        <constraint firstAttribute="trailing" secondItem="5om-WV-y8a" secondAttribute="trailing" id="MO2-Yt-7LI"/>
+                                                        <constraint firstItem="5om-WV-y8a" firstAttribute="leading" secondItem="VxM-98-hcP" secondAttribute="leading" id="c89-Ab-p2Y"/>
+                                                        <constraint firstItem="YmA-t7-GPD" firstAttribute="leading" secondItem="VxM-98-hcP" secondAttribute="leading" id="nPB-H7-sDp"/>
+                                                    </constraints>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="VxM-98-hcP" firstAttribute="top" secondItem="5O4-9z-QRs" secondAttribute="top" id="bfx-uG-XI3"/>
+                                                <constraint firstAttribute="bottom" secondItem="VxM-98-hcP" secondAttribute="bottom" id="f1x-bP-tdO"/>
+                                                <constraint firstItem="VxM-98-hcP" firstAttribute="leading" secondItem="5O4-9z-QRs" secondAttribute="leading" id="n5o-2d-ftO"/>
+                                                <constraint firstAttribute="trailing" secondItem="VxM-98-hcP" secondAttribute="trailing" id="qhi-xk-ABO"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="meetingNameLabel" destination="5om-WV-y8a" id="Mjc-vO-v3l"/>
+                                            <outlet property="startTimeLabel" destination="YmA-t7-GPD" id="38K-e5-Loa"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="dqB-hb-kau" id="cnu-sd-7RW"/>
                                     <outlet property="delegate" destination="dqB-hb-kau" id="VBT-hA-duV"/>
@@ -544,7 +589,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZIP-0o-8Hf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1231" y="-793"/>
+            <point key="canvasLocation" x="1230.534351145038" y="-793.66197183098598"/>
         </scene>
         <!--SwiftBMLSDK Test Harness Meeting View Controller-->
         <scene sceneID="0SE-P3-oJB">
@@ -561,19 +606,19 @@
                                         <rect key="frame" x="16" y="0.0" width="361" height="715"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="2xZ-Ji-bZb">
-                                                <rect key="frame" x="155.66666666666666" y="0.0" width="50" height="48"/>
+                                                <rect key="frame" x="155.66666666666666" y="0.0" width="50" height="50"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oa9-Ry-glJ">
-                                                <rect key="frame" x="155.66666666666666" y="48" width="50" height="619"/>
+                                                <rect key="frame" x="155.66666666666666" y="50" width="50" height="615"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ikG-VJ-Bv5">
-                                                <rect key="frame" x="155.66666666666666" y="667" width="50" height="48"/>
+                                                <rect key="frame" x="155.66666666666666" y="665" width="50" height="50"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>

@@ -8,6 +8,28 @@ import RVS_UIKit_Toolbox
 import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
 
+class SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell: UITableViewCell {
+    /* ################################################################## */
+    /**
+     */
+    static let reuseID = "SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell"
+    
+    /* ################################################################## */
+    /**
+     */
+    static let rowHeight = CGFloat(48)
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet var meetingNameLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet var startTimeLabel: UILabel?
+}
+
 /* ###################################################################################################################################### */
 // MARK: - Main View Controller -
 /* ###################################################################################################################################### */
@@ -20,12 +42,6 @@ class SwiftMLSDK_Map_AnnotationPopover_ViewController: UIViewController {
      The width of the popover
      */
     static private let _popoverWidthInDisplayUnits = CGFloat(300)
-
-    /* ################################################################## */
-    /**
-     The height of each table row
-     */
-    static private let _rowHeightInDisplayUnits = CGFloat(30)
 
     /* ################################################################## */
     /**
@@ -102,7 +118,7 @@ extension SwiftMLSDK_Map_AnnotationPopover_ViewController {
      The dynamic size for this popover.
      */
     override var preferredContentSize: CGSize {
-        get { CGSize(width: Self._popoverWidthInDisplayUnits, height: Self._rowHeightInDisplayUnits * CGFloat(meetings.count) + Self._paddingInDisplayUnits) }
+        get { CGSize(width: Self._popoverWidthInDisplayUnits, height: SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell.rowHeight * CGFloat(meetings.count) + Self._paddingInDisplayUnits) }
         set { super.preferredContentSize = newValue }
     }
     
@@ -112,7 +128,7 @@ extension SwiftMLSDK_Map_AnnotationPopover_ViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView?.rowHeight = Self._rowHeightInDisplayUnits
+        tableView?.rowHeight = SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell.rowHeight
         tableView?.reloadData()
     }
 }
@@ -135,18 +151,23 @@ extension SwiftMLSDK_Map_AnnotationPopover_ViewController: UITableViewDataSource
     /**
      Returns one cell. We use regular default cells.
      
-     - parameter: The table view (ignored)
+     - parameter: The table view
      - parameter cellForRowAt: The index path of the cell we want.
      */
-    func tableView(_: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
-        let ret = UITableViewCell()
+    func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
+        guard let ret = inTableView.dequeueReusableCell(withIdentifier: SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell.reuseID, for: inIndexPath) as? SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell else { return UITableViewCell() }
         ret.backgroundColor = .clear
         guard (0..<meetings.count).contains(inIndexPath.row) else { return ret }
-        let meeting = meetings[inIndexPath.row]
-        ret.textLabel?.text = meeting.name
-        ret.textLabel?.adjustsFontSizeToFitWidth = true
-        ret.textLabel?.minimumScaleFactor = 0.5
-        ret.textLabel?.lineBreakMode = .byTruncatingTail
+        var meeting = meetings[inIndexPath.row]
+        let nextDate = meeting.getNextStartDate(isAdjusted: true)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE"
+        let weekday = formatter.string(from: nextDate)
+        formatter.dateFormat = "h:mm a"
+        let time = formatter.string(from: nextDate)
+        let dayTime = String(format: "SLUG-WEEKDAY-TIME-FORMAT".localizedVariant, weekday, time)
+        ret.meetingNameLabel?.text = meeting.name
+        ret.startTimeLabel?.text = dayTime
         ret.backgroundColor = (1 == inIndexPath.row % 2) ? UIColor.label.withAlphaComponent(Self._alternateRowOpacity) : UIColor.clear
         return ret
     }
