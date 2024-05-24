@@ -63,7 +63,8 @@
 "SLUG-STARTS-IN-HOURS-ONE-MINUTE-FORMAT"        =   "Starts in %d Hours and 1 Minute";
 "SLUG-STARTS-IN-HOURS-MINUTES-FORMAT"           =   "Starts in %d Hours and %d Minutes";
 "SLUG-WEEKDAY-TIME-FORMAT"                      =   "%@s, at %@";
-"SLUG-LOCATION-TITLE"                           =   "LOCATION";
+"SLUG-VLINK-TITLE"                              =   "VIRTUAL MEETING";
+"SLUG-LOCATION-TITLE"                           =   "IN-PERSON MEETING";
 
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";

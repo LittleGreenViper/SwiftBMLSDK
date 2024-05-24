@@ -6,6 +6,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -606,29 +607,61 @@
                                         <rect key="frame" x="16" y="0.0" width="361" height="715"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Day And Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="2xZ-Ji-bZb">
-                                                <rect key="frame" x="127.33333333333334" y="0.0" width="106.33333333333334" height="236.33333333333334"/>
+                                                <rect key="frame" x="127.33333333333334" y="0.0" width="106.33333333333334" height="135.66666666666666"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timezone" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oa9-Ry-glJ">
-                                                <rect key="frame" x="143.33333333333334" y="244.33333333333331" width="74.666666666666657" height="20.333333333333314"/>
+                                                <rect key="frame" x="143.33333333333334" y="143.66666666666666" width="74.666666666666657" height="20.333333333333343"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Meets Next" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ikG-VJ-Bv5">
-                                                <rect key="frame" x="137" y="272.66666666666669" width="87" height="20.333333333333314"/>
+                                                <rect key="frame" x="137" y="172" width="87" height="20.333333333333343"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comments" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X1m-rE-AW8">
-                                                <rect key="frame" x="139" y="301" width="83" height="20.333333333333314"/>
+                                                <rect key="frame" x="139" y="200.33333333333331" width="83" height="20.333333333333343"/>
                                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9DE-Mf-JXT">
+                                                <rect key="frame" x="0.0" y="228.66666666666669" width="361" height="1"/>
+                                                <color key="backgroundColor" systemColor="labelColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="1" id="kHd-aO-hPZ"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SLUG-VLINK-TITLE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yd2-1d-3Do">
+                                                <rect key="frame" x="104.66666666666669" y="237.66666666666669" width="152" height="20.333333333333314"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Video Link" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rqa-nK-8Td">
+                                                <rect key="frame" x="0.0" y="266" width="361" height="20.333333333333314"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" name="AccentColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ngw-2W-8J2">
+                                                <rect key="frame" x="162" y="294.33333333333331" width="37" height="18"/>
+                                                <fontDescription key="fontDescription" type="italicSystem" pointSize="15"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X8h-li-sSg">
+                                                <rect key="frame" x="0.0" y="320.33333333333331" width="361" height="1"/>
+                                                <color key="backgroundColor" systemColor="labelColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="1" id="EXn-O0-i8z"/>
+                                                </constraints>
+                                            </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SLUG-LOCATION-TITLE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vJX-IA-T14">
                                                 <rect key="frame" x="86.000000000000014" y="329.33333333333331" width="189.33333333333337" height="20.333333333333314"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -659,7 +692,13 @@
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="dsO-T6-Xk0" firstAttribute="leading" secondItem="xvz-mT-MiO" secondAttribute="leading" constant="16" id="2bY-DU-gMa"/>
+                                            <constraint firstAttribute="trailing" secondItem="Rqa-nK-8Td" secondAttribute="trailing" id="3QO-Xd-faQ"/>
                                             <constraint firstAttribute="trailing" secondItem="dsO-T6-Xk0" secondAttribute="trailing" constant="16" id="GJg-ot-LTW"/>
+                                            <constraint firstItem="Rqa-nK-8Td" firstAttribute="leading" secondItem="xvz-mT-MiO" secondAttribute="leading" id="OGb-nA-hni"/>
+                                            <constraint firstItem="9DE-Mf-JXT" firstAttribute="leading" secondItem="xvz-mT-MiO" secondAttribute="leading" id="gkd-pe-OKS"/>
+                                            <constraint firstAttribute="trailing" secondItem="9DE-Mf-JXT" secondAttribute="trailing" id="jUW-Wl-GL3"/>
+                                            <constraint firstItem="X8h-li-sSg" firstAttribute="leading" secondItem="xvz-mT-MiO" secondAttribute="leading" id="qhm-2Y-xLd"/>
+                                            <constraint firstAttribute="trailing" secondItem="X8h-li-sSg" secondAttribute="trailing" id="wXJ-HH-PcF"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
@@ -677,6 +716,7 @@
                             </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="YtI-pP-otc"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="kdJ-fu-ayT" firstAttribute="leading" secondItem="YtI-pP-otc" secondAttribute="leading" id="KiS-IN-Cus"/>
@@ -690,10 +730,15 @@
                         <outlet property="addressLabel" destination="Xgo-ZM-kdZ" id="K6X-PR-3yz"/>
                         <outlet property="commentsLabel" destination="X1m-rE-AW8" id="diU-SP-db6"/>
                         <outlet property="locationHeaderLabel" destination="vJX-IA-T14" id="Ir4-Is-tdq"/>
+                        <outlet property="locationSeparatorImageView" destination="X8h-li-sSg" id="3ct-nO-qL9"/>
                         <outlet property="mapView" destination="dsO-T6-Xk0" id="6by-ev-qIz"/>
                         <outlet property="meetsNextLabel" destination="ikG-VJ-Bv5" id="djx-pH-mxB"/>
                         <outlet property="timeDayLabel" destination="2xZ-Ji-bZb" id="wzQ-el-xGF"/>
                         <outlet property="timeZoneLabel" destination="oa9-Ry-glJ" id="2yQ-VO-GEK"/>
+                        <outlet property="videoLinkLabel" destination="Rqa-nK-8Td" id="HH6-AC-qge"/>
+                        <outlet property="virtualExtraInfoLabel" destination="Ngw-2W-8J2" id="GQB-r2-vJE"/>
+                        <outlet property="virtualInfoHeaderLabel" destination="Yd2-1d-3Do" id="dK1-aR-O2m"/>
+                        <outlet property="virtualSeparatorImageView" destination="9DE-Mf-JXT" id="KQs-hi-Hnl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ce4-gR-FHA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -709,6 +754,12 @@
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
+        <namedColor name="AccentColor">
+            <color red="0.31400001049041748" green="0.37999999523162842" blue="0.89399999380111694" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

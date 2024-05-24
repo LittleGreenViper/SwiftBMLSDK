@@ -117,7 +117,32 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /**
      */
     @IBOutlet weak var commentsLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var virtualSeparatorImageView: UIImageView?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var virtualInfoHeaderLabel: UILabel?
 
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var videoLinkLabel: UILabel?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var virtualExtraInfoLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var locationSeparatorImageView: UIImageView?
+    
     /* ################################################################## */
     /**
      */
@@ -132,12 +157,6 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /**
      */
     @IBOutlet weak var addressLabel: UILabel?
-}
-
-/* ###################################################################################################################################### */
-// MARK: Computed Properties
-/* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_MeetingViewController {
 }
 
 /* ###################################################################################################################################### */
@@ -163,27 +182,27 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
      */
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
-        setTimeAndDay()
-        setMeetingTimeZone()
-        setMeetsNext()
-        setComments()
-        setAddress()
-        setMapView()
-        locationHeaderLabel?.text = locationHeaderLabel?.text?.localizedVariant
-        locationHeaderLabel?.isHidden = mapView?.isHidden ?? true && addressLabel?.isHidden ?? true
+        updateUI()
     }
-}
-
-/* ###################################################################################################################################### */
-// MARK: Callbacks
-/* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_MeetingViewController {
 }
 
 /* ###################################################################################################################################### */
 // MARK: Instance Methods
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_MeetingViewController {
+    /* ################################################################## */
+    /**
+     This just updates all the screen UI elements.
+     */
+    func updateUI() {
+        setTimeAndDay()
+        setMeetingTimeZone()
+        setMeetsNext()
+        setComments()
+        setVideoLink()
+        setLocation()
+    }
+    
     /* ################################################################## */
     /**
      Set the time and day label.
@@ -304,6 +323,68 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
     /* ################################################################## */
     /**
      */
+    func setComments() {
+        if let comments = meeting?.comments,
+           !comments.isEmpty {
+            commentsLabel?.isHidden = false
+            commentsLabel?.text = comments
+        } else {
+            commentsLabel?.isHidden = true
+        }
+    }
+
+    /* ################################################################## */
+    /**
+     Callback for the URL touch handler
+     */
+    @objc func urlHit(_: Any) {
+        guard let url = meeting?.directAppURI ?? meeting?.virtualURL else { return }
+        
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    /* ################################################################## */
+    /**
+     Set the video link label.
+     */
+    func setVideoLink() {
+        if let url = meeting?.virtualURL {
+            virtualSeparatorImageView?.isHidden = false
+            virtualInfoHeaderLabel?.text = virtualInfoHeaderLabel?.text?.localizedVariant
+            virtualInfoHeaderLabel?.isHidden = false
+            videoLinkLabel?.text = url.absoluteString
+            videoLinkLabel?.gestureRecognizers?.forEach { videoLinkLabel?.removeGestureRecognizer($0) }
+            videoLinkLabel?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(urlHit)))
+            videoLinkLabel?.isHidden = false
+            if let extraInfo = meeting?.virtualInfo,
+               !extraInfo.isEmpty {
+                virtualExtraInfoLabel?.text = extraInfo
+                virtualExtraInfoLabel?.isHidden = false
+            } else {
+                virtualExtraInfoLabel?.isHidden = true
+            }
+        } else {
+            virtualSeparatorImageView?.isHidden = true
+            virtualInfoHeaderLabel?.isHidden = true
+            videoLinkLabel?.isHidden = true
+            virtualExtraInfoLabel?.isHidden = true
+        }
+    }
+
+    /* ################################################################## */
+    /**
+     */
+    func setLocation() {
+        setAddress()
+        setMapView()
+        locationSeparatorImageView?.isHidden = mapView?.isHidden ?? true && addressLabel?.isHidden ?? true
+        locationHeaderLabel?.text = locationHeaderLabel?.text?.localizedVariant
+        locationHeaderLabel?.isHidden = mapView?.isHidden ?? true && addressLabel?.isHidden ?? true
+    }
+    
+    /* ################################################################## */
+    /**
+     */
     func setAddress() {
         if let postalAddress = meeting?.inPersonAddress {
             var txt = ""
@@ -354,19 +435,6 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
             }
         } else {
             addressLabel?.isHidden = true
-        }
-    }
-    
-    /* ################################################################## */
-    /**
-     */
-    func setComments() {
-        if let comments = meeting?.comments,
-           !comments.isEmpty {
-            commentsLabel?.isHidden = false
-            commentsLabel?.text = comments
-        } else {
-            commentsLabel?.isHidden = true
         }
     }
     
