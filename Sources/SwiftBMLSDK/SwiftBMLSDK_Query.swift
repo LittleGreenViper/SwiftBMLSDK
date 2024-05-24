@@ -25,6 +25,8 @@ import CoreLocation
 /* ###################################################################################################################################### */
 /**
  This struct is about generating queries to instances of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer), and returning the parsed results.
+ 
+ It is designed for minimal filtering. Most filter parameters are for paging the search, or filtering for specific meeting types. Most filtering should be performed on the results.
  */
 public struct SwiftBMLSDK_Query {
     /* ################################################# */
@@ -337,7 +339,9 @@ extension SwiftBMLSDK_Query {
 extension SwiftBMLSDK_Query {
     /* ################################################# */
     /**
-     - parameter: completion: A tail completion proc.
+     Fetches the server info.
+     
+     - parameter completion: A tail completion proc.
      */
     public func serverInfo(completion inCompletion: @escaping ServerInfoResultCompletion) {
         guard let baseURLString = serverBaseURI?.absoluteString,
@@ -438,7 +442,7 @@ extension SwiftBMLSDK_Query {
      Perform a server-based search.
      
      - parameter specification: The search specification.
-     - parameter: completion: A tail completion proc.
+     - parameter completion: A tail completion proc.
      */
     public func meetingSearch(specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
         guard let url = serverBaseURI?.appending(queryItems: inSpecification.urlQueryItems) else {
@@ -466,7 +470,7 @@ extension SwiftBMLSDK_Query {
                 case 200..<300:
                     if let data = inData,
                        "application/json" == response.mimeType {
-                        inCompletion(SwiftBMLSDK_Parser(jsonData: data), nil)
+                        inCompletion(SwiftBMLSDK_Parser(jsonData: data, searchSpec: inSpecification), nil)
                     } else {
                         fallthrough
                     }
