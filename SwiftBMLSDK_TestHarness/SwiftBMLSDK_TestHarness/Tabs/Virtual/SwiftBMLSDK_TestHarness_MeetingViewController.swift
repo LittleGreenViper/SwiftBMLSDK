@@ -111,6 +111,16 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /**
      */
     @IBOutlet weak var meetsNextLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var addressLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var commentsLabel: UILabel?
 }
 
 /* ###################################################################################################################################### */
@@ -145,6 +155,8 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
         setTimeAndDay()
         setMeetingTimeZone()
         setMeetsNext()
+        setAddress()
+        setComments()
     }
 }
 
@@ -272,6 +284,75 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
             }
         } else {
             timeZoneLabel?.isHidden = true
+        }
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    func setAddress() {
+        if let postalAddress = meeting?.inPersonAddress {
+            var txt = ""
+            addressLabel?.isHidden = false
+            let locationName = meeting?.inPersonVenueName ?? ""
+            
+            if !locationName.isEmpty {
+                txt = locationName
+            }
+            
+            var address = ""
+            
+            if !postalAddress.street.isEmpty {
+                if !txt.isEmpty {
+                    txt += "\n"
+                }
+                address += postalAddress.street
+                
+                if !postalAddress.city.isEmpty {
+                    if !address.isEmpty {
+                        address += "\n"
+                    }
+                    address += postalAddress.city
+                }
+                
+                if !postalAddress.state.isEmpty {
+                    if !address.isEmpty {
+                        address += ", "
+                    }
+                    address += postalAddress.state
+                }
+                
+                if !postalAddress.postalCode.isEmpty {
+                    if !address.isEmpty {
+                        address += " "
+                    }
+                    address += postalAddress.postalCode
+                }
+                txt += address
+                if let extraInfo = meeting?.locationInfo,
+                   !extraInfo.isEmpty {
+                    if !txt.isEmpty {
+                        txt += "\n"
+                    }
+                    txt += "(\(extraInfo))"
+                }
+                addressLabel?.text = txt
+            }
+        } else {
+            addressLabel?.isHidden = true
+        }
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    func setComments() {
+        if let comments = meeting?.comments,
+           !comments.isEmpty {
+            commentsLabel?.isHidden = false
+            commentsLabel?.text = comments
+        } else {
+            commentsLabel?.isHidden = true
         }
     }
 }
