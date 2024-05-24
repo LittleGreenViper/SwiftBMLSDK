@@ -20,6 +20,7 @@
 import UIKit
 import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
+import MapKit
 
 /* ###################################################################################################################################### */
 // MARK: - Date Extension for Localized Strings -
@@ -115,12 +116,22 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /* ################################################################## */
     /**
      */
-    @IBOutlet weak var addressLabel: UILabel?
-    
+    @IBOutlet weak var commentsLabel: UILabel?
+
     /* ################################################################## */
     /**
      */
-    @IBOutlet weak var commentsLabel: UILabel?
+    @IBOutlet weak var locationHeaderLabel: UILabel?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var mapView: MKMapView?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var addressLabel: UILabel?
 }
 
 /* ###################################################################################################################################### */
@@ -155,8 +166,11 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
         setTimeAndDay()
         setMeetingTimeZone()
         setMeetsNext()
-        setAddress()
         setComments()
+        setAddress()
+        setMapView()
+        locationHeaderLabel?.text = locationHeaderLabel?.text?.localizedVariant
+        locationHeaderLabel?.isHidden = mapView?.isHidden ?? true && addressLabel?.isHidden ?? true
     }
 }
 
@@ -354,5 +368,44 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
         } else {
             commentsLabel?.isHidden = true
         }
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    func setMapView() {
+        if let meeting = meeting,
+           let coords = meeting.coords,
+           CLLocationCoordinate2DIsValid(coords) {
+            locationHeaderLabel?.isHidden = false
+            mapView?.isHidden = false
+            mapView?.setRegion(MKCoordinateRegion(center: coords, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
+            mapView?.addAnnotation(SwiftBMLSDK_MapAnnotation(coordinate: coords, meetings: [meeting], myController: nil))
+        } else {
+            mapView?.isHidden = true
+        }
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: MKMapViewDelegate Conformance
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_MeetingViewController: MKMapViewDelegate {
+    /* ################################################################## */
+    /**
+     This is called to fetch an annotation (marker) for the map.
+     
+     - parameter: The map view (ignored)
+     - parameter viewFor: The annotation we're getting the marker for.
+     - returns: The marker view for the annotation.
+     */
+    func mapView(_: MKMapView, viewFor inAnnotation: MKAnnotation) -> MKAnnotationView? {
+        var ret: MKAnnotationView?
+        
+        if let myAnnotation = inAnnotation as? SwiftBMLSDK_MapAnnotation {
+            ret = SwiftBMLSDK_MapMarker(annotation: myAnnotation, reuseIdentifier: SwiftBMLSDK_MapMarker.reuseID)
+        }
+        
+        return ret
     }
 }

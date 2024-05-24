@@ -602,40 +602,65 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kdJ-fu-ayT">
                                 <rect key="frame" x="0.0" y="103" width="393" height="715"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xvz-mT-MiO">
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="xvz-mT-MiO">
                                         <rect key="frame" x="16" y="0.0" width="361" height="715"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Day And Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="2xZ-Ji-bZb">
-                                                <rect key="frame" x="127.33333333333334" y="0.0" width="106.33333333333334" height="143"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Day And Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="2xZ-Ji-bZb">
+                                                <rect key="frame" x="127.33333333333334" y="0.0" width="106.33333333333334" height="236.33333333333334"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timezone" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oa9-Ry-glJ">
-                                                <rect key="frame" x="143.33333333333334" y="143" width="74.666666666666657" height="143"/>
+                                                <rect key="frame" x="143.33333333333334" y="244.33333333333331" width="74.666666666666657" height="20.333333333333314"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Meets Next" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ikG-VJ-Bv5">
-                                                <rect key="frame" x="137" y="286" width="87" height="143"/>
+                                                <rect key="frame" x="137" y="272.66666666666669" width="87" height="20.333333333333314"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comments" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X1m-rE-AW8">
-                                                <rect key="frame" x="139" y="429" width="83" height="143"/>
+                                                <rect key="frame" x="139" y="301" width="83" height="20.333333333333314"/>
                                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SLUG-LOCATION-TITLE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vJX-IA-T14">
+                                                <rect key="frame" x="86.000000000000014" y="329.33333333333331" width="189.33333333333337" height="20.333333333333314"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dsO-T6-Xk0">
+                                                <rect key="frame" x="16" y="357.66666666666674" width="329" height="329"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="dsO-T6-Xk0" secondAttribute="height" multiplier="1:1" id="9gY-uB-vlG"/>
+                                                </constraints>
+                                                <standardMapConfiguration key="preferredConfiguration"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <real key="value" value="12"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <outlet property="delegate" destination="y7V-0G-Fls" id="Oji-X8-eGN"/>
+                                                </connections>
+                                            </mapView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xgo-ZM-kdZ">
-                                                <rect key="frame" x="149.33333333333334" y="572" width="62.666666666666657" height="143"/>
+                                                <rect key="frame" x="149.33333333333334" y="694.66666666666663" width="62.666666666666657" height="20.333333333333371"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstItem="dsO-T6-Xk0" firstAttribute="leading" secondItem="xvz-mT-MiO" secondAttribute="leading" constant="16" id="2bY-DU-gMa"/>
+                                            <constraint firstAttribute="trailing" secondItem="dsO-T6-Xk0" secondAttribute="trailing" constant="16" id="GJg-ot-LTW"/>
+                                        </constraints>
                                     </stackView>
                                 </subviews>
                                 <constraints>
@@ -664,6 +689,8 @@
                     <connections>
                         <outlet property="addressLabel" destination="Xgo-ZM-kdZ" id="K6X-PR-3yz"/>
                         <outlet property="commentsLabel" destination="X1m-rE-AW8" id="diU-SP-db6"/>
+                        <outlet property="locationHeaderLabel" destination="vJX-IA-T14" id="Ir4-Is-tdq"/>
+                        <outlet property="mapView" destination="dsO-T6-Xk0" id="6by-ev-qIz"/>
                         <outlet property="meetsNextLabel" destination="ikG-VJ-Bv5" id="djx-pH-mxB"/>
                         <outlet property="timeDayLabel" destination="2xZ-Ji-bZb" id="wzQ-el-xGF"/>
                         <outlet property="timeZoneLabel" destination="oa9-Ry-glJ" id="2yQ-VO-GEK"/>

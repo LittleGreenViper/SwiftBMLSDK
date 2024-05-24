@@ -120,10 +120,9 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         super.viewDidLoad()
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
         throbberView?.isHidden = true
-        guard let switchMan = typeSegmentedSwitch else { return }
-        
-        for index in 0..<switchMan.numberOfSegments {
-            switchMan.setTitle(switchMan.titleForSegment(at: index)?.localizedVariant, forSegmentAt: index)
+        for index in 0..<(typeSegmentedSwitch?.numberOfSegments ?? 0) {
+            let title = "SLUG-VIRTUAL-SWITCH-\(index)".localizedVariant
+            typeSegmentedSwitch?.setTitle(title, forSegmentAt: index)
         }
     }
     
@@ -199,12 +198,37 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     func findMeetings(onlyVirtual inOnlyVirtual: Bool = false, completion inCompletion: ((_: SwiftBMLSDK_Parser?) -> Void)?) {
         _cachedMeetings = nil
         Self._queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .virtual(isExclusive: inOnlyVirtual))){ inSearchResults, inError in
-            guard nil == inError else {
+            guard nil == inError,
+                  let inSearchResults = inSearchResults
+            else {
+                self._cachedMeetings = nil
                 inCompletion?(nil)
                 return
             }
             
             self._cachedMeetings = inSearchResults
+            
+            DispatchQueue.main.async {
+                guard let switchMan = self.typeSegmentedSwitch else { return }
+                
+                for index in 0..<switchMan.numberOfSegments {
+                    var count = 0
+                    
+                    switch index {
+                    case 0:
+                        count = inSearchResults.meetings.count
+                    case 1:
+                        count = inSearchResults.hybridMeetings.count
+                    case 2:
+                        count = inSearchResults.virtualOnlyMeetings.count
+                    default:
+                        break
+                    }
+                    let countSuffix = 0 < count ? " (\(count))" : ""
+                    let title = "SLUG-VIRTUAL-SWITCH-\(index)".localizedVariant + countSuffix
+                    switchMan.setTitle(title, forSegmentAt: index)
+                }
+            }
             
             inCompletion?(self._cachedMeetings)
         }

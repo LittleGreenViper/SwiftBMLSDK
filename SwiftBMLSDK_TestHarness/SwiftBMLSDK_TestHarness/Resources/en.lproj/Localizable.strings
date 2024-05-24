@@ -42,7 +42,7 @@
 
 "SLUG-VIRTUAL-SWITCH-0"                         =   "All";
 "SLUG-VIRTUAL-SWITCH-1"                         =   "Hybrid";
-"SLUG-VIRTUAL-SWITCH-2"                         =   "Virtual Only";
+"SLUG-VIRTUAL-SWITCH-2"                         =   "Virtual";
 "SLUG-NOON-TIME"                                =   "Noon";
 "SLUG-MIDNIGHT-TIME"                            =   "Midnight";
 "SLUG-TIMEZONE-FORMAT"                          =   "Time Zone: %@ (%@)";
@@ -63,6 +63,7 @@
 "SLUG-STARTS-IN-HOURS-ONE-MINUTE-FORMAT"        =   "Starts in %d Hours and 1 Minute";
 "SLUG-STARTS-IN-HOURS-MINUTES-FORMAT"           =   "Starts in %d Hours and %d Minutes";
 "SLUG-WEEKDAY-TIME-FORMAT"                      =   "%@s, at %@";
+"SLUG-LOCATION-TITLE"                           =   "LOCATION";
 
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";

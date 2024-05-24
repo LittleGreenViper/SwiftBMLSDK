@@ -85,7 +85,7 @@ extension SwiftBMLSDK_TestHarness_BaseViewController {
         backgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         let logoView = UIImageView(image: logoImage)
         logoView.contentMode = .scaleAspectFit
-        logoView.layer.opacity = 0.1
+        logoView.layer.opacity = 0.05
         logoView.tintColor = .white
         view.insertSubview(logoView, at: 1)
         logoView.translatesAutoresizingMaskIntoConstraints = false
