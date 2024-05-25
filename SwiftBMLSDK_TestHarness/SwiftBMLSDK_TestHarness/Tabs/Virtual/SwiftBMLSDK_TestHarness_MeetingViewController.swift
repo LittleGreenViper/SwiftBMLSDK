@@ -157,6 +157,11 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /**
      */
     @IBOutlet weak var addressLabel: UILabel?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var formatsStackView: UIStackView?
 }
 
 /* ###################################################################################################################################### */
@@ -201,6 +206,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
         setComments()
         setVideoLink()
         setLocation()
+        setFormats()
     }
     
     /* ################################################################## */
@@ -375,13 +381,29 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
     /**
      */
     func setLocation() {
-        setAddress()
         setMapView()
-        locationSeparatorImageView?.isHidden = mapView?.isHidden ?? true && addressLabel?.isHidden ?? true
+        setAddress()
+        locationSeparatorImageView?.isHidden = (mapView?.isHidden ?? true) && (addressLabel?.isHidden ?? true)
         locationHeaderLabel?.text = locationHeaderLabel?.text?.localizedVariant
-        locationHeaderLabel?.isHidden = mapView?.isHidden ?? true && addressLabel?.isHidden ?? true
+        locationHeaderLabel?.isHidden = (virtualInfoHeaderLabel?.isHidden ?? true) || (locationSeparatorImageView?.isHidden ?? true)
     }
     
+    /* ################################################################## */
+    /**
+     */
+    func setMapView() {
+        if let meeting = meeting,
+           let coords = meeting.coords,
+           CLLocationCoordinate2DIsValid(coords) {
+            locationHeaderLabel?.isHidden = false
+            mapView?.isHidden = false
+            mapView?.setRegion(MKCoordinateRegion(center: coords, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
+            mapView?.addAnnotation(SwiftBMLSDK_MapAnnotation(coordinate: coords, meetings: [meeting], myController: nil))
+        } else {
+            mapView?.isHidden = true
+        }
+    }
+
     /* ################################################################## */
     /**
      */
@@ -440,17 +462,31 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
     
     /* ################################################################## */
     /**
+     Set the format display
      */
-    func setMapView() {
-        if let meeting = meeting,
-           let coords = meeting.coords,
-           CLLocationCoordinate2DIsValid(coords) {
-            locationHeaderLabel?.isHidden = false
-            mapView?.isHidden = false
-            mapView?.setRegion(MKCoordinateRegion(center: coords, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
-            mapView?.addAnnotation(SwiftBMLSDK_MapAnnotation(coordinate: coords, meetings: [meeting], myController: nil))
-        } else {
-            mapView?.isHidden = true
+    func setFormats() {
+        formatsStackView?.subviews.forEach { formatsStackView?.removeArrangedSubview($0) }
+        meeting?.formats.forEach {
+            let keyLabel = UILabel()
+            keyLabel.text = $0.key
+            keyLabel.font = .boldSystemFont(ofSize: 20)
+            keyLabel.adjustsFontSizeToFitWidth = true
+            keyLabel.minimumScaleFactor = 0.5
+            let nameLabel = UILabel()
+            nameLabel.text = $0.name
+            nameLabel.adjustsFontSizeToFitWidth = true
+            nameLabel.minimumScaleFactor = 0.5
+            keyLabel.font = .systemFont(ofSize: 20)
+            let descriptionLabel = UILabel()
+            descriptionLabel.font = .italicSystemFont(ofSize: 17)
+            descriptionLabel.text = $0.description
+            descriptionLabel.numberOfLines = 0
+            let formatHeaderStackView = UIStackView(arrangedSubviews: [keyLabel, nameLabel])
+            formatHeaderStackView.axis = .horizontal
+            keyLabel.translatesAutoresizingMaskIntoConstraints = false
+            keyLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            formatsStackView?.addArrangedSubview(formatHeaderStackView)
+            formatsStackView?.addArrangedSubview(descriptionLabel)
         }
     }
 }

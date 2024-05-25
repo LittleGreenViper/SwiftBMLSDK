@@ -18,6 +18,7 @@
 		D42740192B913C220019DC48 /* RVS_UIKit_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D42740182B913C220019DC48 /* RVS_UIKit_Toolbox */; };
 		D4596F4E2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */; };
 		D476D4532B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */; };
+		D47B17BC2C0208AA00B3452D /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D47B17BB2C0208AA00B3452D /* Warnings.xcconfig */; };
 		D47C81722B85204800783B49 /* RVS_Persistent_Prefs in Frameworks */ = {isa = PBXBuildFile; productRef = D47C81712B85204800783B49 /* RVS_Persistent_Prefs */; };
 		D47C81742B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */; };
 		D488D2952B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */; };
@@ -57,6 +58,7 @@
 		D42740152B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_MapResultsViewController.swift; sourceTree = "<group>"; };
 		D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Map_AnnotationPopover_ViewController.swift; sourceTree = "<group>"; };
 		D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_MapMarker.swift; sourceTree = "<group>"; };
+		D47B17BB2C0208AA00B3452D /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Warnings.xcconfig; path = ../Meta/Warnings.xcconfig; sourceTree = "<group>"; };
 		D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_Prefs.swift; sourceTree = "<group>"; };
 		D488D2912B82CE3F000979D9 /* SwiftBMLSDK_TestHarness.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftBMLSDK_TestHarness.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D488D2942B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_AppDelegate.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				D4011DA92BA4A77F002C3292 /* PrivacyInfo.xcprivacy */,
+				D47B17BB2C0208AA00B3452D /* Warnings.xcconfig */,
 				D488D2932B82CE3F000979D9 /* SwiftBMLSDK_TestHarness */,
 				D488D2922B82CE3F000979D9 /* Products */,
 				D488D2A92B82CF3F000979D9 /* Frameworks */,
@@ -261,6 +264,7 @@
 				D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */,
 				D406220E2B83B705009FFAB3 /* Localizable.strings in Resources */,
 				D488D29E2B82CE40000979D9 /* Assets.xcassets in Resources */,
+				D47B17BC2C0208AA00B3452D /* Warnings.xcconfig in Resources */,
 				D488D29C2B82CE3F000979D9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -329,6 +333,7 @@
 /* Begin XCBuildConfiguration section */
 		D488D2A32B82CE40000979D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D47B17BB2C0208AA00B3452D /* Warnings.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -392,6 +397,7 @@
 		};
 		D488D2A42B82CE40000979D9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D47B17BB2C0208AA00B3452D /* Warnings.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -452,7 +458,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 0000;
 				DEVELOPMENT_TEAM = P53V4JS928;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftBMLSDK_TestHarness/Info.plist;
@@ -470,7 +476,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.littlegreenviper.SwiftBMLSDK-TestHarness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -485,7 +491,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 0000;
 				DEVELOPMENT_TEAM = P53V4JS928;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftBMLSDK_TestHarness/Info.plist;
@@ -503,7 +509,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.littlegreenviper.SwiftBMLSDK-TestHarness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
