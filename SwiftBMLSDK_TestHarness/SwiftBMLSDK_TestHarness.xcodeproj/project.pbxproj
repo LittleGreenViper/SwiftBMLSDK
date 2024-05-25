@@ -16,6 +16,7 @@
 		D40823412BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40823402BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift */; };
 		D42740162B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42740152B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift */; };
 		D42740192B913C220019DC48 /* RVS_UIKit_Toolbox in Frameworks */ = {isa = PBXBuildFile; productRef = D42740182B913C220019DC48 /* RVS_UIKit_Toolbox */; };
+		D449EBF62C020AF200929D0F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D449EBF52C020AF200929D0F /* LaunchScreen.storyboard */; };
 		D4596F4E2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */; };
 		D476D4532B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */; };
 		D47B17BC2C0208AA00B3452D /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D47B17BB2C0208AA00B3452D /* Warnings.xcconfig */; };
@@ -26,7 +27,6 @@
 		D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */; };
 		D488D29C2B82CE3F000979D9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D488D29A2B82CE3F000979D9 /* Main.storyboard */; };
 		D488D29E2B82CE40000979D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D488D29D2B82CE40000979D9 /* Assets.xcassets */; };
-		D488D2A12B82CE40000979D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D488D29F2B82CE40000979D9 /* LaunchScreen.storyboard */; };
 		D488D2AB2B82CF3F000979D9 /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; };
 		D488D2AC2B82CF3F000979D9 /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D4D4B7992B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */; };
@@ -56,6 +56,7 @@
 		D40622192B83BB15009FFAB3 /* SwiftBMLSDK_TestHarness_BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_BaseViewController.swift; sourceTree = "<group>"; };
 		D40823402BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftBMLSDK_TestHarness_MeetingViewController.swift; path = Tabs/Virtual/SwiftBMLSDK_TestHarness_MeetingViewController.swift; sourceTree = "<group>"; };
 		D42740152B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_MapResultsViewController.swift; sourceTree = "<group>"; };
+		D449EBF52C020AF200929D0F /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftMLSDK_Map_AnnotationPopover_ViewController.swift; sourceTree = "<group>"; };
 		D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_MapMarker.swift; sourceTree = "<group>"; };
 		D47B17BB2C0208AA00B3452D /* Warnings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Warnings.xcconfig; path = ../Meta/Warnings.xcconfig; sourceTree = "<group>"; };
@@ -66,7 +67,6 @@
 		D488D2982B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_TabBarController.swift; sourceTree = "<group>"; };
 		D488D29B2B82CE3F000979D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D488D29D2B82CE40000979D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D488D2A02B82CE40000979D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D488D2A22B82CE40000979D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_InfoViewController.swift; sourceTree = "<group>"; };
@@ -176,7 +176,7 @@
 			children = (
 				D488D29A2B82CE3F000979D9 /* Main.storyboard */,
 				D488D29D2B82CE40000979D9 /* Assets.xcassets */,
-				D488D29F2B82CE40000979D9 /* LaunchScreen.storyboard */,
+				D449EBF52C020AF200929D0F /* LaunchScreen.storyboard */,
 				D40622102B83B705009FFAB3 /* Localizable.strings */,
 			);
 			path = Resources;
@@ -260,7 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4011DAA2BA4A77F002C3292 /* PrivacyInfo.xcprivacy in Resources */,
-				D488D2A12B82CE40000979D9 /* LaunchScreen.storyboard in Resources */,
+				D449EBF62C020AF200929D0F /* LaunchScreen.storyboard in Resources */,
 				D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */,
 				D406220E2B83B705009FFAB3 /* Localizable.strings in Resources */,
 				D488D29E2B82CE40000979D9 /* Assets.xcassets in Resources */,
@@ -318,14 +318,6 @@
 				D488D29B2B82CE3F000979D9 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		D488D29F2B82CE40000979D9 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D488D2A02B82CE40000979D9 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
