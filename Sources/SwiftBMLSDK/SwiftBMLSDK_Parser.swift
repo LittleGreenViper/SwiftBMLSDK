@@ -1111,11 +1111,34 @@ extension SwiftBMLSDK_Parser.Meeting {
         return myLocation.distance(from: CLLocation(latitude: inFrom.latitude, longitude: inFrom.longitude))
     }
     
+    /* ################################################################## */
+    /**
+     Returns the number of seconds until the meeting starts (non-mutating. If the cache has not been updated, then this is not accurate).
+     > NOTE: This does not add a "leeway" padding.
+     */
+    public var nextMeetingIn: TimeInterval {
+        let adjustedNow = Date.now._convert(from: .current, to: timeZone)
+        if let cachedDate = _cachedNextDate,
+           adjustedNow < cachedDate {
+            var ret = adjustedNow.distance(to: cachedDate)
+            
+            if 0 > ret {
+                ret = floor(ret)
+            } else {
+                ret = ceil(ret)
+            }
+        
+            return ret
+        }
+        
+        return 0
+    }
+    
     // MARK: Public Mutating Instance Methods
 
     /* ################################################################## */
     /**
-     Returns the number of minutes until the meeting starts.
+     Returns the number of seconds until the meeting starts.
      
      - parameter paddingInSeconds: This is "leeway," where we don't go to the next one, if the meeting is already under way.
      - returns: The number of seconds, before the next start. This may be negative, if the `paddingInSeconds` parameter was provided, and the meeting has been going on, for less than that many.
@@ -1145,10 +1168,11 @@ extension SwiftBMLSDK_Parser.Meeting {
      will show us the meeting starting at 8PM, the next day (In the Eastern Time zone). If isAdjusted is true, then the result will be 9PM (today), and 7PM (tomorrow) (User local), respectively.
      
      - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
-     - returns: The date of the next meeting.
+     - returns: The date of the next meeting (can be ignored, for purposes of updating the cache).
      
      > NOTE: If the date is invalid, then the distant future will be returned.
      */
+    @discardableResult
     mutating public func getNextStartDate(isAdjusted inAdjust: Bool = false) -> Date {
         let adjustedNow = Date.now._convert(from: .current, to: timeZone)
 

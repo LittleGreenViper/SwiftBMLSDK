@@ -22,11 +22,82 @@ import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
+// MARK: - File Private Date Extension -
+/* ###################################################################################################################################### */
+/**
+ This extension allows us to convert a date to a certain time zone.
+ */
+fileprivate extension Date {
+    /* ################################################################## */
+    /**
+     Convert a date between two timezones.
+     
+     Inspired by [this SO answer](https://stackoverflow.com/a/54064820/879365)
+     
+     - parameter from: The source timezone.
+     - paremeter to: The destination timezone.
+     
+     - returns: The converted date
+     */
+    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date {
+        addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self)))
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - Server Virtual Search Main Tab View Controller -
 /* ###################################################################################################################################### */
 /**
  */
 class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
+    /* ################################################################################################################################## */
+    // MARK: This Allows Easy Access to Filtered Meetings
+    /* ################################################################################################################################## */
+    /**
+     */
+    struct CachedMeetings {
+        /* ############################################################## */
+        /**
+         */
+        private var _meetings: [(meeting: SwiftBMLSDK_Parser.Meeting, nextStart: Date)]
+        
+        /* ############################################################## */
+        /**
+         */
+        mutating func meetings() -> [SwiftBMLSDK_Parser.Meeting] {
+            // Updates the cache.
+            for index in 0..<_meetings.count {
+                if .now > _meetings[index].nextStart {
+                    _meetings[index].nextStart = _meetings[index].meeting.getNextStartDate(isAdjusted: true)
+                }
+            }
+            
+            return _meetings.sorted { a, b in a.nextStart < b.nextStart }.map { $0.meeting }
+        }
+        
+        /* ############################################################## */
+        /**
+         */
+        mutating func hybridMeetings() -> [SwiftBMLSDK_Parser.Meeting] { meetings().filter { .hybrid == $0.meetingType } }
+
+        /* ############################################################## */
+        /**
+         */
+        mutating func virtualMeetings() -> [SwiftBMLSDK_Parser.Meeting] { meetings().filter { .virtual == $0.meetingType } }
+
+        /* ############################################################## */
+        /**
+         */
+        init(_ inParser: SwiftBMLSDK_Parser? = nil) {
+            _meetings = []
+            for index in 0..<(inParser?.meetings.count ?? 0) {
+                if var meeting = inParser?.meetings[index] {
+                    _meetings.append((meeting: meeting, nextStart: meeting.getNextStartDate(isAdjusted: true)))
+                }
+            }
+        }
+    }
+    
     /* ################################################################## */
     /**
      The ID for the segue to display a single meeting
@@ -49,7 +120,7 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     /**
      Once a meeting search has been done, we cache, here.
      */
-    private var _cachedMeetings: SwiftBMLSDK_Parser?
+    private var _cachedMeetings: CachedMeetings = CachedMeetings()
 
     /* ################################################################## */
     /**
@@ -81,7 +152,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      The meetings from the last search.
      */
-    var meetings: SwiftBMLSDK_Parser? { _cachedMeetings }
+    var meetings: CachedMeetings? { _cachedMeetings }
     
     /* ################################################################## */
     /**
@@ -90,21 +161,23 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     var tableFood: [SwiftBMLSDK_Parser.Meeting] {
         guard let selected = typeSegmentedSwitch?.selectedSegmentIndex else { return [] }
         
+        var ret: [SwiftBMLSDK_Parser.Meeting] = []
+        
         switch selected {
         case 0:
-            return _cachedMeetings?.meetings ?? []
+            ret = _cachedMeetings.meetings()
             
         case 1:
-            return _cachedMeetings?.hybridMeetings ?? []
+            ret = _cachedMeetings.hybridMeetings()
 
         case 2:
-            return _cachedMeetings?.virtualOnlyMeetings ?? []
+            ret = _cachedMeetings.virtualMeetings()
 
         default:
             break
         }
         
-        return []
+        return ret
     }
 }
 
@@ -135,7 +208,6 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
         if !_dontReload {
-            _cachedMeetings = nil
             prefs.clearSearchResults()
             myTabController?.updateEnablements()
             throbberView?.isHidden = false
@@ -174,7 +246,11 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      */
     @IBAction func typeSegmentedSwitchChanged(_ inSwitch: UISegmentedControl) {
-        meetingsTableView?.reloadData()
+        throbberView?.isHidden = false
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(20)) {
+            self.meetingsTableView?.reloadData()
+            self.throbberView?.isHidden = true
+        }
     }
 }
 
@@ -195,18 +271,17 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /* ################################################################## */
     /**
      */
-    func findMeetings(onlyVirtual inOnlyVirtual: Bool = false, completion inCompletion: ((_: SwiftBMLSDK_Parser?) -> Void)?) {
-        _cachedMeetings = nil
+    func findMeetings(onlyVirtual inOnlyVirtual: Bool = false, completion inCompletion: ((_: CachedMeetings?) -> Void)?) {
         Self._queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .virtual(isExclusive: inOnlyVirtual))){ inSearchResults, inError in
             guard nil == inError,
                   let inSearchResults = inSearchResults
             else {
-                self._cachedMeetings = nil
+                self._cachedMeetings = CachedMeetings()
                 inCompletion?(nil)
                 return
             }
             
-            self._cachedMeetings = inSearchResults
+            self._cachedMeetings = CachedMeetings(inSearchResults)
             
             DispatchQueue.main.async {
                 guard let switchMan = self.typeSegmentedSwitch else { return }
