@@ -254,7 +254,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
 
         var newText = ""
         
-        let nextStart = Int(meeting.meetingStartsIn(isAdjusted: isNormalizedTime, paddingInSeconds: Self._meetingStartPaddingInSeconds) / 60)
+        let nextStart = Int(meeting.meetingStartsIn(paddingInSeconds: Self._meetingStartPaddingInSeconds) / 60)
         switch nextStart {
         case -Int(Self._meetingStartPaddingInSeconds / 60)..<(-1):
             newText = String(format: "SLUG-STARTED-MINUTES-FORMAT".localizedVariant, abs(nextStart))

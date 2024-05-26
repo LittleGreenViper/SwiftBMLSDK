@@ -1117,15 +1117,15 @@ extension SwiftBMLSDK_Parser.Meeting {
     /**
      Returns the number of minutes until the meeting starts.
      
-     - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
      - parameter paddingInSeconds: This is "leeway," where we don't go to the next one, if the meeting is already under way.
      - returns: The number of seconds, before the next start. This may be negative, if the `paddingInSeconds` parameter was provided, and the meeting has been going on, for less than that many.
      */
-    mutating public func meetingStartsIn(isAdjusted inAdjust: Bool = false, paddingInSeconds inPaddingInSeconds: TimeInterval = 0) -> TimeInterval {
-        let meetingStartTime = getNextStartDate(isAdjusted: inAdjust)
-        let prevStart = getPreviousStartDate(isAdjusted: inAdjust)
+    mutating public func meetingStartsIn(paddingInSeconds inPaddingInSeconds: TimeInterval = 0) -> TimeInterval {
+        let now = Date.now
+        let meetingStartTime = getNextStartDate(isAdjusted: true)
+        let prevStart = getPreviousStartDate(isAdjusted: true)
         let lastAcceptable = prevStart.addingTimeInterval(inPaddingInSeconds)
-        var ret = Date.now.distance(to: Date.now <= lastAcceptable ? lastAcceptable : meetingStartTime)
+        var ret = now.distance(to: now <= lastAcceptable ? lastAcceptable : meetingStartTime)
         
         if 0 > ret {
             ret = floor(ret)
@@ -1178,8 +1178,11 @@ extension SwiftBMLSDK_Parser.Meeting {
      > NOTE: If the date is invalid, then the distant past will be returned.
      */
     mutating public func getPreviousStartDate(isAdjusted inAdjust: Bool = false) -> Date {
-        guard .distantFuture > getNextStartDate(isAdjusted: inAdjust) else { return .distantPast }
-        return getNextStartDate().addingTimeInterval(-Self._oneWeekInSeconds)
+        let nextStart = getNextStartDate(isAdjusted: inAdjust)
+        
+        guard .distantFuture > nextStart else { return .distantPast }
+        
+        return nextStart.addingTimeInterval(-Self._oneWeekInSeconds)
     }
 }
 
