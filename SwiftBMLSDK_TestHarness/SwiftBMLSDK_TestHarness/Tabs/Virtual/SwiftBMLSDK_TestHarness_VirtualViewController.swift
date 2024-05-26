@@ -132,6 +132,12 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
      This prevents a reload, when coming back from a meeting inspector.
      */
     private var _dontReload: Bool = false
+    
+    /* ################################################################## */
+    /**
+     The meetings from the last search, but cached, to speed up the table (pre-sorted).
+     */
+    private var _cachedTableFood: [SwiftBMLSDK_Parser.Meeting] = []
 
     /* ################################################################## */
     /**
@@ -164,25 +170,25 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      The meetings from the last search.
      */
     var tableFood: [SwiftBMLSDK_Parser.Meeting] {
-        guard let selected = typeSegmentedSwitch?.selectedSegmentIndex else { return [] }
+        guard _cachedTableFood.isEmpty else { return _cachedTableFood }
         
-        var ret: [SwiftBMLSDK_Parser.Meeting] = []
+        guard let selected = typeSegmentedSwitch?.selectedSegmentIndex else { return [] }
         
         switch selected {
         case 0:
-            ret = _cachedMeetings.meetings()
+            _cachedTableFood = _cachedMeetings.meetings()
             
         case 1:
-            ret = _cachedMeetings.hybridMeetings()
+            _cachedTableFood = _cachedMeetings.hybridMeetings()
 
         case 2:
-            ret = _cachedMeetings.virtualMeetings()
+            _cachedTableFood = _cachedMeetings.virtualMeetings()
 
         default:
             break
         }
         
-        return ret
+        return _cachedTableFood
     }
 }
 
@@ -221,6 +227,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
             throbberView?.isHidden = false
             findMeetings() { _ in
                 DispatchQueue.main.async {
+                    self._cachedTableFood = []
                     self.throbberView?.isHidden = true
                     self.meetingsTableView?.reloadData()
                 }
@@ -259,6 +266,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     @IBAction func reloadData(_: Any! = nil) {
         throbberView?.isHidden = false
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(20)) {
+            self._cachedTableFood = []
             self._cachedMeetings.updateCache()
             self._refreshControl?.endRefreshing()
             self.meetingsTableView?.reloadData()
