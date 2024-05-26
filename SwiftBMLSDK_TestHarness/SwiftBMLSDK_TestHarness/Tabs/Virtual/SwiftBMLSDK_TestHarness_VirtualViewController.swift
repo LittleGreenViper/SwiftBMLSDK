@@ -77,7 +77,7 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
         /**
          */
         func meetings() -> [SwiftBMLSDK_Parser.Meeting] {
-            return _meetings.map { $0.meeting } // .sorted { a, b in a.nextStart < b.nextStart }.map { $0.meeting }
+            return _meetings.sorted { a, b in a.nextStart < b.nextStart }.map { $0.meeting }
         }
 
         /* ############################################################## */
