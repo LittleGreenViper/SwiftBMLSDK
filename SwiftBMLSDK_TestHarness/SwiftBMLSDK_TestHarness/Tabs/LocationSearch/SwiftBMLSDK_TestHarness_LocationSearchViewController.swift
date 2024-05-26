@@ -41,6 +41,12 @@ class SwiftBMLSDK_TestHarness_LocationSearchViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     This will hold our location manager.
+     */
+    private var _locationManager: CLLocationManager?
+
+    /* ################################################################## */
+    /**
      */
     @IBOutlet weak var locationToggleLabelButton: UIButton?
     
@@ -201,6 +207,36 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
 }
 
 /* ###################################################################################################################################### */
+// MARK: Instance Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
+    /* ################################################################## */
+    /**
+     This simply starts looking for where the user is at.
+     */
+    func startLookingUpMyLocation() {
+        _locationManager = CLLocationManager()
+        _locationManager?.delegate = self
+        _locationManager?.requestWhenInUseAuthorization()
+        _locationManager?.desiredAccuracy = kCLLocationAccuracyBest
+        _locationManager?.startUpdatingLocation()
+    }
+    
+    /* ################################################################## */
+    /**
+     This stops the location manager lookups.
+     */
+    func stopLookingUpMyLocation() {
+        if let locationManager = _locationManager {
+            locationManager.stopUpdatingLocation()
+            locationManager.delegate = nil
+        }
+        
+        _locationManager = nil
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: Base Class Overrides
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
@@ -222,7 +258,9 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
         radiusTextField?.placeholder = radiusTextField?.placeholder?.localizedVariant
         performSearchButton?.setTitle(performSearchButton?.title(for: .normal)?.localizedVariant, for: .normal)
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
-        throbberView?.isHidden = true
+        throbberView?.isHidden = false
+        prefs.locationRadius = 0 < prefs.locationRadius ? prefs.locationRadius : Self._defaultRadiusInMeters
+        startLookingUpMyLocation()
     }
     
     /* ################################################################## */
@@ -266,3 +304,43 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController: UITextFieldDeleg
     }
 }
 
+/* ###################################################################################################################################### */
+// MARK: CLLocationManagerDelegate Conformance
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_LocationSearchViewController: CLLocationManagerDelegate {
+    /* ################################################################## */
+    /**
+     Callback to handle errors. We simply turn off autolocation, and proceed.
+     
+     - parameter inManager: The Location Manager object that had the error.
+     - parameter didFailWithError: the error
+     */
+    func locationManager(_ inManager: CLLocationManager, didFailWithError: Error) {
+        DispatchQueue.main.async { [weak self] in
+            self?.throbberView?.isHidden = true
+            self?.stopLookingUpMyLocation()
+            self?.locationToggleSwitch?.setOn(false, animated: true)
+            self?.locationToggleSwitch?.sendActions(for: .valueChanged)
+        }
+    }
+    
+    /* ################################################################## */
+    /**
+     Callback to handle found locations.
+     
+     - parameter inManager: The Location Manager object that had the event.
+     - parameter didUpdateLocations: an array of updated locations.
+     */
+    func locationManager(_ inManager: CLLocationManager, didUpdateLocations inLocations: [CLLocation]) {
+        // Ignore cached locations. Wait for the real.
+        for location in inLocations where 1.0 > location.timestamp.timeIntervalSinceNow {
+            DispatchQueue.main.async { [weak self] in
+                self?.throbberView?.isHidden = true
+                self?.stopLookingUpMyLocation()
+                self?.prefs.locationCenter = location.coordinate
+                self?.locationToggleSwitch?.setOn(true, animated: true)
+                self?.locationToggleSwitch?.sendActions(for: .valueChanged)
+            }
+        }
+    }
+}
