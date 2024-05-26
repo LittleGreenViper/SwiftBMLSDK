@@ -64,26 +64,31 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
         /* ############################################################## */
         /**
          */
-        mutating func meetings() -> [SwiftBMLSDK_Parser.Meeting] {
+        mutating func updateCache() {
             // Updates the cache.
             for index in 0..<_meetings.count {
                 if .now > _meetings[index].nextStart {
                     _meetings[index].nextStart = _meetings[index].meeting.getNextStartDate(isAdjusted: true)
                 }
             }
-            
-            return _meetings.sorted { a, b in a.nextStart < b.nextStart }.map { $0.meeting }
         }
         
         /* ############################################################## */
         /**
          */
-        mutating func hybridMeetings() -> [SwiftBMLSDK_Parser.Meeting] { meetings().filter { .hybrid == $0.meetingType } }
+        func meetings() -> [SwiftBMLSDK_Parser.Meeting] {
+            return _meetings.map { $0.meeting } // .sorted { a, b in a.nextStart < b.nextStart }.map { $0.meeting }
+        }
 
         /* ############################################################## */
         /**
          */
-        mutating func virtualMeetings() -> [SwiftBMLSDK_Parser.Meeting] { meetings().filter { .virtual == $0.meetingType } }
+        func hybridMeetings() -> [SwiftBMLSDK_Parser.Meeting] { meetings().filter { .hybrid == $0.meetingType } }
+
+        /* ############################################################## */
+        /**
+         */
+        func virtualMeetings() -> [SwiftBMLSDK_Parser.Meeting] { meetings().filter { .virtual == $0.meetingType } }
 
         /* ############################################################## */
         /**
@@ -108,13 +113,13 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     /**
      The background transparency, for alternating rows.
      */
-    static private let _alternateRowOpacity = CGFloat(0.05)
-
+    private static let _alternateRowOpacity = CGFloat(0.05)
+    
     /* ################################################################## */
     /**
-     This is our query instance.
+     The "pull to refresh" control.
      */
-    static private var _queryInstance = SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
+    private var _refreshControl: UIRefreshControl?
 
     /* ################################################################## */
     /**
@@ -193,6 +198,9 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         super.viewDidLoad()
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
         throbberView?.isHidden = true
+        _refreshControl = UIRefreshControl()
+        _refreshControl?.addTarget(self, action: #selector(reloadData), for: .valueChanged)
+        meetingsTableView?.refreshControl = _refreshControl
         for index in 0..<(typeSegmentedSwitch?.numberOfSegments ?? 0) {
             let title = "SLUG-VIRTUAL-SWITCH-\(index)".localizedVariant
             typeSegmentedSwitch?.setTitle(title, forSegmentAt: index)
@@ -244,10 +252,15 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
 extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /* ################################################################## */
     /**
+     Refreshes the user data.
+     
+     - parameter: ignored (and can be omitted).
      */
-    @IBAction func typeSegmentedSwitchChanged(_ inSwitch: UISegmentedControl) {
+    @IBAction func reloadData(_: Any! = nil) {
         throbberView?.isHidden = false
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(20)) {
+            self._cachedMeetings.updateCache()
+            self._refreshControl?.endRefreshing()
             self.meetingsTableView?.reloadData()
             self.throbberView?.isHidden = true
         }
@@ -272,7 +285,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      */
     func findMeetings(onlyVirtual inOnlyVirtual: Bool = false, completion inCompletion: ((_: CachedMeetings?) -> Void)?) {
-        Self._queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .virtual(isExclusive: inOnlyVirtual))){ inSearchResults, inError in
+        prefs.queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .virtual(isExclusive: inOnlyVirtual))){ inSearchResults, inError in
             guard nil == inError,
                   let inSearchResults = inSearchResults
             else {
