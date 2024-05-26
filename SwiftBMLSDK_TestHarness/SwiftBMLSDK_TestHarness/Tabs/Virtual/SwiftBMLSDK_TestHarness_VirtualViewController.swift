@@ -96,7 +96,8 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
         init(_ inParser: SwiftBMLSDK_Parser? = nil) {
             _meetings = []
             for index in 0..<(inParser?.meetings.count ?? 0) {
-                if var meeting = inParser?.meetings[index] {
+                if var meeting = inParser?.meetings[index],
+                   (.virtual == meeting.meetingType) || (.hybrid == meeting.meetingType) {
                     _meetings.append((meeting: meeting, nextStart: meeting.getNextStartDate(isAdjusted: true)))
                 }
             }

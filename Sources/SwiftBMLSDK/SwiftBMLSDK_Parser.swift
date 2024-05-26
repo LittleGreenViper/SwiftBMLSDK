@@ -104,7 +104,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
      
      - parameter jsonData: A Data instance, with the raw JSON dump.
      */
-    public init?(jsonData inJSONData: Data) {
+    public init?(jsonData inJSONData: Data, specification inSpecification: SwiftBMLSDK_Query.SearchSpecification) {
         guard let simpleJSON = try? JSONSerialization.jsonObject(with: inJSONData, options: [.allowFragments]) as? NSDictionary,
               let metaJSON = simpleJSON["meta"] as? [String: Any],
               let meta = Self._parseMeta(metaJSON),
@@ -112,7 +112,22 @@ public struct SwiftBMLSDK_Parser: Encodable {
               !meetingsJSON.isEmpty
         else { return nil }
         self.meta = meta
-        self.meetings = meetingsJSON.compactMap { Self._parseMeeting($0) }
+        self.meetings = meetingsJSON.compactMap {
+            let ret = Self._parseMeeting($0)
+            switch inSpecification.type {
+            case .any:
+                return ret
+                
+            case .hybrid:
+                return .hybrid == ret?.meetingType ? ret : nil
+                
+            case .virtual(let isExclusive):
+                return .virtual == ret?.meetingType || (!isExclusive && .hybrid == ret?.meetingType) ? ret : nil
+                
+            case .inPerson(let isExclusive):
+                return .inPerson == ret?.meetingType || (!isExclusive && .hybrid == ret?.meetingType) ? ret : nil
+            }
+        }
     }
 
     // MARK: Public Immutable Properties
@@ -584,13 +599,13 @@ public struct SwiftBMLSDK_Parser: Encodable {
          The meeting type.
          */
         public var meetingType: MeetingType {
-            if (nil != inPersonAddress) || (nil != inPersonVenueName && !inPersonVenueName!.isEmpty),
-               (nil != virtualURL && !virtualURL!.absoluteString.isEmpty) || (nil != virtualPhoneNumber && !virtualPhoneNumber!.isEmpty) {
+            if !basicInPersonAddress.isEmpty,
+               !(virtualURL?.absoluteString ?? "").isEmpty || !(virtualPhoneNumber ?? "").isEmpty {
                 return .hybrid
-            } else if nil != inPersonAddress || (nil != inPersonVenueName && !inPersonVenueName!.isEmpty) {
-                return .inPerson
-            } else {
+            } else if !(virtualURL?.absoluteString ?? "").isEmpty || !(virtualPhoneNumber ?? "").isEmpty {
                 return .virtual
+            } else {
+                return .inPerson
             }
         }
         
