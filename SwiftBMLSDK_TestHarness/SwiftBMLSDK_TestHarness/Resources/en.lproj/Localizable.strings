@@ -52,8 +52,7 @@
 "SLUG-MEETING-TODAY-LABEL-FORMAT"               =   "Today %@";
 "SLUG-MEETING-TODAY-RANGE-LABEL-FORMAT"         =   "Today %@ - %@";
 "SLUG-STARTING-NOW"                             =   "Starting Now";
-"SLUG-STARTED-MINUTE"                           =   "Started 1 Minute Ago";
-"SLUG-STARTED-MINUTES-FORMAT"                   =   "Started %d Minutes Ago";
+"SLUG-MEETING-IN-PROGRESS"                      =   "Meeting is in Progress";
 "SLUG-STARTS-IN-ONE-MINUTE"                     =   "Starts in 1 Minute";
 "SLUG-STARTS-IN-MINUTES-FORMAT"                 =   "Starts in %d Minutes";
 "SLUG-STARTS-IN-ONE-HOUR"                       =   "Starts in 1 Hour";

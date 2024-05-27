@@ -84,12 +84,6 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     
     /* ################################################################## */
     /**
-     The amount of time before we are no longer interested in the meeting.
-     */
-    private static let _meetingStartPaddingInSeconds = TimeInterval(15 * 60)
-    
-    /* ################################################################## */
-    /**
      */
     var meeting: SwiftBMLSDK_Parser.Meeting?
     
@@ -252,16 +246,16 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
     func setMeetsNext() {
         guard var meeting = meeting else { return }
 
+        guard !meeting.isMeetingInProgress() else {
+            meetsNextLabel?.isHidden = false
+            meetsNextLabel?.text = "SLUG-MEETING-IN-PROGRESS".localizedVariant
+            return
+        }
+
         var newText = ""
         
-        let nextStart = Int(meeting.meetingStartsIn(paddingInSeconds: Self._meetingStartPaddingInSeconds) / 60)
+        let nextStart = Int(ceil(meeting.meetingStartsIn() / 60))
         switch nextStart {
-        case -Int(Self._meetingStartPaddingInSeconds / 60)..<(-1):
-            newText = String(format: "SLUG-STARTED-MINUTES-FORMAT".localizedVariant, abs(nextStart))
-
-        case -1:
-            newText = "SLUG-STARTED-MINUTE".localizedVariant
-
         case 0:
             newText = "SLUG-STARTING-NOW".localizedVariant
 

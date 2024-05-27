@@ -1129,7 +1129,6 @@ extension SwiftBMLSDK_Parser.Meeting {
     /* ################################################################## */
     /**
      Returns the number of seconds until the meeting starts (non-mutating. If the cache has not been updated, then this is not accurate).
-     > NOTE: This does not add a "leeway" padding.
      */
     public var nextMeetingIn: TimeInterval {
         let adjustedNow = Date.now._convert(from: .current, to: timeZone)
@@ -1148,22 +1147,19 @@ extension SwiftBMLSDK_Parser.Meeting {
         
         return 0
     }
-    
+
     // MARK: Public Mutating Instance Methods
 
     /* ################################################################## */
     /**
      Returns the number of seconds until the meeting starts.
      
-     - parameter paddingInSeconds: This is "leeway," where we don't go to the next one, if the meeting is already under way.
-     - returns: The number of seconds, before the next start. This may be negative, if the `paddingInSeconds` parameter was provided, and the meeting has been going on, for less than that many.
+     - returns: The number of seconds, before the next start.
      */
-    mutating public func meetingStartsIn(paddingInSeconds inPaddingInSeconds: TimeInterval = 0) -> TimeInterval {
+    mutating public func meetingStartsIn() -> TimeInterval {
         let now = Date.now
         let meetingStartTime = getNextStartDate(isAdjusted: true)
-        let prevStart = getPreviousStartDate(isAdjusted: true)
-        let lastAcceptable = prevStart.addingTimeInterval(inPaddingInSeconds)
-        var ret = now.distance(to: now <= lastAcceptable ? lastAcceptable : meetingStartTime)
+        var ret = now.distance(to: meetingStartTime)
         
         if 0 > ret {
             ret = floor(ret)
@@ -1173,7 +1169,22 @@ extension SwiftBMLSDK_Parser.Meeting {
     
         return ret
     }
-    
+
+    /* ################################################################## */
+    /**
+     Returns true, if the meeting is currently in progress.
+     
+     > NOTE: This is possibly an expensive (in performance) operation, as it may reset the cache.
+     
+     - returns: The number of seconds, before the next start.
+     */
+    mutating public func isMeetingInProgress() -> Bool {
+        let meetingStartTime = getPreviousStartDate(isAdjusted: true)
+        let meetingEndTime = meetingStartTime.addingTimeInterval(duration)
+        
+        return (meetingStartTime..<meetingEndTime).contains(.now)
+    }
+
     /* ################################################################## */
     /**
      This is the start time of the next meeting, in the meeting's local timezone (unless `isAdjusted` is true).
