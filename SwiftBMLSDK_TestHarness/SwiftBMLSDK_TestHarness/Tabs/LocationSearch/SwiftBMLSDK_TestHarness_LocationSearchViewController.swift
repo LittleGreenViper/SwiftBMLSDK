@@ -44,6 +44,12 @@ class SwiftBMLSDK_TestHarness_LocationSearchViewController: SwiftBMLSDK_TestHarn
      This will hold our location manager.
      */
     private var _locationManager: CLLocationManager?
+    
+    /* ################################################################## */
+    /**
+     This allows us to try one more time, in case of location error.
+     */
+    private var _tryAgain: Bool = true
 
     /* ################################################################## */
     /**
@@ -315,7 +321,11 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController: CLLocationManage
      - parameter inManager: The Location Manager object that had the error.
      - parameter didFailWithError: the error
      */
-    func locationManager(_ inManager: CLLocationManager, didFailWithError: Error) {
+    func locationManager(_ inManager: CLLocationManager, didFailWithError inError: Error) {
+        guard !_tryAgain else {
+            _tryAgain = false
+            return
+        }
         DispatchQueue.main.async { [weak self] in
             self?.throbberView?.isHidden = true
             self?.stopLookingUpMyLocation()

@@ -146,7 +146,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
         throbberView?.isHidden = true
         _refreshControl = UIRefreshControl()
-        _refreshControl?.addTarget(self, action: #selector(reloadData), for: .valueChanged)
+        _refreshControl?.addTarget(self, action: #selector(reloadMeetings), for: .valueChanged)
         meetingsTableView?.refreshControl = _refreshControl
         for index in 0..<(typeSegmentedSwitch?.numberOfSegments ?? 0) {
             let title = "SLUG-VIRTUAL-SWITCH-\(index)".localizedVariant
@@ -166,13 +166,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
             prefs.clearSearchResults()
             myTabController?.updateEnablements()
             throbberView?.isHidden = false
-            findMeetings() {
-                DispatchQueue.main.async {
-                    self._cachedTableFood = []
-                    self.throbberView?.isHidden = true
-                    self.meetingsTableView?.reloadData()
-                }
-            }
+            reloadMeetings()
         }
         _dontReload = false
     }
@@ -198,6 +192,17 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
 // MARK: Callbacks
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_VirtualViewController {
+    /* ################################################################## */
+    /**
+     Refreshes the user data.
+     
+     - parameter: ignored (and can be omitted).
+     */
+    @IBAction func reloadMeetings(_: Any! = nil) {
+        throbberView?.isHidden = false
+        findMeetings { DispatchQueue.main.async { self.reloadData() } }
+    }
+
     /* ################################################################## */
     /**
      Refreshes the user data.
