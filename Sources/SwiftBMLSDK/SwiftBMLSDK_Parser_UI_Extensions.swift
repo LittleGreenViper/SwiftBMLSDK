@@ -58,6 +58,129 @@ public protocol SwiftBMLSDK_Meeting {
 }
 
 /* ###################################################################################################################################### */
+// MARK: - Collection Class for Managing Virtual Meetings -
+/* ###################################################################################################################################### */
+/**
+ This class can be used to manage all the virtual meetings.
+ 
+ Virtual meetings are always considered in local (to the user) timezone. We collect all of the meetings at once, and store them here, so they are easier and faster to manage.
+ 
+ This is a class, so we don't go making too many massive copies of the data. We can store this as a reference.
+ */
+public class SwiftBMLSDK_VirtualMeetingCollection {
+    /* ################################################# */
+    /**
+     This clears the cache, and makes a new call, to get the meetings.
+     
+     - parameter query: A query instance, primed with the meeting server.
+     - parameter completion: An escaping tail completion proc, with a single parameter (this instance).
+     */
+    private func _fetchMeetings(query inQuery: SwiftBMLSDK_Query, completion inCompletion: @escaping FetchCallback) {
+        meetings = []
+        inQuery.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .virtual(isExclusive: false))){ inSearchResults, inError in
+            guard nil == inError,
+                  let inSearchResults = inSearchResults
+            else {
+                inCompletion(self)
+                return
+            }
+            
+            self.meetings = inSearchResults.meetings.map { CachedMeeting(meeting: $0) }
+            
+            inCompletion(self)
+        }
+    }
+
+    /* ################################################# */
+    /**
+     The callback from the meeting fetch.
+     
+     - parameter: This collection.
+     */
+    public typealias FetchCallback = (_: SwiftBMLSDK_VirtualMeetingCollection) -> Void
+    
+    /* ################################################# */
+    /**
+     Each meeting is an instance, associated with the date of the next occurrence.
+     If the date is nil, or after now, the meeting is queried for the next ocurrence, and that is cached.
+     */
+    public class CachedMeeting {
+        /* ############################################# */
+        /**
+         This is the stored next date property.
+         */
+        private var _cachedNextDate: Date
+
+        /* ############################################# */
+        /**
+         The meeting is a simple stored property. It needs to be a var, in order to allow date caching.
+         */
+        public var meeting: SwiftBMLSDK_Parser.Meeting
+
+        /* ############################################# */
+        /**
+         This is a smart accessor for the next date. If the date has passed, we fetch it again, before returning it.
+         */
+        public var nextDate: Date {
+            guard .now <= _cachedNextDate else { return _cachedNextDate }
+            
+            _cachedNextDate = meeting.getNextStartDate(isAdjusted: true)
+
+            return _cachedNextDate
+        }
+
+        /* ############################################# */
+        /**
+         Initializer. The meeting is immediately asked for the next date.
+         
+         - parameter meeting: The meeting instance to be stored here.
+         */
+        public init(meeting inMeeting: SwiftBMLSDK_Parser.Meeting) {
+            meeting = inMeeting
+            _cachedNextDate = meeting.getNextStartDate(isAdjusted: true)
+        }
+    }
+    
+    /* ################################################# */
+    /**
+     This is the complete response to the last query. We ask for all of the virtual and hybrid meetings at once from the server, and store them in the order received.
+     */
+    public var meetings = [CachedMeeting]()
+
+    /* ################################################# */
+    /**
+     */
+    public var hybridMeetings: [CachedMeeting] { meetings.filter { .hybrid == $0.meeting.meetingType } }
+
+    /* ################################################# */
+    /**
+     */
+    public var virtualMeetings: [CachedMeeting] { meetings.filter { .virtual == $0.meeting.meetingType } }
+
+    /* ################################################# */
+    /**
+     initializer, with a URL to the server.
+     
+     - parameter serverURL: The URL to the meeting server.
+     - parameter completion: An escaping tail completion proc, with a single parameter (this instance).
+     */
+    public init(serverURL inServerURL: URL, completion inCompletion: @escaping FetchCallback) {
+        _fetchMeetings(query: SwiftBMLSDK_Query(serverBaseURI: inServerURL), completion: inCompletion)
+    }
+
+    /* ################################################# */
+    /**
+     initializer, with a prepared query.
+     
+     - parameter query: A "primed" query instance.
+     - parameter completion: An escaping tail completion proc, with a single parameter (this instance).
+     */
+    public init(query inQuery: SwiftBMLSDK_Query, completion inCompletion: @escaping FetchCallback) {
+        _fetchMeetings(query: inQuery, completion: inCompletion)
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - UIKit Meeting Extensions -
 /* ###################################################################################################################################### */
 /**

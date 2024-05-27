@@ -50,60 +50,6 @@ fileprivate extension Date {
 /**
  */
 class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
-    /* ################################################################################################################################## */
-    // MARK: This Allows Easy Access to Filtered Meetings
-    /* ################################################################################################################################## */
-    /**
-     */
-    struct CachedMeetings {
-        /* ############################################################## */
-        /**
-         */
-        private var _meetings: [(meeting: SwiftBMLSDK_Parser.Meeting, nextStart: Date)]
-        
-        /* ############################################################## */
-        /**
-         */
-        mutating func updateCache() {
-            // Updates the cache.
-            for index in 0..<_meetings.count {
-                if .now > _meetings[index].nextStart {
-                    _meetings[index].nextStart = _meetings[index].meeting.getNextStartDate(isAdjusted: true)
-                }
-            }
-        }
-        
-        /* ############################################################## */
-        /**
-         */
-        func meetings() -> [SwiftBMLSDK_Parser.Meeting] {
-            return _meetings.sorted { a, b in a.nextStart < b.nextStart }.map { $0.meeting }
-        }
-
-        /* ############################################################## */
-        /**
-         */
-        func hybridMeetings() -> [SwiftBMLSDK_Parser.Meeting] { meetings().filter { .hybrid == $0.meetingType } }
-
-        /* ############################################################## */
-        /**
-         */
-        func virtualMeetings() -> [SwiftBMLSDK_Parser.Meeting] { meetings().filter { .virtual == $0.meetingType } }
-
-        /* ############################################################## */
-        /**
-         */
-        init(_ inParser: SwiftBMLSDK_Parser? = nil) {
-            _meetings = []
-            for index in 0..<(inParser?.meetings.count ?? 0) {
-                if var meeting = inParser?.meetings[index],
-                   (.virtual == meeting.meetingType) || (.hybrid == meeting.meetingType) {
-                    _meetings.append((meeting: meeting, nextStart: meeting.getNextStartDate(isAdjusted: true)))
-                }
-            }
-        }
-    }
-    
     /* ################################################################## */
     /**
      The ID for the segue to display a single meeting
@@ -124,9 +70,9 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
 
     /* ################################################################## */
     /**
-     Once a meeting search has been done, we cache, here.
+     This handles transactions with the server.
      */
-    private var _cachedMeetings: CachedMeetings = CachedMeetings()
+    private var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
 
     /* ################################################################## */
     /**
@@ -164,12 +110,6 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      The meetings from the last search.
      */
-    var meetings: CachedMeetings? { _cachedMeetings }
-    
-    /* ################################################################## */
-    /**
-     The meetings from the last search.
-     */
     var tableFood: [SwiftBMLSDK_Parser.Meeting] {
         guard _cachedTableFood.isEmpty else { return _cachedTableFood }
         
@@ -177,13 +117,13 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         
         switch selected {
         case 0:
-            _cachedTableFood = _cachedMeetings.meetings()
+            _cachedTableFood = virtualService?.meetings.map { $0.meeting }.sorted { a, b in a.nextMeetingIn < b.nextMeetingIn } ?? []
             
         case 1:
-            _cachedTableFood = _cachedMeetings.hybridMeetings()
+            _cachedTableFood = virtualService?.meetings.filter { .hybrid == $0.meeting.meetingType }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting } ?? []
 
         case 2:
-            _cachedTableFood = _cachedMeetings.virtualMeetings()
+            _cachedTableFood = virtualService?.meetings.filter { .virtual == $0.meeting.meetingType }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting } ?? []
 
         default:
             break
@@ -226,7 +166,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
             prefs.clearSearchResults()
             myTabController?.updateEnablements()
             throbberView?.isHidden = false
-            findMeetings() { _ in
+            findMeetings() {
                 DispatchQueue.main.async {
                     self._cachedTableFood = []
                     self.throbberView?.isHidden = true
@@ -268,7 +208,6 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         throbberView?.isHidden = false
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(20)) {
             self._cachedTableFood = []
-            self._cachedMeetings.updateCache()
             self._refreshControl?.endRefreshing()
             self.meetingsTableView?.reloadData()
             self.throbberView?.isHidden = true
@@ -293,18 +232,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /* ################################################################## */
     /**
      */
-    func findMeetings(onlyVirtual inOnlyVirtual: Bool = false, completion inCompletion: ((_: CachedMeetings?) -> Void)?) {
-        prefs.queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .virtual(isExclusive: inOnlyVirtual))){ inSearchResults, inError in
-            guard nil == inError,
-                  let inSearchResults = inSearchResults
-            else {
-                self._cachedMeetings = CachedMeetings()
-                inCompletion?(nil)
-                return
-            }
-            
-            self._cachedMeetings = CachedMeetings(inSearchResults)
-            
+    func findMeetings(completion inCompletion: (() -> Void)?) {
+        virtualService = SwiftBMLSDK_VirtualMeetingCollection(query: prefs.queryInstance) { inCollection in
             DispatchQueue.main.async {
                 guard let switchMan = self.typeSegmentedSwitch else { return }
                 
@@ -313,11 +242,11 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
                     
                     switch index {
                     case 0:
-                        count = inSearchResults.meetings.count
+                        count = inCollection.meetings.count
                     case 1:
-                        count = inSearchResults.hybridMeetings.count
+                        count = inCollection.hybridMeetings.count
                     case 2:
-                        count = inSearchResults.virtualOnlyMeetings.count
+                        count = inCollection.virtualMeetings.count
                     default:
                         break
                     }
@@ -327,7 +256,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
                 }
             }
             
-            inCompletion?(self._cachedMeetings)
+            inCompletion?()
         }
     }
 }
