@@ -163,6 +163,22 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         
         return (current: current, upcoming: upcoming)
     }
+    
+    /* ################################################################## */
+    /**
+     Hides or shows the throbber.
+     */
+    var isThrobbing: Bool {
+        get { !(throbberView?.isHidden ?? true) }
+        set {
+            throbberView?.isHidden = !newValue
+            meetingsTableView?.isHidden = newValue
+            typeSegmentedSwitch?.isHidden = newValue
+            if !newValue {
+                _refreshControl?.endRefreshing()
+            }
+        }
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -176,10 +192,11 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
-        throbberView?.isHidden = true
+        isThrobbing = false
         _refreshControl = UIRefreshControl()
         _refreshControl?.addTarget(self, action: #selector(reloadMeetings), for: .valueChanged)
         meetingsTableView?.refreshControl = _refreshControl
+        meetingsTableView?.sectionHeaderTopPadding = 0
         for index in 0..<(typeSegmentedSwitch?.numberOfSegments ?? 0) {
             let title = "SLUG-VIRTUAL-SWITCH-\(index)".localizedVariant
             typeSegmentedSwitch?.setTitle(title, forSegmentAt: index)
@@ -197,7 +214,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         if !_dontReload {
             prefs.clearSearchResults()
             myTabController?.updateEnablements()
-            throbberView?.isHidden = false
+            isThrobbing = true
             reloadMeetings()
         }
         _dontReload = false
@@ -231,7 +248,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      - parameter: ignored (and can be omitted).
      */
     @IBAction func reloadMeetings(_: Any! = nil) {
-        throbberView?.isHidden = false
+        isThrobbing = true
         findMeetings { DispatchQueue.main.async { self.reloadData() } }
     }
 
@@ -242,12 +259,12 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      - parameter: ignored (and can be omitted).
      */
     @IBAction func reloadData(_: Any! = nil) {
-        throbberView?.isHidden = false
+        isThrobbing = true
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(20)) {
             self._cachedMeetings = nil
             self._refreshControl?.endRefreshing()
             self.meetingsTableView?.reloadData()
-            self.throbberView?.isHidden = true
+            self.isThrobbing = false
         }
     }
 }
@@ -268,6 +285,9 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     
     /* ################################################################## */
     /**
+     Fetches all of the virtual meetings (hybrid and pure virtual).
+     
+     - parameter completion: A tail completion proc.
      */
     func findMeetings(completion inCompletion: (() -> Void)?) {
         virtualService = SwiftBMLSDK_VirtualMeetingCollection(query: prefs.queryInstance) { inCollection in
@@ -304,31 +324,29 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
 extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
     /* ################################################################## */
     /**
+     - parameter in: The table view (ignored).
+     
+     - returns: 2 (always)
      */
-    func numberOfSections(in tableView: UITableView) -> Int {
-        2
-    }
+    func numberOfSections(in: UITableView) -> Int { 2 }
     
     /* ################################################################## */
     /**
+     - parameter: The table view (ignored).
+     - parameter numberOfRowsInSection: The 0-based section index.
+     - returns: The number of meetings in the given section.
      */
-    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int {
-        0 == inSection ? tableFood.current.count : tableFood.upcoming.count
-    }
+    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int { (0 == inSection ? tableFood.current : tableFood.upcoming).count }
     
     /* ################################################################## */
     /**
+     - parameter: The table view
+     - parameter cellForRowAt: The indexpath to the requested cell.
+     - returns: A new (or reused) table cell.
      */
-    func tableView(_: UITableView, titleForHeaderInSection inSection: Int) -> String? {
-        "SLUG-SECTION-\(inSection)-HEADER".localizedVariant
-    }
-    
-    /* ################################################################## */
-    /**
-     */
-    func tableView(_ tableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
-        let ret = UITableViewCell()
-        ret.backgroundColor = .clear
+    func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
+        let ret = inTableView.dequeueReusableCell(withIdentifier: "simple-table", for: inIndexPath)
+
         var meeting = 0 == inIndexPath.section ? tableFood.current[inIndexPath.row] : tableFood.upcoming[inIndexPath.row]
         let nextDate = meeting.getNextStartDate(isAdjusted: true)
         let formatter = DateFormatter()
@@ -342,7 +360,9 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
         ret.textLabel?.adjustsFontSizeToFitWidth = true
         ret.textLabel?.minimumScaleFactor = 0.5
         ret.textLabel?.lineBreakMode = .byTruncatingTail
+        
         ret.backgroundColor = (1 == inIndexPath.row % 2) ? UIColor.label.withAlphaComponent(Self._alternateRowOpacity) : UIColor.clear
+        
         return ret
     }
 }
@@ -352,6 +372,27 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
 // MARK: UITableViewDelegate Conformance
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDelegate {
+    /* ################################################################## */
+    /**
+     Returns the displayed header for the given section.
+     
+     - parameter: The table view (ignored)
+     - parameter viewForHeaderInSection: The 0-based section index.
+     - returns: The header view (a label).
+     */
+    func tableView(_: UITableView, viewForHeaderInSection inSection: Int) -> UIView? {
+        let title = "SLUG-SECTION-\(inSection)-HEADER".localizedVariant
+        
+        let ret = UILabel()
+        ret.text = title
+        ret.textAlignment = .center
+        ret.font = .boldSystemFont(ofSize: 20)
+        ret.textColor = .white
+        ret.backgroundColor = .black
+        
+        return ret
+    }
+    
     /* ################################################################## */
     /**
      Called when a cell is selected. We will use this to open the user viewer.
