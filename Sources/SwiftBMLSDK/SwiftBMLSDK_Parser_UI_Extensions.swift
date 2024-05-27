@@ -123,10 +123,18 @@ public class SwiftBMLSDK_VirtualMeetingCollection {
          */
         public var nextDate: Date {
             guard .now <= _cachedNextDate else { return _cachedNextDate }
-            
             _cachedNextDate = meeting.getNextStartDate(isAdjusted: true)
-
             return _cachedNextDate
+        }
+
+        /* ############################################# */
+        /**
+         This returns true, if the meeting is currently in progress.
+         */
+        public var isInProgress: Bool {
+            let prevDate = meeting.getPreviousStartDate(isAdjusted: true)
+            let lastDate = prevDate.addingTimeInterval(meeting.duration)
+            return (prevDate..<lastDate).contains(.now)
         }
 
         /* ############################################# */

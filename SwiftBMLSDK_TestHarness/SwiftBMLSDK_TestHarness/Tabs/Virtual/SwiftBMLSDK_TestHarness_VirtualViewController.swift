@@ -82,9 +82,13 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     
     /* ################################################################## */
     /**
-     The meetings from the last search, but cached, to speed up the table (pre-sorted).
      */
-    private var _cachedTableFood: [SwiftBMLSDK_Parser.Meeting] = []
+    private var _cachedMeetings: SwiftBMLSDK_VirtualMeetingCollection? { didSet { if nil == _cachedMeetings { _cachedTableFood = nil } } }
+    
+    /* ################################################################## */
+    /**
+     */
+    private var _cachedTableFood: (current: [SwiftBMLSDK_Parser.Meeting], upcoming: [SwiftBMLSDK_Parser.Meeting])?
 
     /* ################################################################## */
     /**
@@ -110,26 +114,54 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      The meetings from the last search.
      */
-    var tableFood: [SwiftBMLSDK_Parser.Meeting] {
-        guard _cachedTableFood.isEmpty else { return _cachedTableFood }
+    var tableFood: (current: [SwiftBMLSDK_Parser.Meeting], upcoming: [SwiftBMLSDK_Parser.Meeting]) {
+        guard nil == _cachedTableFood else { return _cachedTableFood! }
         
-        guard let selected = typeSegmentedSwitch?.selectedSegmentIndex else { return [] }
+        let tableFodder = tableFodder
         
-        switch selected {
+        let newTableFood = (current: tableFodder.current.map { $0.meeting }, upcoming: tableFodder.upcoming.map { $0.meeting })
+        
+        _cachedTableFood = newTableFood
+        
+        return newTableFood
+    }
+    
+    /* ################################################################## */
+    /**
+     The meetings from the last search.
+     */
+    var tableFodder: (current: [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting], upcoming: [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]) {
+        guard nil == _cachedMeetings
+        else {
+            let current = _cachedMeetings?.meetings.compactMap { $0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate } ?? []
+            let upcoming = _cachedMeetings?.meetings.compactMap { !$0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate } ?? []
+            return (current: current, upcoming: upcoming)
+        }
+        
+        guard let meetings = virtualService?.meetings.sorted (by: { a, b in a.nextDate < b.nextDate }) else { return (current: [], upcoming: []) }
+        _cachedMeetings = virtualService
+        
+        var current = [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]()
+        var upcoming = [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]()
+
+        switch typeSegmentedSwitch?.selectedSegmentIndex ?? -1 {
         case 0:
-            _cachedTableFood = virtualService?.meetings.map { $0.meeting }.sorted { a, b in a.nextMeetingIn < b.nextMeetingIn } ?? []
-            
+            current = meetings.compactMap { $0.isInProgress ? $0 : nil }
+            upcoming = meetings.compactMap { !$0.isInProgress ? $0 : nil }
+
         case 1:
-            _cachedTableFood = virtualService?.meetings.filter { .hybrid == $0.meeting.meetingType }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting } ?? []
+            current = meetings.compactMap { .hybrid == $0.meeting.meetingType && $0.isInProgress ? $0 : nil }
+            upcoming = meetings.compactMap { .hybrid == $0.meeting.meetingType && !$0.isInProgress ? $0 : nil }
 
         case 2:
-            _cachedTableFood = virtualService?.meetings.filter { .virtual == $0.meeting.meetingType }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting } ?? []
+            current = meetings.compactMap { .virtual == $0.meeting.meetingType && $0.isInProgress ? $0 : nil }
+            upcoming = meetings.compactMap { .virtual == $0.meeting.meetingType && !$0.isInProgress ? $0 : nil }
 
         default:
             break
         }
         
-        return _cachedTableFood
+        return (current: current, upcoming: upcoming)
     }
 }
 
@@ -212,7 +244,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     @IBAction func reloadData(_: Any! = nil) {
         throbberView?.isHidden = false
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(20)) {
-            self._cachedTableFood = []
+            self._cachedMeetings = nil
             self._refreshControl?.endRefreshing()
             self.meetingsTableView?.reloadData()
             self.throbberView?.isHidden = true
@@ -273,8 +305,22 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
     /* ################################################################## */
     /**
      */
-    func tableView(_: UITableView, numberOfRowsInSection: Int) -> Int {
-        tableFood.count
+    func numberOfSections(in tableView: UITableView) -> Int {
+        2
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int {
+        0 == inSection ? tableFood.current.count : tableFood.upcoming.count
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    func tableView(_: UITableView, titleForHeaderInSection inSection: Int) -> String? {
+        "SLUG-SECTION-\(inSection)-HEADER".localizedVariant
     }
     
     /* ################################################################## */
@@ -283,8 +329,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
         let ret = UITableViewCell()
         ret.backgroundColor = .clear
-        guard (0..<tableFood.count).contains(inIndexPath.row) else { return ret }
-        var meeting = tableFood[inIndexPath.row]
+        var meeting = 0 == inIndexPath.section ? tableFood.current[inIndexPath.row] : tableFood.upcoming[inIndexPath.row]
         let nextDate = meeting.getNextStartDate(isAdjusted: true)
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
@@ -316,9 +361,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDelegate {
      - returns: nil (all the time).
      */
     func tableView(_: UITableView, willSelectRowAt inIndexPath: IndexPath) -> IndexPath? {
-        if (0..<tableFood.count).contains(inIndexPath.row) {
-            selectMeeting(tableFood[inIndexPath.row])
-        }
+        let meeting = 0 == inIndexPath.section ? tableFood.current[inIndexPath.row] : tableFood.upcoming[inIndexPath.row]
+        selectMeeting(meeting)
         return nil
     }
 }

@@ -64,6 +64,8 @@
 "SLUG-WEEKDAY-TIME-FORMAT"                      =   "%@s, at %@";
 "SLUG-VLINK-TITLE"                              =   "VIRTUAL MEETING";
 "SLUG-LOCATION-TITLE"                           =   "IN-PERSON MEETING";
+"SLUG-SECTION-0-HEADER"                         =   "In-Progress Meetings";
+"SLUG-SECTION-1-HEADER"                         =   "Upcoming Meetings";
 
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";
