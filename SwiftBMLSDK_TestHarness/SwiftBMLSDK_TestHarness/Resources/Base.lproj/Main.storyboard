@@ -87,8 +87,22 @@
                                     <action selector="reloadData:" destination="AFa-qM-puy" eventType="valueChanged" id="W9M-Bz-xkY"/>
                                 </connections>
                             </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="IZ5-YB-Qg5">
+                                <rect key="frame" x="16" y="141" width="361" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="yZA-qE-w6a"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="SLUG-TIME-FILTER-0"/>
+                                    <segment title="SLUG-TIME-FILTER-1"/>
+                                    <segment title="SLUG-TIME-FILTER-2"/>
+                                </segments>
+                                <connections>
+                                    <action selector="reloadData:" destination="AFa-qM-puy" eventType="valueChanged" id="tmV-lM-clH"/>
+                                </connections>
+                            </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="rzY-XX-r8j">
-                                <rect key="frame" x="16" y="133" width="361" height="636"/>
+                                <rect key="frame" x="16" y="179" width="361" height="590"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="simple-table" id="3Fa-0j-DhN">
@@ -123,15 +137,18 @@
                         <viewLayoutGuide key="safeArea" id="BNm-4O-p2Z"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="BNm-4O-p2Z" firstAttribute="trailing" secondItem="IZ5-YB-Qg5" secondAttribute="trailing" constant="16" id="1Ys-46-alM"/>
                             <constraint firstAttribute="bottom" secondItem="NGB-3X-6Go" secondAttribute="bottom" id="7Ma-hN-wE1"/>
                             <constraint firstItem="swC-ix-ezY" firstAttribute="top" secondItem="BNm-4O-p2Z" secondAttribute="top" id="Bwp-3J-evn"/>
+                            <constraint firstItem="rzY-XX-r8j" firstAttribute="top" secondItem="IZ5-YB-Qg5" secondAttribute="bottom" constant="8" id="FkB-NL-giM"/>
                             <constraint firstItem="NGB-3X-6Go" firstAttribute="top" secondItem="Spx-Pr-P9v" secondAttribute="top" id="GyL-oz-DIa"/>
                             <constraint firstItem="swC-ix-ezY" firstAttribute="leading" secondItem="BNm-4O-p2Z" secondAttribute="leading" constant="16" id="Jer-Na-ij6"/>
                             <constraint firstItem="rzY-XX-r8j" firstAttribute="leading" secondItem="BNm-4O-p2Z" secondAttribute="leading" constant="16" id="M5q-oj-iWE"/>
                             <constraint firstItem="NGB-3X-6Go" firstAttribute="leading" secondItem="Spx-Pr-P9v" secondAttribute="leading" id="byJ-Gl-Flc"/>
+                            <constraint firstItem="IZ5-YB-Qg5" firstAttribute="leading" secondItem="BNm-4O-p2Z" secondAttribute="leading" constant="16" id="eJS-vV-XYT"/>
                             <constraint firstItem="rzY-XX-r8j" firstAttribute="bottom" secondItem="BNm-4O-p2Z" secondAttribute="bottom" id="jtg-9Y-Lil"/>
                             <constraint firstItem="BNm-4O-p2Z" firstAttribute="trailing" secondItem="swC-ix-ezY" secondAttribute="trailing" constant="16" id="kFi-KS-Dtc"/>
-                            <constraint firstItem="rzY-XX-r8j" firstAttribute="top" secondItem="swC-ix-ezY" secondAttribute="bottom" id="sh3-lO-AXM"/>
+                            <constraint firstItem="IZ5-YB-Qg5" firstAttribute="top" secondItem="swC-ix-ezY" secondAttribute="bottom" constant="8" id="oaf-gN-kdl"/>
                             <constraint firstItem="BNm-4O-p2Z" firstAttribute="trailing" secondItem="rzY-XX-r8j" secondAttribute="trailing" constant="16" id="x2v-a0-uSE"/>
                             <constraint firstAttribute="trailing" secondItem="NGB-3X-6Go" secondAttribute="trailing" id="xCd-I0-JNP"/>
                         </constraints>
@@ -142,6 +159,7 @@
                     <connections>
                         <outlet property="meetingsTableView" destination="rzY-XX-r8j" id="9I0-6F-UTe"/>
                         <outlet property="throbberView" destination="NGB-3X-6Go" id="ilz-t8-XK9"/>
+                        <outlet property="timeTypeSegmentedSwitch" destination="IZ5-YB-Qg5" id="yFF-9P-kfV"/>
                         <outlet property="typeSegmentedSwitch" destination="swC-ix-ezY" id="Cxr-O0-uTR"/>
                         <segue destination="y7V-0G-Fls" kind="show" identifier="show-meeting" id="zvc-aD-Atf"/>
                     </connections>

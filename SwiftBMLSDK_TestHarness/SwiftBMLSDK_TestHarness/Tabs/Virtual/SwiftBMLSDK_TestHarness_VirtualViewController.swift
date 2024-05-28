@@ -98,6 +98,11 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     /* ################################################################## */
     /**
      */
+    @IBOutlet weak var timeTypeSegmentedSwitch: UISegmentedControl?
+    
+    /* ################################################################## */
+    /**
+     */
     @IBOutlet weak var meetingsTableView: UITableView?
     
     /* ################################################################## */
@@ -174,6 +179,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
             throbberView?.isHidden = !newValue
             meetingsTableView?.isHidden = newValue
             typeSegmentedSwitch?.isHidden = newValue
+            timeTypeSegmentedSwitch?.isHidden = newValue
             if !newValue {
                 _refreshControl?.endRefreshing()
             }
@@ -200,6 +206,10 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         for index in 0..<(typeSegmentedSwitch?.numberOfSegments ?? 0) {
             let title = "SLUG-VIRTUAL-SWITCH-\(index)".localizedVariant
             typeSegmentedSwitch?.setTitle(title, forSegmentAt: index)
+        }
+        for index in 0..<(timeTypeSegmentedSwitch?.numberOfSegments ?? 0) {
+            let title = "SLUG-TIME-FILTER-\(index)".localizedVariant
+            timeTypeSegmentedSwitch?.setTitle(title, forSegmentAt: index)
         }
     }
     
@@ -249,6 +259,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     @IBAction func reloadMeetings(_: Any! = nil) {
         isThrobbing = true
+        _refreshControl?.endRefreshing()
         findMeetings { DispatchQueue.main.async { self.reloadData() } }
     }
 
@@ -260,6 +271,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     @IBAction func reloadData(_: Any! = nil) {
         isThrobbing = true
+        _refreshControl?.endRefreshing()
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(20)) {
             self._cachedMeetings = nil
             self._refreshControl?.endRefreshing()
@@ -326,9 +338,9 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
     /**
      - parameter in: The table view (ignored).
      
-     - returns: 2 (always)
+     - returns: 1 or 2 (depending on the switch setting).
      */
-    func numberOfSections(in: UITableView) -> Int { 2 }
+    func numberOfSections(in: UITableView) -> Int { (0 == timeTypeSegmentedSwitch?.selectedSegmentIndex) ? 2 : 1 }
     
     /* ################################################################## */
     /**
@@ -336,7 +348,15 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
      - parameter numberOfRowsInSection: The 0-based section index.
      - returns: The number of meetings in the given section.
      */
-    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int { (0 == inSection ? tableFood.current : tableFood.upcoming).count }
+    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int {
+        if 2 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
+            return tableFood.current.count
+        } else if 1 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
+            return tableFood.upcoming.count
+        } else {
+            return (0 == inSection ? tableFood.current : tableFood.upcoming).count
+        }
+    }
     
     /* ################################################################## */
     /**
@@ -347,7 +367,16 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
     func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
         let ret = inTableView.dequeueReusableCell(withIdentifier: "simple-table", for: inIndexPath)
 
-        var meeting = 0 == inIndexPath.section ? tableFood.current[inIndexPath.row] : tableFood.upcoming[inIndexPath.row]
+        var meeting: SwiftBMLSDK_Parser.Meeting
+        
+        if 2 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
+            meeting = tableFood.current[inIndexPath.row]
+        } else if 1 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
+            meeting = tableFood.upcoming[inIndexPath.row]
+        } else {
+            meeting = 0 == inIndexPath.section ? tableFood.current[inIndexPath.row] : tableFood.upcoming[inIndexPath.row]
+        }
+
         let nextDate = meeting.getNextStartDate(isAdjusted: true)
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
@@ -381,7 +410,16 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDelegate {
      - returns: The header view (a label).
      */
     func tableView(_: UITableView, viewForHeaderInSection inSection: Int) -> UIView? {
-        let title = "SLUG-SECTION-\(inSection)-HEADER".localizedVariant
+        var title: String
+        
+        if 2 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
+            title = "SLUG-SECTION-0-HEADER".localizedVariant
+        } else if 1 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
+            title = "SLUG-SECTION-1-HEADER".localizedVariant
+        } else {
+            title = "SLUG-SECTION-\(inSection)-HEADER".localizedVariant
+        }
+
         
         let ret = UILabel()
         ret.text = title
@@ -402,7 +440,15 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDelegate {
      - returns: nil (all the time).
      */
     func tableView(_: UITableView, willSelectRowAt inIndexPath: IndexPath) -> IndexPath? {
-        let meeting = 0 == inIndexPath.section ? tableFood.current[inIndexPath.row] : tableFood.upcoming[inIndexPath.row]
+        var meeting: SwiftBMLSDK_Parser.Meeting
+        
+        if 2 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
+            meeting = tableFood.current[inIndexPath.row]
+        } else if 1 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
+            meeting = tableFood.upcoming[inIndexPath.row]
+        } else {
+            meeting = 0 == inIndexPath.section ? tableFood.current[inIndexPath.row] : tableFood.upcoming[inIndexPath.row]
+        }
         selectMeeting(meeting)
         return nil
     }

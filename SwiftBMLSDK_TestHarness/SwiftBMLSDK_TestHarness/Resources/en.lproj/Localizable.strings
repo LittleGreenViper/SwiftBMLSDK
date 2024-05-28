@@ -66,6 +66,9 @@
 "SLUG-LOCATION-TITLE"                           =   "IN-PERSON MEETING";
 "SLUG-SECTION-0-HEADER"                         =   "In-Progress Meetings";
 "SLUG-SECTION-1-HEADER"                         =   "Upcoming Meetings";
+"SLUG-TIME-FILTER-0"                            =   "All";
+"SLUG-TIME-FILTER-1"                            =   "Upcoming";
+"SLUG-TIME-FILTER-2"                            =   "In Progress";
 
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";
