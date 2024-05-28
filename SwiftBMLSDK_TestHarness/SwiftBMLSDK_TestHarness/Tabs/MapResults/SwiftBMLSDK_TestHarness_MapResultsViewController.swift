@@ -23,14 +23,36 @@ import RVS_UIKit_Toolbox
 import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
-// MARK: - Region Extension For Transforming Array of Coordinates to A Region -
+// MARK: - MKCoordinateRegion Equatable Extension -
 /* ###################################################################################################################################### */
 /**
- Inspired by [this GitHub gist](https://gist.github.com/dionc/46f7e7ee9db7dbd7bddec56bd5418ca6).
- 
- This takes the set of coordinates, and makes a map of them, on either side of the globe, and chooses to use the version that has the smallest spans.
+ Allows comparison of two regions.
  */
-extension MKCoordinateRegion {
+extension MKCoordinateRegion: Equatable {
+    /* ################################################################## */
+    /**
+     This allows comparing two regions for equality.
+     - parameter lhs: The left-hand side region
+     - parameter rhs: The right-hand side region
+     - returns: true, if the two regions are equal.
+     */
+    public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
+        lhs.center.longitude == rhs.center.longitude
+            && lhs.center.latitude == rhs.center.latitude
+            && lhs.span.longitudeDelta == rhs.span.longitudeDelta
+            && lhs.span.latitudeDelta == rhs.span.latitudeDelta
+    }
+    
+    /* ################################################################## */
+    /**
+     Returns the Northwest corner to Southeast corner size, as absolute meters.
+     */
+    public var diagonalSizeInMeters: CLLocationDistance {
+        let point1 = CLLocation(latitude: center.latitude - (span.latitudeDelta * 0.5), longitude: center.longitude - (span.longitudeDelta * 0.5))
+        let point2 = CLLocation(latitude: center.latitude + (span.latitudeDelta * 0.5), longitude: center.longitude + (span.longitudeDelta * 0.5))
+        return CLLocationDistance(abs(point1.distance(from: point2)) / 2)
+    }
+
     /* ################################################################## */
     /**
      This defines the function that we use to "normalize" coordinates that might have negative numbers.
@@ -164,6 +186,18 @@ class SwiftBMLSDK_TestHarness_MapResultsViewController: SwiftBMLSDK_TestHarness_
     
     /* ################################################################## */
     /**
+     This is the maximum region size (corner-to-corner) we allow. It is how we clamp the zoom.
+     */
+    private static let _maximumRegionSizeInMeters: CLLocationDistance = 250000
+    
+    /* ################################################################## */
+    /**
+     This is a flag that is set while the region is being explicitly set (as opposed to being dragged or zoomed).
+     */
+    private var _ignoreRegionChange: Bool = false
+
+    /* ################################################################## */
+    /**
      The main map view
      */
     @IBOutlet weak var mapView: MKMapView?
@@ -195,7 +229,11 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      */
     override func viewDidAppear(_ inIsAnimated: Bool) {
         super.viewDidAppear(inIsAnimated)
+        mapView?.delegate = self
+        _ignoreRegionChange = true
+        print("1");
         mapView?.region = MKCoordinateRegion()
+        _ignoreRegionChange = false
         firstLoadDone = false
     }
     
@@ -285,6 +323,7 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
               !searchResults.isEmpty
         else { return }
         
+        mapView?.delegate = self
         mapView?.addAnnotations(createMeetingAnnotations(searchResults))
     }
     
@@ -350,6 +389,7 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      */
     func setMapToResults() {
         firstLoadDone = true
+        _ignoreRegionChange = true
         guard let allCoords = prefs.searchResults?.inPersonMeetings.allCoords,
               !allCoords.isEmpty
         else { return }
@@ -357,7 +397,9 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
         guard let mapRegion = MKCoordinateRegion(coordinates: allCoords),
               let newRegion = mapView?.regionThatFits(mapRegion) else { return }
         
+        print("2");
         mapView?.setVisibleMapRect(newRegion.asRect, animated: false)
+        _ignoreRegionChange = false
     }
 }
 
@@ -385,15 +427,38 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController: MKMapViewDelegate {
     
     /* ################################################################## */
     /**
+     This is called when the map will change its region.
+     
+     - parameter: The map view (ignored)
+     - parameter regionWillChangeAnimated: True, if the change is animated (ignored)
+     */
+    func mapView(_: MKMapView, regionWillChangeAnimated: Bool) {
+    }
+    
+    /* ################################################################## */
+    /**
      This is called when the map has changed its region.
      
-     - parameter inMapView: The map view
+     - parameter: The map view (ignored)
      - parameter regionDidChangeAnimated: True, if the change is animated (ignored)
      */
     func mapView(_ inMapView: MKMapView, regionDidChangeAnimated: Bool) {
-        createAnnotations()
+        if firstLoadDone,
+           !_ignoreRegionChange {
+            let center = inMapView.region.center
+            let radius = inMapView.region.diagonalSizeInMeters
+            prefs.locationRadius = radius
+            prefs.locationCenter = center
+            prefs.locationRegion = inMapView.region
+            prefs.performSearch {
+                self.createAnnotations()
+            }
+        } else {
+            createAnnotations()
+        }
     }
     
+
     /* ################################################################## */
     /**
      This is called when the map has completed loading.

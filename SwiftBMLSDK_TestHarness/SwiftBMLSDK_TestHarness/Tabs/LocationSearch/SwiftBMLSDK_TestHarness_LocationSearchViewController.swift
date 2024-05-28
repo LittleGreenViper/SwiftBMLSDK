@@ -264,9 +264,13 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
         radiusTextField?.placeholder = radiusTextField?.placeholder?.localizedVariant
         performSearchButton?.setTitle(performSearchButton?.title(for: .normal)?.localizedVariant, for: .normal)
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
-        throbberView?.isHidden = false
-        prefs.locationRadius = 0 < prefs.locationRadius ? prefs.locationRadius : Self._defaultRadiusInMeters
-        startLookingUpMyLocation()
+        if nil == prefs.locationRegion {
+            throbberView?.isHidden = false
+            prefs.locationRadius = 0 < prefs.locationRadius ? prefs.locationRadius : Self._defaultRadiusInMeters
+            startLookingUpMyLocation()
+        } else {
+            throbberView?.isHidden = true
+        }
     }
     
     /* ################################################################## */

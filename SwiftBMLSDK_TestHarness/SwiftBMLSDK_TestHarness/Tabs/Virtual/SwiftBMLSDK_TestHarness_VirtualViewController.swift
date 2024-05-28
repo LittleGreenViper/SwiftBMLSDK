@@ -222,9 +222,6 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     override func viewWillAppear(_ inIsAnimated: Bool) {
         super.viewWillAppear(inIsAnimated)
         if !_dontReload {
-            prefs.clearSearchResults()
-            myTabController?.updateEnablements()
-            isThrobbing = true
             reloadMeetings()
         }
         _dontReload = false
@@ -259,6 +256,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     @IBAction func reloadMeetings(_: Any! = nil) {
         isThrobbing = true
+        prefs.clearSearchResults()
+        myTabController?.updateEnablements()
         _refreshControl?.endRefreshing()
         findMeetings { DispatchQueue.main.async { self.reloadData() } }
     }
