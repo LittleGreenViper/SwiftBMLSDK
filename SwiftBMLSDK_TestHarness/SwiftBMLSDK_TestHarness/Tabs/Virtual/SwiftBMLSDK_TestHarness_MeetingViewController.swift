@@ -85,7 +85,7 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /* ################################################################## */
     /**
      */
-    var meeting: SwiftBMLSDK_Parser.Meeting?
+    var meeting: MeetingInstance?
     
     /* ################################################################## */
     /**

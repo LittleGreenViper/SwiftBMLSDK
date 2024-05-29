@@ -88,7 +88,7 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     /* ################################################################## */
     /**
      */
-    private var _cachedTableFood: (current: [SwiftBMLSDK_Parser.Meeting], upcoming: [SwiftBMLSDK_Parser.Meeting])?
+    private var _cachedTableFood: (current: [MeetingInstance], upcoming: [MeetingInstance])?
 
     /* ################################################################## */
     /**
@@ -119,7 +119,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      The meetings from the last search.
      */
-    var tableFood: (current: [SwiftBMLSDK_Parser.Meeting], upcoming: [SwiftBMLSDK_Parser.Meeting]) {
+    var tableFood: (current: [MeetingInstance], upcoming: [MeetingInstance]) {
         guard nil == _cachedTableFood else { return _cachedTableFood! }
         
         let tableFodder = tableFodder
@@ -236,7 +236,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
         guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
-              let meetingInstance = inMeeting as? SwiftBMLSDK_Parser.Meeting
+              let meetingInstance = inMeeting as? MeetingInstance
         else { return }
         _dontReload = true
         destination.isNormalizedTime = true
@@ -290,7 +290,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      
      - parameter inMeeting: The meeting instance.
      */
-    func selectMeeting(_ inMeeting: SwiftBMLSDK_Parser.Meeting) {
+    func selectMeeting(_ inMeeting: MeetingInstance) {
         performSegue(withIdentifier: Self._showMeetingSegueID, sender: inMeeting)
     }
     
@@ -366,7 +366,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
     func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
         let ret = inTableView.dequeueReusableCell(withIdentifier: "simple-table", for: inIndexPath)
 
-        var meeting: SwiftBMLSDK_Parser.Meeting
+        var meeting: MeetingInstance
         
         if 2 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
             meeting = tableFood.current[inIndexPath.row]
@@ -439,7 +439,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDelegate {
      - returns: nil (all the time).
      */
     func tableView(_: UITableView, willSelectRowAt inIndexPath: IndexPath) -> IndexPath? {
-        var meeting: SwiftBMLSDK_Parser.Meeting
+        var meeting: MeetingInstance
         
         if 2 == timeTypeSegmentedSwitch?.selectedSegmentIndex {
             meeting = tableFood.current[inIndexPath.row]
