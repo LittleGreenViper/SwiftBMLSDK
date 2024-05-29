@@ -108,6 +108,11 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     /* ################################################################## */
     /**
      */
+    @IBOutlet weak var customBarButton: UIBarButtonItem?
+    
+    /* ################################################################## */
+    /**
+     */
     @IBOutlet weak var throbberView: UIView?
 }
 
@@ -203,6 +208,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         _refreshControl?.addTarget(self, action: #selector(reloadMeetings), for: .valueChanged)
         meetingsTableView?.refreshControl = _refreshControl
         meetingsTableView?.sectionHeaderTopPadding = 0
+        customBarButton?.title = customBarButton?.title?.localizedVariant
+        
         for index in 0..<(typeSegmentedSwitch?.numberOfSegments ?? 0) {
             let title = "SLUG-VIRTUAL-SWITCH-\(index)".localizedVariant
             typeSegmentedSwitch?.setTitle(title, forSegmentAt: index)
@@ -235,12 +242,14 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      - parameter sender: The meeting instance.
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
-        guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
-              let meetingInstance = inMeeting as? MeetingInstance
-        else { return }
-        _dontReload = true
-        destination.isNormalizedTime = true
-        destination.meeting = meetingInstance
+        if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
+           let meetingInstance = inMeeting as? MeetingInstance {
+            _dontReload = true
+            destination.isNormalizedTime = true
+            destination.meeting = meetingInstance
+        } else if inSegue.destination is SwiftBMLSDK_TestHarness_VirtualCustomViewController {
+            _dontReload = true
+        }
     }
 }
 

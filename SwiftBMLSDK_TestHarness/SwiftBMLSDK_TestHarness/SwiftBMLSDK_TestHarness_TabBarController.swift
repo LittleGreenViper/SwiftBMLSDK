@@ -132,6 +132,9 @@ class SwiftBMLSDK_TestHarness_TabBaseViewController: SwiftBMLSDK_TestHarness_Bas
         super.viewWillAppear(inIsAnimated)
         myNavItem?.title = tabBarItem?.title?.localizedVariant
         
+        myTabController?.navigationItem.rightBarButtonItems = nil
+        myTabController?.navigationItem.leftBarButtonItems = nil
+
         guard let rightItems = navigationItem.rightBarButtonItems,
               !rightItems.isEmpty
         else { return }
