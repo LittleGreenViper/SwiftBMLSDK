@@ -22,28 +22,23 @@ import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
-// MARK: - Server Virtual Search Custom View Controller -
+// MARK: - Server Virtual Search Custom View Controller (0) -
 /* ###################################################################################################################################### */
 /**
  */
-class SwiftBMLSDK_TestHarness_VirtualCustomViewController: SwiftBMLSDK_TestHarness_BaseViewController {
-    /* ################################################################## */
-    /**
-     */
-    @IBOutlet weak var custom0Button: UIButton?
+class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarness_BaseViewController {
 }
 
 /* ###################################################################################################################################### */
 // MARK: Base Class Overrides
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_VirtualCustomViewController {
+extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
     /* ################################################################## */
     /**
      Called when the view hierarchy has loaded.
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "SLUG-CUSTOM-TITLE".localizedVariant
-        custom0Button?.setTitle(custom0Button?.title(for: .normal)?.localizedVariant, for: .normal)
+        navigationItem.title = "SLUG-CUSTOM-0-BUTTON".localizedVariant
     }
 }

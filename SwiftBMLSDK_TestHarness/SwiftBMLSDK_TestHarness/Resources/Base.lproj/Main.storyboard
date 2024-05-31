@@ -804,14 +804,58 @@
                     <view key="view" contentMode="scaleToFill" id="Ndr-gR-WvA">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="Imi-CU-rGe">
+                                <rect key="frame" x="16" y="103" width="361" height="617"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZaJ-zq-n7e">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="617"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="SLUG-CUSTOM-0-BUTTON"/>
+                                        <connections>
+                                            <segue destination="4MP-wk-Ggy" kind="show" id="9C6-2Q-3O0"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="ZaJ-zq-n7e" firstAttribute="leading" secondItem="Imi-CU-rGe" secondAttribute="leading" id="mi8-HO-ZdK"/>
+                                    <constraint firstAttribute="trailing" secondItem="ZaJ-zq-n7e" secondAttribute="trailing" id="qMZ-7E-tcz"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="xYH-LC-Gf9"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Imi-CU-rGe" firstAttribute="bottom" secondItem="xYH-LC-Gf9" secondAttribute="bottom" placeholder="YES" id="0el-sP-Nri"/>
+                            <constraint firstItem="Imi-CU-rGe" firstAttribute="top" secondItem="xYH-LC-Gf9" secondAttribute="top" id="7Bj-jg-B0F"/>
+                            <constraint firstItem="xYH-LC-Gf9" firstAttribute="trailing" secondItem="Imi-CU-rGe" secondAttribute="trailing" constant="16" id="nX8-iT-DhX"/>
+                            <constraint firstItem="Imi-CU-rGe" firstAttribute="leading" secondItem="xYH-LC-Gf9" secondAttribute="leading" constant="16" id="qGs-4i-esK"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="JtR-6h-cwn"/>
+                    <connections>
+                        <outlet property="custom0Button" destination="ZaJ-zq-n7e" id="MzU-gx-XkD"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fe4-XG-fbN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1227" y="388"/>
+            <point key="canvasLocation" x="1226.7175572519084" y="387.32394366197184"/>
+        </scene>
+        <!--SwiftBMLSDK Test Harness Virtual Custom0 View Controller-->
+        <scene sceneID="cI3-TY-IuN">
+            <objects>
+                <viewController id="4MP-wk-Ggy" customClass="SwiftBMLSDK_TestHarness_VirtualCustom0ViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BM9-4l-WHD">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="ote-KF-BDt"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ddO-r7-AEf"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FDz-gu-xpK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2337" y="387"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
