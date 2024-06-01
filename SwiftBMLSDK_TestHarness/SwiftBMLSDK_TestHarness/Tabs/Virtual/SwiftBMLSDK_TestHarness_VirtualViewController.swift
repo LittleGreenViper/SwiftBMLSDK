@@ -72,7 +72,7 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     /**
      This handles transactions with the server.
      */
-    private var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
+    private var _virtualService: SwiftBMLSDK_VirtualMeetingCollection?
 
     /* ################################################################## */
     /**
@@ -148,8 +148,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
             return (current: current, upcoming: upcoming)
         }
         
-        guard let meetings = virtualService?.meetings.sorted (by: { a, b in a.nextDate < b.nextDate }) else { return (current: [], upcoming: []) }
-        _cachedMeetings = virtualService
+        guard let meetings = _virtualService?.meetings.sorted (by: { a, b in a.nextDate < b.nextDate }) else { return (current: [], upcoming: []) }
+        _cachedMeetings = _virtualService
         
         var current = [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]()
         var upcoming = [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]()
@@ -247,7 +247,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
             _dontReload = true
             destination.isNormalizedTime = true
             destination.meeting = meetingInstance
-        } else if inSegue.destination is SwiftBMLSDK_TestHarness_VirtualCustomViewController {
+        } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustomViewController {
+            destination.virtualService = _virtualService
             _dontReload = true
         }
     }
@@ -310,7 +311,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      - parameter completion: A tail completion proc.
      */
     func findMeetings(completion inCompletion: (() -> Void)?) {
-        virtualService = SwiftBMLSDK_VirtualMeetingCollection(query: prefs.queryInstance) { inCollection in
+        _virtualService = SwiftBMLSDK_VirtualMeetingCollection(query: prefs.queryInstance) { inCollection in
             DispatchQueue.main.async {
                 guard let switchMan = self.typeSegmentedSwitch else { return }
                 

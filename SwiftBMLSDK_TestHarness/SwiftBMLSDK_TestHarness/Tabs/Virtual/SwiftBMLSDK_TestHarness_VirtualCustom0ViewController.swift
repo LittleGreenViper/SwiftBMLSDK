@@ -28,6 +28,15 @@ import SwiftBMLSDK
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarness_BaseViewController {
     /* ################################################################################################################################## */
+    // MARK: Typealias for the data to be sent to the list.
+    /* ################################################################################################################################## */
+    /**
+     - parameter meetingList: The list of meetings
+     - parameter title: The page title for the list.
+     */
+    typealias MeetingRecord = (meetingList: [MeetingInstance], title: String)
+    
+    /* ################################################################################################################################## */
     // MARK: Enums for the Selected Button
     /* ################################################################################################################################## */
     /**
@@ -79,7 +88,13 @@ class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarn
      The segue ID to the list display.
      */
     private static let _showListSegueID = "show-list"
-    
+
+    /* ################################################################## */
+    /**
+     This handles the server data.
+     */
+    var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
+
     /* ################################################################## */
     /**
      */
@@ -164,6 +179,11 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
     /**
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inListData: Any?) {
+        guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_ListViewController,
+              let meetingRecord = inListData as? MeetingRecord
+        else { return }
+        destination.title = meetingRecord.title
+        destination.meetings = meetingRecord.meetingList
     }
 }
 
@@ -201,6 +221,34 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
     /**
      */
     @IBAction func buttonHit(_ inButton: UIButton) {
-        performSegue(withIdentifier: Self._showListSegueID, sender: nil)
+        guard let virtualService = virtualService else { return }
+        
+        var meetingRecord: MeetingRecord?
+        
+        switch inButton {
+        case button0:
+            let current = virtualService.meetings.compactMap { $0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            meetingRecord = MeetingRecord(meetingList: current, title: "SLUG-MEETING-DISPLAY-0".localizedVariant)
+        case button1:
+            break
+        case button2:
+            break
+        case button3:
+            break
+        case button4:
+            break
+        case button5:
+            break
+        case button6:
+            break
+        case button7:
+            break
+        default:
+            break
+        }
+        
+        guard let meetingRecord = meetingRecord else { return }
+        
+        performSegue(withIdentifier: Self._showListSegueID, sender: meetingRecord)
     }
 }

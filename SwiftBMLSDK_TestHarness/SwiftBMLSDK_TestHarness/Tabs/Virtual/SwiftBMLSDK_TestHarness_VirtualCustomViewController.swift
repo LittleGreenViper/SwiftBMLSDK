@@ -31,6 +31,12 @@ class SwiftBMLSDK_TestHarness_VirtualCustomViewController: SwiftBMLSDK_TestHarne
     /**
      */
     @IBOutlet weak var custom0Button: UIButton?
+
+    /* ################################################################## */
+    /**
+     This handles the server data.
+     */
+    var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
 }
 
 /* ###################################################################################################################################### */
@@ -45,5 +51,18 @@ extension SwiftBMLSDK_TestHarness_VirtualCustomViewController {
         super.viewDidLoad()
         navigationItem.title = "SLUG-CUSTOM-TITLE".localizedVariant
         custom0Button?.setTitle(custom0Button?.title(for: .normal)?.localizedVariant, for: .normal)
+    }
+    
+    /* ################################################################## */
+    /**
+     Called before we switch to the meeting inspector.
+     
+     - parameter for: The segue we are executing.
+     - parameter sender: The meeting instance.
+     */
+    override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
+        if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
+            destination.virtualService = virtualService
+        }
     }
 }

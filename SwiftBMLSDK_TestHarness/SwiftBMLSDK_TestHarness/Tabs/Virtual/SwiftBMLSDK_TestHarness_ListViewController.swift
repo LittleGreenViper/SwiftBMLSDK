@@ -64,19 +64,9 @@ class SwiftBMLSDK_TestHarness_ListViewController: SwiftBMLSDK_TestHarness_TabBas
 
     /* ################################################################## */
     /**
-     This handles transactions with the server.
+     This handles the meeting collection for this.
      */
-    private var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
-    
-    /* ################################################################## */
-    /**
-     */
-    private var _cachedMeetings: SwiftBMLSDK_VirtualMeetingCollection? { didSet { if nil == _cachedMeetings { _cachedTableFood = nil } } }
-    
-    /* ################################################################## */
-    /**
-     */
-    private var _cachedTableFood: (current: [MeetingInstance], upcoming: [MeetingInstance])?
+    var meetings: [MeetingInstance] = []
     
     /* ################################################################## */
     /**
@@ -93,42 +83,6 @@ class SwiftBMLSDK_TestHarness_ListViewController: SwiftBMLSDK_TestHarness_TabBas
 // MARK: Computed Properties
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_ListViewController {
-    /* ################################################################## */
-    /**
-     The meetings from the last search.
-     */
-    var tableFood: (current: [MeetingInstance], upcoming: [MeetingInstance]) {
-        guard nil == _cachedTableFood else { return _cachedTableFood! }
-        
-        let tableFodder = tableFodder
-        
-        let newTableFood = (current: tableFodder.current.map { $0.meeting }, upcoming: tableFodder.upcoming.map { $0.meeting })
-        
-        _cachedTableFood = newTableFood
-        
-        return newTableFood
-    }
-    
-    /* ################################################################## */
-    /**
-     The meetings from the last search.
-     */
-    var tableFodder: (current: [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting], upcoming: [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]) {
-        guard nil == _cachedMeetings
-        else {
-            let current = _cachedMeetings?.meetings.compactMap { $0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate } ?? []
-            let upcoming = _cachedMeetings?.meetings.compactMap { !$0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate } ?? []
-            return (current: current, upcoming: upcoming)
-        }
-        
-        _cachedMeetings = virtualService
-        
-        let current = [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]()
-        let upcoming = [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]()
-        
-        return (current: current, upcoming: upcoming)
-    }
-    
     /* ################################################################## */
     /**
      Hides or shows the throbber.
@@ -152,6 +106,7 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = title
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
         isThrobbing = false
         meetingsTableView?.sectionHeaderTopPadding = 0
@@ -169,26 +124,6 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
            let meetingInstance = inMeeting as? MeetingInstance {
             destination.isNormalizedTime = true
             destination.meeting = meetingInstance
-        }
-    }
-}
-
-/* ###################################################################################################################################### */
-// MARK: Callbacks
-/* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_ListViewController {
-    /* ################################################################## */
-    /**
-     Refreshes the user data.
-     
-     - parameter: ignored (and can be omitted).
-     */
-    @IBAction func reloadData(_: Any! = nil) {
-        isThrobbing = true
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(20)) {
-            self._cachedMeetings = nil
-            self.meetingsTableView?.reloadData()
-            self.isThrobbing = false
         }
     }
 }
@@ -214,21 +149,11 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
 extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
     /* ################################################################## */
     /**
-     - parameter in: The table view (ignored).
-     
-     - returns: 1 or 2 (depending on the switch setting).
-     */
-    func numberOfSections(in: UITableView) -> Int { (tableFood.current.isEmpty || tableFood.upcoming.isEmpty) ? 1 : 2 }
-    
-    /* ################################################################## */
-    /**
      - parameter: The table view (ignored).
      - parameter numberOfRowsInSection: The 0-based section index.
      - returns: The number of meetings in the given section.
      */
-    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int {
-        return (0 == inSection ? tableFood.current : tableFood.upcoming).count
-    }
+    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int { meetings.count }
     
     /* ################################################################## */
     /**
@@ -239,7 +164,7 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
     func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
         let ret = inTableView.dequeueReusableCell(withIdentifier: "simple-table", for: inIndexPath)
 
-        var meeting = 0 == inIndexPath.section ? tableFood.current[inIndexPath.row] : tableFood.upcoming[inIndexPath.row]
+        var meeting = meetings[inIndexPath.row]
 
         let nextDate = meeting.getNextStartDate(isAdjusted: true)
         let formatter = DateFormatter()
@@ -267,29 +192,6 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
 extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDelegate {
     /* ################################################################## */
     /**
-     Returns the displayed header for the given section.
-     
-     - parameter: The table view (ignored)
-     - parameter viewForHeaderInSection: The 0-based section index.
-     - returns: The header view (a label).
-     */
-    func tableView(_: UITableView, viewForHeaderInSection inSection: Int) -> UIView? {
-        var title: String
-
-        title = "SLUG-SECTION-\(inSection)-HEADER".localizedVariant
-
-        let ret = UILabel()
-        ret.text = title
-        ret.textAlignment = .center
-        ret.font = .boldSystemFont(ofSize: 20)
-        ret.textColor = .white
-        ret.backgroundColor = .black
-        
-        return ret
-    }
-    
-    /* ################################################################## */
-    /**
      Called when a cell is selected. We will use this to open the user viewer.
      
      - parameter: The table view (ignored)
@@ -297,7 +199,7 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDelegate {
      - returns: nil (all the time).
      */
     func tableView(_: UITableView, willSelectRowAt inIndexPath: IndexPath) -> IndexPath? {
-        let meeting = 0 == inIndexPath.section ? tableFood.current[inIndexPath.row] : tableFood.upcoming[inIndexPath.row]
+        let meeting = meetings[inIndexPath.row]
         selectMeeting(meeting)
         return nil
     }
