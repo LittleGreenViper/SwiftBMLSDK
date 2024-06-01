@@ -185,6 +185,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
             meetingsTableView?.isHidden = newValue
             typeSegmentedSwitch?.isHidden = newValue
             timeTypeSegmentedSwitch?.isHidden = newValue
+            customBarButton?.isEnabled = !newValue
             if !newValue {
                 _refreshControl?.endRefreshing()
             }

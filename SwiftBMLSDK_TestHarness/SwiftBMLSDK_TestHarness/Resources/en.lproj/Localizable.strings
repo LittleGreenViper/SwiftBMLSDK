@@ -81,6 +81,8 @@
 "SLUG-CUSTOM-0-X-BUTTON-FORMAT"                 =   "Meetings on %@";
 
 "SLUG-MEETING-DISPLAY-0"                        =   "In Progress";
+"SLUG-MEETING-DISPLAY-1"                        =   "Later Today";
+"SLUG-MEETING-DISPLAY-2"                        =   "Tomorrow";
 
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";

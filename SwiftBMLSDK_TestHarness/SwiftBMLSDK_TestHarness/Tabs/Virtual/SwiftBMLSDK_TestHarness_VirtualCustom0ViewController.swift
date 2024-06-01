@@ -152,9 +152,6 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
         button1?.setTitle("SLUG-CUSTOM-0-1-BUTTON".localizedVariant, for: .normal)
         
         var currentDay = Calendar.current.component(.weekday, from: .now) + 1
-        if 7 < currentDay {
-            currentDay -= 7
-        }
         
         var weekdayStuff = Self.mapWeekday(currentDay)
         button2?.setTitle(String(format: "SLUG-CUSTOM-0-2-BUTTON-FORMAT".localizedVariant, weekdayStuff.string), for: .normal)
@@ -195,7 +192,13 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
     /**
      */
     static func mapWeekday(_ inWeekdayIndex: Int) -> (weekdayIndex: Int, string: String) {
-        var weekdayIndex = (inWeekdayIndex - Calendar.current.firstWeekday)
+        var currentDay = inWeekdayIndex
+        
+        if 7 < currentDay {
+            currentDay -= 7
+        }
+        
+        var weekdayIndex = (currentDay - Calendar.current.firstWeekday)
         
         if 0 > weekdayIndex {
             weekdayIndex += 7
@@ -225,24 +228,48 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
         
         var meetingRecord: MeetingRecord?
         
+        var weekdayIndex = (Calendar.current.component(.weekday, from: .now) - Calendar.current.firstWeekday)
+        if 0 > weekdayIndex {
+            weekdayIndex += 7
+        }
+        
+        let currentDay = Calendar.current.component(.weekday, from: .now)
+        
         switch inButton {
         case button0:
             let current = virtualService.meetings.compactMap { $0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
             meetingRecord = MeetingRecord(meetingList: current, title: "SLUG-MEETING-DISPLAY-0".localizedVariant)
         case button1:
-            break
+            let current = virtualService.meetings.compactMap { !$0.isInProgress && $0.nextDate > .now && $0.nextDate.isOnTheSameDayAs(.now) ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            meetingRecord = MeetingRecord(meetingList: current, title: "SLUG-MEETING-DISPLAY-1".localizedVariant)
         case button2:
-            break
+            let current = virtualService.meetings.compactMap { !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(.now.addingTimeInterval(86400)) ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            meetingRecord = MeetingRecord(meetingList: current, title: "SLUG-MEETING-DISPLAY-2".localizedVariant)
         case button3:
-            break
+            let weekdayStuff = Self.mapWeekday(currentDay + 2)
+            let theDayDate = Date.now.addingTimeInterval(86400 * 2)
+            let current = virtualService.meetings.compactMap { !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(theDayDate) ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            meetingRecord = MeetingRecord(meetingList: current, title: weekdayStuff.string)
         case button4:
-            break
+            let weekdayStuff = Self.mapWeekday(currentDay + 3)
+            let theDayDate = Date.now.addingTimeInterval(86400 * 3)
+            let current = virtualService.meetings.compactMap { !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(theDayDate) ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            meetingRecord = MeetingRecord(meetingList: current, title: weekdayStuff.string)
         case button5:
-            break
+            let weekdayStuff = Self.mapWeekday(currentDay + 4)
+            let theDayDate = Date.now.addingTimeInterval(86400 * 4)
+            let current = virtualService.meetings.compactMap { !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(theDayDate) ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            meetingRecord = MeetingRecord(meetingList: current, title: weekdayStuff.string)
         case button6:
-            break
+            let weekdayStuff = Self.mapWeekday(currentDay + 5)
+            let theDayDate = Date.now.addingTimeInterval(86400 * 5)
+            let current = virtualService.meetings.compactMap { !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(theDayDate) ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            meetingRecord = MeetingRecord(meetingList: current, title: weekdayStuff.string)
         case button7:
-            break
+            let weekdayStuff = Self.mapWeekday(currentDay + 6)
+            let theDayDate = Date.now.addingTimeInterval(86400 * 6)
+            let current = virtualService.meetings.compactMap { !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(theDayDate) ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            meetingRecord = MeetingRecord(meetingList: current, title: weekdayStuff.string)
         default:
             break
         }
