@@ -75,5 +75,10 @@
 "SLUG-CUSTOM-TITLE"                             =   "Custom Tests";
 "SLUG-CUSTOM-0-BUTTON"                          =   "Custom Test 1";
 
+"SLUG-CUSTOM-0-0-BUTTON"                        =   "Meetings Currently in Progress";
+"SLUG-CUSTOM-0-1-BUTTON"                        =   "Meetings Later Today";
+"SLUG-CUSTOM-0-2-BUTTON-FORMAT"                 =   "Meetings Tomorrow (%@)";
+"SLUG-CUSTOM-0-X-BUTTON-FORMAT"                 =   "Meetings on %@";
+
 // Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
 "SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";

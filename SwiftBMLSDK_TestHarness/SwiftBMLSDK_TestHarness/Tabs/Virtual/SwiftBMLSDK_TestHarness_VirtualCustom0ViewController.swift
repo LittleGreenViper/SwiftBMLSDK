@@ -27,6 +27,92 @@ import SwiftBMLSDK
 /**
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarness_BaseViewController {
+    /* ################################################################################################################################## */
+    // MARK: Enums for the Selected Button
+    /* ################################################################################################################################## */
+    /**
+     */
+    enum ButtonWeekday: Int {
+        /* ############################################################## */
+        /**
+         */
+        case inProgress = 0
+        
+        /* ############################################################## */
+        /**
+         */
+        case sunday
+        
+        /* ############################################################## */
+        /**
+         */
+        case monday
+        
+        /* ############################################################## */
+        /**
+         */
+        case tuesday
+        
+        /* ############################################################## */
+        /**
+         */
+        case wednesday
+        
+        /* ############################################################## */
+        /**
+         */
+        case thursday
+        
+        /* ############################################################## */
+        /**
+         */
+        case friday
+        
+        /* ############################################################## */
+        /**
+         */
+        case saturday
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var button0: UIButton?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var button1: UIButton?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var button2: UIButton?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var button3: UIButton?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var button4: UIButton?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var button5: UIButton?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var button6: UIButton?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var button7: UIButton?
 }
 
 /* ###################################################################################################################################### */
@@ -40,5 +126,75 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "SLUG-CUSTOM-0-BUTTON".localizedVariant
+        
+        button0?.setTitle("SLUG-CUSTOM-0-0-BUTTON".localizedVariant, for: .normal)
+        button1?.setTitle("SLUG-CUSTOM-0-1-BUTTON".localizedVariant, for: .normal)
+        
+        var currentDay = Calendar.current.component(.weekday, from: .now) + 1
+        if 7 < currentDay {
+            currentDay -= 7
+        }
+        
+        var weekdayStuff = Self.mapWeekday(currentDay)
+        button2?.setTitle(String(format: "SLUG-CUSTOM-0-2-BUTTON-FORMAT".localizedVariant, weekdayStuff.string), for: .normal)
+        currentDay += 1
+        weekdayStuff = Self.mapWeekday(currentDay)
+        button3?.setTitle(String(format: "SLUG-CUSTOM-0-X-BUTTON-FORMAT".localizedVariant, weekdayStuff.string), for: .normal)
+        currentDay += 1
+        weekdayStuff = Self.mapWeekday(currentDay)
+        button4?.setTitle(String(format: "SLUG-CUSTOM-0-X-BUTTON-FORMAT".localizedVariant, weekdayStuff.string), for: .normal)
+        currentDay += 1
+        weekdayStuff = Self.mapWeekday(currentDay)
+        button5?.setTitle(String(format: "SLUG-CUSTOM-0-X-BUTTON-FORMAT".localizedVariant, weekdayStuff.string), for: .normal)
+        currentDay += 1
+        weekdayStuff = Self.mapWeekday(currentDay)
+        button6?.setTitle(String(format: "SLUG-CUSTOM-0-X-BUTTON-FORMAT".localizedVariant, weekdayStuff.string), for: .normal)
+        currentDay += 1
+        weekdayStuff = Self.mapWeekday(currentDay)
+        button7?.setTitle(String(format: "SLUG-CUSTOM-0-X-BUTTON-FORMAT".localizedVariant, weekdayStuff.string), for: .normal)
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    override func prepare(for inSegue: UIStoryboardSegue, sender inButtonIndex: Any?) {
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Static Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
+    /* ################################################################## */
+    /**
+     */
+    static func mapWeekday(_ inWeekdayIndex: Int) -> (weekdayIndex: Int, string: String) {
+        var weekdayIndex = (inWeekdayIndex - Calendar.current.firstWeekday)
+        
+        if 0 > weekdayIndex {
+            weekdayIndex += 7
+        }
+        
+        let weekdaySymbols = Calendar.current.weekdaySymbols
+        let weekdayName = weekdaySymbols[weekdayIndex]
+        return (weekdayIndex: weekdayIndex + 1, string: weekdayName)
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Instance Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
+}
+
+/* ###################################################################################################################################### */
+// MARK: Callbacks
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
+    /* ################################################################## */
+    /**
+     */
+    @IBAction func buttonHit(_ inButton: UIButton) {
+        
     }
 }

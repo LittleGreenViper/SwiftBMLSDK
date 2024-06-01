@@ -848,14 +848,107 @@
                     <view key="view" contentMode="scaleToFill" id="BM9-4l-WHD">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="svZ-ya-k4F">
+                                <rect key="frame" x="16" y="103" width="361" height="617"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vqm-Ww-5j2">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="77"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="In-Progress"/>
+                                        <connections>
+                                            <action selector="buttonHit:" destination="4MP-wk-Ggy" eventType="touchUpInside" id="4h9-hf-jB9"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D42-OR-PPG">
+                                        <rect key="frame" x="0.0" y="77" width="361" height="77.333333333333314"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Later Today"/>
+                                        <connections>
+                                            <action selector="buttonHit:" destination="4MP-wk-Ggy" eventType="touchUpInside" id="jMQ-te-dYg"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fdl-Bm-hRJ">
+                                        <rect key="frame" x="0.0" y="154.33333333333331" width="69" height="77"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Tomorrow"/>
+                                        <connections>
+                                            <action selector="buttonHit:" destination="4MP-wk-Ggy" eventType="touchUpInside" id="NTM-23-L2H"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OaT-xS-9H4">
+                                        <rect key="frame" x="0.0" y="231.33333333333334" width="137" height="77.333333333333343"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Day After Tomorrow"/>
+                                        <connections>
+                                            <action selector="buttonHit:" destination="4MP-wk-Ggy" eventType="touchUpInside" id="IYP-l0-vBh"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zGT-ZJ-v3K">
+                                        <rect key="frame" x="0.0" y="308.66666666666669" width="205" height="77"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Day After Day After Tomorrow"/>
+                                        <connections>
+                                            <action selector="buttonHit:" destination="4MP-wk-Ggy" eventType="touchUpInside" id="irf-wv-GSx"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yjh-oa-JRq">
+                                        <rect key="frame" x="0.0" y="385.66666666666669" width="273" height="77"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Day After Day After Day After Tomorrow"/>
+                                        <connections>
+                                            <action selector="buttonHit:" destination="4MP-wk-Ggy" eventType="touchUpInside" id="p2Y-tl-HwU"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7ba-ig-dcZ">
+                                        <rect key="frame" x="0.0" y="462.66666666666663" width="341" height="77.333333333333371"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Day After Day After Day After Day After Tomorrow"/>
+                                        <connections>
+                                            <action selector="buttonHit:" destination="4MP-wk-Ggy" eventType="touchUpInside" id="Mx1-0p-Tbl"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eIV-fi-U4Z">
+                                        <rect key="frame" x="0.0" y="540" width="60" height="77"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Last Day"/>
+                                        <connections>
+                                            <action selector="buttonHit:" destination="4MP-wk-Ggy" eventType="touchUpInside" id="3uE-yO-kfH"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="D42-OR-PPG" firstAttribute="leading" secondItem="svZ-ya-k4F" secondAttribute="leading" id="IiN-b6-pql"/>
+                                    <constraint firstAttribute="trailing" secondItem="vqm-Ww-5j2" secondAttribute="trailing" id="pZ2-rB-jWM"/>
+                                    <constraint firstAttribute="trailing" secondItem="D42-OR-PPG" secondAttribute="trailing" id="saX-By-JcZ"/>
+                                    <constraint firstItem="vqm-Ww-5j2" firstAttribute="leading" secondItem="svZ-ya-k4F" secondAttribute="leading" id="z7C-v6-CzQ"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="ote-KF-BDt"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ote-KF-BDt" firstAttribute="trailing" secondItem="svZ-ya-k4F" secondAttribute="trailing" constant="16" id="2WE-BS-Mzo"/>
+                            <constraint firstItem="svZ-ya-k4F" firstAttribute="bottom" secondItem="ote-KF-BDt" secondAttribute="bottom" placeholder="YES" id="VSD-vf-Pio"/>
+                            <constraint firstItem="svZ-ya-k4F" firstAttribute="leading" secondItem="ote-KF-BDt" secondAttribute="leading" constant="16" id="dVg-Ai-YZN"/>
+                            <constraint firstItem="svZ-ya-k4F" firstAttribute="top" secondItem="ote-KF-BDt" secondAttribute="top" id="o9e-FN-V2g"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ddO-r7-AEf"/>
+                    <connections>
+                        <outlet property="button0" destination="vqm-Ww-5j2" id="jfn-TQ-6qp"/>
+                        <outlet property="button1" destination="D42-OR-PPG" id="Ogb-XI-jdx"/>
+                        <outlet property="button2" destination="fdl-Bm-hRJ" id="7Sm-bE-8KH"/>
+                        <outlet property="button3" destination="OaT-xS-9H4" id="U3t-Wr-3bb"/>
+                        <outlet property="button4" destination="zGT-ZJ-v3K" id="dea-sQ-vyR"/>
+                        <outlet property="button5" destination="yjh-oa-JRq" id="A4I-sn-mgr"/>
+                        <outlet property="button6" destination="7ba-ig-dcZ" id="Xhe-Wn-iuT"/>
+                        <outlet property="button7" destination="eIV-fi-U4Z" id="kcl-dU-34w"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FDz-gu-xpK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2337" y="387"/>
+            <point key="canvasLocation" x="2336.6412213740459" y="386.61971830985919"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
