@@ -1036,21 +1036,39 @@
                     <view key="view" contentMode="scaleToFill" id="gc4-Et-rip">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Snu-3a-xwR" customClass="RVS_CalendarInput" customModule="RVS_CalendarInput">
+                                <rect key="frame" x="16" y="103" width="361" height="617"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showMonthHeaders" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showYearHeaders" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showWeekdayHeader" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="pnw-N1-dme"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="pnw-N1-dme" firstAttribute="trailing" secondItem="Snu-3a-xwR" secondAttribute="trailing" constant="16" id="0A0-rs-h0e"/>
+                            <constraint firstItem="Snu-3a-xwR" firstAttribute="leading" secondItem="pnw-N1-dme" secondAttribute="leading" constant="16" id="JYj-td-sDX"/>
+                            <constraint firstItem="Snu-3a-xwR" firstAttribute="bottom" secondItem="pnw-N1-dme" secondAttribute="bottom" id="f8r-6M-PRr"/>
+                            <constraint firstItem="Snu-3a-xwR" firstAttribute="top" secondItem="pnw-N1-dme" secondAttribute="top" id="kAC-3d-s3f"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="QIW-gZ-PZ6"/>
                     <connections>
+                        <outlet property="calendarView" destination="Snu-3a-xwR" id="qfK-Rm-kKV"/>
                         <segue destination="HxT-KC-ewF" kind="show" identifier="show-list" id="2JD-up-rXd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e6U-md-4c1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2337" y="1123"/>
+            <point key="canvasLocation" x="2336.6412213740459" y="1122.5352112676057"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="q1C-iD-ltS"/>
+        <segue reference="2JD-up-rXd"/>
         <segue reference="dPf-Rf-74a"/>
     </inferredMetricsTieBreakers>
     <resources>
