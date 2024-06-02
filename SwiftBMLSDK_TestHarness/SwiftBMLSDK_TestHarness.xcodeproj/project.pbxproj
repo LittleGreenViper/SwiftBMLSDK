@@ -31,6 +31,8 @@
 		D488D29E2B82CE40000979D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D488D29D2B82CE40000979D9 /* Assets.xcassets */; };
 		D488D2AB2B82CF3F000979D9 /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; };
 		D488D2AC2B82CF3F000979D9 /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D49D883E2C0CB3DB002B232F /* RVS_CalendarInput in Frameworks */ = {isa = PBXBuildFile; productRef = D49D883D2C0CB3DB002B232F /* RVS_CalendarInput */; };
+		D49D88402C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49D883F2C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift */; };
 		D4A137132C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A137122C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift */; };
 		D4D4B7992B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */; };
 		D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift */; };
@@ -74,6 +76,7 @@
 		D488D29D2B82CE40000979D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D488D2A22B82CE40000979D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49D883F2C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift; sourceTree = "<group>"; };
 		D4A137122C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_ListViewController.swift; sourceTree = "<group>"; };
 		D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_InfoViewController.swift; sourceTree = "<group>"; };
 		D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_LocationSearchViewController.swift; sourceTree = "<group>"; };
@@ -86,6 +89,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D47C81722B85204800783B49 /* RVS_Persistent_Prefs in Frameworks */,
+				D49D883E2C0CB3DB002B232F /* RVS_CalendarInput in Frameworks */,
 				D40622182B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox in Frameworks */,
 				D488D2AB2B82CF3F000979D9 /* SwiftBMLSDK.framework in Frameworks */,
 				D42740192B913C220019DC48 /* RVS_UIKit_Toolbox in Frameworks */,
@@ -101,6 +105,7 @@
 				D4026F932BF6A8CC00649E81 /* SwiftBMLSDK_TestHarness_VirtualViewController.swift */,
 				D42CDEE42C079BE500A695AB /* SwiftBMLSDK_TestHarness_VirtualCustomViewController.swift */,
 				D485D21A2C0A024700B16BE4 /* SwiftBMLSDK_TestHarness_VirtualCustom0ViewController.swift */,
+				D49D883F2C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift */,
 				D4A137122C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift */,
 			);
 			path = Virtual;
@@ -220,6 +225,7 @@
 				D40622172B83BA1A009FFAB3 /* RVS_Generic_Swift_Toolbox */,
 				D47C81712B85204800783B49 /* RVS_Persistent_Prefs */,
 				D42740182B913C220019DC48 /* RVS_UIKit_Toolbox */,
+				D49D883D2C0CB3DB002B232F /* RVS_CalendarInput */,
 			);
 			productName = SwiftBMLSDK_TestHarness;
 			productReference = D488D2912B82CE3F000979D9 /* SwiftBMLSDK_TestHarness.app */;
@@ -253,6 +259,7 @@
 				D40622162B83BA1A009FFAB3 /* XCRemoteSwiftPackageReference "RVS_Generic_Swift_Toolbox" */,
 				D47C81702B85204800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */,
 				D42740172B913C220019DC48 /* XCRemoteSwiftPackageReference "RVS_UIKit_Toolbox" */,
+				D49D883C2C0CB3DB002B232F /* XCRemoteSwiftPackageReference "RVS_CalendarInput" */,
 			);
 			productRefGroup = D488D2922B82CE3F000979D9 /* Products */;
 			projectDirPath = "";
@@ -300,6 +307,7 @@
 				D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift in Sources */,
 				D476D4532B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift in Sources */,
 				D4D4B7992B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift in Sources */,
+				D49D88402C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift in Sources */,
 				D42740162B9134840019DC48 /* SwiftBMLSDK_TestHarness_MapResultsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -570,6 +578,14 @@
 				minimumVersion = 1.3.9;
 			};
 		};
+		D49D883C2C0CB3DB002B232F /* XCRemoteSwiftPackageReference "RVS_CalendarInput" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RiftValleySoftware/RVS_CalendarInput";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.5;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -587,6 +603,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D47C81702B85204800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */;
 			productName = RVS_Persistent_Prefs;
+		};
+		D49D883D2C0CB3DB002B232F /* RVS_CalendarInput */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D49D883C2C0CB3DB002B232F /* XCRemoteSwiftPackageReference "RVS_CalendarInput" */;
+			productName = RVS_CalendarInput;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

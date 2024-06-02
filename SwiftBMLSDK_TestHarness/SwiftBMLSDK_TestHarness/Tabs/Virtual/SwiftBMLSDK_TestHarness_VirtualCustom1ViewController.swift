@@ -20,55 +20,31 @@
 import UIKit
 import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
+import RVS_CalendarInput
 
 /* ###################################################################################################################################### */
-// MARK: - Server Virtual Search Custom View Controller -
+// MARK: - Server Virtual Search Custom View Controller (1) -
 /* ###################################################################################################################################### */
 /**
  */
-class SwiftBMLSDK_TestHarness_VirtualCustomViewController: SwiftBMLSDK_TestHarness_BaseViewController {
+class SwiftBMLSDK_TestHarness_VirtualCustom1ViewController: SwiftBMLSDK_TestHarness_BaseViewController {
     /* ################################################################## */
     /**
+     The segue ID to the list display.
      */
-    @IBOutlet weak var custom0Button: UIButton?
-
-    /* ################################################################## */
-    /**
-     */
-    @IBOutlet weak var custom1Button: UIButton?
-    
-    /* ################################################################## */
-    /**
-     This handles the server data.
-     */
-    var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
+    private static let _showListSegueID = "show-list"
 }
 
 /* ###################################################################################################################################### */
 // MARK: Base Class Overrides
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_VirtualCustomViewController {
+extension SwiftBMLSDK_TestHarness_VirtualCustom1ViewController {
     /* ################################################################## */
     /**
      Called when the view hierarchy has loaded.
      */
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "SLUG-CUSTOM-TITLE".localizedVariant
-        custom0Button?.setTitle(custom0Button?.title(for: .normal)?.localizedVariant, for: .normal)
-        custom1Button?.setTitle(custom1Button?.title(for: .normal)?.localizedVariant, for: .normal)
-    }
-    
-    /* ################################################################## */
-    /**
-     Called before we switch to the meeting inspector.
-     
-     - parameter for: The segue we are executing.
-     - parameter sender: The meeting instance.
-     */
-    override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
-        if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
-            destination.virtualService = virtualService
-        }
+        navigationItem.title = "SLUG-CUSTOM-1-BUTTON".localizedVariant
     }
 }

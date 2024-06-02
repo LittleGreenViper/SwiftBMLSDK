@@ -73,7 +73,8 @@
 "SLUG-STARTS-IN-HOURS-MINUTES-FORMAT"           =   "Starts in %d Hours and %d Minutes";
 
 "SLUG-CUSTOM-TITLE"                             =   "Custom Tests";
-"SLUG-CUSTOM-0-BUTTON"                          =   "Custom Test 1";
+"SLUG-CUSTOM-0-BUTTON"                          =   "Custom Test 1 (Simple List)";
+"SLUG-CUSTOM-1-BUTTON"                          =   "Custom Test 2 (Calendar Input)";
 
 "SLUG-CUSTOM-0-0-BUTTON"                        =   "Meetings Currently in Progress";
 "SLUG-CUSTOM-0-1-BUTTON"                        =   "Meetings Later Today";
@@ -83,6 +84,3 @@
 "SLUG-MEETING-DISPLAY-0"                        =   "In Progress";
 "SLUG-MEETING-DISPLAY-1"                        =   "Later Today";
 "SLUG-MEETING-DISPLAY-2"                        =   "Tomorrow";
-
-// Name, Organization, Start Time, Time Zone Name, Weekday Name, Duration
-"SLUG-ML-PARSE-SUMMARY-0-FORMAT"                = "\"%@\" is an %@ meeting, which starts at %@, %@, every %@, and lasts for %d minutes.";
