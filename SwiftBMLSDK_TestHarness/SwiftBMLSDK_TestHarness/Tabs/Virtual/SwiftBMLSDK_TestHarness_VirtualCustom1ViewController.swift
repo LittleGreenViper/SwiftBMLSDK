@@ -29,6 +29,15 @@ import RVS_CalendarInput
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom1ViewController: SwiftBMLSDK_TestHarness_BaseViewController {
     /* ################################################################################################################################## */
+    // MARK: Typealias for the data to be sent to the list.
+    /* ################################################################################################################################## */
+    /**
+     - parameter meetingList: The list of meetings
+     - parameter title: The page title for the list.
+     */
+    typealias MeetingRecord = (meetingList: [MeetingInstance], title: String)
+    
+    /* ################################################################################################################################## */
     // MARK: Date Item Class (One element of the `data` array)
     /* ################################################################################################################################## */
     /**
@@ -103,6 +112,12 @@ class SwiftBMLSDK_TestHarness_VirtualCustom1ViewController: SwiftBMLSDK_TestHarn
 
     /* ################################################################## */
     /**
+     This handles the server data.
+     */
+    var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
+
+    /* ################################################################## */
+    /**
      The segue ID to the list display.
      */
     private static let _showListSegueID = "show-list"
@@ -129,6 +144,22 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom1ViewController {
         setUpWidgetFromDates()
     }
     
+    /* ################################################################## */
+    /**
+     */
+    override func prepare(for inSegue: UIStoryboardSegue, sender inListData: Any?) {
+        guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_ListViewController,
+              let meetingRecord = inListData as? MeetingRecord
+        else { return }
+        destination.title = meetingRecord.title
+        destination.meetings = meetingRecord.meetingList
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Instance Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom1ViewController {
     /* ################################################################## */
     /**
      This creates a new array of date items, and sets them to the widget.
@@ -189,7 +220,20 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom1ViewController: RVS_CalendarInpu
      - parameter dateButton: The date item button that was actuated.
      */
     func calendarInput(_ inCalendarInput: RVS_CalendarInput, dateItemChanged inDateItem: RVS_CalendarInputDateItemProtocol, dateButton inDateButton: RVS_CalendarInput.DayButton?) {
-        print("The date \(String(describing: inDateItem.date)) was selected by the user. It is currently \(inDateItem.isSelected ? "" : "not ")selected.")
+        #if DEBUG
+            print("The date \(String(describing: inDateItem.date)) was selected by the user.")
+        #endif
+
+        guard let virtualService = virtualService,
+              let dateTemp = inDateItem.date
+        else { return }
+        let currentDay = Calendar.current.component(.weekday, from: dateTemp)
+        let weekdayStuff = SwiftBMLSDK_TestHarness_VirtualCustom0ViewController.mapWeekday(currentDay)
+
+        let current = virtualService.meetings.compactMap { Calendar.current.component(.weekday, from: $0.nextDate) == currentDay ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+        let meetingRecord = MeetingRecord(meetingList: current, title: weekdayStuff.string)
+        
+        performSegue(withIdentifier: Self._showListSegueID, sender: meetingRecord)
     }
 }
 

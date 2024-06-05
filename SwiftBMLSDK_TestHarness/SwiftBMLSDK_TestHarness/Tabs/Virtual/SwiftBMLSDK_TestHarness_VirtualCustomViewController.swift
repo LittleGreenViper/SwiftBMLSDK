@@ -69,6 +69,8 @@ extension SwiftBMLSDK_TestHarness_VirtualCustomViewController {
     override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
         if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
             destination.virtualService = virtualService
+        } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom1ViewController {
+            destination.virtualService = virtualService
         }
     }
 }

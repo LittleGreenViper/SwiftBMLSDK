@@ -1044,6 +1044,7 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showMonthHeaders" value="YES"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showYearHeaders" value="YES"/>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showWeekdayHeader" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="readOnlyMode" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
