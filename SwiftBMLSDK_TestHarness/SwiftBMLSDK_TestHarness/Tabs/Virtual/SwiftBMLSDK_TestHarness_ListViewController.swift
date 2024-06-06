@@ -50,6 +50,20 @@ fileprivate extension Date {
 /**
  */
 class SwiftBMLSDK_TestHarness_ListViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
+    /* ################################################################################################################################## */
+    // MARK: Special Button Class
+    /* ################################################################################################################################## */
+    /**
+     This adds a property to the standard button, to allow the button to be associated with one of the headers.
+     */
+    class HeaderButton: UIButton {
+        /* ############################################################## */
+        /**
+         The index will be 0 (morning), 1 (afternoon), or 2 (evening). -1 is error.
+         */
+        var index: Int = -1
+    }
+    
     /* ################################################################## */
     /**
      The ID for the segue to display a single meeting
@@ -67,6 +81,11 @@ class SwiftBMLSDK_TestHarness_ListViewController: SwiftBMLSDK_TestHarness_TabBas
      This handles the meeting collection for this.
      */
     var meetings: [MeetingInstance] = []
+    
+    /* ################################################################## */
+    /**
+     */
+    var openSections = (morning: false, afternoon: false, evening: false)
     
     /* ################################################################## */
     /**
@@ -99,27 +118,23 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
     /**
      This segregates the meetings into times of day.
      */
-    var tableFood: [(title: String, meetings: [MeetingInstance])] {
-        let morningMeetings = meetings.filter {
-            let time = $0.adjustedIntegerStartIme
-            let ret = time < 1200
-            return ret
-        }
+    var tableFood: [(title: String, isOpen: Bool, meetings: [MeetingInstance])] {
+        let morningMeetings = meetings.filter { $0.adjustedIntegerStartIme < 1200 }
         let afternoonMeetings = meetings.filter { (1200..<1800).contains($0.adjustedIntegerStartIme) }
         let eveningMeetings = meetings.filter { $0.adjustedIntegerStartIme >= 1800 }
     
-        var ret = [(title: String, meetings: [MeetingInstance])]()
+        var ret = [(title: String, isOpen: Bool, meetings: [MeetingInstance])]()
         
         if !morningMeetings.isEmpty {
-            ret.append((title: "SLUG-MORNING-SECTION-HEADER", meetings: morningMeetings))
+            ret.append((title: "SLUG-MORNING-SECTION-HEADER", isOpen: openSections.morning, meetings: morningMeetings))
         }
         
         if !afternoonMeetings.isEmpty {
-            ret.append((title: "SLUG-AFTERNOON-SECTION-HEADER", meetings: afternoonMeetings))
+            ret.append((title: "SLUG-AFTERNOON-SECTION-HEADER", isOpen: openSections.afternoon, meetings: afternoonMeetings))
         }
         
         if !eveningMeetings.isEmpty {
-            ret.append((title: "SLUG-EVENING-SECTION-HEADER", meetings: eveningMeetings))
+            ret.append((title: "SLUG-EVENING-SECTION-HEADER", isOpen: openSections.evening, meetings: eveningMeetings))
         }
 
         return ret
@@ -140,6 +155,7 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
         isThrobbing = false
         meetingsTableView?.sectionHeaderTopPadding = 0
+        openSections = (morning: false, afternoon: false, evening: false)
     }
     
     /* ################################################################## */
@@ -174,6 +190,43 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
 }
 
 /* ###################################################################################################################################### */
+// MARK: Callbacks
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_ListViewController {
+    /* ################################################################## */
+    /**
+     Called when the user taps on a section header.
+     
+     - parameter inHeaderInstance: The header button.
+     */
+    @objc func sectionHeaderHit(_ inHeaderInstance: HeaderButton) {
+        switch inHeaderInstance.index {
+        case 0:
+            #if DEBUG
+                print("MORNING")
+            #endif
+            openSections.morning = !openSections.morning
+        case 1:
+            #if DEBUG
+                print("AFTERNOON")
+            #endif
+            openSections.afternoon = !openSections.afternoon
+        case 2:
+            #if DEBUG
+                print("EVENING")
+            #endif
+            openSections.evening = !openSections.evening
+        default:
+            #if DEBUG
+                print("ERROR")
+            #endif
+        }
+        
+        meetingsTableView?.reloadData()
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: UITableViewDataSource Conformance
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
@@ -191,7 +244,7 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
      - parameter numberOfRowsInSection: The 0-based section index.
      - returns: The number of meetings in the given section.
      */
-    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int { tableFood[inSection].meetings.count }
+    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int { tableFood[inSection].isOpen ? tableFood[inSection].meetings.count : 0 }
     
     /* ################################################################## */
     /**
@@ -223,7 +276,6 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
     }
 }
 
-
 /* ###################################################################################################################################### */
 // MARK: UITableViewDelegate Conformance
 /* ###################################################################################################################################### */
@@ -251,14 +303,38 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDelegate {
      - returns: The header view (a label).
      */
     func tableView(_: UITableView, viewForHeaderInSection inSection: Int) -> UIView? {
-        let ret = UILabel()
-        ret.text = tableFood[inSection].title.localizedVariant
-        ret.textAlignment = .center
-        ret.font = .boldSystemFont(ofSize: 20)
-        ret.textColor = .white
-        ret.backgroundColor = .black
+        let title = tableFood[inSection].title
+        var index = -1
+        var isOpen = false
+        switch title {
+        case "SLUG-MORNING-SECTION-HEADER":
+            index = 0
+            isOpen = openSections.morning
+        case "SLUG-AFTERNOON-SECTION-HEADER":
+            index = 1
+            isOpen = openSections.afternoon
+        case "SLUG-EVENING-SECTION-HEADER":
+            index = 2
+            isOpen = openSections.evening
+        default:
+            break
+        }
         
+        guard -1 < index,
+               let image = UIImage(systemName: "arrowtriangle.\(isOpen ? "down" : "right").fill")
+        else { return nil }
+        
+        let ret = HeaderButton()
+        
+        ret.index = index
+        ret.setImage(image, for: .normal)
+        ret.setTitle(title.localizedVariant, for: .normal)
+        ret.titleLabel?.font = .boldSystemFont(ofSize: 20)
+        ret.titleLabel?.textColor = .white
+        ret.tintColor = .white
+        ret.contentHorizontalAlignment = .left
+        ret.backgroundColor = .black
+        ret.addTarget(self, action: #selector(sectionHeaderHit), for: .touchUpInside)
         return ret
     }
-    
 }
