@@ -611,6 +611,43 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################# */
         /**
+         The start time, in local meeting timezone, as a military-style integer (HHMM).
+         
+         Returns -1, if the time could not be calculated.
+         */
+        public var integerStartIme: Int {
+            let components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
+            
+            guard let hour = components.hour,
+                  (0..<24).contains(hour),
+                  let minute = components.minute,
+                  (0..<60).contains(minute)
+            else { return -1 }
+            
+            return (hour * 100) + minute
+        }
+        
+        /* ################################################# */
+        /**
+         The start time, adjusted to user timezone, as a military-style integer (HHMM).
+         
+         Returns -1, if the time could not be calculated.
+         */
+        public var adjustedIntegerStartIme: Int {
+            let adjustedStart = startTime._convert(from: timeZone, to: .current)
+            let components = Calendar.current.dateComponents([.hour, .minute], from: adjustedStart)
+            
+            guard let hour = components.hour,
+                  (0..<24).contains(hour),
+                  let minute = components.minute,
+                  (0..<60).contains(minute)
+            else { return -1 }
+            
+            return (hour * 100) + minute
+        }
+
+        /* ################################################# */
+        /**
          Returns the meeting location as a CLLocation.
          > NOTE: This may return nil, as not all meetings have a location.
          */
