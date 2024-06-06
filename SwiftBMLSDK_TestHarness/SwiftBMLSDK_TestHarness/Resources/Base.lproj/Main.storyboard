@@ -809,7 +809,7 @@
                                 <rect key="frame" x="16" y="103" width="361" height="617"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZaJ-zq-n7e">
-                                        <rect key="frame" x="0.0" y="0.0" width="361" height="308.66666666666669"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="205.66666666666666"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-0-BUTTON"/>
                                         <connections>
@@ -817,11 +817,19 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="foY-8L-Tia">
-                                        <rect key="frame" x="0.0" y="308.66666666666674" width="361" height="308.33333333333326"/>
+                                        <rect key="frame" x="0.0" y="205.66666666666669" width="361" height="205.66666666666669"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-1-BUTTON"/>
                                         <connections>
                                             <segue destination="EaF-EE-W6L" kind="show" id="wNC-ar-9Xc"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ocd-kz-hg0">
+                                        <rect key="frame" x="0.0" y="411.33333333333343" width="193" height="205.66666666666669"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="SLUG-CUSTOM-2-BUTTON"/>
+                                        <connections>
+                                            <segue destination="bow-dz-g1I" kind="show" id="ZTV-6L-0ww"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -846,6 +854,7 @@
                     <connections>
                         <outlet property="custom0Button" destination="ZaJ-zq-n7e" id="MzU-gx-XkD"/>
                         <outlet property="custom1Button" destination="foY-8L-Tia" id="nMq-We-bQX"/>
+                        <outlet property="custom2Button" destination="Ocd-kz-hg0" id="W7e-UX-pXu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fe4-XG-fbN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1066,6 +1075,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e6U-md-4c1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2336.6412213740459" y="1122.5352112676057"/>
+        </scene>
+        <!--SwiftBMLSDK Test Harness Virtual Custom2 View Controller-->
+        <scene sceneID="0EP-2R-6Co">
+            <objects>
+                <viewController id="bow-dz-g1I" customClass="SwiftBMLSDK_TestHarness_VirtualCustom2ViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="48b-vY-AVQ">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="DBa-7U-BeW"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="eUh-g2-utM"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XaR-73-vaM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2337" y="1829"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
