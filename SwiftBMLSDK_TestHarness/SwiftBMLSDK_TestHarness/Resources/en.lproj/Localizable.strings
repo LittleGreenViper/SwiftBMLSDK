@@ -84,3 +84,7 @@
 "SLUG-MEETING-DISPLAY-0"                        =   "In Progress";
 "SLUG-MEETING-DISPLAY-1"                        =   "Later Today";
 "SLUG-MEETING-DISPLAY-2"                        =   "Tomorrow";
+
+"SLUG-MORNING-SECTION-HEADER"                   =   "Morning Meetings";
+"SLUG-AFTERNOON-SECTION-HEADER"                 =   "Afternoon Meetings";
+"SLUG-EVENING-SECTION-HEADER"                   =   "Evening Meetings";

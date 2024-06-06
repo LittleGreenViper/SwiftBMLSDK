@@ -94,6 +94,36 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
             meetingsTableView?.isHidden = newValue
         }
     }
+    
+    /* ################################################################## */
+    /**
+     This segregates the meetings into times of day.
+     */
+    var tableFood: [(title: String, meetings: [MeetingInstance])] {
+        let morningMeetings = meetings.filter {
+            let time = $0.adjustedIntegerStartIme
+            let ret = time < 1200
+            return ret
+        }
+        let afternoonMeetings = meetings.filter { (1200..<1800).contains($0.adjustedIntegerStartIme) }
+        let eveningMeetings = meetings.filter { $0.adjustedIntegerStartIme >= 1800 }
+    
+        var ret = [(title: String, meetings: [MeetingInstance])]()
+        
+        if !morningMeetings.isEmpty {
+            ret.append((title: "SLUG-MORNING-SECTION-HEADER", meetings: morningMeetings))
+        }
+        
+        if !afternoonMeetings.isEmpty {
+            ret.append((title: "SLUG-AFTERNOON-SECTION-HEADER", meetings: afternoonMeetings))
+        }
+        
+        if !eveningMeetings.isEmpty {
+            ret.append((title: "SLUG-EVENING-SECTION-HEADER", meetings: eveningMeetings))
+        }
+
+        return ret
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -149,11 +179,19 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
 extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
     /* ################################################################## */
     /**
+     - parameter in: The table view (ignored).
+     
+     - returns: 1-3
+     */
+    func numberOfSections(in: UITableView) -> Int { tableFood.count }
+    
+    /* ################################################################## */
+    /**
      - parameter: The table view (ignored).
      - parameter numberOfRowsInSection: The 0-based section index.
      - returns: The number of meetings in the given section.
      */
-    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int { meetings.count }
+    func tableView(_: UITableView, numberOfRowsInSection inSection: Int) -> Int { tableFood[inSection].meetings.count }
     
     /* ################################################################## */
     /**
@@ -163,8 +201,8 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
      */
     func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
         let ret = inTableView.dequeueReusableCell(withIdentifier: "simple-table", for: inIndexPath)
-
-        var meeting = meetings[inIndexPath.row]
+        
+        var meeting = tableFood[inIndexPath.section].meetings[inIndexPath.row]
 
         let nextDate = meeting.getNextStartDate(isAdjusted: true)
         let formatter = DateFormatter()
@@ -199,8 +237,28 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDelegate {
      - returns: nil (all the time).
      */
     func tableView(_: UITableView, willSelectRowAt inIndexPath: IndexPath) -> IndexPath? {
-        let meeting = meetings[inIndexPath.row]
+        let meeting = tableFood[inIndexPath.section].meetings[inIndexPath.row]
         selectMeeting(meeting)
         return nil
     }
+    
+    /* ################################################################## */
+    /**
+     Returns the displayed header for the given section.
+     
+     - parameter: The table view (ignored)
+     - parameter viewForHeaderInSection: The 0-based section index.
+     - returns: The header view (a label).
+     */
+    func tableView(_: UITableView, viewForHeaderInSection inSection: Int) -> UIView? {
+        let ret = UILabel()
+        ret.text = tableFood[inSection].title.localizedVariant
+        ret.textAlignment = .center
+        ret.font = .boldSystemFont(ofSize: 20)
+        ret.textColor = .white
+        ret.backgroundColor = .black
+        
+        return ret
+    }
+    
 }

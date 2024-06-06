@@ -429,7 +429,6 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDelegate {
         } else {
             title = "SLUG-SECTION-\(inSection)-HEADER".localizedVariant
         }
-
         
         let ret = UILabel()
         ret.text = title
