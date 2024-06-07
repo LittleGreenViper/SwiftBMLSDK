@@ -137,6 +137,10 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
             ret.append((title: "SLUG-EVENING-SECTION-HEADER", isOpen: openSections.evening, meetings: eveningMeetings))
         }
 
+        if 1 == ret.count {
+            ret = [(title: "", isOpen: true, meetings: ret[0].meetings)]
+        }
+        
         return ret
     }
 }
@@ -294,6 +298,12 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDelegate {
         return nil
     }
     
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard 1 < tableFood.count else { return 0 }
+        
+        return 30
+    }
+    
     /* ################################################################## */
     /**
      Returns the displayed header for the given section.
@@ -303,6 +313,7 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDelegate {
      - returns: The header view (a label).
      */
     func tableView(_: UITableView, viewForHeaderInSection inSection: Int) -> UIView? {
+        guard 1 < tableFood.count else { return nil }
         let title = tableFood[inSection].title
         var index = -1
         var isOpen = false
@@ -328,7 +339,7 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDelegate {
         
         ret.index = index
         ret.setImage(image, for: .normal)
-        ret.setTitle(title.localizedVariant, for: .normal)
+        ret.setTitle(title.localizedVariant + " (\(tableFood[inSection].meetings.count))", for: .normal)
         ret.titleLabel?.font = .boldSystemFont(ofSize: 20)
         ret.titleLabel?.textColor = .white
         ret.tintColor = .white

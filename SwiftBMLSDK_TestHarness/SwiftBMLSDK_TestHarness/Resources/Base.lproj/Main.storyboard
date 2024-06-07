@@ -1083,14 +1083,64 @@
                     <view key="view" contentMode="scaleToFill" id="48b-vY-AVQ">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Fac-6d-quX">
+                                <rect key="frame" x="130.66666666666666" y="103" width="131.99999999999997" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="G3d-0M-LNy"/>
+                                </constraints>
+                                <segments>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                </segments>
+                                <connections>
+                                    <action selector="weekdaySelected:" destination="bow-dz-g1I" eventType="valueChanged" id="iZu-T4-X8Z"/>
+                                </connections>
+                            </segmentedControl>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="fVy-jN-VGX">
+                                <rect key="frame" x="16" y="141" width="361" height="579"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="simple-table" id="9No-tr-ynH">
+                                        <rect key="frame" x="0.0" y="50" width="361" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="9No-tr-ynH" id="WRn-7M-P6v">
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="bow-dz-g1I" id="os9-zY-lLk"/>
+                                    <outlet property="delegate" destination="bow-dz-g1I" id="tX3-Qz-k3G"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="DBa-7U-BeW"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Fac-6d-quX" firstAttribute="top" secondItem="DBa-7U-BeW" secondAttribute="top" id="1Tk-3u-bZs"/>
+                            <constraint firstItem="DBa-7U-BeW" firstAttribute="bottom" secondItem="fVy-jN-VGX" secondAttribute="bottom" id="49O-xR-hVl"/>
+                            <constraint firstItem="fVy-jN-VGX" firstAttribute="leading" secondItem="DBa-7U-BeW" secondAttribute="leading" constant="16" id="5Uj-Zn-BNZ"/>
+                            <constraint firstItem="fVy-jN-VGX" firstAttribute="top" secondItem="Fac-6d-quX" secondAttribute="bottom" constant="8" symbolic="YES" id="GEz-i8-HsQ"/>
+                            <constraint firstItem="DBa-7U-BeW" firstAttribute="trailing" secondItem="fVy-jN-VGX" secondAttribute="trailing" constant="16" id="kYb-iR-YtF"/>
+                            <constraint firstItem="Fac-6d-quX" firstAttribute="centerX" secondItem="48b-vY-AVQ" secondAttribute="centerX" id="oHi-LT-6Yn"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="eUh-g2-utM"/>
+                    <connections>
+                        <outlet property="meetingsTableView" destination="fVy-jN-VGX" id="a6L-N8-KTT"/>
+                        <outlet property="weekdayHeaderSegmentedSwitch" destination="Fac-6d-quX" id="bQy-7b-k6g"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XaR-73-vaM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2337" y="1829"/>
+            <point key="canvasLocation" x="2336.6412213740459" y="1828.8732394366198"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
@@ -1103,7 +1153,7 @@
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
         <namedColor name="AccentColor">
-            <color red="0.31400001049041748" green="0.37999999523162842" blue="0.89399999380111694" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.0" green="0.51800000667572021" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

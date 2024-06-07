@@ -27,12 +27,66 @@ import RVS_CalendarInput
 /* ###################################################################################################################################### */
 /**
  */
-class SwiftBMLSDK_TestHarness_VirtualCustom2ViewController: SwiftBMLSDK_TestHarness_BaseViewController {
+class SwiftBMLSDK_TestHarness_VirtualCustom2ViewController: SwiftBMLSDK_TestHarness_ListViewController {
     /* ################################################################## */
     /**
      This handles the server data.
      */
     var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
+
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var weekdayHeaderSegmentedSwitch: UISegmentedControl?
+}
+
+/* ###################################################################################################################################### */
+// MARK: Callbacks
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom2ViewController {
+    /* ################################################################## */
+    /**
+     */
+    @IBAction func weekdaySelected(_ inSwitch: UISegmentedControl! = nil) {
+        let selectedSegment = inSwitch?.selectedSegmentIndex ?? 0
+        
+        var currentDay = selectedSegment + Calendar.current.firstWeekday
+        
+        if 7 < currentDay {
+            currentDay -= 7
+        }
+        
+        let current = virtualService?.meetings.compactMap { Calendar.current.component(.weekday, from: $0.nextDate) == currentDay ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+        
+        guard let current = current else { return }
+        
+        meetings = current
+        
+        meetingsTableView?.reloadData()
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Instance Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom2ViewController {
+    /* ################################################################## */
+    /**
+     */
+    func setUpWeekdayControl() {
+        for index in 0..<7 {
+            var currentDay = index + Calendar.current.firstWeekday
+            
+            if 7 < currentDay {
+                currentDay -= 7
+            }
+            
+            let weekdaySymbols = Calendar.current.shortWeekdaySymbols
+            let weekdayName = weekdaySymbols[currentDay - 1]
+
+            weekdayHeaderSegmentedSwitch?.setTitle(weekdayName, forSegmentAt: index)
+        }
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -44,7 +98,10 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom2ViewController {
      Called when the view hierarchy has loaded.
      */
     override func viewDidLoad() {
+        title = "SLUG-CUSTOM-2-BUTTON".localizedVariant
         super.viewDidLoad()
-        navigationItem.title = "SLUG-CUSTOM-2-BUTTON".localizedVariant
+        setUpWeekdayControl()
+        weekdaySelected()
+        meetingsTableView?.reloadData()
     }
 }
