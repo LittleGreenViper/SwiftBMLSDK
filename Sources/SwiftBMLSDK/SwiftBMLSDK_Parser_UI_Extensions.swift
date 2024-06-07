@@ -442,7 +442,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
      */
     public var directAppURI: URL? {
         guard let virtualURL = virtualURL,
-              "https" == virtualURL.scheme
+              "https" == virtualURL.scheme?.lowercased()
         else { return nil }
         
         return DirectVirtual.factory(url: virtualURL)?.directURL
@@ -457,7 +457,5 @@ public extension Array where Element==SwiftBMLSDK_Parser.Meeting {
     /**
      This returns all of the in-person meeting coordinates in an array.
      */
-    var allCoords: [CLLocationCoordinate2D] {
-        compactMap { $0.coords }
-    }
+    var allCoords: [CLLocationCoordinate2D] { compactMap { $0.coords } }
 }
