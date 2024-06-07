@@ -93,7 +93,7 @@ class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarn
     /**
      This handles the server data.
      */
-    var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
+    var virtualService: SwiftBMLSDK_MeetingLocalTimezoneCollection?
 
     /* ################################################################## */
     /**

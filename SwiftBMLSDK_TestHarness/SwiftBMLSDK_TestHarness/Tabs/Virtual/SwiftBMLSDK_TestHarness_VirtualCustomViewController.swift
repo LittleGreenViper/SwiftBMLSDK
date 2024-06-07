@@ -44,9 +44,14 @@ class SwiftBMLSDK_TestHarness_VirtualCustomViewController: SwiftBMLSDK_TestHarne
     
     /* ################################################################## */
     /**
+     */
+    @IBOutlet weak var custom3Button: UIButton?
+    
+    /* ################################################################## */
+    /**
      This handles the server data.
      */
-    var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
+    var virtualService: SwiftBMLSDK_MeetingLocalTimezoneCollection?
 }
 
 /* ###################################################################################################################################### */
@@ -63,6 +68,7 @@ extension SwiftBMLSDK_TestHarness_VirtualCustomViewController {
         custom0Button?.setTitle(custom0Button?.title(for: .normal)?.localizedVariant, for: .normal)
         custom1Button?.setTitle(custom1Button?.title(for: .normal)?.localizedVariant, for: .normal)
         custom2Button?.setTitle(custom2Button?.title(for: .normal)?.localizedVariant, for: .normal)
+        custom3Button?.setTitle(custom3Button?.title(for: .normal)?.localizedVariant, for: .normal)
     }
     
     /* ################################################################## */
@@ -78,6 +84,8 @@ extension SwiftBMLSDK_TestHarness_VirtualCustomViewController {
         } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom1ViewController {
             destination.virtualService = virtualService
         } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom2ViewController {
+            destination.virtualService = virtualService
+        } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom3ViewController {
             destination.virtualService = virtualService
         }
     }

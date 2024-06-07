@@ -20,10 +20,9 @@
 import UIKit
 import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
-import RVS_CalendarInput
 
 /* ###################################################################################################################################### */
-// MARK: - Server Virtual Search Custom View Controller (1) -
+// MARK: - Server Virtual Search Custom View Controller (2) -
 /* ###################################################################################################################################### */
 /**
  */
@@ -32,7 +31,7 @@ class SwiftBMLSDK_TestHarness_VirtualCustom2ViewController: SwiftBMLSDK_TestHarn
     /**
      This handles the server data.
      */
-    var virtualService: SwiftBMLSDK_VirtualMeetingCollection?
+    var virtualService: SwiftBMLSDK_MeetingLocalTimezoneCollection?
 
     /* ################################################################## */
     /**

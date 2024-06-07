@@ -49,7 +49,7 @@ fileprivate extension StringProtocol {
 /**
  We have special properties that apply only to specific runtime environments.
  */
-public protocol SwiftBMLSDK_Meeting {
+public protocol SwiftBMLSDK_MeetingProtocol {
     /* ################################################# */
     /**
      If the URL for the virtual meeting is one that can open an app on the user's device, a direct URL scheme version of the URL is returned.
@@ -61,13 +61,13 @@ public protocol SwiftBMLSDK_Meeting {
 // MARK: - Collection Class for Managing Virtual Meetings -
 /* ###################################################################################################################################### */
 /**
- This class can be used to manage all the virtual meetings.
+ This class can be used to manage meetings, in the user's local timezone. It is especially useful for virtual meetings.
  
  Virtual meetings are always considered in local (to the user) timezone. We collect all of the meetings at once, and store them here, so they are easier and faster to manage.
  
  This is a class, so we don't go making too many massive copies of the data. We can store this as a reference.
  */
-public class SwiftBMLSDK_VirtualMeetingCollection {
+public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
     /* ################################################# */
     /**
      This clears the cache, and makes a new call, to get the meetings.
@@ -97,7 +97,7 @@ public class SwiftBMLSDK_VirtualMeetingCollection {
      
      - parameter: This collection.
      */
-    public typealias FetchCallback = (_: SwiftBMLSDK_VirtualMeetingCollection) -> Void
+    public typealias FetchCallback = (_: SwiftBMLSDK_MeetingLocalTimezoneCollection) -> Void
     
     /* ################################################# */
     /**
@@ -113,7 +113,7 @@ public class SwiftBMLSDK_VirtualMeetingCollection {
 
         /* ############################################# */
         /**
-         The meeting is a simple stored property. It needs to be a var, in order to allow date caching.
+         The meeting is a simple stored property. It needs to be a var, in order to allow date caching (getNextStartDate is mutating).
          */
         public var meeting: SwiftBMLSDK_Parser.Meeting
 
@@ -194,14 +194,14 @@ public class SwiftBMLSDK_VirtualMeetingCollection {
 /**
  This extension uses UIKit to determine the proper app for app-specific URIs.
  */
-extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
+extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
     /* ################################################################################################################################## */
-    // MARK: - Enum For Virtual Direct URLs -
+    // MARK: Private Enum For Virtual Direct URLs
     /* ################################################################################################################################## */
     /**
      This enum helps us to create direct (as in opening the app directly) URLs, for various services.
      */
-    enum DirectVirtual: CaseIterable {
+    private enum _DirectVirtual: CaseIterable {
         /* ############################################# */
         /**
          The Zoom app.
@@ -230,7 +230,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
         /**
          CaseIterable Conformance
          */
-        static var allCases: [SwiftBMLSDK_Parser.Meeting.DirectVirtual] { [.zoom(nil), .gotomeeting(nil), .skype(nil), .meet(nil)] }
+        static var allCases: [SwiftBMLSDK_Parser.Meeting._DirectVirtual] { [.zoom(nil), .gotomeeting(nil), .skype(nil), .meet(nil)] }
         
         /* ############################################# */
         /**
@@ -421,20 +421,22 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
          - parameter url: The URL to check.
          - returns: The enum case ( or nil, if none).
          */
-        static func factory(url inURL: URL) -> DirectVirtual? {
-            var ret: DirectVirtual?
+        static func factory(url inURL: URL) -> _DirectVirtual? {
+            var ret: _DirectVirtual?
             
-            if inURL.host?.contains(DirectVirtual.zoom(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.zoom(inURL)
-            } else if inURL.host?.contains(DirectVirtual.gotomeeting(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.gotomeeting(inURL)
-            } else if inURL.host?.contains(DirectVirtual.skype(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.skype(inURL)
+            if inURL.host?.contains(_DirectVirtual.zoom(nil)._serviceURLHost) ?? false {
+                ret = _DirectVirtual.zoom(inURL)
+            } else if inURL.host?.contains(_DirectVirtual.gotomeeting(nil)._serviceURLHost) ?? false {
+                ret = _DirectVirtual.gotomeeting(inURL)
+            } else if inURL.host?.contains(_DirectVirtual.skype(nil)._serviceURLHost) ?? false {
+                ret = _DirectVirtual.skype(inURL)
             }
             
             return nil != ret?.directURL ? ret : nil
         }
     }
+    
+    // MARK: Public API
     
     /* ################################################# */
     /**
@@ -445,7 +447,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_Meeting {
               "https" == virtualURL.scheme?.lowercased()
         else { return nil }
         
-        return DirectVirtual.factory(url: virtualURL)?.directURL
+        return _DirectVirtual.factory(url: virtualURL)?.directURL
     }
 }
 

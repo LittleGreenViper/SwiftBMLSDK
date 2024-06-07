@@ -72,7 +72,7 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     /**
      This handles transactions with the server.
      */
-    private var _virtualService: SwiftBMLSDK_VirtualMeetingCollection?
+    private var _virtualService: SwiftBMLSDK_MeetingLocalTimezoneCollection?
 
     /* ################################################################## */
     /**
@@ -83,7 +83,7 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     /* ################################################################## */
     /**
      */
-    private var _cachedMeetings: SwiftBMLSDK_VirtualMeetingCollection? { didSet { if nil == _cachedMeetings { _cachedTableFood = nil } } }
+    private var _cachedMeetings: SwiftBMLSDK_MeetingLocalTimezoneCollection? { didSet { if nil == _cachedMeetings { _cachedTableFood = nil } } }
     
     /* ################################################################## */
     /**
@@ -140,7 +140,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      The meetings from the last search.
      */
-    var tableFodder: (current: [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting], upcoming: [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]) {
+    var tableFodder: (current: [SwiftBMLSDK_MeetingLocalTimezoneCollection.CachedMeeting], upcoming: [SwiftBMLSDK_MeetingLocalTimezoneCollection.CachedMeeting]) {
         guard nil == _cachedMeetings
         else {
             let current = _cachedMeetings?.meetings.compactMap { $0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate } ?? []
@@ -151,8 +151,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
         guard let meetings = _virtualService?.meetings.sorted (by: { a, b in a.nextDate < b.nextDate }) else { return (current: [], upcoming: []) }
         _cachedMeetings = _virtualService
         
-        var current = [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]()
-        var upcoming = [SwiftBMLSDK_VirtualMeetingCollection.CachedMeeting]()
+        var current = [SwiftBMLSDK_MeetingLocalTimezoneCollection.CachedMeeting]()
+        var upcoming = [SwiftBMLSDK_MeetingLocalTimezoneCollection.CachedMeeting]()
 
         switch typeSegmentedSwitch?.selectedSegmentIndex ?? -1 {
         case 0:
@@ -312,7 +312,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
      - parameter completion: A tail completion proc.
      */
     func findMeetings(completion inCompletion: (() -> Void)?) {
-        _virtualService = SwiftBMLSDK_VirtualMeetingCollection(query: prefs.queryInstance) { inCollection in
+        _virtualService = SwiftBMLSDK_MeetingLocalTimezoneCollection(query: prefs.queryInstance) { inCollection in
             DispatchQueue.main.async {
                 guard let switchMan = self.typeSegmentedSwitch else { return }
                 
