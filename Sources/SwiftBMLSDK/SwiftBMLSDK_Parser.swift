@@ -21,6 +21,23 @@ import CoreLocation // For coordinates.
 import Contacts     // For the in-person address
 
 /* ###################################################################################################################################### */
+// MARK: - CoreLocation Extension -
+/* ###################################################################################################################################### */
+/**
+ These are some useful Core Location tools.
+ */
+fileprivate extension CLLocationCoordinate2D {
+    /* ################################################################## */
+    /**
+     - parameter inComp: A location (long and lat), to which we are comparing ourselves.
+     - parameter precisionInMeters: This is an optional precision (slop area), in meters. If left out, then the match must be exact.
+     
+     - returns: True, if the locations are equal, according to the given precision.
+     */
+    func _isEqualTo(_ inComp: CLLocationCoordinate2D, precisionInMeters inPrecisionInMeters: CLLocationDistance = 0.0) -> Bool { CLLocation(latitude: latitude, longitude: longitude).distance(from: CLLocation(latitude: inComp.latitude, longitude: inComp.longitude)) <= inPrecisionInMeters }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - File Private Date Extension -
 /* ###################################################################################################################################### */
 /**
@@ -746,11 +763,13 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
             self.name = (inDictionary["name"] as? String) ?? ""
 
+            var fixedCoords = CLLocationCoordinate2D()
+            
             if let long = inDictionary["longitude"] as? Double,
                let lat = inDictionary["latitude"] as? Double,
-               CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: lat, longitude: long)),
-               !((round(long * 1000) == -118605) && (round(lat * 1000) == 34267)) { // Since the NAWS office is the default BMLT physical location, we make sure that it is not the specified long/lat.
-                self.coords = CLLocationCoordinate2D(latitude: lat, longitude: long)
+               CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: lat, longitude: long)) {
+                fixedCoords = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                self.coords = fixedCoords
             } else {
                 self.coords = nil
             }
@@ -769,7 +788,8 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 self.comments = nil
             }
 
-            if let physicalAddress = inDictionary["physical_address"] as? [String: String] {
+            if let physicalAddress = inDictionary["physical_address"] as? [String: String],
+               !fixedCoords._isEqualTo(CLLocationCoordinate2D(latitude: 34.233, longitude: -118.549), precisionInMeters: 500) { // Since the NAWS office is the default BMLT physical location, we make sure that it is not the specified long/lat.
                 let mutableGoPostal = CNMutablePostalAddress()
                 mutableGoPostal.street = (physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 mutableGoPostal.subLocality = (physicalAddress["neighborhood"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
