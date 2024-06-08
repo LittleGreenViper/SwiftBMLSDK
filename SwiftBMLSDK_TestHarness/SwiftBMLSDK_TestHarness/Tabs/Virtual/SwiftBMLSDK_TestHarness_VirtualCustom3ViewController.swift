@@ -35,9 +35,42 @@ class SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell: UITableVie
     
     /* ################################################################## */
     /**
+     The label that displays the meeting start time
+     */
+    @IBOutlet weak var timeLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     The label that displays the meeting name
+     */
+    @IBOutlet weak var meetingNameLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
      The meeting instance associated with this row.
      */
     var meetingInstance: MeetingInstance?
+}
+
+/* ###################################################################################################################################### */
+// MARK: Base Class Overrides
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell {
+    /* ################################################################## */
+    /**
+     Called when the views are being laid out.
+     */
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        meetingNameLabel?.text = meetingInstance?.name
+        guard var meeting = meetingInstance else { return }
+
+        let nextDate = meeting.getNextStartDate(isAdjusted: true)
+        let formatter = DateFormatter()
+        formatter.dateFormat = .none
+        formatter.dateFormat = "h:mm a"
+        timeLabel?.text = formatter.string(from: nextDate)
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -120,6 +153,21 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom3ViewController {
         super.viewDidLoad()
         setUpWeekdayControl()
         weekdaySelected()
+    }
+    
+    /* ################################################################## */
+    /**
+     Called before we switch to the meeting inspector.
+     
+     - parameter for: The segue we are executing.
+     - parameter sender: The meeting instance.
+     */
+    override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
+        if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
+           let meetingInstance = inMeeting as? MeetingInstance {
+            destination.isNormalizedTime = true
+            destination.meeting = meetingInstance
+        }
     }
 }
 

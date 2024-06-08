@@ -1184,14 +1184,44 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell" id="u2d-kY-SKK" customClass="SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="50" width="361" height="44"/>
+                                        <rect key="frame" x="0.0" y="50" width="361" height="42.333332061767578"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="u2d-kY-SKK" id="QR7-25-QcG">
-                                            <rect key="frame" x="0.0" y="0.0" width="361" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="42.333332061767578"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CL0-Nl-huY">
+                                                    <rect key="frame" x="80" y="10.999999999999998" width="261" height="20.333333333333329"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WT2-JO-Aq3">
+                                                    <rect key="frame" x="0.0" y="0.0" width="72" height="42.333333333333336"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="72" id="TNV-7E-Zbf"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="CL0-Nl-huY" secondAttribute="bottom" id="4aY-Ad-gzN"/>
+                                                <constraint firstAttribute="bottom" secondItem="WT2-JO-Aq3" secondAttribute="bottom" id="5rR-71-Ghl"/>
+                                                <constraint firstItem="WT2-JO-Aq3" firstAttribute="leading" secondItem="QR7-25-QcG" secondAttribute="leading" id="7ch-kF-HI7"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="CL0-Nl-huY" secondAttribute="trailing" id="YeI-mh-s6t"/>
+                                                <constraint firstItem="CL0-Nl-huY" firstAttribute="leading" secondItem="WT2-JO-Aq3" secondAttribute="trailing" constant="8" symbolic="YES" id="esO-ct-6aI"/>
+                                                <constraint firstItem="WT2-JO-Aq3" firstAttribute="top" secondItem="QR7-25-QcG" secondAttribute="top" id="nik-Ay-qtj"/>
+                                                <constraint firstItem="CL0-Nl-huY" firstAttribute="top" secondItem="QR7-25-QcG" secondAttribute="topMargin" id="o9X-04-fFC"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="meetingNameLabel" destination="CL0-Nl-huY" id="6cr-zk-UqH"/>
+                                            <outlet property="timeLabel" destination="WT2-JO-Aq3" id="e3w-CR-JaL"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>

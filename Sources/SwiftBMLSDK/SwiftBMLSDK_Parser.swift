@@ -748,7 +748,8 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
             if let long = inDictionary["longitude"] as? Double,
                let lat = inDictionary["latitude"] as? Double,
-               CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: lat, longitude: long)) {
+               CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: lat, longitude: long)),
+               !((round(long * 1000) == -118605) && (round(lat * 1000) == 34267)) { // Since the NAWS office is the default BMLT physical location, we make sure that it is not the specified long/lat.
                 self.coords = CLLocationCoordinate2D(latitude: lat, longitude: long)
             } else {
                 self.coords = nil
