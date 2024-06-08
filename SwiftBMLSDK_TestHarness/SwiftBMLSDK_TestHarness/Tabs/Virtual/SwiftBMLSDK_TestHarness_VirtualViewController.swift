@@ -297,7 +297,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
 extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /* ################################################################## */
     /**
-     Called to show a user page.
+     Called to show a meeting details page.
      
      - parameter inMeeting: The meeting instance.
      */

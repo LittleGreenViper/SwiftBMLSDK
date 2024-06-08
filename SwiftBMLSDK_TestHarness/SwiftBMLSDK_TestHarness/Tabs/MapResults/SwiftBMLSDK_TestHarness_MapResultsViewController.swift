@@ -259,7 +259,7 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
 extension SwiftBMLSDK_TestHarness_MapResultsViewController {
     /* ################################################################## */
     /**
-     Called to show a user page.
+     Called to show a meeting details page.
      
      - parameter inMeeting: The meeting instance.
      */

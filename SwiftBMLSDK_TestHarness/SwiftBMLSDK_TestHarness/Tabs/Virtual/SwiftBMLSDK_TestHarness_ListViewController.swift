@@ -184,7 +184,7 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
 extension SwiftBMLSDK_TestHarness_ListViewController {
     /* ################################################################## */
     /**
-     Called to show a user page.
+     Called to show a meeting details page.
      
      - parameter inMeeting: The meeting instance.
      */
@@ -298,7 +298,15 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDelegate {
         return nil
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    /* ################################################################## */
+    /**
+     Returns the height for the section header, in display units.
+     
+     - parameter: The table view (ignored)
+     - parameter heightForHeaderInSection: The section we want the height for (ignored).
+     - returns: 0, if there is only one section, or 30, if there are more than one.
+     */
+    func tableView(_: UITableView, heightForHeaderInSection: Int) -> CGFloat {
         guard 1 < tableFood.count else { return 0 }
         
         return 30
@@ -310,7 +318,7 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDelegate {
      
      - parameter: The table view (ignored)
      - parameter viewForHeaderInSection: The 0-based section index.
-     - returns: The header view (a label).
+     - returns: The header view (a button).
      */
     func tableView(_: UITableView, viewForHeaderInSection inSection: Int) -> UIView? {
         guard 1 < tableFood.count else { return nil }

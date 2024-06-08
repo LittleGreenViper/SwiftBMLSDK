@@ -1159,19 +1159,73 @@
                     <view key="view" contentMode="scaleToFill" id="JcS-zb-B8d">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ajn-Lw-fw0">
+                                <rect key="frame" x="130.66666666666666" y="103" width="131.99999999999997" height="31"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="dxh-NO-PIc"/>
+                                </constraints>
+                                <segments>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                    <segment title=""/>
+                                </segments>
+                                <connections>
+                                    <action selector="weekdaySelected:" destination="bow-dz-g1I" eventType="valueChanged" id="VMt-zy-WFs"/>
+                                    <action selector="weekdaySelected:" destination="3sT-US-jYS" eventType="valueChanged" id="Yg9-Kl-Yd6"/>
+                                </connections>
+                            </segmentedControl>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="od3-CJ-T09">
+                                <rect key="frame" x="16" y="141" width="361" height="579"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell" id="u2d-kY-SKK" customClass="SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="361" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="u2d-kY-SKK" id="QR7-25-QcG">
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="3sT-US-jYS" id="Go0-Uc-ThW"/>
+                                    <outlet property="delegate" destination="3sT-US-jYS" id="JGb-ke-WbT"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="YMI-7O-hUe"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Ajn-Lw-fw0" firstAttribute="centerX" secondItem="JcS-zb-B8d" secondAttribute="centerX" id="CjK-RU-8MY"/>
+                            <constraint firstItem="od3-CJ-T09" firstAttribute="bottom" secondItem="YMI-7O-hUe" secondAttribute="bottom" id="LXF-Ws-u0c"/>
+                            <constraint firstItem="YMI-7O-hUe" firstAttribute="trailing" secondItem="od3-CJ-T09" secondAttribute="trailing" constant="16" id="OrE-6F-ydf"/>
+                            <constraint firstItem="od3-CJ-T09" firstAttribute="leading" secondItem="YMI-7O-hUe" secondAttribute="leading" constant="16" id="jfq-0d-hng"/>
+                            <constraint firstItem="od3-CJ-T09" firstAttribute="top" secondItem="Ajn-Lw-fw0" secondAttribute="bottom" constant="8" symbolic="YES" id="jov-07-ApT"/>
+                            <constraint firstItem="Ajn-Lw-fw0" firstAttribute="top" secondItem="YMI-7O-hUe" secondAttribute="top" id="tb3-Aa-7uv"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="hs7-Gx-3na"/>
+                    <connections>
+                        <outlet property="meetingsTableView" destination="od3-CJ-T09" id="Lfj-Mq-sJL"/>
+                        <outlet property="weekdayHeaderSegmentedSwitch" destination="Ajn-Lw-fw0" id="Sse-TQ-6Js"/>
+                        <segue destination="y7V-0G-Fls" kind="show" identifier="show-meeting" id="rsY-NR-muU"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ytf-2C-QBH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2337" y="2505"/>
+            <point key="canvasLocation" x="2336.6412213740459" y="2504.929577464789"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="2JD-up-rXd"/>
-        <segue reference="Q1i-nl-m9J"/>
+        <segue reference="rsY-NR-muU"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="globe" catalog="system" width="128" height="123"/>
