@@ -35,6 +35,7 @@
 		D49D883E2C0CB3DB002B232F /* RVS_CalendarInput in Frameworks */ = {isa = PBXBuildFile; productRef = D49D883D2C0CB3DB002B232F /* RVS_CalendarInput */; };
 		D49D88402C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49D883F2C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift */; };
 		D4A137132C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A137122C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift */; };
+		D4BA3D5D2C15F5F100FF3DF7 /* SwiftBMLSDK_TestHarness_VirtualCustom4ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BA3D5C2C15F5F100FF3DF7 /* SwiftBMLSDK_TestHarness_VirtualCustom4ViewController.swift */; };
 		D4C2CBFE2C13A1A6006634B2 /* SwiftBMLSDK_TestHarness_VirtualCustom3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C2CBFD2C13A1A6006634B2 /* SwiftBMLSDK_TestHarness_VirtualCustom3ViewController.swift */; };
 		D4D4B7992B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */; };
 		D4D5E1DF2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift */; };
@@ -81,6 +82,7 @@
 		D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49D883F2C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift; sourceTree = "<group>"; };
 		D4A137122C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_ListViewController.swift; sourceTree = "<group>"; };
+		D4BA3D5C2C15F5F100FF3DF7 /* SwiftBMLSDK_TestHarness_VirtualCustom4ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_VirtualCustom4ViewController.swift; sourceTree = "<group>"; };
 		D4C2CBFD2C13A1A6006634B2 /* SwiftBMLSDK_TestHarness_VirtualCustom3ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_VirtualCustom3ViewController.swift; sourceTree = "<group>"; };
 		D4D4B7982B93FD0E0021EBD3 /* SwiftBMLSDK_TestHarness_InfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_InfoViewController.swift; sourceTree = "<group>"; };
 		D4D5E1DE2B84062C002B769B /* SwiftBMLSDK_TestHarness_LocationSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_LocationSearchViewController.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				D49D883F2C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift */,
 				D4302D972C127E6E00748E5B /* SwiftBMLSDK_TestHarness_VirtualCustom2ViewController.swift */,
 				D4C2CBFD2C13A1A6006634B2 /* SwiftBMLSDK_TestHarness_VirtualCustom3ViewController.swift */,
+				D4BA3D5C2C15F5F100FF3DF7 /* SwiftBMLSDK_TestHarness_VirtualCustom4ViewController.swift */,
 				D4A137122C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift */,
 			);
 			path = Virtual;
@@ -300,6 +303,7 @@
 			files = (
 				D4026F952BF6A8CC00649E81 /* SwiftBMLSDK_TestHarness_VirtualViewController.swift in Sources */,
 				D42CDEE52C079BE500A695AB /* SwiftBMLSDK_TestHarness_VirtualCustomViewController.swift in Sources */,
+				D4BA3D5D2C15F5F100FF3DF7 /* SwiftBMLSDK_TestHarness_VirtualCustom4ViewController.swift in Sources */,
 				D4A137132C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift in Sources */,
 				D40823412BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift in Sources */,
 				D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift in Sources */,

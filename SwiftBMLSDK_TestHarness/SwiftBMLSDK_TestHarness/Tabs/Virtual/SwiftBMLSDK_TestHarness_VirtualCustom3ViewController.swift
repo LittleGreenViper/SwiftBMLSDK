@@ -78,7 +78,7 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell {
 /* ###################################################################################################################################### */
 /**
  */
-class SwiftBMLSDK_TestHarness_VirtualCustom3ViewController: SwiftBMLSDK_TestHarness_BaseViewController {
+class SwiftBMLSDK_TestHarness_VirtualCustom3ViewController: SwiftBMLSDK_TestHarness_BaseViewController, VirtualServiceControllerProtocol {
     /* ################################################################## */
     /**
      The ID for the segue to display a single meeting

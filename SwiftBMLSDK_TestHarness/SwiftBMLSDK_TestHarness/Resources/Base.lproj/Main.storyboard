@@ -809,7 +809,7 @@
                                 <rect key="frame" x="16" y="103" width="361" height="617"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZaJ-zq-n7e">
-                                        <rect key="frame" x="0.0" y="0.0" width="361" height="154.33333333333334"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="123.33333333333333"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-0-BUTTON"/>
                                         <connections>
@@ -817,7 +817,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="foY-8L-Tia">
-                                        <rect key="frame" x="0.0" y="154.33333333333331" width="361" height="154.33333333333331"/>
+                                        <rect key="frame" x="0.0" y="123.33333333333334" width="361" height="123.33333333333334"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-1-BUTTON"/>
                                         <connections>
@@ -825,7 +825,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ocd-kz-hg0">
-                                        <rect key="frame" x="0.0" y="308.66666666666669" width="193" height="154"/>
+                                        <rect key="frame" x="0.0" y="246.66666666666666" width="193" height="123.66666666666666"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-2-BUTTON"/>
                                         <connections>
@@ -833,11 +833,19 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A4S-4a-7lT">
-                                        <rect key="frame" x="0.0" y="462.66666666666657" width="194" height="154.33333333333331"/>
+                                        <rect key="frame" x="0.0" y="370.33333333333331" width="194" height="123.33333333333331"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-3-BUTTON"/>
                                         <connections>
                                             <segue destination="3sT-US-jYS" kind="show" id="M4X-pP-zjC"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FBN-J4-7Fq">
+                                        <rect key="frame" x="0.0" y="493.66666666666657" width="194" height="123.33333333333331"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="SLUG-CUSTOM-4-BUTTON"/>
+                                        <connections>
+                                            <segue destination="4AY-ly-I8u" kind="show" id="cy8-mx-djm"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -864,6 +872,7 @@
                         <outlet property="custom1Button" destination="foY-8L-Tia" id="nMq-We-bQX"/>
                         <outlet property="custom2Button" destination="Ocd-kz-hg0" id="W7e-UX-pXu"/>
                         <outlet property="custom3Button" destination="A4S-4a-7lT" id="iCy-St-Ie5"/>
+                        <outlet property="custom4Button" destination="FBN-J4-7Fq" id="4mR-mc-UuJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fe4-XG-fbN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1252,6 +1261,22 @@
             </objects>
             <point key="canvasLocation" x="2336.6412213740459" y="2504.929577464789"/>
         </scene>
+        <!--SwiftBMLSDK Test Harness Virtual Custom4 View Controller-->
+        <scene sceneID="Zfx-ho-lly">
+            <objects>
+                <viewController id="4AY-ly-I8u" customClass="SwiftBMLSDK_TestHarness_VirtualCustom4ViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oW6-Aq-svz">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="nhT-rk-mH2"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="gKf-0n-MwR"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Tlh-rx-DoZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2337" y="3244"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="2JD-up-rXd"/>
@@ -1263,7 +1288,7 @@
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
         <namedColor name="AccentColor">
-            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.31400001049041748" green="0.37999999523162842" blue="0.89399999380111694" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

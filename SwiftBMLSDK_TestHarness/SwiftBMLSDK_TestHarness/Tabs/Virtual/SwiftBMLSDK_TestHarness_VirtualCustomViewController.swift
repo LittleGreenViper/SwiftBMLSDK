@@ -22,6 +22,19 @@ import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
+// MARK: - Protocol to Genericize the Virtual Service Property -
+/* ###################################################################################################################################### */
+/**
+ */
+protocol VirtualServiceControllerProtocol: AnyObject {
+    /* ################################################################## */
+    /**
+     This handles the server data.
+     */
+    var virtualService: SwiftBMLSDK_MeetingLocalTimezoneCollection? { get set }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - Server Virtual Search Custom View Controller -
 /* ###################################################################################################################################### */
 /**
@@ -49,6 +62,11 @@ class SwiftBMLSDK_TestHarness_VirtualCustomViewController: SwiftBMLSDK_TestHarne
     
     /* ################################################################## */
     /**
+     */
+    @IBOutlet weak var custom4Button: UIButton?
+    
+    /* ################################################################## */
+    /**
      This handles the server data.
      */
     var virtualService: SwiftBMLSDK_MeetingLocalTimezoneCollection?
@@ -65,10 +83,15 @@ extension SwiftBMLSDK_TestHarness_VirtualCustomViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "SLUG-CUSTOM-TITLE".localizedVariant
-        custom0Button?.setTitle(custom0Button?.title(for: .normal)?.localizedVariant, for: .normal)
-        custom1Button?.setTitle(custom1Button?.title(for: .normal)?.localizedVariant, for: .normal)
-        custom2Button?.setTitle(custom2Button?.title(for: .normal)?.localizedVariant, for: .normal)
-        custom3Button?.setTitle(custom3Button?.title(for: .normal)?.localizedVariant, for: .normal)
+        guard let subviews = view?.subviews,
+              3 == subviews.count,
+              let mainContainer = subviews[2] as? UIStackView
+        else { return }
+        mainContainer.arrangedSubviews.forEach {
+            if let view = $0 as? UIButton {
+                view.setTitle(view.title(for: .normal)?.localizedVariant, for: .normal)
+            }
+        }
     }
     
     /* ################################################################## */
@@ -79,14 +102,6 @@ extension SwiftBMLSDK_TestHarness_VirtualCustomViewController {
      - parameter sender: The meeting instance.
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
-        if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
-            destination.virtualService = virtualService
-        } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom1ViewController {
-            destination.virtualService = virtualService
-        } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom2ViewController {
-            destination.virtualService = virtualService
-        } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_VirtualCustom3ViewController {
-            destination.virtualService = virtualService
-        }
+        (inSegue.destination as? VirtualServiceControllerProtocol)?.virtualService = virtualService
     }
 }

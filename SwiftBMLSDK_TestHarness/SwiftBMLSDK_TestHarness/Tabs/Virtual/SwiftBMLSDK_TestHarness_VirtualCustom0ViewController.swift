@@ -26,7 +26,7 @@ import SwiftBMLSDK
 /* ###################################################################################################################################### */
 /**
  */
-class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarness_BaseViewController {
+class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarness_BaseViewController, VirtualServiceControllerProtocol {
     /* ################################################################################################################################## */
     // MARK: Typealias for the data to be sent to the list.
     /* ################################################################################################################################## */

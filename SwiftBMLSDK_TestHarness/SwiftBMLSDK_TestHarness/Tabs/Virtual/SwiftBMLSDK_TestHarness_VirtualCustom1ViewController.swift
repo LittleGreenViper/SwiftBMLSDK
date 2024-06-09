@@ -27,7 +27,7 @@ import RVS_CalendarInput
 /* ###################################################################################################################################### */
 /**
  */
-class SwiftBMLSDK_TestHarness_VirtualCustom1ViewController: SwiftBMLSDK_TestHarness_BaseViewController {
+class SwiftBMLSDK_TestHarness_VirtualCustom1ViewController: SwiftBMLSDK_TestHarness_BaseViewController, VirtualServiceControllerProtocol {
     /* ################################################################################################################################## */
     // MARK: Typealias for the data to be sent to the list.
     /* ################################################################################################################################## */

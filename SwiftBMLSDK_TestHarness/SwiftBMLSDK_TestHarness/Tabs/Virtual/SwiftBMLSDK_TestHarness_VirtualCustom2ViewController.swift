@@ -26,7 +26,7 @@ import SwiftBMLSDK
 /* ###################################################################################################################################### */
 /**
  */
-class SwiftBMLSDK_TestHarness_VirtualCustom2ViewController: SwiftBMLSDK_TestHarness_ListViewController {
+class SwiftBMLSDK_TestHarness_VirtualCustom2ViewController: SwiftBMLSDK_TestHarness_ListViewController, VirtualServiceControllerProtocol {
     /* ################################################################## */
     /**
      This handles the server data.
