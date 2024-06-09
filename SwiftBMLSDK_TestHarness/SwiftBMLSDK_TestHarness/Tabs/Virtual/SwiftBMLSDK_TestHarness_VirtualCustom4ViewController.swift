@@ -22,6 +22,31 @@ import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
 
 /* ###################################################################################################################################### */
+// MARK: - Special Table Cell Class -
+/* ###################################################################################################################################### */
+/**
+ */
+class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController_TableCell: UITableViewCell {
+    /* ################################################################## */
+    /**
+     The ID for reuse
+     */
+    static let reuseID = "SwiftBMLSDK_TestHarness_VirtualCustom4ViewController_TableCell"
+    
+    /* ################################################################## */
+    /**
+     The label that displays the meeting name
+     */
+    @IBOutlet weak var meetingNameLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     The meeting instance associated with this row.
+     */
+    var meetingInstance: MeetingInstance?
+}
+
+/* ###################################################################################################################################### */
 // MARK: - Additional Function for Meetings -
 /* ###################################################################################################################################### */
 extension MeetingInstance {
@@ -53,6 +78,54 @@ class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     The index of the component that will handle the day. 2 is right side, 0 is left side.
+     */
+    private static let _dayComponentIndex = 0
+    
+    /* ################################################################## */
+    /**
+     The index of the component that will handle the times.
+     */
+    private static let _timeComponentIndex = 0 == _dayComponentIndex ? 2 : 0
+    
+    /* ################################################################## */
+    /**
+     The width of the component that will handle the day.
+     */
+    private static let _dayComponentWidthInDisplayUnits = CGFloat(100)
+    
+    /* ################################################################## */
+    /**
+     The width of the component that will handle the time.
+     */
+    private static let _timeComponentWidthInDisplayUnits = CGFloat(100)
+    
+    /* ################################################################## */
+    /**
+     The width of the component that separates the other two components.
+     */
+    private static let _separatorComponentWidthInDisplayUnits = CGFloat(8)
+
+    /* ################################################################## */
+    /**
+     The ID for the segue to display a single meeting
+     */
+    private static let _showMeetingSegueID = "show-meeting"
+    
+    /* ################################################################## */
+    /**
+     The background transparency, for alternating rows.
+     */
+    private static let _alternateRowOpacity = CGFloat(0.05)
+
+    /* ################################################################## */
+    /**
+     We use this to prevent re-mapping the data, when returning from viewing a meeting.
+     */
+    var dontRefresh = false
+    
+    /* ################################################################## */
+    /**
      This handles the server data.
      */
     var virtualService: SwiftBMLSDK_MeetingLocalTimezoneCollection?
@@ -65,9 +138,31 @@ class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     */
+    @IBOutlet weak var meetingsTableView: UITableView?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var throbberView: UIView?
+
+    /* ################################################################## */
+    /**
      This is an array of the time-mapped meeting data.
      */
-    var mappedDataset = [MappedSet]()
+    var mappedDataset = [[MappedSet]]()
+    
+    /* ################################################################## */
+    /**
+     */
+    var tableFood: [MeetingInstance] {
+        guard let dayTimePicker = dayTimePicker,
+              2 < dayTimePicker.numberOfComponents,
+              (0..<mappedDataset.count).contains(dayTimePicker.selectedRow(inComponent: Self._dayComponentIndex)),
+              (0..<mappedDataset[dayTimePicker.selectedRow(inComponent: Self._dayComponentIndex)].count).contains(dayTimePicker.selectedRow(inComponent: Self._timeComponentIndex))
+        else { return [] }
+        return mappedDataset[dayTimePicker.selectedRow(inComponent: Self._dayComponentIndex)][dayTimePicker.selectedRow(inComponent: Self._timeComponentIndex)].meetings
+    }
 }
 
 /* ###################################################################################################################################### */
@@ -105,35 +200,40 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController {
      This maps the times for the selected day.
      */
     func mapData() {
-        guard let dayTimePicker = dayTimePicker,
-              let virtualService = virtualService
-        else { return }
-
-        var meetings = [MeetingInstance]()
-        
-        if 0 == dayTimePicker.selectedRow(inComponent: 1),
-           0 == dayTimePicker.selectedRow(inComponent: 0) {
-            meetings = virtualService.meetings.compactMap { $0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
-        } else if 0 == dayTimePicker.selectedRow(inComponent: 1) {
-            meetings = virtualService.meetings.compactMap { !$0.isInProgress && $0.nextDate > .now && $0.nextDate.isOnTheSameDayAs(.now) ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
-        } else {
-            let theDayDate = Date.now.addingTimeInterval(86400 * TimeInterval(dayTimePicker.selectedRow(inComponent: 0) + 1))
-            meetings = virtualService.meetings.compactMap { !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(theDayDate) ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
-        }
-        
-        var times = Set<Int>()
-        
-        meetings.forEach { times.insert($0.adjustedIntegerStartIme) }
-        
-        let timeAr = Array(times).sorted()
-        
         mappedDataset = []
         
-        for timeInst in timeAr.enumerated() {
-            let meetings = meetings.filter { $0.adjustedIntegerStartIme == timeInst.element }
-            if !meetings.isEmpty {
-                mappedDataset.append(MappedSet(time: meetings[0].timeString, meetings: meetings))
+        guard let virtualService = virtualService else { return }
+
+
+        for day in 0..<8 {
+            var daySet = [MappedSet]()
+            
+            var meetings = [MeetingInstance]()
+            
+            let date = Calendar.current.startOfDay(for: .now).addingTimeInterval(86400 * TimeInterval(day))
+            meetings = virtualService.meetings.compactMap {
+                !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(date) && $0.nextDate >= .now ? $0 : nil
+            }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            
+            var times = Set<Int>()
+            
+            meetings.forEach { times.insert($0.adjustedIntegerStartIme) }
+            
+            let timeAr = Array(times).sorted()
+            
+            if 0 == day {
+                let inProgressMeetings = virtualService.meetings.compactMap { $0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+                daySet.append(MappedSet(time: "SLUG-IN-PROGRESS-PICKER".localizedVariant, meetings: inProgressMeetings))
             }
+            
+            for timeInst in timeAr.enumerated() {
+                let meetings = meetings.filter { $0.adjustedIntegerStartIme == timeInst.element }
+                if !meetings.isEmpty {
+                    daySet.append(MappedSet(time: meetings[0].timeString, meetings: meetings))
+                }
+            }
+            
+            mappedDataset.append(daySet)
         }
     }
 }
@@ -149,6 +249,9 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController {
     override func viewDidLoad() {
         title = "SLUG-CUSTOM-4-BUTTON".localizedVariant
         super.viewDidLoad()
+        dayTimePicker?.isHidden = true
+        throbberView?.isHidden = false
+        meetingsTableView?.isHidden = true
     }
     
     /* ################################################################## */
@@ -159,7 +262,49 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController {
      */
     override func viewDidAppear(_ inIsAnimated: Bool) {
         super.viewDidAppear(inIsAnimated)
-        dayTimePicker?.selectRow(0, inComponent: 1, animated: false)
+        if !dontRefresh {
+            mapData()
+            dayTimePicker?.delegate = self
+            dayTimePicker?.dataSource = self
+            meetingsTableView?.reloadData()
+            dayTimePicker?.selectRow(0, inComponent: Self._dayComponentIndex, animated: false)
+            dayTimePicker?.selectRow(0, inComponent: Self._timeComponentIndex, animated: false)
+        }
+        dontRefresh = false
+        throbberView?.isHidden = true
+        dayTimePicker?.isHidden = false
+        meetingsTableView?.isHidden = false
+    }
+    
+    /* ################################################################## */
+    /**
+     Called before we switch to the meeting inspector.
+     
+     - parameter for: The segue we are executing.
+     - parameter sender: The meeting instance.
+     */
+    override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
+        if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
+           let meetingInstance = inMeeting as? MeetingInstance {
+            dontRefresh = true
+            destination.isNormalizedTime = true
+            destination.meeting = meetingInstance
+        }
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Instance Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController {
+    /* ################################################################## */
+    /**
+     Called to show a meeting details page.
+     
+     - parameter inMeeting: The meeting instance.
+     */
+    func selectMeeting(_ inMeeting: MeetingInstance) {
+        performSegue(withIdentifier: Self._showMeetingSegueID, sender: inMeeting)
     }
 }
 
@@ -172,9 +317,9 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UIPickerViewData
      Returns the number of components for the picker view.
      
      - parameter in: The picker view (ignored)
-     - returns: 2 (always)
+     - returns: 3 (always)
      */
-    func numberOfComponents(in: UIPickerView) -> Int { 2 }
+    func numberOfComponents(in: UIPickerView) -> Int { 3 }
     
     /* ################################################################## */
     /**
@@ -186,13 +331,19 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UIPickerViewData
      */
     func pickerView(_ inPickerView: UIPickerView, numberOfRowsInComponent inComponent: Int) -> Int {
         switch inComponent {
-        case 1:
-            return 8
+        case Self._dayComponentIndex:
+            return mappedDataset.count
+            
+        case Self._timeComponentIndex:
+            if 1 < inPickerView.numberOfComponents {
+                let day = inPickerView.selectedRow(inComponent: Self._dayComponentIndex)
+                return mappedDataset[day].count
+            } else {
+                return 0
+            }
             
         default:
-            var ret = 1 < inPickerView.numberOfComponents && 0 == inPickerView.selectedRow(inComponent: 1) ? 1 : 0
-            ret += mappedDataset.count
-            return ret
+            return 0
         }
     }
 }
@@ -210,14 +361,15 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UIPickerViewDele
      - returns: the number of rows to display in the component.
      */
     func pickerView(_ inPickerView: UIPickerView, widthForComponent inComponent: Int) -> CGFloat {
-        let pickerWidth = inPickerView.frame.size.width
-        
         switch inComponent {
-        case 1:
-            return 100
+        case Self._dayComponentIndex:
+            return Self._dayComponentWidthInDisplayUnits
             
+        case Self._timeComponentIndex:
+            return Self._timeComponentWidthInDisplayUnits
+
         default:
-            return pickerWidth - 100
+            return Self._separatorComponentWidthInDisplayUnits
         }
     }
     
@@ -238,26 +390,29 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UIPickerViewDele
         ret.minimumScaleFactor = 0.5
         
         switch inComponent {
-        case 1:
+        case Self._dayComponentIndex:
             if 0 == inRow {
                 let currentDay = Calendar.current.component(.weekday, from: .now)
                 let mapped = Self.mapWeekday(currentDay)
                 ret.text = String(format: "SLUG-TODAY-FORMAT".localizedVariant, mapped.short)
             } else {
-                let currentDay = Calendar.current.component(.weekday, from: .now.addingTimeInterval(86400 * TimeInterval(inRow)))
+                let date = Calendar.current.startOfDay(for: .now.addingTimeInterval(86400 * TimeInterval(inRow)))
+                let currentDay = Calendar.current.component(.weekday, from: date)
                 let mapped = Self.mapWeekday(currentDay)
                 ret.text = mapped.string
             }
             
+        case Self._timeComponentIndex:
+            let day = inPickerView.selectedRow(inComponent: Self._dayComponentIndex)
+            guard (0..<mappedDataset.count).contains(day),
+                  (0..<mappedDataset[day].count).contains(inRow)
+            else { return UIView() }
+            ret.text = mappedDataset[day][inRow].time
         default:
-            if 0 == inPickerView.selectedRow(inComponent: 1),
-               0 == inRow {
-                ret.text = "SLUG-IN-PROGRESS-PICKER".localizedVariant
-            } else {
-                let theRow = 0 == inPickerView.selectedRow(inComponent: 1) ? inRow - 1 : inRow
-                ret.text = mappedDataset[theRow].time
-            }
+            return UIView()
         }
+        
+        ret.textAlignment = 0 == inComponent ? .right : .left
         
         return ret
     }
@@ -272,14 +427,66 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UIPickerViewDele
      */
     func pickerView(_ inPickerView: UIPickerView, didSelectRow inRow: Int, inComponent: Int) {
         switch inComponent {
-        case 1:
-            mapData()
-            inPickerView.reloadComponent(0)
+        case Self._dayComponentIndex:
+            inPickerView.reloadComponent(Self._timeComponentIndex)
             if !mappedDataset.isEmpty {
-                inPickerView.selectRow(0, inComponent: 0, animated: true)
+                inPickerView.selectRow(0, inComponent: Self._timeComponentIndex, animated: true)
             }
+        
+        case Self._timeComponentIndex:
+            meetingsTableView?.reloadData()
+            
         default:
             break
         }
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: UITableViewDataSource Conformance
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UITableViewDataSource {
+    /* ################################################################## */
+    /**
+     - parameter: The table view (ignored).
+     - parameter numberOfRowsInSection: The 0-based section index.
+     - returns: The number of meetings in the given section.
+     */
+    func tableView(_: UITableView, numberOfRowsInSection: Int) -> Int { tableFood.count }
+    
+    /* ################################################################## */
+    /**
+     - parameter: The table view
+     - parameter cellForRowAt: The indexpath to the requested cell.
+     - returns: A new (or reused) table cell.
+     */
+    func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
+        guard let ret = inTableView.dequeueReusableCell(withIdentifier: SwiftBMLSDK_TestHarness_VirtualCustom4ViewController_TableCell.reuseID, for: inIndexPath) as? SwiftBMLSDK_TestHarness_VirtualCustom4ViewController_TableCell else { return UITableViewCell() }
+        
+        ret.meetingInstance = tableFood[inIndexPath.row]
+        ret.meetingNameLabel?.text = ret.meetingInstance?.name
+        
+        ret.backgroundColor = (1 == inIndexPath.row % 2) ? UIColor.label.withAlphaComponent(Self._alternateRowOpacity) : UIColor.clear
+        
+        return ret
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: UITableViewDelegate Conformance
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UITableViewDelegate {
+    /* ################################################################## */
+    /**
+     Called when a cell is selected. We will use this to open the user viewer.
+     
+     - parameter: The table view (ignored)
+     - parameter willSelectRowAt: The index path of the cell we are selecting.
+     - returns: nil (all the time).
+     */
+    func tableView(_: UITableView, willSelectRowAt inIndexPath: IndexPath) -> IndexPath? {
+        let meeting = tableFood[inIndexPath.row]
+        selectMeeting(meeting)
+        return nil
     }
 }

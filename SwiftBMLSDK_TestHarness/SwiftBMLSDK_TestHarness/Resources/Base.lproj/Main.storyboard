@@ -1270,27 +1270,82 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nbn-x6-6Dw">
-                                <rect key="frame" x="16" y="103" width="361" height="100"/>
+                                <rect key="frame" x="36.666666666666657" y="103" width="320" height="180"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="5L8-wh-nRr"/>
+                                    <constraint firstAttribute="height" constant="180" id="xlL-pP-iQS"/>
                                 </constraints>
-                                <connections>
-                                    <outlet property="dataSource" destination="4AY-ly-I8u" id="4L7-Mv-D7N"/>
-                                    <outlet property="delegate" destination="4AY-ly-I8u" id="2jN-9C-oby"/>
-                                </connections>
                             </pickerView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="YLS-B2-iVi">
+                                <rect key="frame" x="16" y="283" width="361" height="437"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SwiftBMLSDK_TestHarness_VirtualCustom4ViewController_TableCell" id="MPq-fy-dqN" customClass="SwiftBMLSDK_TestHarness_VirtualCustom4ViewController_TableCell" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="361" height="40.333332061767578"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MPq-fy-dqN" id="X0T-TH-p1y">
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="40.333332061767578"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZbX-ee-5o7">
+                                                    <rect key="frame" x="20" y="10.999999999999998" width="321" height="18.333333333333329"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ZbX-ee-5o7" firstAttribute="leading" secondItem="X0T-TH-p1y" secondAttribute="leadingMargin" id="2vc-C6-jYi"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="ZbX-ee-5o7" secondAttribute="bottom" id="8LY-Dk-1gH"/>
+                                                <constraint firstItem="ZbX-ee-5o7" firstAttribute="top" secondItem="X0T-TH-p1y" secondAttribute="topMargin" id="DXe-SD-iH8"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ZbX-ee-5o7" secondAttribute="trailing" id="Ma3-Hh-bgs"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="meetingNameLabel" destination="ZbX-ee-5o7" id="c47-iR-qnz"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="4AY-ly-I8u" id="DYh-6t-hXp"/>
+                                    <outlet property="delegate" destination="4AY-ly-I8u" id="rBl-mB-PcO"/>
+                                </connections>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dTI-td-Wcw">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="79M-HI-QDW">
+                                        <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
+                                        <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.49759756459999999" green="0.49759756459999999" blue="0.49759756459999999" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="79M-HI-QDW" firstAttribute="centerX" secondItem="dTI-td-Wcw" secondAttribute="centerX" id="LRl-Ic-Bs0"/>
+                                    <constraint firstItem="79M-HI-QDW" firstAttribute="centerY" secondItem="dTI-td-Wcw" secondAttribute="centerY" id="jHS-uq-Sy7"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="nhT-rk-mH2"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="nbn-x6-6Dw" firstAttribute="leading" secondItem="nhT-rk-mH2" secondAttribute="leading" constant="16" id="eYf-5c-Bgc"/>
+                            <constraint firstItem="YLS-B2-iVi" firstAttribute="top" secondItem="nbn-x6-6Dw" secondAttribute="bottom" id="15B-CJ-fAx"/>
+                            <constraint firstItem="nbn-x6-6Dw" firstAttribute="centerX" secondItem="oW6-Aq-svz" secondAttribute="centerX" id="2dz-3q-2it"/>
+                            <constraint firstItem="YLS-B2-iVi" firstAttribute="leading" secondItem="nhT-rk-mH2" secondAttribute="leading" constant="16" id="4a6-6U-1Jk"/>
+                            <constraint firstItem="dTI-td-Wcw" firstAttribute="leading" secondItem="oW6-Aq-svz" secondAttribute="leading" id="7aH-tg-q0s"/>
+                            <constraint firstAttribute="trailing" secondItem="dTI-td-Wcw" secondAttribute="trailing" id="OK4-Yl-DbV"/>
+                            <constraint firstAttribute="bottom" secondItem="dTI-td-Wcw" secondAttribute="bottom" id="fup-c7-Ew5"/>
                             <constraint firstItem="nbn-x6-6Dw" firstAttribute="top" secondItem="nhT-rk-mH2" secondAttribute="top" id="hrh-A6-33l"/>
-                            <constraint firstItem="nhT-rk-mH2" firstAttribute="trailing" secondItem="nbn-x6-6Dw" secondAttribute="trailing" constant="16" id="oL6-fD-xup"/>
+                            <constraint firstItem="nhT-rk-mH2" firstAttribute="trailing" secondItem="YLS-B2-iVi" secondAttribute="trailing" constant="16" id="mxT-Y1-KVr"/>
+                            <constraint firstItem="nhT-rk-mH2" firstAttribute="bottom" secondItem="YLS-B2-iVi" secondAttribute="bottom" id="soM-YY-9qk"/>
+                            <constraint firstItem="dTI-td-Wcw" firstAttribute="top" secondItem="oW6-Aq-svz" secondAttribute="top" id="z4G-YB-bC3"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="gKf-0n-MwR"/>
                     <connections>
                         <outlet property="dayTimePicker" destination="nbn-x6-6Dw" id="36F-J1-Z0V"/>
+                        <outlet property="meetingsTableView" destination="YLS-B2-iVi" id="vbT-nQ-zoR"/>
+                        <outlet property="throbberView" destination="dTI-td-Wcw" id="oCM-Al-X6b"/>
+                        <segue destination="y7V-0G-Fls" kind="show" identifier="show-meeting" id="fCC-tT-c5D"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tlh-rx-DoZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1300,7 +1355,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="2JD-up-rXd"/>
-        <segue reference="rsY-NR-muU"/>
+        <segue reference="fCC-tT-c5D"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="globe" catalog="system" width="128" height="123"/>
