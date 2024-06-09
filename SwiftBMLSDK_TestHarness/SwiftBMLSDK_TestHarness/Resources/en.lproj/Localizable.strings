@@ -91,3 +91,6 @@
 "SLUG-MORNING-SECTION-HEADER"                   =   "Morning Meetings";
 "SLUG-AFTERNOON-SECTION-HEADER"                 =   "Afternoon Meetings";
 "SLUG-EVENING-SECTION-HEADER"                   =   "Evening Meetings";
+
+"SLUG-TODAY-FORMAT"                             =   "Today (%@)";
+"SLUG-IN-PROGRESS-PICKER"                       =   "In Progress";

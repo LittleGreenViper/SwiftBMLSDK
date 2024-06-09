@@ -1268,14 +1268,34 @@
                     <view key="view" contentMode="scaleToFill" id="oW6-Aq-svz">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nbn-x6-6Dw">
+                                <rect key="frame" x="16" y="103" width="361" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="5L8-wh-nRr"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="dataSource" destination="4AY-ly-I8u" id="4L7-Mv-D7N"/>
+                                    <outlet property="delegate" destination="4AY-ly-I8u" id="2jN-9C-oby"/>
+                                </connections>
+                            </pickerView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="nhT-rk-mH2"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="nbn-x6-6Dw" firstAttribute="leading" secondItem="nhT-rk-mH2" secondAttribute="leading" constant="16" id="eYf-5c-Bgc"/>
+                            <constraint firstItem="nbn-x6-6Dw" firstAttribute="top" secondItem="nhT-rk-mH2" secondAttribute="top" id="hrh-A6-33l"/>
+                            <constraint firstItem="nhT-rk-mH2" firstAttribute="trailing" secondItem="nbn-x6-6Dw" secondAttribute="trailing" constant="16" id="oL6-fD-xup"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="gKf-0n-MwR"/>
+                    <connections>
+                        <outlet property="dayTimePicker" destination="nbn-x6-6Dw" id="36F-J1-Z0V"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tlh-rx-DoZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2337" y="3244"/>
+            <point key="canvasLocation" x="2336.6412213740459" y="3243.6619718309862"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
