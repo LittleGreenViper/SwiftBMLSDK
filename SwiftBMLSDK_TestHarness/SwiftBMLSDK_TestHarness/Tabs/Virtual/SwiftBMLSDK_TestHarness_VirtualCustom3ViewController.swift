@@ -152,6 +152,14 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom3ViewController {
         title = "SLUG-CUSTOM-3-BUTTON".localizedVariant
         super.viewDidLoad()
         setUpWeekdayControl()
+    }
+    
+    /* ################################################################## */
+    /**
+     Called when the subviews have all been resolved.
+     */
+    override func viewWillAppear(_ inIsAnimated: Bool) {
+        super.viewWillAppear(inIsAnimated)
         weekdaySelected()
     }
     
