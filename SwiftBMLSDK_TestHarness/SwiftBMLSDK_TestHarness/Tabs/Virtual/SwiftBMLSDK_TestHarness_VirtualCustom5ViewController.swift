@@ -241,9 +241,11 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController {
      Called when the view hierarchy has loaded.
      */
     override func viewDidLoad() {
-        title = "SLUG-CUSTOM-4-BUTTON".localizedVariant
+        title = "SLUG-CUSTOM-5-BUTTON".localizedVariant
         super.viewDidLoad()
         dayTimePicker?.isHidden = true
+        meetingPicker?.isHidden = true
+        meetingContainerView?.isHidden = true
         throbberView?.isHidden = false
     }
     
@@ -265,6 +267,8 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController {
         dontRefresh = false
         throbberView?.isHidden = true
         dayTimePicker?.isHidden = false
+        meetingPicker?.isHidden = false
+        meetingContainerView?.isHidden = false
     }
     
     /* ################################################################## */

@@ -830,7 +830,9 @@ public struct SwiftBMLSDK_Parser: Encodable {
                     self.virtualPhoneNumber = nil
                 }
                 
-                let virtualInfo = (virtualMeetingInfo["info"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                splitsville = (virtualMeetingInfo["info"] ?? "").split(separator: "#@-@#")
+                let vInfoString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
+                let virtualInfo = vInfoString.trimmingCharacters(in: .whitespacesAndNewlines)
                 self.virtualInfo = virtualInfo.isEmpty ? nil : virtualInfo
             } else {
                 self.virtualURL = nil

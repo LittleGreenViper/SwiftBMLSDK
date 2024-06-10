@@ -479,7 +479,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
             let formatHeaderStackView = UIStackView(arrangedSubviews: [keyLabel, nameLabel])
             formatHeaderStackView.axis = .horizontal
             keyLabel.translatesAutoresizingMaskIntoConstraints = false
-            keyLabel.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            keyLabel.widthAnchor.constraint(equalToConstant: 60).isActive = true
             formatsStackView?.addArrangedSubview(formatHeaderStackView)
             formatsStackView?.addArrangedSubview(descriptionLabel)
         }
