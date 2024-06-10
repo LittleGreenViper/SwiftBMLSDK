@@ -42,31 +42,6 @@ protocol VirtualServiceControllerProtocol: AnyObject {
 class SwiftBMLSDK_TestHarness_VirtualCustomViewController: SwiftBMLSDK_TestHarness_BaseViewController {
     /* ################################################################## */
     /**
-     */
-    @IBOutlet weak var custom0Button: UIButton?
-
-    /* ################################################################## */
-    /**
-     */
-    @IBOutlet weak var custom1Button: UIButton?
-    
-    /* ################################################################## */
-    /**
-     */
-    @IBOutlet weak var custom2Button: UIButton?
-    
-    /* ################################################################## */
-    /**
-     */
-    @IBOutlet weak var custom3Button: UIButton?
-    
-    /* ################################################################## */
-    /**
-     */
-    @IBOutlet weak var custom4Button: UIButton?
-    
-    /* ################################################################## */
-    /**
      This handles the server data.
      */
     var virtualService: SwiftBMLSDK_MeetingLocalTimezoneCollection?

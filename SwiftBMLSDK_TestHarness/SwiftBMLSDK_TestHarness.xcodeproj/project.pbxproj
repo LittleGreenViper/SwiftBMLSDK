@@ -32,6 +32,7 @@
 		D488D29E2B82CE40000979D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D488D29D2B82CE40000979D9 /* Assets.xcassets */; };
 		D488D2AB2B82CF3F000979D9 /* SwiftBMLSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; };
 		D488D2AC2B82CF3F000979D9 /* SwiftBMLSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D493FBD22C1741B5001E18B9 /* SwiftBMLSDK_TestHarness_VirtualCustom5ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D493FBD12C1741B5001E18B9 /* SwiftBMLSDK_TestHarness_VirtualCustom5ViewController.swift */; };
 		D49D883E2C0CB3DB002B232F /* RVS_CalendarInput in Frameworks */ = {isa = PBXBuildFile; productRef = D49D883D2C0CB3DB002B232F /* RVS_CalendarInput */; };
 		D49D88402C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49D883F2C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift */; };
 		D4A137132C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A137122C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift */; };
@@ -80,6 +81,7 @@
 		D488D29D2B82CE40000979D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D488D2A22B82CE40000979D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D488D2AA2B82CF3F000979D9 /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D493FBD12C1741B5001E18B9 /* SwiftBMLSDK_TestHarness_VirtualCustom5ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_VirtualCustom5ViewController.swift; sourceTree = "<group>"; };
 		D49D883F2C0CB432002B232F /* SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_VirtualCustom1ViewController.swift; sourceTree = "<group>"; };
 		D4A137122C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_ListViewController.swift; sourceTree = "<group>"; };
 		D4BA3D5C2C15F5F100FF3DF7 /* SwiftBMLSDK_TestHarness_VirtualCustom4ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_TestHarness_VirtualCustom4ViewController.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				D4302D972C127E6E00748E5B /* SwiftBMLSDK_TestHarness_VirtualCustom2ViewController.swift */,
 				D4C2CBFD2C13A1A6006634B2 /* SwiftBMLSDK_TestHarness_VirtualCustom3ViewController.swift */,
 				D4BA3D5C2C15F5F100FF3DF7 /* SwiftBMLSDK_TestHarness_VirtualCustom4ViewController.swift */,
+				D493FBD12C1741B5001E18B9 /* SwiftBMLSDK_TestHarness_VirtualCustom5ViewController.swift */,
 				D4A137122C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift */,
 			);
 			path = Virtual;
@@ -307,6 +310,7 @@
 				D4A137132C0B58B80015599E /* SwiftBMLSDK_TestHarness_ListViewController.swift in Sources */,
 				D40823412BFB9F3D00269D87 /* SwiftBMLSDK_TestHarness_MeetingViewController.swift in Sources */,
 				D488D2992B82CE3F000979D9 /* SwiftBMLSDK_TestHarness_TabBarController.swift in Sources */,
+				D493FBD22C1741B5001E18B9 /* SwiftBMLSDK_TestHarness_VirtualCustom5ViewController.swift in Sources */,
 				D4C2CBFE2C13A1A6006634B2 /* SwiftBMLSDK_TestHarness_VirtualCustom3ViewController.swift in Sources */,
 				D485D21B2C0A024700B16BE4 /* SwiftBMLSDK_TestHarness_VirtualCustom0ViewController.swift in Sources */,
 				D47C81742B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift in Sources */,

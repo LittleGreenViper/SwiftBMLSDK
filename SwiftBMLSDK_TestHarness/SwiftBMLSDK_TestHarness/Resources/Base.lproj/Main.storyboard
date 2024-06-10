@@ -809,7 +809,7 @@
                                 <rect key="frame" x="16" y="103" width="361" height="617"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZaJ-zq-n7e">
-                                        <rect key="frame" x="0.0" y="0.0" width="361" height="123.33333333333333"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="103"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-0-BUTTON"/>
                                         <connections>
@@ -817,7 +817,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="foY-8L-Tia">
-                                        <rect key="frame" x="0.0" y="123.33333333333334" width="361" height="123.33333333333334"/>
+                                        <rect key="frame" x="0.0" y="103" width="361" height="102.66666666666669"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-1-BUTTON"/>
                                         <connections>
@@ -825,7 +825,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ocd-kz-hg0">
-                                        <rect key="frame" x="0.0" y="246.66666666666666" width="193" height="123.66666666666666"/>
+                                        <rect key="frame" x="0.0" y="205.66666666666669" width="193" height="103"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-2-BUTTON"/>
                                         <connections>
@@ -833,7 +833,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A4S-4a-7lT">
-                                        <rect key="frame" x="0.0" y="370.33333333333331" width="194" height="123.33333333333331"/>
+                                        <rect key="frame" x="0.0" y="308.66666666666669" width="194" height="102.66666666666669"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-3-BUTTON"/>
                                         <connections>
@@ -841,11 +841,19 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FBN-J4-7Fq">
-                                        <rect key="frame" x="0.0" y="493.66666666666657" width="194" height="123.33333333333331"/>
+                                        <rect key="frame" x="0.0" y="411.33333333333337" width="194" height="103"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="SLUG-CUSTOM-4-BUTTON"/>
                                         <connections>
                                             <segue destination="4AY-ly-I8u" kind="show" id="cy8-mx-djm"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tYI-g8-Kfi">
+                                        <rect key="frame" x="0.0" y="514.33333333333337" width="194" height="102.66666666666663"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="SLUG-CUSTOM-5-BUTTON"/>
+                                        <connections>
+                                            <segue destination="BgH-ei-GT4" kind="show" id="jfL-Il-Bs7"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -867,13 +875,6 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="JtR-6h-cwn"/>
-                    <connections>
-                        <outlet property="custom0Button" destination="ZaJ-zq-n7e" id="MzU-gx-XkD"/>
-                        <outlet property="custom1Button" destination="foY-8L-Tia" id="nMq-We-bQX"/>
-                        <outlet property="custom2Button" destination="Ocd-kz-hg0" id="W7e-UX-pXu"/>
-                        <outlet property="custom3Button" destination="A4S-4a-7lT" id="iCy-St-Ie5"/>
-                        <outlet property="custom4Button" destination="FBN-J4-7Fq" id="4mR-mc-UuJ"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fe4-XG-fbN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1351,6 +1352,56 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tlh-rx-DoZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2336.6412213740459" y="3243.6619718309862"/>
+        </scene>
+        <!--SwiftBMLSDK Test Harness Virtual Custom5 View Controller-->
+        <scene sceneID="1Ua-Gy-YXy">
+            <objects>
+                <viewController id="BgH-ei-GT4" customClass="SwiftBMLSDK_TestHarness_VirtualCustom5ViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="kLB-dh-da8">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zDS-bI-ur4">
+                                <rect key="frame" x="36.666666666666657" y="103" width="320" height="180"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="180" id="Tik-Zn-WiG"/>
+                                </constraints>
+                            </pickerView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uxr-NW-F4y">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="ten-bu-lOA">
+                                        <rect key="frame" x="178" y="407.66666666666669" width="37" height="37"/>
+                                        <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.49759756459999999" green="0.49759756459999999" blue="0.49759756459999999" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="ten-bu-lOA" firstAttribute="centerX" secondItem="uxr-NW-F4y" secondAttribute="centerX" id="6my-CT-3RW"/>
+                                    <constraint firstItem="ten-bu-lOA" firstAttribute="centerY" secondItem="uxr-NW-F4y" secondAttribute="centerY" id="suK-Vv-ls4"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Uxi-LB-qhT"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="uxr-NW-F4y" firstAttribute="leading" secondItem="kLB-dh-da8" secondAttribute="leading" id="0vN-0O-8Dy"/>
+                            <constraint firstAttribute="bottom" secondItem="uxr-NW-F4y" secondAttribute="bottom" id="AFo-3w-S9L"/>
+                            <constraint firstItem="zDS-bI-ur4" firstAttribute="centerX" secondItem="kLB-dh-da8" secondAttribute="centerX" id="FN7-sv-PTh"/>
+                            <constraint firstItem="zDS-bI-ur4" firstAttribute="top" secondItem="Uxi-LB-qhT" secondAttribute="top" id="R7s-TL-fwA"/>
+                            <constraint firstAttribute="trailing" secondItem="uxr-NW-F4y" secondAttribute="trailing" id="flp-CP-d26"/>
+                            <constraint firstItem="uxr-NW-F4y" firstAttribute="top" secondItem="kLB-dh-da8" secondAttribute="top" id="t2d-vm-hQv"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Upr-X5-Qro"/>
+                    <connections>
+                        <outlet property="dayTimePicker" destination="zDS-bI-ur4" id="TJQ-aa-DLi"/>
+                        <outlet property="throbberView" destination="uxr-NW-F4y" id="Hfq-fd-DDj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c4k-ET-sqL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2337" y="3936"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
