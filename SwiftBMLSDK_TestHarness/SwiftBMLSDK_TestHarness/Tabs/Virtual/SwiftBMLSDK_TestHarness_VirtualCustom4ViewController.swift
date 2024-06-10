@@ -204,35 +204,46 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController {
         
         guard let virtualService = virtualService else { return }
 
+        var date = Calendar.current.startOfDay(for: .now)
+        
+        var daySet = [MappedSet]()
+        
+        var meetings = [MeetingInstance]()
+        
+        let inProgressMeetings = virtualService.meetings.compactMap { $0.isInProgress ? $0 : nil }.map { $0.meeting }
+
         for day in 0..<8 {
-            var daySet = [MappedSet]()
-            
-            var meetings = [MeetingInstance]()
-            
-            let date = Calendar.current.startOfDay(for: .now).addingTimeInterval(86400 * TimeInterval(day))
             meetings = virtualService.meetings.compactMap {
-                !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(date) && $0.nextDate >= .now ? $0 : nil
-            }.map { $0.meeting }
-            
-            var times = Set<Int>()
-            
-            meetings.forEach { times.insert($0.adjustedIntegerStartIme) }
-            
-            let timeAr = Array(times).sorted()
-            
-            if 0 == day {
-                let inProgressMeetings = virtualService.meetings.compactMap { $0.isInProgress ? $0 : nil }.map { $0.meeting }
-                daySet.append(MappedSet(time: "SLUG-IN-PROGRESS-PICKER".localizedVariant, meetings: inProgressMeetings))
+                let nextDate = $0.nextDate
+                return nextDate.isOnTheSameDayAs(date) && (nextDate >= .now || (0 < day || !$0.isInProgress)) ? $0.meeting : nil
             }
             
-            for timeInst in timeAr.enumerated() {
-                let meetings = meetings.filter { $0.adjustedIntegerStartIme == timeInst.element }
-                if !meetings.isEmpty {
-                    daySet.append(MappedSet(time: meetings[0].timeString, meetings: meetings))
+            var times = [Int: [MeetingInstance]]()
+            
+            meetings.forEach {
+                let time = $0.adjustedIntegerStartTime
+                if nil == times[time] {
+                    times[time] = [$0]
+                } else {
+                    times[time]?.append($0)
                 }
             }
             
+            daySet = []
+            
+            if 0 == day,
+               !inProgressMeetings.isEmpty {
+                daySet = [MappedSet(time: "SLUG-IN-PROGRESS-PICKER".localizedVariant, meetings: inProgressMeetings)]
+            }
+            
+            for timeInst in times.keys.sorted() {
+                let meetings = meetings.filter { $0.adjustedIntegerStartTime == timeInst }
+                daySet.append(MappedSet(time: meetings[0].timeString, meetings: meetings))
+            }
+            
             mappedDataset.append(daySet)
+            
+            date = date.addingTimeInterval(86400)
         }
     }
 }
@@ -431,12 +442,12 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UIPickerViewDele
             if !mappedDataset.isEmpty {
                 inPickerView.selectRow(0, inComponent: Self._timeComponentIndex, animated: true)
             }
-            
+            meetingsTableView?.reloadData()
+            meetingsTableView?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         default:
-            break
+            meetingsTableView?.reloadData()
         }
         
-        meetingsTableView?.reloadData()
     }
 }
 

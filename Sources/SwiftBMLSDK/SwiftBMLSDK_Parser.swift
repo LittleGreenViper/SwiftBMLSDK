@@ -650,7 +650,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          
          Returns -1, if the time could not be calculated.
          */
-        public var adjustedIntegerStartIme: Int {
+        public var adjustedIntegerStartTime: Int {
             var mutableSelf = self
             let starter = mutableSelf.getNextStartDate(isAdjusted: true)
             let components = Calendar.current.dateComponents([.hour, .minute], from: starter)

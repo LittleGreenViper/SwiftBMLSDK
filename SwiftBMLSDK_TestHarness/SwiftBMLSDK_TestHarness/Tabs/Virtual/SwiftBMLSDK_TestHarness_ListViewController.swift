@@ -119,9 +119,9 @@ extension SwiftBMLSDK_TestHarness_ListViewController {
      This segregates the meetings into times of day.
      */
     var tableFood: [(title: String, isOpen: Bool, meetings: [MeetingInstance])] {
-        let morningMeetings = meetings.filter { $0.adjustedIntegerStartIme < 1200 }
-        let afternoonMeetings = meetings.filter { (1200..<1800).contains($0.adjustedIntegerStartIme) }
-        let eveningMeetings = meetings.filter { $0.adjustedIntegerStartIme >= 1800 }
+        let morningMeetings = meetings.filter { $0.adjustedIntegerStartTime < 1200 }
+        let afternoonMeetings = meetings.filter { (1200..<1800).contains($0.adjustedIntegerStartTime) }
+        let eveningMeetings = meetings.filter { $0.adjustedIntegerStartTime >= 1800 }
     
         var ret = [(title: String, isOpen: Bool, meetings: [MeetingInstance])]()
         
