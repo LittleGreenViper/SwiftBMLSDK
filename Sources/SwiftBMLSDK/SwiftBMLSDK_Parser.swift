@@ -812,8 +812,8 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
             if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
                 var splitsville = (virtualMeetingInfo["url"] ?? "").split(separator: "#@-@#")
-                let urlString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
-                let urlStr = cleanURI(urlString: urlString) ?? ""
+                var splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
+                let urlStr = cleanURI(urlString: splitString) ?? ""
                 if !urlStr.isEmpty,
                    let virtualURL = URL(string: urlStr) {
                     self.virtualURL = virtualURL
@@ -822,8 +822,8 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 }
                 
                 splitsville = (virtualMeetingInfo["phone_number"] ?? "").split(separator: "#@-@#")
-                let phoneString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
-                let virtualPhoneNumber = phoneString.trimmingCharacters(in: .whitespacesAndNewlines)
+                splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
+                let virtualPhoneNumber = splitString.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !virtualPhoneNumber.isEmpty {
                     self.virtualPhoneNumber = virtualPhoneNumber
                 } else {
@@ -831,8 +831,8 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 }
                 
                 splitsville = (virtualMeetingInfo["info"] ?? "").split(separator: "#@-@#")
-                let vInfoString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
-                let virtualInfo = vInfoString.trimmingCharacters(in: .whitespacesAndNewlines)
+                splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
+                let virtualInfo = splitString.trimmingCharacters(in: .whitespacesAndNewlines)
                 self.virtualInfo = virtualInfo.isEmpty ? nil : virtualInfo
             } else {
                 self.virtualURL = nil
