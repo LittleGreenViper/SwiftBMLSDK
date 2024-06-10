@@ -388,6 +388,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
     func setMapView() {
         if let meeting = meeting,
            let coords = meeting.coords,
+           !meeting.basicInPersonAddress.isEmpty,
            CLLocationCoordinate2DIsValid(coords) {
             locationHeaderLabel?.isHidden = false
             mapView?.isHidden = false

@@ -204,7 +204,6 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController {
         
         guard let virtualService = virtualService else { return }
 
-
         for day in 0..<8 {
             var daySet = [MappedSet]()
             
@@ -213,7 +212,7 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController {
             let date = Calendar.current.startOfDay(for: .now).addingTimeInterval(86400 * TimeInterval(day))
             meetings = virtualService.meetings.compactMap {
                 !$0.isInProgress && $0.nextDate.isOnTheSameDayAs(date) && $0.nextDate >= .now ? $0 : nil
-            }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+            }.map { $0.meeting }
             
             var times = Set<Int>()
             
@@ -222,7 +221,7 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController {
             let timeAr = Array(times).sorted()
             
             if 0 == day {
-                let inProgressMeetings = virtualService.meetings.compactMap { $0.isInProgress ? $0 : nil }.sorted { a, b in a.nextDate < b.nextDate }.map { $0.meeting }
+                let inProgressMeetings = virtualService.meetings.compactMap { $0.isInProgress ? $0 : nil }.map { $0.meeting }
                 daySet.append(MappedSet(time: "SLUG-IN-PROGRESS-PICKER".localizedVariant, meetings: inProgressMeetings))
             }
             
@@ -432,13 +431,12 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UIPickerViewDele
             if !mappedDataset.isEmpty {
                 inPickerView.selectRow(0, inComponent: Self._timeComponentIndex, animated: true)
             }
-        
-        case Self._timeComponentIndex:
-            meetingsTableView?.reloadData()
             
         default:
             break
         }
+        
+        meetingsTableView?.reloadData()
     }
 }
 

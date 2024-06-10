@@ -789,6 +789,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
             }
 
             if let physicalAddress = inDictionary["physical_address"] as? [String: String],
+               !((physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? "").isEmpty,
                !fixedCoords._isEqualTo(CLLocationCoordinate2D(latitude: 34.233, longitude: -118.549), precisionInMeters: 500) { // Since the NAWS office is the default BMLT physical location, we make sure that it is not the specified long/lat.
                 let mutableGoPostal = CNMutablePostalAddress()
                 mutableGoPostal.street = (physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
