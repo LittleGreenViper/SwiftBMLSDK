@@ -95,8 +95,21 @@ class SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     The picker for individual meetings.
+     */
+    @IBOutlet weak var meetingPicker: UIPickerView?
+    
+    /* ################################################################## */
+    /**
+     The "busy throbber" mask.
      */
     @IBOutlet weak var throbberView: UIView?
+    
+    /* ################################################################## */
+    /**
+     This holds individual meetings.
+     */
+    @IBOutlet weak var meetingContainerView: UIView?
 
     /* ################################################################## */
     /**
@@ -294,10 +307,10 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: UIPickerViewData
     /**
      Returns the number of components for the picker view.
      
-     - parameter in: The picker view (ignored)
+     - parameter in: The picker view
      - returns: 3 (always)
      */
-    func numberOfComponents(in: UIPickerView) -> Int { 3 }
+    func numberOfComponents(in inPickerView: UIPickerView) -> Int { dayTimePicker == inPickerView ? 3 : 1 }
     
     /* ################################################################## */
     /**
@@ -308,21 +321,25 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: UIPickerViewData
      - returns: the number of rows to display in the component.
      */
     func pickerView(_ inPickerView: UIPickerView, numberOfRowsInComponent inComponent: Int) -> Int {
-        switch inComponent {
-        case Self._dayComponentIndex:
-            return mappedDataset.count
-            
-        case Self._timeComponentIndex:
-            if 1 < inPickerView.numberOfComponents {
-                let day = inPickerView.selectedRow(inComponent: Self._dayComponentIndex)
-                return mappedDataset[day].count
-            } else {
-                return 0
+        if dayTimePicker == inPickerView {
+            switch inComponent {
+            case Self._dayComponentIndex:
+                return mappedDataset.count
+                
+            case Self._timeComponentIndex:
+                if 1 < inPickerView.numberOfComponents {
+                    let day = inPickerView.selectedRow(inComponent: Self._dayComponentIndex)
+                    return mappedDataset[day].count
+                } else {
+                    break
+                }
+                
+            default:
+                break
             }
-            
-        default:
-            return 0
         }
+        
+        return 0
     }
 }
 
@@ -339,16 +356,20 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: UIPickerViewDele
      - returns: the number of rows to display in the component.
      */
     func pickerView(_ inPickerView: UIPickerView, widthForComponent inComponent: Int) -> CGFloat {
-        switch inComponent {
-        case Self._dayComponentIndex:
-            return Self._dayComponentWidthInDisplayUnits
-            
-        case Self._timeComponentIndex:
-            return Self._timeComponentWidthInDisplayUnits
-
-        default:
-            return Self._separatorComponentWidthInDisplayUnits
+        if dayTimePicker == inPickerView {
+            switch inComponent {
+            case Self._dayComponentIndex:
+                return Self._dayComponentWidthInDisplayUnits
+                
+            case Self._timeComponentIndex:
+                return Self._timeComponentWidthInDisplayUnits
+                
+            default:
+                return Self._separatorComponentWidthInDisplayUnits
+            }
         }
+        
+        return inPickerView.frame.size.width
     }
     
     /* ################################################################## */
@@ -364,33 +385,37 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: UIPickerViewDele
     func pickerView(_ inPickerView: UIPickerView, viewForRow inRow: Int, forComponent inComponent: Int, reusing inReusingView: UIView?) -> UIView {
         let ret = inReusingView as? UILabel ?? UILabel()
         
-        ret.adjustsFontSizeToFitWidth = true
-        ret.minimumScaleFactor = 0.5
-        
-        switch inComponent {
-        case Self._dayComponentIndex:
-            if 0 == inRow {
-                let currentDay = Calendar.current.component(.weekday, from: .now)
-                let mapped = Self.mapWeekday(currentDay)
-                ret.text = String(format: "SLUG-TODAY-FORMAT".localizedVariant, mapped.short)
-            } else {
-                let date = Calendar.current.startOfDay(for: .now.addingTimeInterval(86400 * TimeInterval(inRow)))
-                let currentDay = Calendar.current.component(.weekday, from: date)
-                let mapped = Self.mapWeekday(currentDay)
-                ret.text = mapped.string
+        if dayTimePicker == inPickerView {
+            ret.adjustsFontSizeToFitWidth = true
+            ret.minimumScaleFactor = 0.5
+            
+            switch inComponent {
+            case Self._dayComponentIndex:
+                if 0 == inRow {
+                    let currentDay = Calendar.current.component(.weekday, from: .now)
+                    let mapped = Self.mapWeekday(currentDay)
+                    ret.text = String(format: "SLUG-TODAY-FORMAT".localizedVariant, mapped.short)
+                } else {
+                    let date = Calendar.current.startOfDay(for: .now.addingTimeInterval(86400 * TimeInterval(inRow)))
+                    let currentDay = Calendar.current.component(.weekday, from: date)
+                    let mapped = Self.mapWeekday(currentDay)
+                    ret.text = mapped.string
+                }
+                
+            case Self._timeComponentIndex:
+                let day = inPickerView.selectedRow(inComponent: Self._dayComponentIndex)
+                guard (0..<mappedDataset.count).contains(day),
+                      (0..<mappedDataset[day].count).contains(inRow)
+                else { return UIView() }
+                ret.text = mappedDataset[day][inRow].time
+            default:
+                return UIView()
             }
             
-        case Self._timeComponentIndex:
-            let day = inPickerView.selectedRow(inComponent: Self._dayComponentIndex)
-            guard (0..<mappedDataset.count).contains(day),
-                  (0..<mappedDataset[day].count).contains(inRow)
-            else { return UIView() }
-            ret.text = mappedDataset[day][inRow].time
-        default:
-            return UIView()
+            ret.textAlignment = 0 == inComponent ? .right : .left
+        } else {
+            
         }
-        
-        ret.textAlignment = 0 == inComponent ? .right : .left
         
         return ret
     }
@@ -404,12 +429,16 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: UIPickerViewDele
      - parameter inComponent: The 0-based component.
      */
     func pickerView(_ inPickerView: UIPickerView, didSelectRow inRow: Int, inComponent: Int) {
-        switch inComponent {
-        case Self._dayComponentIndex:
-            currentDayIndex = inRow
-
-        default:
-            currentTimeIndex = inRow
+        if dayTimePicker == inPickerView {
+            switch inComponent {
+            case Self._dayComponentIndex:
+                currentDayIndex = inRow
+                
+            default:
+                currentTimeIndex = inRow
+            }
+        } else {
+            
         }
     }
 }

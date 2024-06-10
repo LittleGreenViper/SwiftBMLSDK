@@ -136,13 +136,13 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 return ret
                 
             case .hybrid:
-                return .hybrid == ret?.meetingType ? ret : nil
+                return .hybrid == ret?.meetingType && (!(ret?.inPersonVenueName ?? "").isEmpty || !(ret?.inPersonAddress?.street ?? "").isEmpty) ? ret : nil
                 
             case .virtual(let isExclusive):
                 return .virtual == ret?.meetingType || (!isExclusive && .hybrid == ret?.meetingType) ? ret : nil
                 
             case .inPerson(let isExclusive):
-                return .inPerson == ret?.meetingType || (!isExclusive && .hybrid == ret?.meetingType) ? ret : nil
+                return (.inPerson == ret?.meetingType || (!isExclusive && .hybrid == ret?.meetingType)) /*&& (!(ret?.inPersonVenueName ?? "").isEmpty || !(ret?.inPersonAddress?.street ?? "").isEmpty)*/ ? ret : nil
             }
         }
     }
@@ -616,7 +616,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          The meeting type.
          */
         public var meetingType: MeetingType {
-            if !basicInPersonAddress.isEmpty,
+            if (!(inPersonVenueName ?? "").isEmpty || !(inPersonAddress?.street ?? "").isEmpty),
                !(virtualURL?.absoluteString ?? "").isEmpty || !(virtualPhoneNumber ?? "").isEmpty {
                 return .hybrid
             } else if !(virtualURL?.absoluteString ?? "").isEmpty || !(virtualPhoneNumber ?? "").isEmpty {
@@ -811,7 +811,9 @@ public struct SwiftBMLSDK_Parser: Encodable {
             }
 
             if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
-                let urlStr = cleanURI(urlString: virtualMeetingInfo["url"]) ?? ""
+                var splitsville = (virtualMeetingInfo["url"] ?? "").split(separator: "#@-@#")
+                let urlString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
+                let urlStr = cleanURI(urlString: urlString) ?? ""
                 if !urlStr.isEmpty,
                    let virtualURL = URL(string: urlStr) {
                     self.virtualURL = virtualURL
@@ -819,7 +821,9 @@ public struct SwiftBMLSDK_Parser: Encodable {
                     self.virtualURL = nil
                 }
                 
-                let virtualPhoneNumber = (virtualMeetingInfo["phone_number"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                splitsville = (virtualMeetingInfo["phone_number"] ?? "").split(separator: "#@-@#")
+                let phoneString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
+                let virtualPhoneNumber = phoneString.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !virtualPhoneNumber.isEmpty {
                     self.virtualPhoneNumber = virtualPhoneNumber
                 } else {
@@ -832,6 +836,13 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 self.virtualURL = nil
                 self.virtualPhoneNumber = nil
                 self.virtualInfo = nil
+            }
+            
+            if (inPersonAddress?.street ?? "").isEmpty,
+               (inPersonVenueName ?? "").isEmpty,
+               nil == virtualURL,
+               (virtualPhoneNumber ?? "").isEmpty {
+                return nil
             }
         }
         
