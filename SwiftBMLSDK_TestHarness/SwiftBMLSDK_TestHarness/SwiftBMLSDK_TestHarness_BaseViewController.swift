@@ -51,12 +51,6 @@ extension SwiftBMLSDK_TestHarness_BaseViewController {
         guard 1 < (navigationController?.viewControllers.count ?? 0) else { return tabBarController?.navigationItem }
         return navigationItem
     }
-    
-    /* ################################################################## */
-    /**
-     Quick accessor for the shared application delegate instance.
-     */
-    var myAppDelegateInstance: SwiftBMLSDK_TestHarness_AppDelegate? { SwiftBMLSDK_TestHarness_AppDelegate.appDelegateInstance }
 }
 
 /* ###################################################################################################################################### */

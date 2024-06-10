@@ -29,17 +29,6 @@ import SwiftBMLSDK
 class SwiftBMLSDK_TestHarness_AppDelegate: UIResponder { }
 
 /* ###################################################################################################################################### */
-// MARK: Computed Properties
-/* ###################################################################################################################################### */
-extension SwiftBMLSDK_TestHarness_AppDelegate {
-    /* ################################################################## */
-    /**
-     Quick accessor for the shared delegate instance.
-     */
-    class var appDelegateInstance: SwiftBMLSDK_TestHarness_AppDelegate? { UIApplication.shared.delegate as? SwiftBMLSDK_TestHarness_AppDelegate }
-}
-
-/* ###################################################################################################################################### */
 // MARK: UIApplicationDelegate Conformance
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_AppDelegate: UIApplicationDelegate {

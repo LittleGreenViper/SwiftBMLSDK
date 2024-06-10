@@ -155,13 +155,34 @@ class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: SwiftBMLSDK_TestHarn
     /* ################################################################## */
     /**
      */
+    var currentDayIndex = 0 {
+        didSet {
+            dayTimePicker?.reloadComponent(Self._timeComponentIndex)
+            currentTimeIndex = 0
+            dayTimePicker?.selectRow(0, inComponent: Self._timeComponentIndex, animated: true)
+        }
+    }
+    
+    /* ################################################################## */
+    /**
+     */
+    var currentTimeIndex = 0 {
+        didSet {
+            meetingsTableView?.reloadData()
+            meetingsTableView?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+        }
+    }
+    
+    /* ################################################################## */
+    /**
+     */
     var tableFood: [MeetingInstance] {
         guard let dayTimePicker = dayTimePicker,
               2 < dayTimePicker.numberOfComponents,
-              (0..<mappedDataset.count).contains(dayTimePicker.selectedRow(inComponent: Self._dayComponentIndex)),
-              (0..<mappedDataset[dayTimePicker.selectedRow(inComponent: Self._dayComponentIndex)].count).contains(dayTimePicker.selectedRow(inComponent: Self._timeComponentIndex))
+              (0..<mappedDataset.count).contains(currentDayIndex),
+              (0..<mappedDataset[currentDayIndex].count).contains(currentTimeIndex)
         else { return [] }
-        return mappedDataset[dayTimePicker.selectedRow(inComponent: Self._dayComponentIndex)][dayTimePicker.selectedRow(inComponent: Self._timeComponentIndex)].meetings
+        return mappedDataset[currentDayIndex][currentTimeIndex].meetings
     }
 }
 
@@ -438,16 +459,11 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: UIPickerViewDele
     func pickerView(_ inPickerView: UIPickerView, didSelectRow inRow: Int, inComponent: Int) {
         switch inComponent {
         case Self._dayComponentIndex:
-            inPickerView.reloadComponent(Self._timeComponentIndex)
-            if !mappedDataset.isEmpty {
-                inPickerView.selectRow(0, inComponent: Self._timeComponentIndex, animated: true)
-            }
-            meetingsTableView?.reloadData()
-            meetingsTableView?.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            currentDayIndex = inRow
+
         default:
-            meetingsTableView?.reloadData()
+            currentTimeIndex = inRow
         }
-        
     }
 }
 
