@@ -31,6 +31,18 @@ class SwiftBMLSDK_TestHarness_BaseViewController: UIViewController {
      Allows access to the central model.
      */
     let prefs = SwiftBMLSDK_TestHarness_Prefs()
+    
+    /* ################################################################## */
+    /**
+     The background gradient image view
+     */
+    var backgroundImageView: UIImageView?
+    
+    /* ################################################################## */
+    /**
+     The background "watermark" image view
+     */
+    var watermarkImageView: UIImageView?
 }
 
 /* ###################################################################################################################################### */
@@ -88,6 +100,9 @@ extension SwiftBMLSDK_TestHarness_BaseViewController {
         logoView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.6).isActive = true
         logoView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         logoView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        backgroundImageView = backgroundView
+        watermarkImageView = logoView
     }
 
     /* ################################################################## */

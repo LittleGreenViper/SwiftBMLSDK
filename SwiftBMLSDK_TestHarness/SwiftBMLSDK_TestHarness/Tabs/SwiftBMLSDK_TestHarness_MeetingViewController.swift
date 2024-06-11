@@ -85,12 +85,18 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     /* ################################################################## */
     /**
      */
-    var meeting: MeetingInstance?
+    var meeting: MeetingInstance? {  didSet { updateUI() } }
     
     /* ################################################################## */
     /**
      */
     var isNormalizedTime: Bool = false
+    
+    /* ################################################################## */
+    /**
+     This is set to true, if the view is embedded.
+     */
+    var hideBackgound = false
     
     /* ################################################################## */
     /**
@@ -168,6 +174,12 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if hideBackgound {
+            backgroundImageView?.removeFromSuperview()
+            watermarkImageView?.removeFromSuperview()
+            view?.backgroundColor = .clear
+        }
         
         guard let meeting = meeting else { return }
         myNavItem?.title = meeting.name
@@ -460,7 +472,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
      Set the format display
      */
     func setFormats() {
-        formatsStackView?.subviews.forEach { formatsStackView?.removeArrangedSubview($0) }
+        formatsStackView?.subviews.forEach { $0.removeFromSuperview() }
         meeting?.formats.forEach {
             let keyLabel = UILabel()
             keyLabel.text = $0.key

@@ -74,6 +74,12 @@ class SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: SwiftBMLSDK_TestHarn
      The background transparency, for alternating rows.
      */
     private static let _alternateRowOpacity = CGFloat(0.05)
+    
+    /* ################################################################## */
+    /**
+     The meeting display view controller.
+     */
+    var embededMeetingController: SwiftBMLSDK_TestHarness_MeetingViewController?
 
     /* ################################################################## */
     /**
@@ -133,6 +139,8 @@ class SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: SwiftBMLSDK_TestHarn
      */
     var currentTimeIndex = 0 {
         didSet {
+            meetingPicker?.reloadComponent(0)
+            meetingPicker?.selectRow(0, inComponent: 0, animated: true)
         }
     }
     
@@ -263,6 +271,8 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController {
             dayTimePicker?.dataSource = self
             dayTimePicker?.selectRow(0, inComponent: Self._dayComponentIndex, animated: false)
             dayTimePicker?.selectRow(0, inComponent: Self._timeComponentIndex, animated: false)
+            meetingPicker?.reloadComponent(0)
+            setCurrentMeeting()
         }
         dontRefresh = false
         throbberView?.isHidden = true
@@ -279,11 +289,15 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController {
      - parameter sender: The meeting instance.
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
-        if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
-           let meetingInstance = inMeeting as? MeetingInstance {
-            dontRefresh = true
-            destination.isNormalizedTime = true
-            destination.meeting = meetingInstance
+        if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController {
+            if let meetingInstance = inMeeting as? MeetingInstance {
+                dontRefresh = true
+                destination.isNormalizedTime = true
+                destination.meeting = meetingInstance
+            } else {
+                embededMeetingController = destination
+                destination.hideBackgound = true
+            }
         }
     }
 }
@@ -300,6 +314,17 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController {
      */
     func selectMeeting(_ inMeeting: MeetingInstance) {
         performSegue(withIdentifier: Self._showMeetingSegueID, sender: inMeeting)
+    }
+    
+    /* ################################################################## */
+    /**
+     This sets the embedded controller to the current meeting.
+     */
+    func setCurrentMeeting() {
+        guard let selectedRow = meetingPicker?.selectedRow(inComponent: 0),
+              (0..<tableFood.count).contains(selectedRow)
+        else { return }
+        embededMeetingController?.meeting = tableFood[selectedRow]
     }
 }
 
@@ -341,6 +366,8 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: UIPickerViewData
             default:
                 break
             }
+        } else {
+            return tableFood.count
         }
         
         return 0
@@ -389,10 +416,12 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: UIPickerViewDele
     func pickerView(_ inPickerView: UIPickerView, viewForRow inRow: Int, forComponent inComponent: Int, reusing inReusingView: UIView?) -> UIView {
         let ret = inReusingView as? UILabel ?? UILabel()
         
+        ret.adjustsFontSizeToFitWidth = true
+        ret.minimumScaleFactor = 0.5
+        ret.numberOfLines = 0
+        ret.lineBreakMode = .byWordWrapping
+        
         if dayTimePicker == inPickerView {
-            ret.adjustsFontSizeToFitWidth = true
-            ret.minimumScaleFactor = 0.5
-            
             switch inComponent {
             case Self._dayComponentIndex:
                 if 0 == inRow {
@@ -418,7 +447,8 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: UIPickerViewDele
             
             ret.textAlignment = 0 == inComponent ? .right : .left
         } else {
-            
+            ret.text = tableFood[inRow].name
+            ret.textAlignment = .center
         }
         
         return ret
@@ -441,8 +471,7 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: UIPickerViewDele
             default:
                 currentTimeIndex = inRow
             }
-        } else {
-            
         }
+        setCurrentMeeting()
     }
 }
