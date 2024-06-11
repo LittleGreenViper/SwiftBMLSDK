@@ -225,6 +225,12 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
          Google Meet
          */
         case meet(_: URL? = nil)
+        
+        /* ############################################# */
+        /**
+         Discord
+         */
+        case discord(_: URL? = nil)
 
         /* ############################################# */
         /**
@@ -249,6 +255,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .meet:
                 return "gmeet"
+
+            case .discord:
+                return "discord"
             }
         }
         
@@ -269,6 +278,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .meet:
                 return "gmeet"
+
+            case .discord:
+                return "discord"
             }
         }
 
@@ -289,6 +301,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .meet:
                 return "meet.google.com"
+
+            case .discord:
+                return "discordapp.com"
             }
         }
 
@@ -309,6 +324,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .meet:
                 return "SLUG-DIRECT-URI-MEET"
+
+            case .discord:
+                return "SLUG-DIRECT-URI-DISCORD"
             }
         }
 
@@ -403,6 +421,24 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
                 let retString = "\(_serviceProtocol)://\(_serviceURLHost)/\(confNum)"
 
                 ret = URL(string: retString)
+
+            case .discord(let inURL):
+                guard let comp = inURL?.pathComponents,
+                      !comp.isEmpty else { return nil }
+                
+                let guild = comp[1]
+                
+                if 1 < comp.count {
+                    let channel = comp[2]
+                    
+                    let retString = "\(_serviceProtocol)://channels/\(guild)/\(channel)"
+                    
+                    ret = URL(string: retString)
+                } else {
+                    let retString = "\(_serviceProtocol)://channels/\(guild)"
+                    
+                    ret = URL(string: retString)
+                }
             }
             
             #if canImport(UIKit)
@@ -410,7 +446,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
                       UIApplication.shared.canOpenURL(ret)
                 else { return nil }
             #endif
-
+            
             return ret
         }
         

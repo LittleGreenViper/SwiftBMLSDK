@@ -39,6 +39,7 @@
 "SLUG-DIRECT-URI-GOTOMEETING"                   =   "GotoMeeting";
 "SLUG-DIRECT-URI-SKYPE"                         =   "Skype";
 "SLUG-DIRECT-URI-MEET"                          =   "Google Meet";
+"SLUG-DIRECT-URI-DISCORD"                       =   "Discord";
 
 "SLUG-VIRTUAL-SWITCH-0"                         =   "All";
 "SLUG-VIRTUAL-SWITCH-1"                         =   "Hybrid";

@@ -341,7 +341,7 @@ extension SwiftBMLSDK_Query {
     /**
      Fetches the server info.
      
-     - parameter completion: A tail completion proc.
+     - parameter completion: A tail completion proc (may be called in any thread).
      */
     public func serverInfo(completion inCompletion: @escaping ServerInfoResultCompletion) {
         guard let baseURLString = serverBaseURI?.absoluteString,
@@ -442,7 +442,7 @@ extension SwiftBMLSDK_Query {
      Perform a server-based search.
      
      - parameter specification: The search specification.
-     - parameter completion: A tail completion proc.
+     - parameter completion: A tail completion proc (may be called in any thread).
      */
     public func meetingSearch(specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
         guard let url = serverBaseURI?.appending(queryItems: inSpecification.urlQueryItems) else {
