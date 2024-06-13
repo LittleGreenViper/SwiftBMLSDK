@@ -290,14 +290,9 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController {
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
         if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController {
-            if let meetingInstance = inMeeting as? MeetingInstance {
-                dontRefresh = true
-                destination.isNormalizedTime = true
-                destination.meeting = meetingInstance
-            } else {
-                embededMeetingController = destination
-                destination.hideBackgound = true
-            }
+            embededMeetingController = destination
+            destination.isNormalizedTime = true
+            destination.hideBackgound = true
         }
     }
 }
