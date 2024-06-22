@@ -65,7 +65,7 @@ fileprivate extension Date {
 // MARK: - Meeting JSON Page Parser -
 /* ###################################################################################################################################### */
 /**
- This struct will accept raw JSON data from one page of results from the [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer), and parse it into an immutable struct instance.
+ This struct will contain one page of results from a meeting search, and is one of the response parameters to the ``SwiftBMLSDK_Query/QueryResultCompletion`` completion callback.
  
  This is a **baseline** parser; it doesn't really do anything more than make a simple map of the input JSON into an array of structs. It doesn't change the sorting, and provides a read-only, struct property view.
  
@@ -169,6 +169,38 @@ public struct SwiftBMLSDK_Parser: Encodable {
     public struct PageMeta: Encodable {
         /* ############################################# */
         /**
+         Default Initializer (internal).
+         
+         - parameters:
+             - actualSize: This is the actual size of this single page of results, in results (not bytes).
+             - pageSize: This is the number of results allowed as a maximum, per page, in results.
+             - startingIndex: This is the 0-based starting index, of the total found set (in results), for this page.
+             - total: This is the total size of all results in the found set.
+             - totalPages: This is the total number of pages that contain the found set.
+             - page: This is the 0-based index of this page of results.
+             - searchTime: This is the number of seconds, reported by the server, to generate this page of results.
+         */
+        internal init(actualSize inActualSize: Int = 0,
+                    pageSize inPageSize: Int = 0,
+                    startingIndex inStartingIndex: Int = 0,
+                    total inTotal: Int = 0,
+                    totalPages inTotalPages: Int = 0,
+                    page inPage: Int = 0,
+                    searchTime inSearchTime: TimeInterval = 0
+        ) {
+            actualSize = inActualSize
+            pageSize = inPageSize
+            startingIndex = inStartingIndex
+            total = inTotal
+            totalPages = inTotalPages
+            page = inPage
+            searchTime = inSearchTime
+        }
+
+        // MARK: - Exported Public Interface -
+
+        /* ############################################# */
+        /**
          This is the actual size of this single page of results, in results (not bytes).
          */
         public let actualSize: Int
@@ -208,36 +240,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
          This is the number of seconds, reported by the server, to generate this page of results.
          */
         public let searchTime: TimeInterval
-        
-        /* ############################################# */
-        /**
-         Default Initializer.
-         
-         - parameters:
-             - actualSize: This is the actual size of this single page of results, in results (not bytes).
-             - pageSize: This is the number of results allowed as a maximum, per page, in results.
-             - startingIndex: This is the 0-based starting index, of the total found set (in results), for this page.
-             - total: This is the total size of all results in the found set.
-             - totalPages: This is the total number of pages that contain the found set.
-             - page: This is the 0-based index of this page of results.
-             - searchTime: This is the number of seconds, reported by the server, to generate this page of results.
-         */
-        internal init(actualSize inActualSize: Int = 0,
-                    pageSize inPageSize: Int = 0,
-                    startingIndex inStartingIndex: Int = 0,
-                    total inTotal: Int = 0,
-                    totalPages inTotalPages: Int = 0,
-                    page inPage: Int = 0,
-                    searchTime inSearchTime: TimeInterval = 0
-        ) {
-            actualSize = inActualSize
-            pageSize = inPageSize
-            startingIndex = inStartingIndex
-            total = inTotal
-            totalPages = inTotalPages
-            page = inPage
-            searchTime = inSearchTime
-        }
     }
 
     /* ################################################################################################################################## */
@@ -291,6 +293,36 @@ public struct SwiftBMLSDK_Parser: Encodable {
                  */
                 case id
             }
+            
+            // MARK: Initializers (internal)
+            
+            /* ############################################# */
+            /**
+             Default initializer
+             
+             - parameters:
+                - key: The format key
+                - name: The short format name
+                - description: The longer format description
+                - language: The language code.
+             */
+            internal init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) {
+                key = inKey
+                name = inName
+                description = inDescription
+                language = inLanguage
+                id = inID
+            }
+
+            /* ############################################# */
+            /**
+             A failable initializer. This initializer parses "raw" format data, and populates the instance properties.
+             
+             - parameter inDictionary: A simple String-keyed dictionary of partly-parsed values.
+             */
+            internal init(_ inDictionary: [String: Any]) {
+                self.init(key: (inDictionary["key"] as? String) ?? "", name: (inDictionary["name"] as? String) ?? "", description: (inDictionary["description"] as? String) ?? "", language: (inDictionary["language"] as? String) ?? "", id: String((inDictionary["id"] as? Int) ?? 0))
+            }
 
             // MARK: Public Instance Properties
             
@@ -332,36 +364,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
              */
             public var asString: String { "\(key)\t\(name)\t\(description)" } // \t\(language)\t\(id)" } These confuse ML.
             
-            // MARK: Initializers
-            
-            /* ############################################# */
-            /**
-             Default initializer
-             
-             - parameters:
-                - key: The format key
-                - name: The short format name
-                - description: The longer format description
-                - language: The language code.
-             */
-            internal init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) {
-                key = inKey
-                name = inName
-                description = inDescription
-                language = inLanguage
-                id = inID
-            }
-
-            /* ############################################# */
-            /**
-             A failable initializer. This initializer parses "raw" format data, and populates the instance properties.
-             
-             - parameter inDictionary: A simple String-keyed dictionary of partly-parsed values.
-             */
-            internal init(_ inDictionary: [String: Any]) {
-                self.init(key: (inDictionary["key"] as? String) ?? "", name: (inDictionary["name"] as? String) ?? "", description: (inDictionary["description"] as? String) ?? "", language: (inDictionary["language"] as? String) ?? "", id: String((inDictionary["id"] as? Int) ?? 0))
-            }
-            
             // MARK: Comparable Conformance
             
             /* ############################################# */
@@ -392,9 +394,11 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 try container.encode(id, forKey: .id)
             }
             
+            // MARK: CustomDebugStringConvertible Conformance
+            
             /* ############################################# */
             /**
-             CustomDebugStringConvertible Conformance
+             Returns a simple textual description of the data.
              */
             public var debugDescription: String { "\t\t(\(key))\t\(name)\t(\(language))\n\t\t\t\t\(description)\n\t\t\t\t\(id)" }
         }
@@ -431,52 +435,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
              The integer variant always fails.
              */
             init?(intValue: Int) { nil }
-        }
-
-        /* ############################################################################################################################## */
-        // MARK: Meeting Type Enum
-        /* ############################################################################################################################## */
-        /**
-         This provides values for the type of meeting.
-         */
-        public enum MeetingType: String {
-            /* ############################################# */
-            /**
-             The meeting only gathers virtually.
-             */
-            case virtual
-
-            /* ############################################# */
-            /**
-             The meeting only gathers in-person.
-             */
-            case inPerson
-
-            /* ############################################# */
-            /**
-             The meeting gathers, both in-person, and virtually.
-             */
-            case hybrid
-        }
-
-        /* ############################################################################################################################## */
-        // MARK: Organization Type Enum
-        /* ############################################################################################################################## */
-        /**
-         This specifies the organization for the meeting.
-         */
-        public enum Organization: String, Codable {
-            /* ############################################# */
-            /**
-             No organization specified
-             */
-            case none
-
-            /* ############################################# */
-            /**
-             Narcotics Anonymous
-             */
-            case na
         }
         
         // MARK: Private Properties
@@ -663,6 +621,54 @@ public struct SwiftBMLSDK_Parser: Encodable {
                (virtualPhoneNumber ?? "").isEmpty {
                 return nil
             }
+        }
+
+        // MARK: Public Interface
+        
+        /* ############################################################################################################################## */
+        // MARK: Meeting Type Enum
+        /* ############################################################################################################################## */
+        /**
+         This provides values for the type of meeting.
+         */
+        public enum MeetingType: String {
+            /* ############################################# */
+            /**
+             The meeting only gathers virtually.
+             */
+            case virtual
+
+            /* ############################################# */
+            /**
+             The meeting only gathers in-person.
+             */
+            case inPerson
+
+            /* ############################################# */
+            /**
+             The meeting gathers, both in-person, and virtually.
+             */
+            case hybrid
+        }
+
+        /* ############################################################################################################################## */
+        // MARK: Organization Type Enum
+        /* ############################################################################################################################## */
+        /**
+         This specifies the organization for the meeting.
+         */
+        public enum Organization: String, Codable {
+            /* ############################################# */
+            /**
+             No organization specified
+             */
+            case none
+
+            /* ############################################# */
+            /**
+             Narcotics Anonymous
+             */
+            case na
         }
 
         // MARK: Public Required Instance Properties

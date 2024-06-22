@@ -265,7 +265,7 @@ extension SwiftBMLSDK_TestHarness_Prefs {
      */
     public func performSearch(completion inCompletion: @escaping () -> Void) {
         clearSearchResults()
-        queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .inPerson(isExclusive: false), locationRadius: locationRadius, locationCenter: locationCenter)) { inSearchResults, inError in
+        queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .inPerson(isExclusive: false), locationCenter: locationCenter, locationRadius: locationRadius)) { inSearchResults, inError in
             Self._searchResults = inSearchResults
             DispatchQueue.main.async { inCompletion() }
         }
@@ -279,7 +279,7 @@ extension SwiftBMLSDK_TestHarness_Prefs {
      */
     public func performVirtualSearch(completion inCompletion: @escaping () -> Void) {
         clearSearchResults()
-        queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(locationRadius: locationRadius, locationCenter: locationCenter)) { inSearchResults, inError in
+        queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(locationCenter: locationCenter, locationRadius: locationRadius)) { inSearchResults, inError in
             Self._searchResults = inSearchResults
             DispatchQueue.main.async { inCompletion() }
         }

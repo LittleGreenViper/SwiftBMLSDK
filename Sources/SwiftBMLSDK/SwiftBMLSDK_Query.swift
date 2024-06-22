@@ -60,7 +60,7 @@ import CoreLocation // For coordinates
  
  # Dependencies
  
- This parser has no dependencies, other than the Foundation and CoreLocation SDKs, provided by Apple.
+ This type has no dependencies, other than the Foundation and CoreLocation SDKs, provided by Apple.
  */
 public struct SwiftBMLSDK_Query {
     /* ################################################# */
@@ -274,17 +274,17 @@ public struct SwiftBMLSDK_Query {
          This is the default initializer. All parameters are optional, with blank/none defaults.
          
          - parameters:
+            - type: The meeting type. Default is any type.
+            - locationCenter: The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search. Ignored if the type is exclusive virtual.
+            - locationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Ignored if the type is exclusive virtual.
             - pageSize: The number of results per page. If this is 0, then no results are returned, and only the meta is populated. If left out, or set to a negative number, then all results are returned in one page.
             - page: The page number (0-based). If `pageSize` is 0 or less, this is ignored. If over the maximum number of pages, an empty page is returned.
-            - type: The meeting type. Default is any type.
-            - locationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Ignored if the type is exclusive virtual.
-            - locationCenter: The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search. Ignored if the type is exclusive virtual.
          */
-        public init(pageSize inPageSize: Int = -1,
-                    page inPageNumber: Int = 0,
-                    type inType: SearchForMeetingType = .any,
+        public init(type inType: SearchForMeetingType = .any,
+                    locationCenter inLocationCenter: CLLocationCoordinate2D = CLLocationCoordinate2D(),
                     locationRadius inLocationRadius: Double = 0,
-                    locationCenter inLocationCenter: CLLocationCoordinate2D = CLLocationCoordinate2D()
+                    pageSize inPageSize: Int = -1,
+                    page inPageNumber: Int = 0
         ) {
             pageSize = inPageSize
             pageNumber = inPageNumber
@@ -297,7 +297,7 @@ public struct SwiftBMLSDK_Query {
         /**
          This returns the query portion of the search (needs to be appended to the server base URI).
          */
-        public var urlQueryItems: [URLQueryItem] {
+        internal var urlQueryItems: [URLQueryItem] {
             var ret: [URLQueryItem] = [URLQueryItem(name: "query", value: nil)]
             
             if 0 <= pageSize {
@@ -311,7 +311,7 @@ public struct SwiftBMLSDK_Query {
             switch type {
             case .any:
                 break
-                
+            
             case .inPerson(let isExclusive):
                 ret.append(URLQueryItem(name: "type", value: String(isExclusive ? 2 : 1)))
                 
