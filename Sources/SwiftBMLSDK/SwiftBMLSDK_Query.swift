@@ -18,28 +18,51 @@
  */
 
 import Foundation
-import CoreLocation
+import CoreLocation // For coordinates
 
 /* ###################################################################################################################################### */
 // MARK: - Meeting Search Query And Communication -
 /* ###################################################################################################################################### */
 /**
- This struct is about generating queries to instances of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer), and returning the parsed results.
+ This struct is for generating queries to instances of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer), and returning the parsed results.
  
  It is designed for minimal filtering. Most filter parameters are for paging the search, or filtering for specific meeting types. Most filtering should be performed on the results.
+ 
+ # Supported Systems
+ 
+ This will support iOS 16 (and greater), iPadOS 16 (and greater), tvOS 16 (and greater), macOS 13 (and greater), and watchOS 9 (and greater)
+ 
+ This requires Swift 5 or greater.
+
+ # Usage
+ 
+ Instantiate this struct with a [URL](https://developer.apple.com/documentation/foundation/url) to an [LGV_MeetingServer](https://github.com/LittleGreenViper/LGV_MeetingServer) implementation.
+ 
+ For example:
+ 
+    `SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))`
+ 
+ creates an instance, based on the LGV test server.
+ 
+ Once the struct is instantiated, it can then be queried. Responses to queries are a ``SwiftBMLSDK_Parser`` instance, which contains and interprets the found set.
+ 
+ There are limited parameters to queries, as it is expected that most of the filtering and sorting will be performed on the found set of meeting instances.
+ 
+ ## Querying the Server
+ 
+ There are only two public query methods:
+ 
+ - ``serverInfo(completion:)``
+ This is a method that fetches the general information structure from the server, and presents it as a ``ServerInfo`` struct.
+ 
+ - ``meetingSearch(specification:completion:)``
+ This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion func.
+ 
+ # Dependencies
+ 
+ This parser has no dependencies, other than the Foundation and CoreLocation SDKs, provided by Apple.
  */
 public struct SwiftBMLSDK_Query {
-    /* ################################################# */
-    /**
-     This is the completion function for the meeting search query.
-     
-     > NOTE: The completion may be called in any thread!
-     
-     - parameter: The resultant server response. Can be nil.
-     - parameter: Any errors that occurred. Should usually be nil.
-     */
-    public typealias QueryResultCompletion = (_: SwiftBMLSDK_Parser?, _: Error?) -> Void
-
     /* ################################################# */
     /**
      This is the completion function for the server info query.
@@ -51,11 +74,22 @@ public struct SwiftBMLSDK_Query {
      */
     public typealias ServerInfoResultCompletion = (_: ServerInfo?, _: Error?) -> Void
 
+    /* ################################################# */
+    /**
+     This is the completion function for the meeting search query.
+     
+     > NOTE: The completion may be called in any thread!
+     
+     - parameter: The resultant server response. Can be nil.
+     - parameter: Any errors that occurred. Should usually be nil.
+     */
+    public typealias QueryResultCompletion = (_: SwiftBMLSDK_Parser?, _: Error?) -> Void
+
     /* ################################################################################################################################## */
     // MARK: Server Info Struct
     /* ################################################################################################################################## */
     /**
-     This is the response to the general info query. It contains information about all the servers that can be aggregated by the server.
+     This is the response to the general server info query. It contains information about all the individual servers, represented by the aggregator server.
      */
     public struct ServerInfo {
         /* ############################################################################################################################## */
@@ -63,6 +97,8 @@ public struct SwiftBMLSDK_Query {
         /* ############################################################################################################################## */
         /**
          This breaks down the information for each type of service.
+         
+         Do not instantiate this. It is provided by the query instance.
          */
         public struct Service {
             /* ########################################################################################################################## */
@@ -70,6 +106,8 @@ public struct SwiftBMLSDK_Query {
             /* ########################################################################################################################## */
             /**
              This is the information for each server that provides the service.
+             
+             Do not instantiate this. It is provided by the query instance.
              */
            public struct Server {
                /* ##################################### */
@@ -169,6 +207,8 @@ public struct SwiftBMLSDK_Query {
     /* ################################################################################################################################## */
     /**
      This struct is what we use to prescribe the search spec.
+     
+     Search specifications are quite simple. We only have the meeting type, location/radius (for in-person meetings), and paging options (to break up large found sets).
      */
     public struct SearchSpecification {
         public enum SearchForMeetingType {

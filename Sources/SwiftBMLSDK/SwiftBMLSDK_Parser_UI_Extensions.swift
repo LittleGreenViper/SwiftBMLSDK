@@ -61,7 +61,7 @@ public protocol SwiftBMLSDK_MeetingProtocol {
 // MARK: - Collection Class for Managing Virtual Meetings -
 /* ###################################################################################################################################### */
 /**
- This class can be used to manage meetings, in the user's local timezone. It is especially useful for virtual meetings.
+ This class can be used to manage meetings in the user's local timezone. It is especially useful for virtual meetings.
  
  Virtual meetings are always considered in local (to the user) timezone. We collect all of the meetings at once, and store them here, so they are easier and faster to manage.
  
@@ -236,7 +236,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
         /**
          CaseIterable Conformance
          */
-        static var allCases: [SwiftBMLSDK_Parser.Meeting._DirectVirtual] { [.zoom(nil), .gotomeeting(nil), .skype(nil), .meet(nil)] }
+        static var allCases: [SwiftBMLSDK_Parser.Meeting._DirectVirtual] { [.zoom(nil), .gotomeeting(nil), .skype(nil), .meet(nil), .discord(nil)] }
         
         /* ############################################# */
         /**

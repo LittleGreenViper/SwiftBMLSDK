@@ -17,7 +17,8 @@
  CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import CoreLocation // For coordinates.
+import Foundation
+import CoreLocation // For coordinates
 import Contacts     // For the in-person address
 
 /* ###################################################################################################################################### */
@@ -61,16 +62,26 @@ fileprivate extension Date {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - Baseline Meeting JSON Page Parser -
+// MARK: - Meeting JSON Page Parser -
 /* ###################################################################################################################################### */
 /**
  This struct will accept raw JSON data from one page of results from the [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer), and parse it into an immutable struct instance.
  
  This is a **baseline** parser; it doesn't really do anything more than make a simple map of the input JSON into an array of structs. It doesn't change the sorting, and provides a read-only, struct property view.
  
- You use this by instantiating with the public init, with the JSON data from the server, as the only argument.
+ The parser then automatically populates a ``meta`` instance, that reports the page metadata from the server, and a ``meetings`` array, of all meeting instances, and some functional interfaces.
  
- The parser then automatically populates a `meta` instance, that reports the page metadata from the server, and a `meetings` array, of all meeting instances, and some functional interfaces.
+ # Supported Systems
+ 
+ This will support iOS 16 (and greater), iPadOS 16 (and greater), tvOS 16 (and greater), macOS 13 (and greater), and watchOS 9 (and greater)
+ 
+ This requires Swift 5 or greater.
+ 
+ # Usage
+ 
+ Do not instantiate this type. That's handled by a ``SwiftBMLSDK_Query`` instance that performs a search, and returns an instance of this struct.
+ 
+ # Dependencies
  
  This parser has no dependencies, other than the Foundation, CoreLocation, and Contacts SDKs, provided by Apple.
  */
@@ -111,9 +122,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
      */
     private static func _parseMeeting(_ inDictionary: [String: Any]) -> Meeting? { Meeting(inDictionary) }
     
-    // MARK: - Exported Public Interface -
-    
-    // MARK: Public Initializer
+    // MARK: Internal Initializer
     
     /* ################################################# */
     /**
@@ -121,7 +130,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
      
      - parameter jsonData: A Data instance, with the raw JSON dump.
      */
-    public init?(jsonData inJSONData: Data, specification inSpecification: SwiftBMLSDK_Query.SearchSpecification) {
+    internal init?(jsonData inJSONData: Data, specification inSpecification: SwiftBMLSDK_Query.SearchSpecification) {
         guard let simpleJSON = try? JSONSerialization.jsonObject(with: inJSONData, options: [.allowFragments]) as? NSDictionary,
               let metaJSON = simpleJSON["meta"] as? [String: Any],
               let meta = Self._parseMeta(metaJSON),
@@ -147,19 +156,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         }
     }
 
-    // MARK: Public Immutable Properties
-    
-    /* ################################################# */
-    /**
-     The page metadata for this page of meetings.
-     */
-    public let meta: PageMeta
-    
-    /* ################################################# */
-    /**
-     The meeting data for this page of meetings.
-     */
-    public let meetings: [Meeting]
+    // MARK: - Exported Public Interface -
     
     // MARK: - Public Data Types and Enums -
     
@@ -225,7 +222,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
              - page: This is the 0-based index of this page of results.
              - searchTime: This is the number of seconds, reported by the server, to generate this page of results.
          */
-        public init(actualSize inActualSize: Int = 0,
+        internal init(actualSize inActualSize: Int = 0,
                     pageSize inPageSize: Int = 0,
                     startingIndex inStartingIndex: Int = 0,
                     total inTotal: Int = 0,
@@ -347,7 +344,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 - description: The longer format description
                 - language: The language code.
              */
-            public init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) {
+            internal init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) {
                 key = inKey
                 name = inName
                 description = inDescription
@@ -361,7 +358,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
              
              - parameter inDictionary: A simple String-keyed dictionary of partly-parsed values.
              */
-            public init(_ inDictionary: [String: Any]) {
+            internal init(_ inDictionary: [String: Any]) {
                 self.init(key: (inDictionary["key"] as? String) ?? "", name: (inDictionary["name"] as? String) ?? "", description: (inDictionary["description"] as? String) ?? "", language: (inDictionary["language"] as? String) ?? "", id: String((inDictionary["id"] as? Int) ?? 0))
             }
             
@@ -496,7 +493,178 @@ public struct SwiftBMLSDK_Parser: Encodable {
          This is how many seconds there are, in a week.
          */
         private static let _oneWeekInSeconds = TimeInterval(604800)
-        
+
+        // MARK: Internal Initializer
+                
+        /* ################################################# */
+        /**
+         This is a failable initializer, it parses an input dictionary.
+         
+         - parameter inDictionary: The semi-parsed JSON record for the meeting.
+         */
+        internal init?(_ inDictionary: [String: Any]) {
+            /* ########################################### */
+            /**
+             "Cleans" a URI.
+             
+             - parameter urlString: The URL, as a String. It can be optional.
+             
+             - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
+             */
+            func cleanURI(urlString inURLString: String?) -> String? {
+                /* ####################################### */
+                /**
+                 This tests a string to see if a given substring is present at the start.
+                 
+                 - Parameters:
+                 - inString: The string to test.
+                 - inSubstring: The substring to test for.
+                 
+                 - returns: true, if the string begins with the given substring.
+                 */
+                func string (_ inString: String, beginsWith inSubstring: String) -> Bool {
+                    var ret: Bool = false
+                    if let range = inString.range(of: inSubstring) {
+                        ret = (range.lowerBound == inString.startIndex)
+                    }
+                    return ret
+                }
+                
+                guard var ret: String = inURLString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed),
+                      let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
+                else { return nil }
+                
+                // We specifically look for tel URIs.
+                let wasTel = string(ret.lowercased(), beginsWith: "tel:")
+                
+                // Yeah, this is pathetic, but it's quick, simple, and works a charm.
+                ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
+                
+                if ret.isEmpty {
+                    return nil
+                }
+                
+                if wasTel {
+                    ret = "tel:" + ret
+                } else {
+                    ret = "https://" + ret
+                }
+                
+                return ret
+            }
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.calendar = Calendar(identifier: .iso8601)
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            dateFormatter.dateFormat = "HH:mm:ss"
+
+            guard let serverID = inDictionary["server_id"] as? Int,
+                  let startTimeStr = inDictionary["start_time"] as? String,
+                  let startTime = dateFormatter.date(from: startTimeStr),
+                  let localMeetingID = inDictionary["meeting_id"] as? Int,
+                  let weekday = inDictionary["weekday"] as? Int,
+                  (1..<8).contains(weekday),
+                  let organizationStr = inDictionary["organization_key"] as? String
+            else { return nil }
+
+            self.weekday = weekday
+            self.startTime = startTime
+            self.serverID = serverID
+            self.localMeetingID = localMeetingID
+            self.organization = Organization(rawValue: organizationStr) ?? .none
+            
+            let durationTemp = inDictionary["duration"] as? Int ?? 3600 // One hour default.
+            self.duration = (0..<86400).contains(durationTemp) ? TimeInterval(durationTemp) : TimeInterval(3600)    // Can't be greater than 24 hours.
+
+            self.formats = (inDictionary["formats"] as? [[String: Any]] ?? []).compactMap { Format($0) }.sorted()
+
+            self.name = (inDictionary["name"] as? String) ?? ""
+
+            var fixedCoords = CLLocationCoordinate2D()
+            
+            if let long = inDictionary["longitude"] as? Double,
+               let lat = inDictionary["latitude"] as? Double,
+               CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: lat, longitude: long)) {
+                fixedCoords = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                self.coords = fixedCoords
+            } else {
+                self.coords = nil
+            }
+
+            if let timezoneStr = inDictionary["time_zone"] as? String,
+               let tz = TimeZone(identifier: timezoneStr) {
+                self.timeZone = tz
+            } else {
+                self.timeZone = .current
+            }
+
+            if let comments = inDictionary["comments"] as? String,
+               !comments.isEmpty {
+                self.comments = comments
+            } else {
+                self.comments = nil
+            }
+
+            if let physicalAddress = inDictionary["physical_address"] as? [String: String],
+               !((physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? "").isEmpty,
+               !fixedCoords._isEqualTo(CLLocationCoordinate2D(latitude: 34.233, longitude: -118.549), precisionInMeters: 500) { // Since the NAWS office is the default BMLT physical location, we make sure that it is not the specified long/lat.
+                let mutableGoPostal = CNMutablePostalAddress()
+                mutableGoPostal.street = (physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.subLocality = (physicalAddress["neighborhood"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.city = (physicalAddress["city"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.state = (physicalAddress["province"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.subAdministrativeArea = (physicalAddress["county"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.postalCode = (physicalAddress["postal_code"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                mutableGoPostal.country = (physicalAddress["nation"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                self.inPersonAddress = mutableGoPostal
+                let locationInfo = (physicalAddress["info"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                self.locationInfo = locationInfo.isEmpty ? nil : locationInfo
+                let inPersonVenueName = physicalAddress["name"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                self.inPersonVenueName = inPersonVenueName.isEmpty ? nil : inPersonVenueName
+            } else {
+                self.inPersonAddress = nil
+                self.locationInfo = nil
+                self.inPersonVenueName = nil
+            }
+
+            if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
+                var splitsville = (virtualMeetingInfo["url"] ?? "").split(separator: "#@-@#")
+                var splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
+                let urlStr = cleanURI(urlString: splitString) ?? ""
+                if !urlStr.isEmpty,
+                   let virtualURL = URL(string: urlStr) {
+                    self.virtualURL = virtualURL
+                } else {
+                    self.virtualURL = nil
+                }
+                
+                splitsville = (virtualMeetingInfo["phone_number"] ?? "").split(separator: "#@-@#")
+                splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
+                let virtualPhoneNumber = splitString.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !virtualPhoneNumber.isEmpty {
+                    self.virtualPhoneNumber = virtualPhoneNumber
+                } else {
+                    self.virtualPhoneNumber = nil
+                }
+                
+                splitsville = (virtualMeetingInfo["info"] ?? "").split(separator: "#@-@#")
+                splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
+                let virtualInfo = splitString.trimmingCharacters(in: .whitespacesAndNewlines)
+                self.virtualInfo = virtualInfo.isEmpty ? nil : virtualInfo
+            } else {
+                self.virtualURL = nil
+                self.virtualPhoneNumber = nil
+                self.virtualInfo = nil
+            }
+            
+            if (inPersonAddress?.street ?? "").isEmpty,
+               (inPersonVenueName ?? "").isEmpty,
+               nil == virtualURL,
+               (virtualPhoneNumber ?? "").isEmpty {
+                return nil
+            }
+        }
+
         // MARK: Public Required Instance Properties
         
         /* ################################################# */
@@ -675,177 +843,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
                   CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: lat, longitude: lng))
             else { return nil }
             return CLLocation(latitude: lat, longitude: lng)
-        }
-
-        // MARK: Public Initializer
-                
-        /* ################################################# */
-        /**
-         This is a failable initializer, it parses an input dictionary.
-         
-         - parameter inDictionary: The semi-parsed JSON record for the meeting.
-         */
-        public init?(_ inDictionary: [String: Any]) {
-            /* ########################################### */
-            /**
-             "Cleans" a URI.
-             
-             - parameter urlString: The URL, as a String. It can be optional.
-             
-             - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
-             */
-            func cleanURI(urlString inURLString: String?) -> String? {
-                /* ####################################### */
-                /**
-                 This tests a string to see if a given substring is present at the start.
-                 
-                 - Parameters:
-                 - inString: The string to test.
-                 - inSubstring: The substring to test for.
-                 
-                 - returns: true, if the string begins with the given substring.
-                 */
-                func string (_ inString: String, beginsWith inSubstring: String) -> Bool {
-                    var ret: Bool = false
-                    if let range = inString.range(of: inSubstring) {
-                        ret = (range.lowerBound == inString.startIndex)
-                    }
-                    return ret
-                }
-                
-                guard var ret: String = inURLString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed),
-                      let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
-                else { return nil }
-                
-                // We specifically look for tel URIs.
-                let wasTel = string(ret.lowercased(), beginsWith: "tel:")
-                
-                // Yeah, this is pathetic, but it's quick, simple, and works a charm.
-                ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
-                
-                if ret.isEmpty {
-                    return nil
-                }
-                
-                if wasTel {
-                    ret = "tel:" + ret
-                } else {
-                    ret = "https://" + ret
-                }
-                
-                return ret
-            }
-
-            let dateFormatter = DateFormatter()
-            dateFormatter.calendar = Calendar(identifier: .iso8601)
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            dateFormatter.dateFormat = "HH:mm:ss"
-
-            guard let serverID = inDictionary["server_id"] as? Int,
-                  let startTimeStr = inDictionary["start_time"] as? String,
-                  let startTime = dateFormatter.date(from: startTimeStr),
-                  let localMeetingID = inDictionary["meeting_id"] as? Int,
-                  let weekday = inDictionary["weekday"] as? Int,
-                  (1..<8).contains(weekday),
-                  let organizationStr = inDictionary["organization_key"] as? String
-            else { return nil }
-
-            self.weekday = weekday
-            self.startTime = startTime
-            self.serverID = serverID
-            self.localMeetingID = localMeetingID
-            self.organization = Organization(rawValue: organizationStr) ?? .none
-            
-            let durationTemp = inDictionary["duration"] as? Int ?? 3600 // One hour default.
-            self.duration = (0..<86400).contains(durationTemp) ? TimeInterval(durationTemp) : TimeInterval(3600)    // Can't be greater than 24 hours.
-
-            self.formats = (inDictionary["formats"] as? [[String: Any]] ?? []).compactMap { Format($0) }.sorted()
-
-            self.name = (inDictionary["name"] as? String) ?? ""
-
-            var fixedCoords = CLLocationCoordinate2D()
-            
-            if let long = inDictionary["longitude"] as? Double,
-               let lat = inDictionary["latitude"] as? Double,
-               CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: lat, longitude: long)) {
-                fixedCoords = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                self.coords = fixedCoords
-            } else {
-                self.coords = nil
-            }
-
-            if let timezoneStr = inDictionary["time_zone"] as? String,
-               let tz = TimeZone(identifier: timezoneStr) {
-                self.timeZone = tz
-            } else {
-                self.timeZone = .current
-            }
-
-            if let comments = inDictionary["comments"] as? String,
-               !comments.isEmpty {
-                self.comments = comments
-            } else {
-                self.comments = nil
-            }
-
-            if let physicalAddress = inDictionary["physical_address"] as? [String: String],
-               !((physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? "").isEmpty,
-               !fixedCoords._isEqualTo(CLLocationCoordinate2D(latitude: 34.233, longitude: -118.549), precisionInMeters: 500) { // Since the NAWS office is the default BMLT physical location, we make sure that it is not the specified long/lat.
-                let mutableGoPostal = CNMutablePostalAddress()
-                mutableGoPostal.street = (physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
-                mutableGoPostal.subLocality = (physicalAddress["neighborhood"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
-                mutableGoPostal.city = (physicalAddress["city"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
-                mutableGoPostal.state = (physicalAddress["province"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
-                mutableGoPostal.subAdministrativeArea = (physicalAddress["county"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
-                mutableGoPostal.postalCode = (physicalAddress["postal_code"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
-                mutableGoPostal.country = (physicalAddress["nation"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
-                self.inPersonAddress = mutableGoPostal
-                let locationInfo = (physicalAddress["info"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
-                self.locationInfo = locationInfo.isEmpty ? nil : locationInfo
-                let inPersonVenueName = physicalAddress["name"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-                self.inPersonVenueName = inPersonVenueName.isEmpty ? nil : inPersonVenueName
-            } else {
-                self.inPersonAddress = nil
-                self.locationInfo = nil
-                self.inPersonVenueName = nil
-            }
-
-            if let virtualMeetingInfo = inDictionary["virtual_information"] as? [String: String] {
-                var splitsville = (virtualMeetingInfo["url"] ?? "").split(separator: "#@-@#")
-                var splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
-                let urlStr = cleanURI(urlString: splitString) ?? ""
-                if !urlStr.isEmpty,
-                   let virtualURL = URL(string: urlStr) {
-                    self.virtualURL = virtualURL
-                } else {
-                    self.virtualURL = nil
-                }
-                
-                splitsville = (virtualMeetingInfo["phone_number"] ?? "").split(separator: "#@-@#")
-                splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
-                let virtualPhoneNumber = splitString.trimmingCharacters(in: .whitespacesAndNewlines)
-                if !virtualPhoneNumber.isEmpty {
-                    self.virtualPhoneNumber = virtualPhoneNumber
-                } else {
-                    self.virtualPhoneNumber = nil
-                }
-                
-                splitsville = (virtualMeetingInfo["info"] ?? "").split(separator: "#@-@#")
-                splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
-                let virtualInfo = splitString.trimmingCharacters(in: .whitespacesAndNewlines)
-                self.virtualInfo = virtualInfo.isEmpty ? nil : virtualInfo
-            } else {
-                self.virtualURL = nil
-                self.virtualPhoneNumber = nil
-                self.virtualInfo = nil
-            }
-            
-            if (inPersonAddress?.street ?? "").isEmpty,
-               (inPersonVenueName ?? "").isEmpty,
-               nil == virtualURL,
-               (virtualPhoneNumber ?? "").isEmpty {
-                return nil
-            }
         }
         
         // MARK: Public Codable Conformance
@@ -1075,44 +1072,20 @@ public struct SwiftBMLSDK_Parser: Encodable {
          */
         public func hash(into inOutHasher: inout Hasher) { inOutHasher.combine(id) }
     }
-}
 
-/* ###################################################################################################################################### */
-// MARK: - Parser Extensions -
-/* ###################################################################################################################################### */
-/**
- This extension adds some basic filtering and conversion options to the parser.
- */
-public extension SwiftBMLSDK_Parser {
-    /* ################################################# */
-    /**
-     Returns meetings that have an in-person component.
-     */
-    var inPersonMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: false)] }
+    // MARK: Public Immutable Properties
     
     /* ################################################# */
     /**
-     Returns meetings that are only in-person.
+     The page metadata for this page of meetings.
      */
-    var inPersonOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: true)] }
-
+    public let meta: PageMeta
+    
     /* ################################################# */
     /**
-     Returns meetings that have a virtual component.
+     The meeting data for this page of meetings.
      */
-    var virtualMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: false)] }
-
-    /* ################################################# */
-    /**
-     Returns meetings that are only virtual.
-     */
-    var virtualOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: true)] }
-
-    /* ################################################# */
-    /**
-     Returns meetings that are only hybrid.
-     */
-    var hybridMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.hybrid] }
+    public let meetings: [Meeting]
 }
 
 /* ###################################################################################################################################### */
@@ -1447,4 +1420,42 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
      This is different from the input JSON, as it has the organization and "cleaning" provided by the parser. It also keeps it at 2 dimensions, for easy integration into ML stuff.
      */
     var asJSONData: Data? { try? JSONEncoder().encode(self) }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Parser Extensions -
+/* ###################################################################################################################################### */
+/**
+ This extension adds some basic filtering and conversion options to the parser.
+ */
+public extension SwiftBMLSDK_Parser {
+    /* ################################################# */
+    /**
+     Returns meetings that have an in-person component.
+     */
+    var inPersonMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: false)] }
+    
+    /* ################################################# */
+    /**
+     Returns meetings that are only in-person.
+     */
+    var inPersonOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: true)] }
+
+    /* ################################################# */
+    /**
+     Returns meetings that have a virtual component.
+     */
+    var virtualMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: false)] }
+
+    /* ################################################# */
+    /**
+     Returns meetings that are only virtual.
+     */
+    var virtualOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: true)] }
+
+    /* ################################################# */
+    /**
+     Returns meetings that are only hybrid.
+     */
+    var hybridMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.hybrid] }
 }

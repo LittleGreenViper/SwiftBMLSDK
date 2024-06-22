@@ -5,6 +5,12 @@
       location = "container:"
       name = "Meta">
       <FileRef
+         location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/README.md">
+      </FileRef>
+      <FileRef
+         location = "group:Package.swift">
+      </FileRef>
+      <FileRef
          location = "group:LICENSE">
       </FileRef>
       <FileRef
@@ -15,9 +21,6 @@
       </FileRef>
       <FileRef
          location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/PRIVACY.md">
-      </FileRef>
-      <FileRef
-         location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/README.md">
       </FileRef>
    </Group>
    <FileRef
