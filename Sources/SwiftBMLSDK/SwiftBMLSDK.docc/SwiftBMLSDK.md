@@ -4,6 +4,8 @@ A native Swift client SDK for the `LGV_MeetingServer` Web server.
 
 ## Overview
 
+![Icon](icon.png)
+
 Use the SwiftBMLSDK to query instances of the [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer) meeting aggregator server.
 
 This service manages structured queries, and allows powerful parsing and filtering of search results.
@@ -42,11 +44,13 @@ This is how you do a meeting search. Create a ``SwiftBMLSDK_Query/SearchSpecific
 
 - ``SwiftBMLSDK_Parser``
 
-### Useful Extensions
+### Useful Classes
 
 You can create an instance of ``SwiftBMLSDK_MeetingLocalTimezoneCollection``, and use that to manage all the meetings (which are represented in the user's local timezone).
 
 - ``SwiftBMLSDK_MeetingLocalTimezoneCollection``
+
+### Useful Extensions
 
 - ``SwiftBMLSDK_Parser/Meeting/directAppURI``
 

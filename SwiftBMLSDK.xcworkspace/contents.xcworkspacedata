@@ -22,6 +22,9 @@
       <FileRef
          location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/PRIVACY.md">
       </FileRef>
+      <FileRef
+         location = "group:icon.png">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:/Users/chrismarshall/Developer/LGV/SwiftBMLSDK/SwiftBMLSDK.xcodeproj">
