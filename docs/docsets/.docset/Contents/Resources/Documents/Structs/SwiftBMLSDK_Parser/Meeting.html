@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Meeting Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+    <script src="../../js/lunr.min.js" defer></script>
+    <script src="../../js/typeahead.jquery.js" defer></script>
+    <script src="../../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Struct/Meeting" class="dashAnchor"></a>
+
+    <a title="Meeting Structure Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../../index.html">
+          SwiftBMLSDK Doumentation
+        </a>
+         (100% documented)
+      </p>
+    
+      <div class="header-col--secondary">
+        <form role="search" action="../../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </div>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/LittleGreenViper/SwiftBMLSDK">
+            <img class="header-icon" src="../../img/gh.png" alt="GitHub"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../../index.html"> Reference</a>
+      <img class="carat" src="../../img/carat.png" alt=""/>
+      Meeting Structure Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection.html">SwiftBMLSDK_MeetingLocalTimezoneCollection</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection/CachedMeeting.html">– CachedMeeting</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Extensions/Array/Weekdays.html">– Weekdays</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/SwiftBMLSDK_MeetingProtocol.html">SwiftBMLSDK_MeetingProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/SwiftBMLSDK_Parser/PageMeta.html">– PageMeta</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/SwiftBMLSDK_Parser/Meeting.html">– Meeting</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/SwiftBMLSDK_Query.html">SwiftBMLSDK_Query</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/SwiftBMLSDK_Query/ServerInfo.html">– ServerInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/SwiftBMLSDK_Query/SearchSpecification.html">– SearchSpecification</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>Meeting</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Meeting</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></span><span class="o">.</span><span class="kt">Meeting</span><span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></span><span class="o">.</span><span class="kt">Meeting</span><span class="p">:</span> <span class="kt">Hashable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></span><span class="o">.</span><span class="kt">Meeting</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></span><span class="o">.</span><span class="kt">Meeting</span><span class="p">:</span> <span class="kt">CustomDebugStringConvertible</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></span><span class="o">.</span><span class="kt">Meeting</span><span class="p">:</span> <span class="kt">Encodable</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></span><span class="o">.</span><span class="kt">Meeting</span><span class="p">:</span> <span class="kt"><a href="../../Protocols/SwiftBMLSDK_MeetingProtocol.html">SwiftBMLSDK_MeetingProtocol</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>This struct holds a single parsed meeting instance.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>There is a platform-dependent extension that adds the <code><a href="../../Structs/SwiftBMLSDK_Parser/Meeting.html#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12directAppURI10Foundation3URLVSgvp">directAppURI</a></code> computed property to this type.</p>
+
+</div>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Format%20Information%20Container"></a>
+                <a name="//apple_ref/swift/Section/Format Information Container" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Format%20Information%20Container"></a>
+                  <h3 class="section-name"><span>Format Information Container</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV6FormatV"></a>
+                    <a name="//apple_ref/swift/Struct/Format" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV6FormatV">Format</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This struct holds a parsed format information instance.</p>
+
+                        <a href="../../Structs/SwiftBMLSDK_Parser/Meeting/Format.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Format</span> <span class="p">:</span> <span class="kt">CustomStringConvertible</span><span class="p">,</span> <span class="kt">CustomDebugStringConvertible</span><span class="p">,</span> <span class="kt">Hashable</span><span class="p">,</span> <span class="kt">Comparable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Meeting%20Type%20Enum"></a>
+                <a name="//apple_ref/swift/Section/Meeting Type Enum" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Meeting%20Type%20Enum"></a>
+                  <h3 class="section-name"><span>Meeting Type Enum</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV0D4TypeO"></a>
+                    <a name="//apple_ref/swift/Enum/MeetingType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV0D4TypeO">MeetingType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This provides values for the type of meeting.</p>
+
+                        <a href="../../Structs/SwiftBMLSDK_Parser/Meeting/MeetingType.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">MeetingType</span> <span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Organization%20Type%20Enum"></a>
+                <a name="//apple_ref/swift/Section/Organization Type Enum" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Organization%20Type%20Enum"></a>
+                  <h3 class="section-name"><span>Organization Type Enum</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12OrganizationO"></a>
+                    <a name="//apple_ref/swift/Enum/Organization" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12OrganizationO">Organization</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This specifies the organization for the meeting.</p>
+
+                        <a href="../../Structs/SwiftBMLSDK_Parser/Meeting/Organization.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Organization</span> <span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">Codable</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Instance%20Properties"></a>
+                <a name="//apple_ref/swift/Section/Public Instance Properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Instance%20Properties"></a>
+                  <h3 class="section-name"><span>Public Instance Properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8serverIDSivp"></a>
+                    <a name="//apple_ref/swift/Property/serverID" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8serverIDSivp">serverID</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the unique ID (within the found set) for the data source server.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">serverID</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV05localD2IDSivp"></a>
+                    <a name="//apple_ref/swift/Property/localMeetingID" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV05localD2IDSivp">localMeetingID</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is a unique ID (within the data source server) for this meeting.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">localMeetingID</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV7weekdaySivp"></a>
+                    <a name="//apple_ref/swift/Property/weekday" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV7weekdaySivp">weekday</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is a 1-based weekday index, with 1 being Sunday, and 7 being Saturday.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">weekday</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV9startTime10Foundation4DateVvp"></a>
+                    <a name="//apple_ref/swift/Property/startTime" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV9startTime10Foundation4DateVvp">startTime</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the time of day that the meeting starts (date-independent).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">startTime</span><span class="p">:</span> <span class="kt">Date</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8durationSdvp"></a>
+                    <a name="//apple_ref/swift/Property/duration" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8durationSdvp">duration</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the duration, in seconds, of the meeting.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">duration</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8timeZone10Foundation04TimeF0Vvp"></a>
+                    <a name="//apple_ref/swift/Property/timeZone" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8timeZone10Foundation04TimeF0Vvp">timeZone</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the local timezone of this meeting.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">timeZone</span><span class="p">:</span> <span class="kt">TimeZone</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV4nameSSvp"></a>
+                    <a name="//apple_ref/swift/Property/name" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV4nameSSvp">name</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the name of the meeting.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12organizationAE12OrganizationOvp"></a>
+                    <a name="//apple_ref/swift/Property/organization" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12organizationAE12OrganizationOvp">organization</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the organization to which this meeting belongs.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">organization</span><span class="p">:</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser/Meeting/Organization.html">Organization</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV7formatsSayAE6FormatVGvp"></a>
+                    <a name="//apple_ref/swift/Property/formats" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV7formatsSayAE6FormatVGvp">formats</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This contains an array of formats that apply to the meeting.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">formats</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser/Meeting/Format.html">Format</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Optional%20Instance%20Properties"></a>
+                <a name="//apple_ref/swift/Section/Public Optional Instance Properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Optional%20Instance%20Properties"></a>
+                  <h3 class="section-name"><span>Public Optional Instance Properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV6coordsSo22CLLocationCoordinate2DVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/coords" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV6coordsSo22CLLocationCoordinate2DVSgvp">coords</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the physical location of this meeting, or a location used to determine local timezone. It is optional.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">coords</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8commentsSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/comments" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8commentsSSSgvp">comments</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is any additional comments for the meeting. It is optional.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">comments</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV17inPersonVenueNameSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/inPersonVenueName" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV17inPersonVenueNameSSSgvp">inPersonVenueName</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the name for an in-person venue. It is optional.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">inPersonVenueName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV15inPersonAddressSo08CNPostalG0CSgvp"></a>
+                    <a name="//apple_ref/swift/Property/inPersonAddress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV15inPersonAddressSo08CNPostalG0CSgvp">inPersonAddress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is a physical address of an in-person meeting. It is optional.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">inPersonAddress</span><span class="p">:</span> <span class="kt">CNPostalAddress</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12locationInfoSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/locationInfo" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12locationInfoSSSgvp">locationInfo</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is any additional text, describing the location. It is optional.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">locationInfo</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV10virtualURL10Foundation0F0VSgvp"></a>
+                    <a name="//apple_ref/swift/Property/virtualURL" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV10virtualURL10Foundation0F0VSgvp">virtualURL</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is a URL for a virtual meeting. It is optional.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">virtualURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV18virtualPhoneNumberSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/virtualPhoneNumber" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV18virtualPhoneNumberSSSgvp">virtualPhoneNumber</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is a phonr number for a virtual meeting. It is optional.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">virtualPhoneNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV11virtualInfoSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/virtualInfo" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV11virtualInfoSSSgvp">virtualInfo</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is any additional text, describing the virtual meeting. It is optional.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">virtualInfo</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Computed%20Properties"></a>
+                <a name="//apple_ref/swift/Section/Public Computed Properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Computed%20Properties"></a>
+                  <h3 class="section-name"><span>Public Computed Properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV2ids6UInt64Vvp"></a>
+                    <a name="//apple_ref/swift/Property/id" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV2ids6UInt64Vvp">id</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is a unique ID (within the found set) for this meeting, based on the two local IDs.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">UInt64</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV11meetingTypeAE0dF0Ovp"></a>
+                    <a name="//apple_ref/swift/Property/meetingType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV11meetingTypeAE0dF0Ovp">meetingType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The meeting type.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">meetingType</span><span class="p">:</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser/Meeting/MeetingType.html">MeetingType</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV15integerStartImeSivp"></a>
+                    <a name="//apple_ref/swift/Property/integerStartIme" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV15integerStartImeSivp">integerStartIme</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The start time, in local meeting timezone, as a military-style integer (HHMM).</p>
+
+<p>Returns -1, if the time could not be calculated.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">integerStartIme</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV24adjustedIntegerStartTimeSivp"></a>
+                    <a name="//apple_ref/swift/Property/adjustedIntegerStartTime" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV24adjustedIntegerStartTimeSivp">adjustedIntegerStartTime</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The start time, adjusted to user timezone, as a military-style integer (HHMM).</p>
+
+<p>Returns -1, if the time could not be calculated.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">adjustedIntegerStartTime</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8locationSo10CLLocationCSgvp"></a>
+                    <a name="//apple_ref/swift/Property/location" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8locationSo10CLLocationCSgvp">location</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the meeting location as a CLLocation.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>This may return nil, as not all meetings have a location.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">location</span><span class="p">:</span> <span class="kt">CLLocation</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Meeting%20Equatable%20Conformance"></a>
+                <a name="//apple_ref/swift/Section/Meeting Equatable Conformance" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Meeting%20Equatable%20Conformance"></a>
+                  <h3 class="section-name"><span>Meeting Equatable Conformance</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV2eeoiySbAE_AEtFZ"></a>
+                    <a name="//apple_ref/swift/Method/==(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV2eeoiySbAE_AEtFZ">==(_:<wbr>_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Public Equatable Conformance</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></span><span class="o">.</span><span class="kt">Meeting</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></span><span class="o">.</span><span class="kt">Meeting</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>lhs</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The left-hand side of the comparison.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>rhs</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The right-hand side of the comparison.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Meeting%20Hashable%20Conformance"></a>
+                <a name="//apple_ref/swift/Section/Meeting Hashable Conformance" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Meeting%20Hashable%20Conformance"></a>
+                  <h3 class="section-name"><span>Meeting Hashable Conformance</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV4hash4intoys6HasherVz_tF"></a>
+                    <a name="//apple_ref/swift/Method/hash(into:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV4hash4intoys6HasherVz_tF">hash(into:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Public Hashable Conformance</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">hash</span><span class="p">(</span><span class="n">into</span> <span class="nv">inOutHasher</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">Hasher</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>into</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>(INOUT) -The hasher to be loaded.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Meeting%20CustomStringConvertible%20Conformance"></a>
+                <a name="//apple_ref/swift/Section/Meeting CustomStringConvertible Conformance" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Meeting%20CustomStringConvertible%20Conformance"></a>
+                  <h3 class="section-name"><span>Meeting CustomStringConvertible Conformance</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV11descriptionSSvp"></a>
+                    <a name="//apple_ref/swift/Property/description" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV11descriptionSSvp">description</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Public CustomStringConvertible Conformance</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Meeting%20CustomDebugStringConvertible%20Conformance"></a>
+                <a name="//apple_ref/swift/Section/Meeting CustomDebugStringConvertible Conformance" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Meeting%20CustomDebugStringConvertible%20Conformance"></a>
+                  <h3 class="section-name"><span>Meeting CustomDebugStringConvertible Conformance</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV16debugDescriptionSSvp"></a>
+                    <a name="//apple_ref/swift/Property/debugDescription" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV16debugDescriptionSSvp">debugDescription</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Public CustomDebugStringConvertible Conformance</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">debugDescription</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Codable%20Coding%20Keys"></a>
+                <a name="//apple_ref/swift/Section/Codable Coding Keys" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Codable%20Coding%20Keys"></a>
+                  <h3 class="section-name"><span>Codable Coding Keys</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV6encode2toys7Encoder_p_tKF"></a>
+                    <a name="//apple_ref/swift/Method/encode(to:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV6encode2toys7Encoder_p_tKF">encode(to:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Encoder</p>
+
+<p>The reason for the &ldquo;flat&rdquo; encoding, is that many ML parsers like fairly simple data, without nesting.
+Nested structures, like the coordinates and the formats, are converted to top-level basic data types, so that a JSON file, made from the encoder, is simple and flat.</p>
+
+<p>Formats are encoded into a TDV string, with the fields being tab-separated, and the formats being linefeed-separated.</p>
+
+<p>If a value is not valid, it is not included in the encoding.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">encode</span><span class="p">(</span><span class="n">to</span> <span class="nv">inEncoder</span><span class="p">:</span> <span class="kt">Encoder</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>to</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The encoder to load with our values.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Computed%20Properties2"></a>
+                <a name="//apple_ref/swift/Section/Public Computed Properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Computed%20Properties2"></a>
+                  <h3 class="section-name"><span>Public Computed Properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV10hasVirtualSbvp"></a>
+                    <a name="//apple_ref/swift/Property/hasVirtual" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV10hasVirtualSbvp">hasVirtual</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>True, if the meeting has a virtual component.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">hasVirtual</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV11hasInPersonSbvp"></a>
+                    <a name="//apple_ref/swift/Property/hasInPerson" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV11hasInPersonSbvp">hasInPerson</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>True, if the meeting has an in-person component.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">hasInPerson</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV30startTimeInSecondsFromMidnightSdvp"></a>
+                    <a name="//apple_ref/swift/Property/startTimeInSecondsFromMidnight" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV30startTimeInSecondsFromMidnightSdvp">startTimeInSecondsFromMidnight</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This returns the start time as seconds from midnight.</p>
+
+<p>It returns -1, if there was a problem.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">startTimeInSecondsFromMidnight</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV14dateComponents10Foundation04DateF0VSgvp"></a>
+                    <a name="//apple_ref/swift/Property/dateComponents" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV14dateComponents10Foundation04DateF0VSgvp">dateComponents</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This returns the start time and weekday as date components.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">dateComponents</span><span class="p">:</span> <span class="kt">DateComponents</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV20basicInPersonAddressSSvp"></a>
+                    <a name="//apple_ref/swift/Property/basicInPersonAddress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV20basicInPersonAddressSSvp">basicInPersonAddress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This returns the address as a basic readable address.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">basicInPersonAddress</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Non-Mutating%20Instance%20Methods"></a>
+                <a name="//apple_ref/swift/Section/Public Non-Mutating Instance Methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Non-Mutating%20Instance%20Methods"></a>
+                  <h3 class="section-name"><span>Public Non-Mutating Instance Methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV16distanceInMeters4fromSdSgSo22CLLocationCoordinate2DV_tF"></a>
+                    <a name="//apple_ref/swift/Method/distanceInMeters(from:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV16distanceInMeters4fromSdSgSo22CLLocationCoordinate2DV_tF">distanceInMeters(from:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the linear distance, in meters, between the input coordinate, and the meeting&rsquo;s coordinate.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>May return nil, as not all meetings have a valid coordinate.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">distanceInMeters</span><span class="p">(</span><span class="n">from</span> <span class="nv">inFrom</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CLLocationDistance</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The coordinates of the location we are comparing to the meeting&rsquo;s location.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>An optional (may be nil) float, with the exact distance between the meeting&rsquo;s location, and the input. It is always positive (or 0), if not nil.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV04nextD2InSdvp"></a>
+                    <a name="//apple_ref/swift/Property/nextMeetingIn" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV04nextD2InSdvp">nextMeetingIn</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the number of seconds until the meeting starts (non-mutating. If the cache has not been updated, then this is not accurate).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">nextMeetingIn</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Mutating%20Instance%20Methods"></a>
+                <a name="//apple_ref/swift/Section/Public Mutating Instance Methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Mutating%20Instance%20Methods"></a>
+                  <h3 class="section-name"><span>Public Mutating Instance Methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV15meetingStartsInSdyF"></a>
+                    <a name="//apple_ref/swift/Method/meetingStartsIn()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV15meetingStartsInSdyF">meetingStartsIn()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the number of seconds until the meeting starts.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">meetingStartsIn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The number of seconds, before the next start.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV02isD10InProgressSbyF"></a>
+                    <a name="//apple_ref/swift/Method/isMeetingInProgress()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV02isD10InProgressSbyF">isMeetingInProgress()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns true, if the meeting is currently in progress.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>This is possibly an expensive (in performance) operation, as it may reset the cache.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">isMeetingInProgress</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The number of seconds, before the next start.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV16getNextStartDate10isAdjusted10Foundation0H0VSb_tF"></a>
+                    <a name="//apple_ref/swift/Method/getNextStartDate(isAdjusted:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV16getNextStartDate10isAdjusted10Foundation0H0VSb_tF">getNextStartDate(isAdjusted:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the start time of the next meeting, in the meeting&rsquo;s local timezone (unless <code>isAdjusted</code> is true).</p>
+
+<p>The meeting&rsquo;s start date is always compared to our local time, so that means, for example, if we are at Eastern Time (US), and the meeting is at Central Time (US), and starts at 8PM (local),
+then, if we check at 8PM (Eastern), the next meeting start will be at 8PM, the same day (Central). If we are at Central Time, and the meeting is at Eastern Time, then checking at 8PM (Central),
+will show us the meeting starting at 8PM, the next day (In the Eastern Time zone). If isAdjusted is true, then the result will be 9PM (today), and 7PM (tomorrow) (User local), respectively.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>If the date is invalid, then the distant future will be returned.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">getNextStartDate</span><span class="p">(</span><span class="n">isAdjusted</span> <span class="nv">inAdjust</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Date</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isAdjusted</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true (default is false), then the date will be converted to our local timezone.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The date of the next meeting (can be ignored, for purposes of updating the cache).</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV20getPreviousStartDate10isAdjusted10Foundation0H0VSb_tF"></a>
+                    <a name="//apple_ref/swift/Method/getPreviousStartDate(isAdjusted:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV20getPreviousStartDate10isAdjusted10Foundation0H0VSb_tF">getPreviousStartDate(isAdjusted:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the start time of the previous meeting, in the meeting&rsquo;s local timezone (unless <code>isAdjusted</code> is true).</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>If the date is invalid, then the distant past will be returned.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">getPreviousStartDate</span><span class="p">(</span><span class="n">isAdjusted</span> <span class="nv">inAdjust</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Date</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isAdjusted</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true (default is false), then the date will be converted to our local timezone.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The date of the last meeting.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20API"></a>
+                <a name="//apple_ref/swift/Section/Public API" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20API"></a>
+                  <h3 class="section-name"><span>Public API</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12directAppURI10Foundation3URLVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/directAppURI" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12directAppURI10Foundation3URLVSgvp">directAppURI</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>If the URL for the virtual meeting is one that can open an app on the user&rsquo;s device, a direct URL scheme version of the URL is returned.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">directAppURI</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-23)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+    </section>
+  </body>
+</html>

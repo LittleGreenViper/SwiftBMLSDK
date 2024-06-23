@@ -44,13 +44,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D41620322B73C17F00E6E0CA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D416203C2B73C17F00E6E0CA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -138,24 +131,12 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		D41620302B73C17F00E6E0CA /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		D41620342B73C17F00E6E0CA /* SwiftBMLSDK */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D41620492B73C17F00E6E0CA /* Build configuration list for PBXNativeTarget "SwiftBMLSDK" */;
 			buildPhases = (
-				D41620302B73C17F00E6E0CA /* Headers */,
 				D41620312B73C17F00E6E0CA /* Sources */,
-				D41620322B73C17F00E6E0CA /* Frameworks */,
 				D41620332B73C17F00E6E0CA /* Resources */,
 			);
 			buildRules = (

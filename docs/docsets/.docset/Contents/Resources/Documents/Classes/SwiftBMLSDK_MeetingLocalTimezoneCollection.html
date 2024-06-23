@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SwiftBMLSDK_MeetingLocalTimezoneCollection Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/SwiftBMLSDK_MeetingLocalTimezoneCollection" class="dashAnchor"></a>
+
+    <a title="SwiftBMLSDK_MeetingLocalTimezoneCollection Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          SwiftBMLSDK Doumentation
+        </a>
+         (100% documented)
+      </p>
+    
+      <div class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </div>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/LittleGreenViper/SwiftBMLSDK">
+            <img class="header-icon" src="../img/gh.png" alt="GitHub"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html"> Reference</a>
+      <img class="carat" src="../img/carat.png" alt=""/>
+      SwiftBMLSDK_MeetingLocalTimezoneCollection Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection.html">SwiftBMLSDK_MeetingLocalTimezoneCollection</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection/CachedMeeting.html">– CachedMeeting</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Array/Weekdays.html">– Weekdays</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SwiftBMLSDK_MeetingProtocol.html">SwiftBMLSDK_MeetingProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SwiftBMLSDK_Parser/PageMeta.html">– PageMeta</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SwiftBMLSDK_Parser/Meeting.html">– Meeting</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SwiftBMLSDK_Query.html">SwiftBMLSDK_Query</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SwiftBMLSDK_Query/ServerInfo.html">– ServerInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SwiftBMLSDK_Query/SearchSpecification.html">– SearchSpecification</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>SwiftBMLSDK_MeetingLocalTimezoneCollection</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SwiftBMLSDK_MeetingLocalTimezoneCollection</span></code></pre>
+
+                </div>
+              </div>
+            <p>This class can be used to manage meetings in the user&rsquo;s local timezone. It is especially useful for virtual meetings.</p>
+
+<p>Virtual meetings are always considered in local (to the user) timezone. We collect all of the meetings at once, and store them here, so they are easier and faster to manage.</p>
+
+<p>This is a class, so we don&rsquo;t go making too many massive copies of the data. We can store this as a reference.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20SDK%20Properties%20and%20Methods"></a>
+                <a name="//apple_ref/swift/Section/Public SDK Properties and Methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20SDK%20Properties%20and%20Methods"></a>
+                  <h3 class="section-name"><span>Public SDK Properties and Methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC13FetchCallbacka"></a>
+                    <a name="//apple_ref/swift/Alias/FetchCallback" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC13FetchCallbacka">FetchCallback</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The callback from the meeting fetch. This can be called in any thread.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">FetchCallback</span> <span class="o">=</span> <span class="p">(</span><span class="kt">SwiftBMLSDK_MeetingLocalTimezoneCollection</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC06CachedC0C"></a>
+                    <a name="//apple_ref/swift/Class/CachedMeeting" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC06CachedC0C">CachedMeeting</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Each meeting is an instance, associated with the date of the next occurrence.
+If the date is nil, or after now, the meeting is queried for the next ocurrence, and that is cached.</p>
+
+                        <a href="../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection/CachedMeeting.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">CachedMeeting</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Stored%20Properties"></a>
+                <a name="//apple_ref/swift/Section/Public Stored Properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Stored%20Properties"></a>
+                  <h3 class="section-name"><span>Public Stored Properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC8meetingsSayAC06CachedC0CGvp"></a>
+                    <a name="//apple_ref/swift/Property/meetings" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC8meetingsSayAC06CachedC0CGvp">meetings</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is the complete response to the last query. We ask for all of the virtual and hybrid meetings at once from the server, and store them in the order received.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">meetings</span><span class="p">:</span> <span class="p">[</span><span class="kt">SwiftBMLSDK_MeetingLocalTimezoneCollection</span><span class="o">.</span><span class="kt"><a href="../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection/CachedMeeting.html">CachedMeeting</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Computed%20Properties"></a>
+                <a name="//apple_ref/swift/Section/Public Computed Properties" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Computed%20Properties"></a>
+                  <h3 class="section-name"><span>Public Computed Properties</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC14hybridMeetingsSayAC06CachedC0CGvp"></a>
+                    <a name="//apple_ref/swift/Property/hybridMeetings" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC14hybridMeetingsSayAC06CachedC0CGvp">hybridMeetings</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">hybridMeetings</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection/CachedMeeting.html">CachedMeeting</a></span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC15virtualMeetingsSayAC06CachedC0CGvp"></a>
+                    <a name="//apple_ref/swift/Property/virtualMeetings" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC15virtualMeetingsSayAC06CachedC0CGvp">virtualMeetings</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">virtualMeetings</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection/CachedMeeting.html">CachedMeeting</a></span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Initializers"></a>
+                <a name="//apple_ref/swift/Section/Public Initializers" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Initializers"></a>
+                  <h3 class="section-name"><span>Public Initializers</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC9serverURL10completionAC10Foundation0H0V_yACctcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(serverURL:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC9serverURL10completionAC10Foundation0H0V_yACctcfc">init(serverURL:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>initializer, with a URL to the server.</p>
+
+<p>Instantiating this class executes an immediate fetch.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">serverURL</span> <span class="nv">inServerURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="n">completion</span> <span class="nv">inCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection.html#/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC13FetchCallbacka">FetchCallback</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>serverURL</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL to the meeting server.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC5query10completionAcA0aB6_QueryV_yACctcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(query:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC5query10completionAcA0aB6_QueryV_yACctcfc">init(query:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>initializer, with a prepared query.</p>
+
+<p>Instantiating this class executes an immediate fetch.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">query</span> <span class="nv">inQuery</span><span class="p">:</span> <span class="kt"><a href="../Structs/SwiftBMLSDK_Query.html">SwiftBMLSDK_Query</a></span><span class="p">,</span> <span class="n">completion</span> <span class="nv">inCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection.html#/s:11SwiftBMLSDK0aB31_MeetingLocalTimezoneCollectionC13FetchCallbacka">FetchCallback</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>query</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A &ldquo;primed&rdquo; query instance (an instance that has a server URL).</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-06-23)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+    </section>
+  </body>
+</html>
