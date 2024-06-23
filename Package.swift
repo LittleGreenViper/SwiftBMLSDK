@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 /*
  © Copyright 2024, Little Green Viper Software Development LLC
  LICENSE:
@@ -24,7 +24,6 @@ let package = Package(
     name: "SwiftBMLSDK",
     platforms: [
         .iOS(.v16),
-        .iPadOS(.v16),
         .tvOS(.v16),
         .macOS(.v13),
         .watchOS(.v9)
@@ -34,6 +33,10 @@ let package = Package(
             name: "SwiftBMLSDK",
             targets: ["SwiftBMLSDK"]
         )],
+    dependencies: [
+        // other dependencies
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.0.0"),
+    ],
     targets: [
         .target(name: "SwiftBMLSDK")
     ]
