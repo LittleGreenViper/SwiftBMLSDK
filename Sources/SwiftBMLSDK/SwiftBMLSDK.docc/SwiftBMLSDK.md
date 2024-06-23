@@ -14,15 +14,19 @@ create an instance of ``SwiftBMLSDK_Query``, and use that to query an external [
 
 The response to the query will be an instance of ``SwiftBMLSDK_Parser``, which can then be used to access, filter and sort the meetings, contained, therein.
 
+That's just about the only thing that you need to do, as a user of the SDK. It uses completion procs for most of its responses.
+
 ## Topics
 
 ### Making a Query to the Server
 
-This is the struct that you need to instantiate, in order to execute queries to [the meeting server](https://github.com/LittleGreenViper/LGV_MeetingServer).
+This is the struct that you need to instantiate, in order to execute queries to [the meeting server](https://github.com/LittleGreenViper/LGV_MeetingServer). Everything else comes from that instance.
 
 - ``SwiftBMLSDK_Query``
 
 ### Meeting Server Information Queries
+
+This is a query that fetches basic information from the server.
 
 - ``SwiftBMLSDK_Query/serverInfo(completion:)``
 
@@ -30,8 +34,20 @@ This is the struct that you need to instantiate, in order to execute queries to 
 
 ### Meeting Search Queries
 
+This is how you do a meeting search. Create a ``SwiftBMLSDK_Query/SearchSpecification`` instance, and pass that to the ``SwiftBMLSDK_Query/meetingSearch(specification:completion:)`` method.
+
 - ``SwiftBMLSDK_Query/SearchSpecification``
 
 - ``SwiftBMLSDK_Query/meetingSearch(specification:completion:)``
 
 - ``SwiftBMLSDK_Parser``
+
+### Useful Extensions
+
+You can create an instance of ``SwiftBMLSDK_MeetingLocalTimezoneCollection``, and use that to manage all the meetings (which are represented in the user's local timezone).
+
+- ``SwiftBMLSDK_MeetingLocalTimezoneCollection``
+
+- ``SwiftBMLSDK_Parser/Meeting/directAppURI``
+
+- ``SwiftBMLSDK_MeetingProtocol``

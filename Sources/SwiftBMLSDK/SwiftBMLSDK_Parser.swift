@@ -247,55 +247,17 @@ public struct SwiftBMLSDK_Parser: Encodable {
     /* ################################################################################################################################## */
     /**
      This struct holds a single parsed meeting instance.
+     
+     > NOTE: There is a platform-dependent extension that adds the ``SwiftBMLSDK_Parser/Meeting/directAppURI`` computed property to this type.
      */
-    public struct Meeting: Encodable, Hashable, CustomStringConvertible, CustomDebugStringConvertible {
+    public struct Meeting {
         /* ############################################################################################################################## */
         // MARK: Format Information Container
         /* ############################################################################################################################## */
         /**
          This struct holds a parsed format information instance.
          */
-        public struct Format: Codable, CustomStringConvertible, CustomDebugStringConvertible, Hashable, Comparable {
-            /* ########################################################################################################################## */
-            // MARK: Codable Coding Keys
-            /* ########################################################################################################################## */
-            /**
-             This defines the keys that we use for encoding and decoding.
-             */
-            private enum _CodingKeys: String, CodingKey {
-                /* ######################################### */
-                /**
-                 This is the short format "key" string.
-                 */
-                case key
-                
-                /* ######################################### */
-                /**
-                 This is the short name for the format.
-                 */
-                case name
-
-                /* ######################################### */
-                /**
-                 This is the longer description of the format.
-                 */
-                case description
-
-                /* ######################################### */
-                /**
-                 This is the [ISO 639-2](https://www.loc.gov/standards/iso639-2/php/code_list.php) code for the language used for the name and description.
-                 */
-                case language
-
-                /* ######################################### */
-                /**
-                 This is the local server ID of the format. We use a String, even though it comes as an Int.
-                 */
-                case id
-            }
-            
-            // MARK: Initializers (internal)
-            
+        public struct Format: CustomStringConvertible, CustomDebugStringConvertible, Hashable, Comparable {
             /* ############################################# */
             /**
              Default initializer
@@ -377,23 +339,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
              */
             public static func < (lhs: Format, rhs: Format) -> Bool { lhs.key < rhs.key }
             
-            // MARK: Encodable Conformance
-            
-            /* ############################################# */
-            /**
-             Encoder
-             
-             - parameter to: The encoder to load with our values.
-             */
-            public func encode(to inEncoder: Encoder) throws {
-                var container = inEncoder.container(keyedBy: _CodingKeys.self)
-                try container.encode(key, forKey: .key)
-                try container.encode(name, forKey: .name)
-                try container.encode(description, forKey: .description)
-                try container.encode(language, forKey: .language)
-                try container.encode(id, forKey: .id)
-            }
-            
             // MARK: CustomDebugStringConvertible Conformance
             
             /* ############################################# */
@@ -403,40 +348,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
             public var debugDescription: String { "\t\t(\(key))\t\(name)\t(\(language))\n\t\t\t\t\(description)\n\t\t\t\t\(id)" }
         }
 
-        /* ############################################################################################################################## */
-        // MARK: Codable Coding Keys
-        /* ############################################################################################################################## */
-        /**
-         This defines the keys that we use for encoding and decoding.
-         
-         This struct was inspired by [this SO answer](https://stackoverflow.com/a/50715560/879365)
-         */
-        private struct _CustomCodingKeys: CodingKey {
-            /* ############################################# */
-            /**
-             We only keep a string.
-             */
-            var stringValue: String
-
-            /* ############################################# */
-            /**
-             We can initialize with a string.
-             */
-            init?(stringValue inStringValue: String) { stringValue = inStringValue }
-
-            /* ############################################# */
-            /**
-             We define this, but it won't be used.
-             */
-            var intValue: Int?
-
-            /* ############################################# */
-            /**
-             The integer variant always fails.
-             */
-            init?(intValue: Int) { nil }
-        }
-        
         // MARK: Private Properties
         
         /* ################################################# */
@@ -671,7 +582,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
             case na
         }
 
-        // MARK: Public Required Instance Properties
+        // MARK: Public Instance Properties
         
         /* ################################################# */
         /**
@@ -850,233 +761,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
             else { return nil }
             return CLLocation(latitude: lat, longitude: lng)
         }
-        
-        // MARK: Public Codable Conformance
-        
-        /* ############################################# */
-        /**
-         Encoder
-         
-         The reason for the "flat" encoding, is that many ML parsers like fairly simple data, without nesting.
-         Nested structures, like the coordinates and the formats, are converted to top-level basic data types, so that a JSON file, made from the encoder, is simple and flat.
-         
-         Formats are encoded into a TDV string, with the fields being tab-separated, and the formats being linefeed-separated.
-         
-         If a value is not valid, it is not included in the encoding.
-         
-         - parameter to: The encoder to load with our values.
-         */
-        public func encode(to inEncoder: Encoder) throws {
-            var container = inEncoder.container(keyedBy: _CustomCodingKeys.self)
-            
-            // These three must always be present.
-            try container.encode(serverID, forKey: _CustomCodingKeys(stringValue: "serverID")!)
-            try container.encode(localMeetingID, forKey: _CustomCodingKeys(stringValue: "localMeetingID")!)
-            
-            // These are included in the encoder, but we don't care about them, for the decoder.
-            try container.encode(id, forKey: _CustomCodingKeys(stringValue: "id")!)
-            let typeString = meetingType.rawValue
-            if !typeString.isEmpty {
-                try container.encode(typeString, forKey: _CustomCodingKeys(stringValue: "meetingType")!)
-            }
-
-            if 0 < weekday {
-                try container.encode(weekday, forKey: _CustomCodingKeys(stringValue: "weekday")!)
-            }
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "HH:mm:ss"
-            let timeString = formatter.string(from: startTime)
-            if !timeString.isEmpty {
-                try container.encode(timeString, forKey: _CustomCodingKeys(stringValue: "startTime")!)
-            }
-            
-            if 0 < duration {
-                try container.encode(duration, forKey: _CustomCodingKeys(stringValue: "duration")!)
-            }
-            
-            let tzString = timeZone.identifier
-            if !tzString.isEmpty {
-                try container.encode(tzString, forKey: _CustomCodingKeys(stringValue: "timezone")!)
-            }
-            
-            let orgString = organization.rawValue
-            if !orgString.isEmpty {
-                try container.encode(orgString, forKey: _CustomCodingKeys(stringValue: "organization")!)
-            }
-            
-            if !name.isEmpty {
-                try container.encode(name, forKey: _CustomCodingKeys(stringValue: "name")!)
-            }
-            
-            if !formats.isEmpty {
-                var formatIndex = 0
-                
-                try formats.forEach {
-                    let formatString = $0.asString
-                    if !formatString.isEmpty {
-                        try container.encode(formatString, forKey: _CustomCodingKeys(stringValue: "format-\(formatIndex)")!)
-                        formatIndex += 1
-                    }
-                }
-            }
-            
-            if let comments = comments,
-               !comments.isEmpty {
-                try? container.encode(comments, forKey: _CustomCodingKeys(stringValue: "comments")!)
-            }
-            
-            if let locationInfo = locationInfo,
-               !locationInfo.isEmpty {
-                try? container.encode(locationInfo, forKey: _CustomCodingKeys(stringValue: "locationInfo")!)
-            }
-            
-            if let virtualURL = virtualURL?.absoluteString,
-               !virtualURL.isEmpty {
-                try? container.encode(virtualURL, forKey: _CustomCodingKeys(stringValue: "virtualURL")!)
-            }
-            
-            if let virtualPhoneNumber = virtualPhoneNumber,
-               !virtualPhoneNumber.isEmpty {
-                try? container.encode(virtualPhoneNumber, forKey: _CustomCodingKeys(stringValue: "virtualPhoneNumber")!)
-            }
-            
-            if let virtualInfo = virtualInfo,
-               !virtualInfo.isEmpty {
-                try? container.encode(virtualInfo, forKey: _CustomCodingKeys(stringValue: "virtualInfo")!)
-            }
-
-            if let latitude = coords?.latitude,
-               let longitude = coords?.longitude {
-                try? container.encode(Double(round(1000000.0 * latitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "coords_lat")!)
-                try? container.encode(Double(round(1000000.0 * longitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "coords_lng")!)
-            }
-            
-            if let inPersonVenueName = inPersonVenueName,
-               !inPersonVenueName.isEmpty {
-                try? container.encode(inPersonVenueName, forKey: _CustomCodingKeys(stringValue: "inPersonVenueName")!)
-            }
-            
-            if let string = inPersonAddress?.street,
-               !string.isEmpty {
-                try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_street")!)
-            }
-            
-            if let string = inPersonAddress?.subLocality,
-               !string.isEmpty {
-                try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_subLocality")!)
-            }
-            
-            if let string = inPersonAddress?.city,
-               !string.isEmpty {
-                try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_city")!)
-            }
-            
-            if let string = inPersonAddress?.state,
-               !string.isEmpty {
-                try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_state")!)
-            }
-            
-            if let string = inPersonAddress?.subAdministrativeArea,
-               !string.isEmpty {
-                try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_subAdministrativeArea")!)
-            }
-            
-            if let string = inPersonAddress?.postalCode,
-               !string.isEmpty {
-                try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_postalCode")!)
-            }
-            
-            if let string = inPersonAddress?.country,
-               !string.isEmpty {
-                try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_country")!)
-            }
-        }
-
-        /* ############################################# */
-        /**
-         Public CustomStringConvertible Conformance
-         */
-        public var description: String {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "HH:mm:ss"
-            let timeString = formatter.string(from: startTime)
-            var ret = "Meeting:\n\t"
-            ret += "id:\t\(id)\n\t"
-            ret += "serverID:\t\(serverID)\n\t"
-            ret += "localMeetingID:\t\(localMeetingID)\n\t"
-            ret += "weekday:\t\(weekday)\n\t"
-            ret += "startTime:\t\(timeString)\n\t"
-            ret += "duration:\t\(duration)\n\t"
-            ret += "timeZone:\t\(timeZone.debugDescription)\n\t"
-            ret += "organization:\t\(organization.rawValue)\n\t"
-            ret += "name:\t\(name)\n\t"
-            ret += "formats:\n\(formats.map { $0.debugDescription }.joined(separator: "\n"))\n\t"
-            
-            if let coords = coords {
-                ret += "coords:\t(latitude: \(coords.latitude), longitude: \(coords.longitude))\n\t"
-            }
-            
-            if let comments = comments,
-               !comments.isEmpty {
-                ret += "comments:\t\(comments)\n\t"
-            }
-
-            if let locationInfo = locationInfo,
-               !locationInfo.isEmpty {
-                ret += "locationInfo:\t\(locationInfo)\n\t"
-            }
-
-            if let virtualURL = virtualURL?.absoluteString,
-               !virtualURL.isEmpty {
-                ret += "virtualURL:\t\(virtualURL)\n\t"
-            }
-
-            if let virtualPhoneNumber = virtualPhoneNumber,
-               !virtualPhoneNumber.isEmpty {
-                ret += "virtualPhoneNumber:\t\(virtualPhoneNumber)\n\t"
-            }
-
-            if let virtualInfo = virtualInfo,
-               !virtualInfo.isEmpty {
-                ret += "virtualInfo:\t\(virtualInfo)\n\t"
-            }
-
-            if let inPersonVenueName = inPersonVenueName,
-               !inPersonVenueName.isEmpty {
-                ret += "inPersonVenueName:\t\(inPersonVenueName)\n\t"
-            }
-
-            if nil != inPersonAddress,
-               !basicInPersonAddress.isEmpty {
-                ret += "inPersonAddress:\t\(basicInPersonAddress)\n\t"
-            }
-
-            return ret
-        }
-
-        /* ############################################# */
-        /**
-         Public CustomDebugStringConvertible Conformance
-         */
-        public var debugDescription: String { description }
-
-        /* ############################################# */
-        /**
-         Public Equatable Conformance
-         
-         - parameter lhs: The left-hand side of the comparison.
-         - parameter rhs: The right-hand side of the comparison.
-         */
-        public static func == (lhs: SwiftBMLSDK_Parser.Meeting, rhs: SwiftBMLSDK_Parser.Meeting) -> Bool { lhs.id == rhs.id }
-        
-        /* ############################################# */
-        /**
-         Public Hashable Conformance
-         
-         - parameter into: (INOUT) -The hasher to be loaded.
-         */
-        public func hash(into inOutHasher: inout Hasher) { inOutHasher.combine(id) }
     }
 
     // MARK: Public Immutable Properties
@@ -1092,6 +776,290 @@ public struct SwiftBMLSDK_Parser: Encodable {
      The meeting data for this page of meetings.
      */
     public let meetings: [Meeting]
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Meeting Equatable Conformance -
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_Parser.Meeting: Equatable {
+    /* ############################################# */
+    /**
+     Public Equatable Conformance
+     
+     - parameter lhs: The left-hand side of the comparison.
+     - parameter rhs: The right-hand side of the comparison.
+     */
+    public static func == (lhs: SwiftBMLSDK_Parser.Meeting, rhs: SwiftBMLSDK_Parser.Meeting) -> Bool { lhs.id == rhs.id }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Meeting Hashable Conformance -
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_Parser.Meeting: Hashable {
+    /* ############################################# */
+    /**
+     Public Hashable Conformance
+     
+     - parameter into: (INOUT) -The hasher to be loaded.
+     */
+    public func hash(into inOutHasher: inout Hasher) { inOutHasher.combine(id) }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Meeting CustomStringConvertible Conformance -
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_Parser.Meeting: CustomStringConvertible {
+    /* ############################################# */
+    /**
+     Public CustomStringConvertible Conformance
+     */
+    public var description: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        let timeString = formatter.string(from: startTime)
+        var ret = "Meeting:\n\t"
+        ret += "id:\t\(id)\n\t"
+        ret += "serverID:\t\(serverID)\n\t"
+        ret += "localMeetingID:\t\(localMeetingID)\n\t"
+        ret += "weekday:\t\(weekday)\n\t"
+        ret += "startTime:\t\(timeString)\n\t"
+        ret += "duration:\t\(duration)\n\t"
+        ret += "timeZone:\t\(timeZone.debugDescription)\n\t"
+        ret += "organization:\t\(organization.rawValue)\n\t"
+        ret += "name:\t\(name)\n\t"
+        ret += "formats:\n\(formats.map { $0.debugDescription }.joined(separator: "\n"))\n\t"
+        
+        if let coords = coords {
+            ret += "coords:\t(latitude: \(coords.latitude), longitude: \(coords.longitude))\n\t"
+        }
+        
+        if let comments = comments,
+           !comments.isEmpty {
+            ret += "comments:\t\(comments)\n\t"
+        }
+
+        if let locationInfo = locationInfo,
+           !locationInfo.isEmpty {
+            ret += "locationInfo:\t\(locationInfo)\n\t"
+        }
+
+        if let virtualURL = virtualURL?.absoluteString,
+           !virtualURL.isEmpty {
+            ret += "virtualURL:\t\(virtualURL)\n\t"
+        }
+
+        if let virtualPhoneNumber = virtualPhoneNumber,
+           !virtualPhoneNumber.isEmpty {
+            ret += "virtualPhoneNumber:\t\(virtualPhoneNumber)\n\t"
+        }
+
+        if let virtualInfo = virtualInfo,
+           !virtualInfo.isEmpty {
+            ret += "virtualInfo:\t\(virtualInfo)\n\t"
+        }
+
+        if let inPersonVenueName = inPersonVenueName,
+           !inPersonVenueName.isEmpty {
+            ret += "inPersonVenueName:\t\(inPersonVenueName)\n\t"
+        }
+
+        if nil != inPersonAddress,
+           !basicInPersonAddress.isEmpty {
+            ret += "inPersonAddress:\t\(basicInPersonAddress)\n\t"
+        }
+
+        return ret
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Meeting CustomDebugStringConvertible Conformance -
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_Parser.Meeting: CustomDebugStringConvertible {
+    /* ############################################# */
+    /**
+     Public CustomDebugStringConvertible Conformance
+     */
+    public var debugDescription: String { description }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Meeting Encodable Conformance -
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_Parser.Meeting: Encodable {
+    /* ############################################################################################################################## */
+    // MARK: Codable Coding Keys
+    /* ############################################################################################################################## */
+    /**
+     This defines the keys that we use for encoding and decoding.
+     
+     This struct was inspired by [this SO answer](https://stackoverflow.com/a/50715560/879365)
+     */
+    private struct _CustomCodingKeys: CodingKey {
+        /* ############################################# */
+        /**
+         We only keep a string.
+         */
+        var stringValue: String
+
+        /* ############################################# */
+        /**
+         We can initialize with a string.
+         */
+        init?(stringValue inStringValue: String) { stringValue = inStringValue }
+
+        /* ############################################# */
+        /**
+         We define this, but it won't be used.
+         */
+        var intValue: Int?
+
+        /* ############################################# */
+        /**
+         The integer variant always fails.
+         */
+        init?(intValue: Int) { nil }
+    }
+    
+    /* ############################################# */
+    /**
+     Encoder
+     
+     The reason for the "flat" encoding, is that many ML parsers like fairly simple data, without nesting.
+     Nested structures, like the coordinates and the formats, are converted to top-level basic data types, so that a JSON file, made from the encoder, is simple and flat.
+     
+     Formats are encoded into a TDV string, with the fields being tab-separated, and the formats being linefeed-separated.
+     
+     If a value is not valid, it is not included in the encoding.
+     
+     - parameter to: The encoder to load with our values.
+     */
+    public func encode(to inEncoder: Encoder) throws {
+        var container = inEncoder.container(keyedBy: _CustomCodingKeys.self)
+        
+        // These three must always be present.
+        try container.encode(serverID, forKey: _CustomCodingKeys(stringValue: "serverID")!)
+        try container.encode(localMeetingID, forKey: _CustomCodingKeys(stringValue: "localMeetingID")!)
+        
+        // These are included in the encoder, but we don't care about them, for the decoder.
+        try container.encode(id, forKey: _CustomCodingKeys(stringValue: "id")!)
+        let typeString = meetingType.rawValue
+        if !typeString.isEmpty {
+            try container.encode(typeString, forKey: _CustomCodingKeys(stringValue: "meetingType")!)
+        }
+
+        if 0 < weekday {
+            try container.encode(weekday, forKey: _CustomCodingKeys(stringValue: "weekday")!)
+        }
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        let timeString = formatter.string(from: startTime)
+        if !timeString.isEmpty {
+            try container.encode(timeString, forKey: _CustomCodingKeys(stringValue: "startTime")!)
+        }
+        
+        if 0 < duration {
+            try container.encode(duration, forKey: _CustomCodingKeys(stringValue: "duration")!)
+        }
+        
+        let tzString = timeZone.identifier
+        if !tzString.isEmpty {
+            try container.encode(tzString, forKey: _CustomCodingKeys(stringValue: "timezone")!)
+        }
+        
+        let orgString = organization.rawValue
+        if !orgString.isEmpty {
+            try container.encode(orgString, forKey: _CustomCodingKeys(stringValue: "organization")!)
+        }
+        
+        if !name.isEmpty {
+            try container.encode(name, forKey: _CustomCodingKeys(stringValue: "name")!)
+        }
+        
+        if !formats.isEmpty {
+            var formatIndex = 0
+            
+            try formats.forEach {
+                let formatString = $0.asString
+                if !formatString.isEmpty {
+                    try container.encode(formatString, forKey: _CustomCodingKeys(stringValue: "format-\(formatIndex)")!)
+                    formatIndex += 1
+                }
+            }
+        }
+        
+        if let comments = comments,
+           !comments.isEmpty {
+            try? container.encode(comments, forKey: _CustomCodingKeys(stringValue: "comments")!)
+        }
+        
+        if let locationInfo = locationInfo,
+           !locationInfo.isEmpty {
+            try? container.encode(locationInfo, forKey: _CustomCodingKeys(stringValue: "locationInfo")!)
+        }
+        
+        if let virtualURL = virtualURL?.absoluteString,
+           !virtualURL.isEmpty {
+            try? container.encode(virtualURL, forKey: _CustomCodingKeys(stringValue: "virtualURL")!)
+        }
+        
+        if let virtualPhoneNumber = virtualPhoneNumber,
+           !virtualPhoneNumber.isEmpty {
+            try? container.encode(virtualPhoneNumber, forKey: _CustomCodingKeys(stringValue: "virtualPhoneNumber")!)
+        }
+        
+        if let virtualInfo = virtualInfo,
+           !virtualInfo.isEmpty {
+            try? container.encode(virtualInfo, forKey: _CustomCodingKeys(stringValue: "virtualInfo")!)
+        }
+
+        if let latitude = coords?.latitude,
+           let longitude = coords?.longitude {
+            try? container.encode(Double(round(1000000.0 * latitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "coords_lat")!)
+            try? container.encode(Double(round(1000000.0 * longitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "coords_lng")!)
+        }
+        
+        if let inPersonVenueName = inPersonVenueName,
+           !inPersonVenueName.isEmpty {
+            try? container.encode(inPersonVenueName, forKey: _CustomCodingKeys(stringValue: "inPersonVenueName")!)
+        }
+        
+        if let string = inPersonAddress?.street,
+           !string.isEmpty {
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_street")!)
+        }
+        
+        if let string = inPersonAddress?.subLocality,
+           !string.isEmpty {
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_subLocality")!)
+        }
+        
+        if let string = inPersonAddress?.city,
+           !string.isEmpty {
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_city")!)
+        }
+        
+        if let string = inPersonAddress?.state,
+           !string.isEmpty {
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_state")!)
+        }
+        
+        if let string = inPersonAddress?.subAdministrativeArea,
+           !string.isEmpty {
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_subAdministrativeArea")!)
+        }
+        
+        if let string = inPersonAddress?.postalCode,
+           !string.isEmpty {
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_postalCode")!)
+        }
+        
+        if let string = inPersonAddress?.country,
+           !string.isEmpty {
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_country")!)
+        }
+    }
 }
 
 /* ###################################################################################################################################### */

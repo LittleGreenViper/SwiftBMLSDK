@@ -128,6 +128,7 @@ extension SwiftMLSDK_Map_AnnotationPopover_ViewController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        overrideUserInterfaceStyle = .dark
         tableView?.rowHeight = SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell.rowHeight
         tableView?.reloadData()
     }

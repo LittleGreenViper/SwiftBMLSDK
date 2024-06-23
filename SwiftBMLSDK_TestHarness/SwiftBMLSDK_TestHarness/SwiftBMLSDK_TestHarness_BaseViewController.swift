@@ -79,6 +79,7 @@ extension SwiftBMLSDK_TestHarness_BaseViewController {
               let logoImage = UIImage(named: "Logo"),
               let view = view
         else { return }
+        overrideUserInterfaceStyle = .dark
         navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
         view.overrideUserInterfaceStyle = .dark
         let backgroundView = UIImageView(image: backgroundImage)

@@ -73,7 +73,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
      This clears the cache, and makes a new call, to get the meetings.
      
      - parameter query: A query instance, primed with the meeting server.
-     - parameter completion: An escaping tail completion proc, with a single parameter (this instance).
+     - parameter completion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
      */
     private func _fetchMeetings(query inQuery: SwiftBMLSDK_Query, completion inCompletion: @escaping FetchCallback) {
         meetings = []
@@ -91,9 +91,11 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
         }
     }
 
+    // MARK: Public SDK Properties and Methods
+    
     /* ################################################# */
     /**
-     The callback from the meeting fetch.
+     The callback from the meeting fetch. This can be called in any thread.
      
      - parameter: This collection.
      */
@@ -149,11 +151,15 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
         }
     }
     
+    // MARK: Public Stored Properties
+    
     /* ################################################# */
     /**
      This is the complete response to the last query. We ask for all of the virtual and hybrid meetings at once from the server, and store them in the order received.
      */
     public var meetings = [CachedMeeting]()
+    
+    // MARK: Public Computed Properties
 
     /* ################################################# */
     /**
@@ -165,12 +171,16 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
      */
     public var virtualMeetings: [CachedMeeting] { meetings.filter { .virtual == $0.meeting.meetingType } }
 
+    // MARK: Public Initializers
+    
     /* ################################################# */
     /**
      initializer, with a URL to the server.
      
+     Instantiating this class executes an immediate fetch.
+     
      - parameter serverURL: The URL to the meeting server.
-     - parameter completion: An escaping tail completion proc, with a single parameter (this instance).
+     - parameter completion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
      */
     public init(serverURL inServerURL: URL, completion inCompletion: @escaping FetchCallback) {
         _fetchMeetings(query: SwiftBMLSDK_Query(serverBaseURI: inServerURL), completion: inCompletion)
@@ -180,8 +190,10 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
     /**
      initializer, with a prepared query.
      
-     - parameter query: A "primed" query instance.
-     - parameter completion: An escaping tail completion proc, with a single parameter (this instance).
+     Instantiating this class executes an immediate fetch.
+
+     - parameter query: A "primed" query instance (an instance that has a server URL).
+     - parameter completion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
      */
     public init(query inQuery: SwiftBMLSDK_Query, completion inCompletion: @escaping FetchCallback) {
         _fetchMeetings(query: inQuery, completion: inCompletion)
@@ -309,34 +321,11 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
         /* ############################################# */
         /**
-         This returns a localization token for the app name.
-         */
-        var appName: String {
-            switch self {
-            case .zoom:
-                return "SLUG-DIRECT-URI-ZOOM"
-
-            case .gotomeeting:
-                return "SLUG-DIRECT-URI-GOTOMEETING"
-
-            case .skype:
-                return "SLUG-DIRECT-URI-SKYPE"
-
-            case .meet:
-                return "SLUG-DIRECT-URI-MEET"
-
-            case .discord:
-                return "SLUG-DIRECT-URI-DISCORD"
-            }
-        }
-
-        /* ############################################# */
-        /**
          This returns a URL to open the relevant app for the URI.
          
          If the app is not installed on the phone, then nil is returned.
          */
-        var directURL: URL? {
+        internal var directURL: URL? {
             var ret: URL?
             var confNum: String = ""
             
@@ -457,7 +446,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
          - parameter url: The URL to check.
          - returns: The enum case ( or nil, if none).
          */
-        static func factory(url inURL: URL) -> _DirectVirtual? {
+        internal static func factory(url inURL: URL) -> _DirectVirtual? {
             var ret: _DirectVirtual?
             
             if inURL.host?.contains(_DirectVirtual.zoom(nil)._serviceURLHost) ?? false {
@@ -469,6 +458,31 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
             }
             
             return nil != ret?.directURL ? ret : nil
+        }
+
+        // MARK: Public Computed Properties
+        
+        /* ############################################# */
+        /**
+         This returns a localization token for the app name.
+         */
+        public var appName: String {
+            switch self {
+            case .zoom:
+                return "SLUG-DIRECT-URI-ZOOM"
+
+            case .gotomeeting:
+                return "SLUG-DIRECT-URI-GOTOMEETING"
+
+            case .skype:
+                return "SLUG-DIRECT-URI-SKYPE"
+
+            case .meet:
+                return "SLUG-DIRECT-URI-MEET"
+
+            case .discord:
+                return "SLUG-DIRECT-URI-DISCORD"
+            }
         }
     }
     
