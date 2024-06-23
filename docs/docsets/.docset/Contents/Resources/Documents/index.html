@@ -111,7 +111,59 @@
             
             <h1 id='code-swiftbmlsdk-code' class='heading'><code>SwiftBMLSDK</code></h1>
 
-<p>An adaptible SDK, for finding and listing regularly-occurring, scheduled events.</p>
+<p>A native Swift client SDK for the <code>LGV_MeetingServer</code> Web server.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p><img src="icon.png" alt="Icon"></p>
+
+<p>Use the SwiftBMLSDK to query instances of the <a href="https://github.com/LittleGreenViper/LGV_MeetingServer"><code>LGV_MeetingServer</code></a> meeting aggregator server.</p>
+
+<p>This service manages structured queries, and allows powerful parsing and filtering of search results.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>create an instance of <code><a href="Structs/SwiftBMLSDK_Query.html">SwiftBMLSDK_Query</a></code>, and use that to query an external <a href="https://github.com/LittleGreenViper/LGV_MeetingServer"><code>LGV_MeetingServer</code></a> server.</p>
+
+<p>The response to the query will be an instance of <code><a href="Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></code>, which can then be used to access, filter and sort the meetings, contained, therein.</p>
+
+<p>That&rsquo;s just about the only thing that you need to do, as a user of the SDK. It uses completion procs for most of its responses.</p>
+<h2 id='topics' class='heading'>Topics</h2>
+<h3 id='making-a-query-to-the-server' class='heading'>Making a Query to the Server</h3>
+
+<p>This is the struct that you need to instantiate, in order to execute queries to <a href="https://github.com/LittleGreenViper/LGV_MeetingServer">the meeting server</a>. Everything else comes from that instance.</p>
+
+<ul>
+<li><code><a href="Structs/SwiftBMLSDK_Query.html">SwiftBMLSDK_Query</a></code></li>
+</ul>
+<h3 id='meeting-server-information-queries' class='heading'>Meeting Server Information Queries</h3>
+
+<p>This is a query that fetches basic information from the server.</p>
+
+<ul>
+<li><p><code><a href="Structs/SwiftBMLSDK_Query.html#/s:11SwiftBMLSDK0aB6_QueryV10serverInfo10completionyyAC06ServerE0VSg_s5Error_pSgtc_tF">serverInfo(completion:)</a></code></p></li>
+<li><p><code><a href="Structs/SwiftBMLSDK_Query/ServerInfo.html">ServerInfo</a></code></p></li>
+</ul>
+<h3 id='meeting-search-queries' class='heading'>Meeting Search Queries</h3>
+
+<p>This is how you do a meeting search. Create a <code><a href="Structs/SwiftBMLSDK_Query/SearchSpecification.html">SearchSpecification</a></code> instance, and pass that to the <code><a href="Structs/SwiftBMLSDK_Query.html#/s:11SwiftBMLSDK0aB6_QueryV13meetingSearch13specification10completionyAC0E13SpecificationV_yAA0aB7_ParserVSg_s5Error_pSgtctF">meetingSearch(specification:completion:)</a></code> method.</p>
+
+<ul>
+<li><p><code><a href="Structs/SwiftBMLSDK_Query/SearchSpecification.html">SearchSpecification</a></code></p></li>
+<li><p><code><a href="Structs/SwiftBMLSDK_Query.html#/s:11SwiftBMLSDK0aB6_QueryV13meetingSearch13specification10completionyAC0E13SpecificationV_yAA0aB7_ParserVSg_s5Error_pSgtctF">meetingSearch(specification:completion:)</a></code></p></li>
+<li><p><code><a href="Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></code></p></li>
+</ul>
+<h3 id='useful-classes' class='heading'>Useful Classes</h3>
+
+<p>You can create an instance of <code><a href="Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection.html">SwiftBMLSDK_MeetingLocalTimezoneCollection</a></code>, and use that to manage all the meetings (which are represented in the user&rsquo;s local timezone).</p>
+
+<ul>
+<li><code><a href="Classes/SwiftBMLSDK_MeetingLocalTimezoneCollection.html">SwiftBMLSDK_MeetingLocalTimezoneCollection</a></code></li>
+</ul>
+<h3 id='useful-extensions' class='heading'>Useful Extensions</h3>
+
+<ul>
+<li><p><code><a href="Structs/SwiftBMLSDK_Parser/Meeting.html#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12directAppURIXevp">directAppURI</a></code></p></li>
+<li><p><code><a href="Protocols/SwiftBMLSDK_MeetingProtocol.html">SwiftBMLSDK_MeetingProtocol</a></code></p></li>
+</ul>
 
           </div>
         </section>
