@@ -333,9 +333,9 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
                     let title = "SLUG-VIRTUAL-SWITCH-\(index)".localizedVariant + countSuffix
                     switchMan.setTitle(title, forSegmentAt: index)
                 }
+                
+                inCompletion?()
             }
-            
-            inCompletion?()
         }
     }
 }
