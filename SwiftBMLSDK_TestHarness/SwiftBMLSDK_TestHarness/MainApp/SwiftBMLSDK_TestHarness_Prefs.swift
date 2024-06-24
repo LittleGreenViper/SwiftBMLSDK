@@ -270,20 +270,6 @@ extension SwiftBMLSDK_TestHarness_Prefs {
             DispatchQueue.main.async { inCompletion() }
         }
     }
-    
-    /* ############################################################## */
-    /**
-     This fetches the meetings from the aggregator, using the current settings. This populates the `searchResults` property.
-     
-     - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.
-     */
-    public func performVirtualSearch(completion inCompletion: @escaping () -> Void) {
-        clearSearchResults()
-        queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(locationCenter: locationCenter, locationRadius: locationRadius)) { inSearchResults, inError in
-            Self._searchResults = inSearchResults
-            DispatchQueue.main.async { inCompletion() }
-        }
-    }
 
     /* ############################################################## */
     /**

@@ -309,7 +309,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      Fetches all of the virtual meetings (hybrid and pure virtual).
      
-     - parameter completion: A tail completion proc.
+     - parameter completion: A tail completion proc. This is always called in the main thread.
      */
     func findMeetings(completion inCompletion: (() -> Void)?) {
         _virtualService = SwiftBMLSDK_MeetingLocalTimezoneCollection(query: prefs.queryInstance) { inCollection in
