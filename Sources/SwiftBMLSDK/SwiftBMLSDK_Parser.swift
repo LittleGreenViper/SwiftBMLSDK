@@ -451,13 +451,13 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
             var fixedCoords = CLLocationCoordinate2D()
             
+            var coords: CLLocationCoordinate2D?
+            
             if let long = inDictionary["longitude"] as? Double,
                let lat = inDictionary["latitude"] as? Double,
                CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: lat, longitude: long)) {
                 fixedCoords = CLLocationCoordinate2D(latitude: lat, longitude: long)
-                self.coords = fixedCoords
-            } else {
-                self.coords = nil
+                coords = fixedCoords
             }
 
             if let timezoneStr = inDictionary["time_zone"] as? String,
@@ -476,7 +476,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
             if let physicalAddress = inDictionary["physical_address"] as? [String: String],
                !((physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? "").isEmpty,
-               !fixedCoords._isEqualTo(CLLocationCoordinate2D(latitude: 34.233, longitude: -118.549), precisionInMeters: 500) { // Since the NAWS office is the default BMLT physical location, we make sure that it is not the specified long/lat.
+               !fixedCoords._isEqualTo(CLLocationCoordinate2D(latitude: 34.23596, longitude: -118.56352), precisionInMeters: 200) { // Since the NAWS office is the default BMLT physical location, we make sure that it is not the specified long/lat.
                 let mutableGoPostal = CNMutablePostalAddress()
                 mutableGoPostal.street = (physicalAddress["street"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 mutableGoPostal.subLocality = (physicalAddress["neighborhood"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
@@ -491,6 +491,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 let inPersonVenueName = physicalAddress["name"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
                 self.inPersonVenueName = inPersonVenueName.isEmpty ? nil : inPersonVenueName
             } else {
+                coords = nil
                 self.inPersonAddress = nil
                 self.locationInfo = nil
                 self.inPersonVenueName = nil
@@ -532,6 +533,8 @@ public struct SwiftBMLSDK_Parser: Encodable {
                (virtualPhoneNumber ?? "").isEmpty {
                 return nil
             }
+            
+            self.coords = coords
         }
 
         // MARK: Public Interface

@@ -1,3 +1,7 @@
+ **1.0.5** *June 27, 2024*
+ 
+ - The NAWS coordinates were wrong.
+ 
  **1.0.4** *June 27, 2024*
  
  - Forgot to make the enum Comparable
