@@ -568,30 +568,21 @@ public struct SwiftBMLSDK_Parser: Encodable {
         /**
          This has the type of meeting, but in a sortable manner.
          */
-        public enum SortableMeetingType: Int {
+        public enum SortableMeetingType: Int, Comparable {
+            /* ############################################# */
+            /**
+             Comparable Conformance
+             - parameter lhs: The left-hand side of the comparison
+             - parameter rhs: The right-hand side of the comparison
+             - returns: True, if lhs < rhs.
+             */
+            public static func < (lhs: SwiftBMLSDK_Parser.Meeting.SortableMeetingType, rhs: SwiftBMLSDK_Parser.Meeting.SortableMeetingType) -> Bool { lhs.rawValue < rhs.rawValue }
+            
             /* ############################################# */
             /**
              The meeting only gathers in-person.
              */
             case inPerson
-
-            /* ############################################# */
-            /**
-             The meeting only gathers virtually, by both phone and video.
-             */
-            case virtual
-
-            /* ############################################# */
-            /**
-             The meeting only gathers virtually, and only by phone.
-             */
-            case virtual_phone
-
-            /* ############################################# */
-            /**
-             The meeting only gathers virtually, and only by video.
-             */
-            case virtual_video
 
             /* ############################################# */
             /**
@@ -601,15 +592,33 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
             /* ############################################# */
             /**
+             The meeting gathers, both in-person, and virtually, but only via video.
+             */
+            case hybrid_video
+
+            /* ############################################# */
+            /**
              The meeting gathers, both in-person, and virtually, but only via phone.
              */
             case hybrid_phone
 
             /* ############################################# */
             /**
-             The meeting gathers, both in-person, and virtually, but only via video.
+             The meeting only gathers virtually, by both phone and video.
              */
-            case hybrid_video
+            case virtual
+
+            /* ############################################# */
+            /**
+             The meeting only gathers virtually, and only by video.
+             */
+            case virtual_video
+
+            /* ############################################# */
+            /**
+             The meeting only gathers virtually, and only by phone.
+             */
+            case virtual_phone
         }
 
         /* ############################################################################################################################## */

@@ -1,3 +1,7 @@
+ **1.0.4** *June 27, 2024*
+ 
+ - Forgot to make the enum Comparable
+
  **1.0.3** *June 27, 2024*
  
  - Added support for a "sortable" meeting type.
