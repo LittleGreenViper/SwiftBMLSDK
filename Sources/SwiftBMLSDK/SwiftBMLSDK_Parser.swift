@@ -561,6 +561,56 @@ public struct SwiftBMLSDK_Parser: Encodable {
              */
             case hybrid
         }
+        
+        /* ############################################################################################################################## */
+        // MARK: Meeting Type Enum
+        /* ############################################################################################################################## */
+        /**
+         This has the type of meeting, but in a sortable manner.
+         */
+        public enum SortableMeetingType: Int {
+            /* ############################################# */
+            /**
+             The meeting only gathers in-person.
+             */
+            case inPerson
+
+            /* ############################################# */
+            /**
+             The meeting only gathers virtually, by both phone and video.
+             */
+            case virtual
+
+            /* ############################################# */
+            /**
+             The meeting only gathers virtually, and only by phone.
+             */
+            case virtual_phone
+
+            /* ############################################# */
+            /**
+             The meeting only gathers virtually, and only by video.
+             */
+            case virtual_video
+
+            /* ############################################# */
+            /**
+             The meeting gathers, both in-person, and virtually, by both phone and video.
+             */
+            case hybrid
+
+            /* ############################################# */
+            /**
+             The meeting gathers, both in-person, and virtually, but only via phone.
+             */
+            case hybrid_phone
+
+            /* ############################################# */
+            /**
+             The meeting gathers, both in-person, and virtually, but only via video.
+             */
+            case hybrid_video
+        }
 
         /* ############################################################################################################################## */
         // MARK: Organization Type Enum
@@ -710,7 +760,24 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 return .inPerson
             }
         }
-        
+
+        /* ################################################# */
+        /**
+         The meeting type, as a sortable value.
+         */
+        public var sortableMeetingType: SortableMeetingType {
+            if (!(inPersonVenueName ?? "").isEmpty || !(inPersonAddress?.street ?? "").isEmpty),
+               !(virtualURL?.absoluteString ?? "").isEmpty || !(virtualPhoneNumber ?? "").isEmpty {
+                return  (!(virtualURL?.absoluteString ?? "").isEmpty && (virtualPhoneNumber ?? "").isEmpty) ? .hybrid_video :
+                ((virtualURL?.absoluteString ?? "").isEmpty && !(virtualPhoneNumber ?? "").isEmpty) ? .hybrid_phone : .hybrid
+            } else if !(virtualURL?.absoluteString ?? "").isEmpty || !(virtualPhoneNumber ?? "").isEmpty {
+                return  (!(virtualURL?.absoluteString ?? "").isEmpty && (virtualPhoneNumber ?? "").isEmpty) ? .virtual_video :
+                ((virtualURL?.absoluteString ?? "").isEmpty && !(virtualPhoneNumber ?? "").isEmpty) ? .virtual_phone : .virtual
+            } else {
+                return .inPerson
+            }
+        }
+
         /* ################################################# */
         /**
          The start time, in local meeting timezone, as a military-style integer (HHMM).
