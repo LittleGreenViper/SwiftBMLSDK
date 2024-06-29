@@ -1,3 +1,7 @@
+ **1.0.7** *June 29, 2024*
+ 
+ - Added support for a direct, tested phone URI.
+ 
  **1.0.6** *June 29, 2024*
  
  - Fixed documentation typos.

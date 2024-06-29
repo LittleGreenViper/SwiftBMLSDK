@@ -41,6 +41,32 @@ fileprivate extension StringProtocol {
             return decimalDigits.contains(cha)
         }
     }
+    
+    /* ################################################################## */
+    /**
+     This tests a string to see if a given substring is present at the start.
+     
+     - parameter inSubstring: The substring to test.
+     
+     - returns: true, if the string begins with the given substring.
+     */
+    func _beginsWith (_ inSubstring: String) -> Bool {
+        var ret: Bool = false
+        if let range = self.range(of: inSubstring) {
+            ret = (range.lowerBound == self.startIndex)
+        }
+        return ret
+    }
+    
+    /* ################################################################## */
+    /**
+     The following computed property comes from this: http://stackoverflow.com/a/27736118/879365
+     
+     This extension function cleans up a URI string.
+     
+     - returns: a string, cleaned for URI.
+     */
+    var _urlEncodedString: String? { addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) }
 }
 
 /* ###################################################################################################################################### */
@@ -489,6 +515,38 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
         }
     }
     
+    /* ################################################################## */
+    /**
+     "Cleans" a URI.
+     
+     - parameter urlString: The URL, as a String. It can be optional.
+     
+     - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
+     */
+    private static func _cleanURI(urlString inURLString: String?) -> String? {
+        guard var ret: String = inURLString?._urlEncodedString,
+              let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
+        else { return nil }
+        
+        // We specifically look for tel URIs.
+        let wasTel = ret.lowercased()._beginsWith("tel:")
+        
+        // Yeah, this is pathetic, but it's quick, simple, and works a charm.
+        ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
+
+        if ret.isEmpty {
+            return nil
+        }
+        
+        if wasTel {
+            ret = "tel:" + ret
+        } else {
+            ret = "https://" + ret
+        }
+        
+        return ret
+    }
+
     // MARK: Public API
     
     /* ################################################# */
@@ -501,6 +559,27 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
         else { return nil }
         
         return _DirectVirtual.factory(url: virtualURL)?.directURL
+    }
+    
+    /* ################################################# */
+    /**
+     If we have a valid direct phone URL, it is returned here.
+     */
+    public var directPhoneURI: URL? {
+        if let phoneStringTemp = virtualPhoneNumber {
+            if let phoneURLTemp = Self._cleanURI(urlString: phoneStringTemp),
+               let phoneURLTempURL = URL(string: phoneURLTemp) {
+                if "tel" == phoneURLTempURL.scheme {
+                    #if canImport(UIKit)
+                        guard UIApplication.shared.canOpenURL(phoneURLTempURL) else { return nil }
+                    #endif
+
+                    return phoneURLTempURL
+                }
+            }
+        }
+        
+        return nil
     }
 }
 
