@@ -303,7 +303,8 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
         private var _serviceURLHost: String {
             switch self {
             case .zoom:
-                return "zoom.us"
+                return "zoom"
+//                return "zoom.us"
 
             case .gotomeeting:
                 return "gotomeeting.com"
@@ -331,16 +332,18 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
             
             switch self {
             case .zoom(let inURL):
-                guard let query = inURL?.query,
-                      !query.isEmpty else { return nil }
+                var pwd: String = ""
                 
-                let pwd = query.split(separator: "&").reduce("") { (current, next) in
-                    if current.isEmpty,
-                       next.starts(with: "pwd=") {
-                        return String(next[next.index(next.startIndex, offsetBy: 4)...])
+                if let query = inURL?.query,
+                   !query.isEmpty {
+                    pwd = query.split(separator: "&").reduce("") { (current, next) in
+                        if current.isEmpty,
+                           next.starts(with: "pwd=") {
+                            return String(next[next.index(next.startIndex, offsetBy: 4)...])
+                        }
+                        
+                        return ""
                     }
-                    
-                    return ""
                 }
                 
                 guard let comp = inURL?.pathComponents,
@@ -362,7 +365,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
                 guard !confNum.isEmpty else { return nil }
                 
-                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/join?confno=\(confNum)" + (!pwd.isEmpty ? "&pwd=\(pwd)" : "")
+                let retString = "\(_serviceProtocol)://zoom.us/join?confno=\(confNum)" + (!pwd.isEmpty ? "&pwd=\(pwd)" : "")
 
                 ret = URL(string: retString)
 

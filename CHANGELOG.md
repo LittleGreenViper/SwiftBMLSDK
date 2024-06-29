@@ -1,3 +1,8 @@
+ **1.0.6** *June 29, 2024*
+ 
+ - Fixed documentation typos.
+ - I had to make the Zoom URL detector "looser," in order to compensate for spectacularly bad URIs.
+ 
  **1.0.5** *June 27, 2024*
  
  - The NAWS coordinates were wrong.

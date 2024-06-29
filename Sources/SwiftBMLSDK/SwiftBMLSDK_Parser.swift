@@ -740,7 +740,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################# */
         /**
-         This is a phonr number for a virtual meeting. It is optional.
+         This is a phone number for a virtual meeting. It is optional.
          */
         public let virtualPhoneNumber: String?
         
