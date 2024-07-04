@@ -40,6 +40,7 @@
 "SLUG-DIRECT-URI-SKYPE"                         =   "Skype";
 "SLUG-DIRECT-URI-MEET"                          =   "Google Meet";
 "SLUG-DIRECT-URI-DISCORD"                       =   "Discord";
+"SLUG-DIRECT-URI-JITSI"                         =   "Jitsi Meet";
 
 "SLUG-VIRTUAL-SWITCH-0"                         =   "All";
 "SLUG-VIRTUAL-SWITCH-1"                         =   "Hybrid";

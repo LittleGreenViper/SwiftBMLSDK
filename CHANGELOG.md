@@ -1,3 +1,7 @@
+ **1.0.9** *July 4, 2024*
+ 
+ - Added support for Jitsi Meet.
+ 
  **1.0.8** *July 4, 2024*
  
  - The factory wasn't generating Google Meet or Discord direct URIs. That's been fixed.

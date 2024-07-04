@@ -269,12 +269,18 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
          Discord
          */
         case discord(_: URL? = nil)
+        
+        /* ############################################# */
+        /**
+         Jitsi
+         */
+        case jitsi(_: URL? = nil)
 
         /* ############################################# */
         /**
          CaseIterable Conformance
          */
-        static var allCases: [SwiftBMLSDK_Parser.Meeting._DirectVirtual] { [.zoom(nil), .gotomeeting(nil), .skype(nil), .meet(nil), .discord(nil)] }
+        static var allCases: [SwiftBMLSDK_Parser.Meeting._DirectVirtual] { [.zoom(nil), .gotomeeting(nil), .skype(nil), .meet(nil), .discord(nil), .jitsi(nil)] }
         
         /* ############################################# */
         /**
@@ -296,6 +302,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .discord:
                 return "discord"
+
+            case .jitsi:
+                return "jitsi"
             }
         }
         
@@ -319,6 +328,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .discord:
                 return "discord"
+
+            case .jitsi:
+                return "org.jitsi.meet"
             }
         }
 
@@ -342,6 +354,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .discord:
                 return "discordapp.com"
+
+            case .jitsi:
+                return "jitsi.meet"
             }
         }
 
@@ -372,7 +387,8 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
                 }
                 
                 guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty else { return nil }
+                      !comp.isEmpty
+                else { return nil }
                 
                 // Primitive, but it will work. It gets an element that has a run of more than eight positive numeric characters, and assumes that is the conference code.
                 // The conference code should come before the password (which might also be a string of numbers).
@@ -396,7 +412,8 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .gotomeeting(let inURL):
                 guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty else { return nil }
+                      !comp.isEmpty
+                else { return nil }
                 
                 let numStringArray: [String] = comp.compactMap {
                     let str = String($0._decimalOnly)
@@ -417,7 +434,8 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .skype(let inURL):
                 guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty else { return nil }
+                      !comp.isEmpty
+                else { return nil }
                 
                 confNum = comp[0]
 
@@ -429,7 +447,8 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .meet(let inURL):
                 guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty else { return nil }
+                      !comp.isEmpty
+                else { return nil }
                 
                 confNum = comp[0]
 
@@ -441,7 +460,8 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .discord(let inURL):
                 guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty else { return nil }
+                      !comp.isEmpty
+                else { return nil }
                 
                 let guild = comp[1]
                 
@@ -456,6 +476,17 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
                     
                     ret = URL(string: retString)
                 }
+
+            case .jitsi(let inURL):
+                guard let comp = inURL?.pathComponents,
+                      1 < comp.count
+                else { return nil }
+                
+                let server = comp[0]
+                let id = comp[1]
+                let retString = "\(_serviceProtocol)://\(server)/\(id)"
+                
+                ret = URL(string: retString)
             }
             
             #if canImport(UIKit)
@@ -487,6 +518,8 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
                 ret = _DirectVirtual.meet(inURL)
             } else if inURL.host?.contains(_DirectVirtual.discord(nil)._serviceURLHost) ?? false {
                 ret = _DirectVirtual.discord(inURL)
+            } else if inURL.host?.contains(_DirectVirtual.jitsi(nil)._serviceURLHost) ?? false {
+                ret = _DirectVirtual.jitsi(inURL)
             }
             
             return nil != ret?.directURL ? ret : nil
@@ -514,6 +547,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
             case .discord:
                 return "SLUG-DIRECT-URI-DISCORD"
+
+            case .jitsi:
+                return "SLUG-DIRECT-URI-JITSI"
             }
         }
     }

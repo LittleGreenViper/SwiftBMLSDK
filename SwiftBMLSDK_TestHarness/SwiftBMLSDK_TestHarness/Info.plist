@@ -9,6 +9,7 @@
 		<string>zoomus</string>
 		<string>lmi-g2m</string>
 		<string>skype</string>
+		<string>org.jitsi.meet</string>
 		<string>gmeet</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
