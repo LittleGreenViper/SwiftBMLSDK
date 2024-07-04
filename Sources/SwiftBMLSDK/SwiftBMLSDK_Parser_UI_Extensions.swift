@@ -330,7 +330,6 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
             switch self {
             case .zoom:
                 return "zoom"
-//                return "zoom.us"
 
             case .gotomeeting:
                 return "gotomeeting.com"
@@ -484,6 +483,10 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
                 ret = _DirectVirtual.gotomeeting(inURL)
             } else if inURL.host?.contains(_DirectVirtual.skype(nil)._serviceURLHost) ?? false {
                 ret = _DirectVirtual.skype(inURL)
+            } else if inURL.host?.contains(_DirectVirtual.meet(nil)._serviceURLHost) ?? false {
+                ret = _DirectVirtual.meet(inURL)
+            } else if inURL.host?.contains(_DirectVirtual.discord(nil)._serviceURLHost) ?? false {
+                ret = _DirectVirtual.discord(inURL)
             }
             
             return nil != ret?.directURL ? ret : nil

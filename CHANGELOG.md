@@ -1,3 +1,7 @@
+ **1.0.8** *July 4, 2024*
+ 
+ - The factory wasn't generating Google Meet or Discord direct URIs. That's been fixed.
+ 
  **1.0.7** *June 29, 2024*
  
  - Added support for a direct, tested phone URI.
