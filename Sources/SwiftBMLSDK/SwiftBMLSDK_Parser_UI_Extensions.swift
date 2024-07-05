@@ -233,13 +233,47 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
  This extension uses UIKit to determine the proper app for app-specific URIs.
  */
 extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
+    /* ################################################################## */
+    /**
+     "Cleans" a URI.
+     
+     - parameter urlString: The URL, as a String. It can be optional.
+     
+     - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
+     */
+    private static func _cleanURI(urlString inURLString: String?) -> String? {
+        guard var ret: String = inURLString?._urlEncodedString,
+              let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
+        else { return nil }
+        
+        // We specifically look for tel URIs.
+        let wasTel = ret.lowercased()._beginsWith("tel:")
+        
+        // Yeah, this is pathetic, but it's quick, simple, and works a charm.
+        ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
+
+        if ret.isEmpty {
+            return nil
+        }
+        
+        if wasTel {
+            ret = "tel:" + ret
+        } else {
+            ret = "https://" + ret
+        }
+        
+        return ret
+    }
+
+    // MARK: Public API
+    
     /* ################################################################################################################################## */
-    // MARK: Private Enum For Virtual Direct URLs
+    // MARK: Public Enum For Virtual Direct URLs
     /* ################################################################################################################################## */
     /**
      This enum helps us to create direct (as in opening the app directly) URLs, for various services.
      */
-    private enum _DirectVirtual: CaseIterable {
+    public enum DirectVirtual: CaseIterable {
         /* ############################################# */
         /**
          The Zoom app.
@@ -280,7 +314,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
         /**
          CaseIterable Conformance
          */
-        static var allCases: [SwiftBMLSDK_Parser.Meeting._DirectVirtual] { [.zoom(nil), .gotomeeting(nil), .skype(nil), .meet(nil), .discord(nil), .jitsi(nil)] }
+        public static var allCases: [SwiftBMLSDK_Parser.Meeting.DirectVirtual] { [.zoom(nil), .gotomeeting(nil), .skype(nil), .meet(nil), .discord(nil), .jitsi(nil)] }
         
         /* ############################################# */
         /**
@@ -505,21 +539,21 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
          - parameter url: The URL to check.
          - returns: The enum case ( or nil, if none).
          */
-        internal static func factory(url inURL: URL) -> _DirectVirtual? {
-            var ret: _DirectVirtual?
+        internal static func factory(url inURL: URL) -> DirectVirtual? {
+            var ret: DirectVirtual?
             
-            if inURL.host?.contains(_DirectVirtual.zoom(nil)._serviceURLHost) ?? false {
-                ret = _DirectVirtual.zoom(inURL)
-            } else if inURL.host?.contains(_DirectVirtual.gotomeeting(nil)._serviceURLHost) ?? false {
-                ret = _DirectVirtual.gotomeeting(inURL)
-            } else if inURL.host?.contains(_DirectVirtual.skype(nil)._serviceURLHost) ?? false {
-                ret = _DirectVirtual.skype(inURL)
-            } else if inURL.host?.contains(_DirectVirtual.meet(nil)._serviceURLHost) ?? false {
-                ret = _DirectVirtual.meet(inURL)
-            } else if inURL.host?.contains(_DirectVirtual.discord(nil)._serviceURLHost) ?? false {
-                ret = _DirectVirtual.discord(inURL)
-            } else if inURL.host?.contains(_DirectVirtual.jitsi(nil)._serviceURLHost) ?? false {
-                ret = _DirectVirtual.jitsi(inURL)
+            if inURL.host?.contains(DirectVirtual.zoom(nil)._serviceURLHost) ?? false {
+                ret = DirectVirtual.zoom(inURL)
+            } else if inURL.host?.contains(DirectVirtual.gotomeeting(nil)._serviceURLHost) ?? false {
+                ret = DirectVirtual.gotomeeting(inURL)
+            } else if inURL.host?.contains(DirectVirtual.skype(nil)._serviceURLHost) ?? false {
+                ret = DirectVirtual.skype(inURL)
+            } else if inURL.host?.contains(DirectVirtual.meet(nil)._serviceURLHost) ?? false {
+                ret = DirectVirtual.meet(inURL)
+            } else if inURL.host?.contains(DirectVirtual.discord(nil)._serviceURLHost) ?? false {
+                ret = DirectVirtual.discord(inURL)
+            } else if inURL.host?.contains(DirectVirtual.jitsi(nil)._serviceURLHost) ?? false {
+                ret = DirectVirtual.jitsi(inURL)
             }
             
             return nil != ret?.directURL ? ret : nil
@@ -553,53 +587,25 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
             }
         }
     }
-    
-    /* ################################################################## */
-    /**
-     "Cleans" a URI.
-     
-     - parameter urlString: The URL, as a String. It can be optional.
-     
-     - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
-     */
-    private static func _cleanURI(urlString inURLString: String?) -> String? {
-        guard var ret: String = inURLString?._urlEncodedString,
-              let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
-        else { return nil }
-        
-        // We specifically look for tel URIs.
-        let wasTel = ret.lowercased()._beginsWith("tel:")
-        
-        // Yeah, this is pathetic, but it's quick, simple, and works a charm.
-        ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
 
-        if ret.isEmpty {
-            return nil
-        }
-        
-        if wasTel {
-            ret = "tel:" + ret
-        } else {
-            ret = "https://" + ret
-        }
-        
-        return ret
-    }
-
-    // MARK: Public API
-    
     /* ################################################# */
     /**
-     If the URL for the virtual meeting is one that can open an app on the user's device, a direct URL scheme version of the URL is returned.
+     This returns the enum.
      */
-    public var directAppURI: URL? {
+    public var directApp: DirectVirtual? {
         guard let virtualURL = virtualURL,
               "https" == virtualURL.scheme?.lowercased()
         else { return nil }
         
-        return _DirectVirtual.factory(url: virtualURL)?.directURL
+        return DirectVirtual.factory(url: virtualURL)
     }
-    
+
+    /* ################################################# */
+    /**
+     If the URL for the virtual meeting is one that can open an app on the user's device, a direct URL scheme version of the URL is returned.
+     */
+    public var directAppURI: URL? { directApp?.directURL }
+
     /* ################################################# */
     /**
      If we have a valid direct phone URL, it is returned here.

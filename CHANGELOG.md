@@ -1,3 +1,7 @@
+ **1.0.10** *July 5, 2024*
+ 
+ - Added support for accessing the direct URL parser.
+ 
  **1.0.9** *July 4, 2024*
  
  - Added support for Jitsi Meet.
