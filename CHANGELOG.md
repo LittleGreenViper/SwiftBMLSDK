@@ -1,3 +1,7 @@
+ **1.0.11** *July 5, 2024*
+ 
+ - Added a "cacherizer" to the virtual meeting collection class.
+ 
  **1.0.10** *July 5, 2024*
  
  - Added support for accessing the direct URL parser.

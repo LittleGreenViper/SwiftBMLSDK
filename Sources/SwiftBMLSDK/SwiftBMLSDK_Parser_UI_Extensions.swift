@@ -116,7 +116,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
             inCompletion(self)
         }
     }
-
+    
     // MARK: Public SDK Properties and Methods
     
     /* ################################################# */
@@ -138,13 +138,13 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
          This is the stored next date property.
          */
         private var _cachedNextDate: Date
-
+        
         /* ############################################# */
         /**
          The meeting is a simple stored property. It needs to be a var, in order to allow date caching (getNextStartDate is mutating).
          */
         public var meeting: SwiftBMLSDK_Parser.Meeting
-
+        
         /* ############################################# */
         /**
          This is a smart accessor for the next date. If the date has passed, we fetch it again, before returning it.
@@ -154,7 +154,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
             _cachedNextDate = meeting.getNextStartDate(isAdjusted: true)
             return _cachedNextDate
         }
-
+        
         /* ############################################# */
         /**
          This returns true, if the meeting is currently in progress.
@@ -164,7 +164,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
             let lastDate = prevDate.addingTimeInterval(meeting.duration)
             return (prevDate..<lastDate).contains(.now)
         }
-
+        
         /* ############################################# */
         /**
          Initializer. The meeting is immediately asked for the next date.
@@ -186,17 +186,17 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
     public var meetings = [CachedMeeting]()
     
     // MARK: Public Computed Properties
-
+    
     /* ################################################# */
     /**
      */
     public var hybridMeetings: [CachedMeeting] { meetings.filter { .hybrid == $0.meeting.meetingType } }
-
+    
     /* ################################################# */
     /**
      */
     public var virtualMeetings: [CachedMeeting] { meetings.filter { .virtual == $0.meeting.meetingType } }
-
+    
     // MARK: Public Initializers
     
     /* ################################################# */
@@ -211,18 +211,34 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
     public init(serverURL inServerURL: URL, completion inCompletion: @escaping FetchCallback) {
         _fetchMeetings(query: SwiftBMLSDK_Query(serverBaseURI: inServerURL), completion: inCompletion)
     }
-
+    
     /* ################################################# */
     /**
      initializer, with a prepared query.
      
      Instantiating this class executes an immediate fetch.
-
+     
      - parameter query: A "primed" query instance (an instance that has a server URL).
      - parameter completion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
      */
     public init(query inQuery: SwiftBMLSDK_Query, completion inCompletion: @escaping FetchCallback) {
         _fetchMeetings(query: inQuery, completion: inCompletion)
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Public Instance Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_MeetingLocalTimezoneCollection {
+    /* ################################################# */
+    /**
+     This forces the meetings cache to be recalculated from scratch.
+     
+     - parameter completion: An optional, simple, one-parameter (This instance) tail completion proc. Always called in the main thread.
+     */
+    public func refreshCaches(completion inCompletion: ((_: SwiftBMLSDK_MeetingLocalTimezoneCollection) -> Void)? = nil) {
+        meetings = meetings.map { CachedMeeting(meeting: $0.meeting) }
+        DispatchQueue.main.async { inCompletion?(self) }
     }
 }
 
