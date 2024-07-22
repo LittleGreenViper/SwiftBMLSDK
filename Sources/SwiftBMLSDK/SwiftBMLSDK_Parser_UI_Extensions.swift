@@ -44,6 +44,20 @@ fileprivate extension StringProtocol {
     
     /* ################################################################## */
     /**
+     This simply strips out all non-phone characters in the string, leaving only valid phone characters.
+     */
+    var _phoneNumber: String {
+        let decimalDigits = CharacterSet(charactersIn: "0123456789+-,")
+        return String(self).filter {
+            // The higher-order function stuff will convert each character into an aggregate integer, which then becomes a Unicode scalar. Very primitive, but shouldn't be a problem for us, as we only need a very limited ASCII set.
+            guard let cha = UnicodeScalar($0.unicodeScalars.map { $0.value }.reduce(0, +)) else { return false }
+            
+            return decimalDigits.contains(cha)
+        }
+    }
+    
+    /* ################################################################## */
+    /**
      This tests a string to see if a given substring is present at the start.
      
      - parameter inSubstring: The substring to test.
@@ -258,12 +272,12 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
      - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
      */
     private static func _cleanURI(urlString inURLString: String?) -> String? {
-        guard var ret: String = inURLString?._urlEncodedString,
+        guard var ret: String = inURLString?.trimmingCharacters(in: .whitespacesAndNewlines),
               let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
         else { return nil }
         
-        // We specifically look for tel URIs.
-        let wasTel = ret.lowercased()._beginsWith("tel:")
+        // We assume non-HTTP is TEL
+        let wasTel = !ret.lowercased()._beginsWith("http")
         
         // Yeah, this is pathetic, but it's quick, simple, and works a charm.
         ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
@@ -273,7 +287,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
         }
         
         if wasTel {
-            ret = "tel:" + ret
+            ret = "tel:" + ret._phoneNumber
         } else {
             ret = "https://" + ret
         }

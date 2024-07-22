@@ -1,3 +1,7 @@
+ **1.0.12** *July 22, 2024*
+ 
+ - Added more flexibility, with the phone number parsing.
+ 
  **1.0.11** *July 5, 2024*
  
  - Added a "cacherizer" to the virtual meeting collection class.
