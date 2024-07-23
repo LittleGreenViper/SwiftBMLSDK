@@ -47,12 +47,12 @@ fileprivate extension StringProtocol {
      This simply strips out all non-phone characters in the string, leaving only valid phone characters.
      */
     var _phoneNumber: String {
-        let decimalDigits = CharacterSet(charactersIn: "0123456789+-,")
+        let phoneDigits = CharacterSet(charactersIn: "0123456789+-,()")
         return String(self).filter {
-            // The higher-order function stuff will convert each character into an aggregate integer, which then becomes a Unicode scalar. Very primitive, but shouldn't be a problem for us, as we only need a very limited ASCII set.
+            // The higher-order function stuff will convert each character into a Unicode scalar. Very primitive, but shouldn't be a problem for us, as we only need a very limited ASCII set.
             guard let cha = UnicodeScalar($0.unicodeScalars.map { $0.value }.reduce(0, +)) else { return false }
             
-            return decimalDigits.contains(cha)
+            return phoneDigits.contains(cha)
         }
     }
     

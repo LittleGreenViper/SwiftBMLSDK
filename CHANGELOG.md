@@ -1,3 +1,7 @@
+ **1.0.13** *July 23, 2024*
+ 
+ - Tweaked the phone number filtering a bit.
+ 
  **1.0.12** *July 22, 2024*
  
  - Added more flexibility, with the phone number parsing.
