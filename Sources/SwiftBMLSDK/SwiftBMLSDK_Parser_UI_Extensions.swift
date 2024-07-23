@@ -1,7 +1,7 @@
 /*
  © Copyright 2024, Little Green Viper Software Development LLC
  LICENSE:
- 
+  
  MIT License
  
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
@@ -555,8 +555,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
             
             #if canImport(UIKit)
                 guard let ret = ret,
+                      nil == getenv("SKIP_CANOPEN"),
                       UIApplication.shared.canOpenURL(ret)
-                else { return nil }
+            else { return nil != getenv("SKIP_CANOPEN") ? ret : nil }
             #endif
             
             return ret
@@ -646,7 +647,9 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
                let phoneURLTempURL = URL(string: phoneURLTemp) {
                 if "tel" == phoneURLTempURL.scheme {
                     #if canImport(UIKit)
-                        guard UIApplication.shared.canOpenURL(phoneURLTempURL) else { return nil }
+                        guard nil == getenv("SKIP_CANOPEN"),
+                              UIApplication.shared.canOpenURL(phoneURLTempURL)
+                        else { return nil != getenv("SKIP_CANOPEN") ? phoneURLTempURL : nil }
                     #endif
 
                     return phoneURLTempURL

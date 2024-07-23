@@ -1,3 +1,7 @@
+ **1.0.14** *July 23, 2024*
+ 
+ - Added a SKIP_CANOPEN environment variable, that allows the library to ignore whether or not the URL should be openable (DO NOT USE FOR SHIP!)
+ 
  **1.0.13** *July 23, 2024*
  
  - Tweaked the phone number filtering a bit.
