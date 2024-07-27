@@ -796,7 +796,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          
          Returns -1, if the time could not be calculated.
          */
-        public var integerStartIme: Int {
+        public var integerStartTime: Int {
             let components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
             
             guard let hour = components.hour,
@@ -1306,10 +1306,14 @@ extension SwiftBMLSDK_Parser.Meeting {
             _cachedNextDate = nil
         }
         
-        guard let rawComponents = dateComponents else { return Date.distantFuture }
+        // We make the components from scratch, because that's faster.
+        let hour = integerStartTime / 100
+        let minute = integerStartTime - (hour * 100)
+        
+        let dateComp = DateComponents(hour: hour, minute: minute, weekday: weekday)
         
         // The reason for all the cache shenanigans, is because `Calendar.current.nextDate` is REALLY EXPENSIVE, in regards to performance, so we try to use a cache, where possible.
-        if let nextDate = _cachedNextDate ?? Calendar.current.nextDate(after: adjustedNow, matching: rawComponents, matchingPolicy: .nextTimePreservingSmallerComponents) {
+        if let nextDate = _cachedNextDate ?? Calendar.current.nextDate(after: adjustedNow, matching: dateComp, matchingPolicy: .nextTimePreservingSmallerComponents) {
             _cachedNextDate = nextDate
             return inAdjust ? nextDate._convert(from: timeZone, to: .current) : nextDate
         }
