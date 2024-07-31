@@ -1,3 +1,7 @@
+ **1.0.16** *July 31, 2024*
+ 
+ - If a meeting has no timezone, it can be skipped (specify "IGNORE_NO_TZ" as an environment variable). This allows meetings to "opt out," by not specifying a timezone.
+ 
  **1.0.15** *July 27, 2024*
  
  - Made the next start time getter faster.

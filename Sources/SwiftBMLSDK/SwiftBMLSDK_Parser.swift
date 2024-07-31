@@ -463,6 +463,8 @@ public struct SwiftBMLSDK_Parser: Encodable {
             if let timezoneStr = inDictionary["time_zone"] as? String,
                let tz = TimeZone(identifier: timezoneStr) {
                 self.timeZone = tz
+            } else if nil == getenv("IGNORE_NO_TZ") {
+                return nil  // Zero-tolerance for no timezone.
             } else {
                 self.timeZone = .current
             }
