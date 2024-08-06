@@ -25,6 +25,7 @@ import SwiftBMLSDK
 // MARK: - Special Table Cell Class -
 /* ###################################################################################################################################### */
 /**
+ Custom table cell for the view.
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController_TableCell: UITableViewCell {
     /* ################################################################## */
@@ -68,6 +69,7 @@ extension MeetingInstance {
 // MARK: - Server Virtual Search Custom View Controller (4) -
 /* ###################################################################################################################################### */
 /**
+ This displays a picker view.
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: SwiftBMLSDK_TestHarness_BaseViewController, VirtualServiceControllerProtocol {
     /* ################################################################## */
@@ -138,11 +140,13 @@ class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     The table of meetings.
      */
     @IBOutlet weak var meetingsTableView: UITableView?
     
     /* ################################################################## */
     /**
+     The busy throbber.
      */
     @IBOutlet weak var throbberView: UIView?
 
@@ -154,6 +158,7 @@ class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     The 0-based index of the currently selected day.
      */
     var currentDayIndex = 0 {
         didSet {
@@ -165,6 +170,7 @@ class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     The 0-based index of the currently selected time.
      */
     var currentTimeIndex = 0 {
         didSet {
@@ -175,6 +181,7 @@ class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     The data to display in the table.
      */
     var tableFood: [MeetingInstance] {
         guard let dayTimePicker = dayTimePicker,
@@ -192,6 +199,9 @@ class SwiftBMLSDK_TestHarness_VirtualCustom4ViewController: SwiftBMLSDK_TestHarn
 extension SwiftBMLSDK_TestHarness_VirtualCustom4ViewController {
     /* ################################################################## */
     /**
+     This maps weekdays to the user's local layout.
+     - parameter inWeekdayIndex: The 1-based (1 == Sunday) day index.
+     - returns: A tuple, containing the converted index (also 1-based), and the weekday name (localized).
      */
     static func mapWeekday(_ inWeekdayIndex: Int) -> (weekdayIndex: Int, string: String, short: String) {
         var currentDay = inWeekdayIndex

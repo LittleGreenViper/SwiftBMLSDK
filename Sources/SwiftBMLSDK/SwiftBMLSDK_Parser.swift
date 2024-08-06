@@ -156,8 +156,9 @@ public struct SwiftBMLSDK_Parser: Encodable {
         }
     }
 
+    // MARK: -
     // MARK: - Exported Public Interface -
-    
+
     // MARK: - Public Data Types and Enums -
     
     /* ################################################################################################################################## */
@@ -1492,29 +1493,29 @@ public extension SwiftBMLSDK_Parser {
     /**
      Returns meetings that have an in-person component.
      */
-    var inPersonMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: false)] }
+    var inPersonMeetings: [Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: false)] }
     
     /* ################################################# */
     /**
      Returns meetings that are only in-person.
      */
-    var inPersonOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: true)] }
+    var inPersonOnlyMeetings: [Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.inPerson(isExclusive: true)] }
 
     /* ################################################# */
     /**
      Returns meetings that have a virtual component.
      */
-    var virtualMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: false)] }
+    var virtualMeetings: [Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: false)] }
 
     /* ################################################# */
     /**
      Returns meetings that are only virtual.
      */
-    var virtualOnlyMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: true)] }
+    var virtualOnlyMeetings: [Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.virtual(isExclusive: true)] }
 
     /* ################################################# */
     /**
      Returns meetings that are only hybrid.
      */
-    var hybridMeetings: [SwiftBMLSDK_Parser.Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.hybrid] }
+    var hybridMeetings: [Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.hybrid] }
 }

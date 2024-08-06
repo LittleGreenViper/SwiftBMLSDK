@@ -28,6 +28,8 @@ import CoreLocation // For coordinates
  
  It is designed for minimal filtering. Most filter parameters are for paging the search, or filtering for specific meeting types. Most filtering should be performed on the results.
  
+ This is the "working" part of the SwiftBMLSDK system. You instantiate an instance of this struct, and everything else comes from that.
+ 
  # Supported Systems
  
  This will support iOS 16 (and greater), iPadOS 16 (and greater), tvOS 16 (and greater), macOS 13 (and greater), and watchOS 9 (and greater)
@@ -56,7 +58,7 @@ import CoreLocation // For coordinates
  This is a method that fetches the general information structure from the server, and presents it as a ``ServerInfo`` struct.
  
  - ``meetingSearch(specification:completion:)``
- This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion func.
+ This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function.
  
  # Dependencies
  

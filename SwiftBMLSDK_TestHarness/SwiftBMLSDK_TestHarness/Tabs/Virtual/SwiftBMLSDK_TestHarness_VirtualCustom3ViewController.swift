@@ -25,6 +25,7 @@ import SwiftBMLSDK
 // MARK: - Special Table Cell Class -
 /* ###################################################################################################################################### */
 /**
+ Custom table cell class for our display.
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell: UITableViewCell {
     /* ################################################################## */
@@ -77,6 +78,7 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell {
 // MARK: - Server Virtual Search Custom View Controller (3) -
 /* ###################################################################################################################################### */
 /**
+ This shows a fixed grid of meetings.
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom3ViewController: SwiftBMLSDK_TestHarness_BaseViewController, VirtualServiceControllerProtocol {
     /* ################################################################## */
@@ -105,11 +107,13 @@ class SwiftBMLSDK_TestHarness_VirtualCustom3ViewController: SwiftBMLSDK_TestHarn
 
     /* ################################################################## */
     /**
+     The segmented switch that shows the weekday selected.
      */
     @IBOutlet weak var weekdayHeaderSegmentedSwitch: UISegmentedControl?
     
     /* ################################################################## */
     /**
+     The table of meetings.
      */
     @IBOutlet weak var meetingsTableView: UITableView?
 }
@@ -120,6 +124,9 @@ class SwiftBMLSDK_TestHarness_VirtualCustom3ViewController: SwiftBMLSDK_TestHarn
 extension SwiftBMLSDK_TestHarness_VirtualCustom3ViewController {
     /* ################################################################## */
     /**
+     Called when one of the weekdays was selected in the segmented switch.
+     
+     - parameter inSwitch: The segmented switch that was hit.
      */
     @IBAction func weekdaySelected(_ inSwitch: UISegmentedControl! = nil) {
         let selectedSegment = inSwitch?.selectedSegmentIndex ?? 0
@@ -185,6 +192,7 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom3ViewController {
 extension SwiftBMLSDK_TestHarness_VirtualCustom3ViewController {
     /* ################################################################## */
     /**
+     This populates the segmented switch, honoring the user's local layout.
      */
     func setUpWeekdayControl() {
         for index in 0..<7 {

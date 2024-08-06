@@ -139,6 +139,9 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
     
     /* ################################################################## */
     /**
+     Called when the new search button is hit.
+     
+     - parameter: The button (ignored).
      */
     @IBAction func performSearchButtonHit(_: Any) {
         prefs.clearSearchResults()
@@ -155,6 +158,9 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
 
     /* ################################################################## */
     /**
+     Called when text changes in one of the search text fields.
+     
+     - parameter inTextField: The text field that changed.
      */
     @IBAction func textFieldTextChanged(_ inTextField: UITextField) {
         guard let latText = latitudeTextField?.text,
@@ -299,6 +305,11 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
 extension SwiftBMLSDK_TestHarness_LocationSearchViewController: UITextFieldDelegate {
     /* ################################################################## */
     /**
+     Called when the user enters text. We use this to filter for only numbers and whatnot
+     
+     - parameter inTextField: The text field getting the characters.
+     - parameter shouldChangeCharactersIn: The range of characters in the existing text, being replaced.
+     - parameter replacementString: The string that we want to replace them with.
      */
     func textField(_ inTextField: UITextField, shouldChangeCharactersIn inRange: NSRange, replacementString inString: String) -> Bool {
         guard let testString = (inTextField.text as NSString?)?.replacingCharacters(in: inRange, with: inString),

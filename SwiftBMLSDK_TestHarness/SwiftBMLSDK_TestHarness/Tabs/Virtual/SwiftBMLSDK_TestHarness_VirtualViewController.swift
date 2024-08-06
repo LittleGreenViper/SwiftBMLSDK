@@ -82,36 +82,43 @@ class SwiftBMLSDK_TestHarness_VirtualViewController: SwiftBMLSDK_TestHarness_Tab
     
     /* ################################################################## */
     /**
+     We cache our meetings, to improve performance.
      */
     private var _cachedMeetings: SwiftBMLSDK_MeetingLocalTimezoneCollection? { didSet { if nil == _cachedMeetings { _cachedTableFood = nil } } }
     
     /* ################################################################## */
     /**
+     We cache the sorted and filtered table data, too.
      */
     private var _cachedTableFood: (current: [MeetingInstance], upcoming: [MeetingInstance])?
 
     /* ################################################################## */
     /**
+     The segmented switch that controls the meeting type.
      */
     @IBOutlet weak var typeSegmentedSwitch: UISegmentedControl?
     
     /* ################################################################## */
     /**
+     The segmented switch that controls the time range.
      */
     @IBOutlet weak var timeTypeSegmentedSwitch: UISegmentedControl?
     
     /* ################################################################## */
     /**
+     The table of meetings.
      */
     @IBOutlet weak var meetingsTableView: UITableView?
     
     /* ################################################################## */
     /**
+     This is our bar button item for selecting custom UI experiments.
      */
     @IBOutlet weak var customBarButton: UIBarButtonItem?
     
     /* ################################################################## */
     /**
+     This is our busy throbber view.
      */
     @IBOutlet weak var throbberView: UIView?
 }

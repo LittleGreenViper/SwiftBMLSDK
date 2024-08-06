@@ -24,6 +24,7 @@ import RVS_Generic_Swift_Toolbox
 // MARK: - Base View Controller For All Screens -
 /* ###################################################################################################################################### */
 /**
+ This is a base class for all our view controllers.
  */
 class SwiftBMLSDK_TestHarness_BaseViewController: UIViewController {
     /* ################################################################## */

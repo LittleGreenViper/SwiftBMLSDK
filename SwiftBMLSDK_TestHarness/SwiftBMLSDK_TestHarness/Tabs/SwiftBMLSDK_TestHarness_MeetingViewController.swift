@@ -74,6 +74,7 @@ fileprivate extension Date {
 // MARK: - Server Single Meeting Inspector View Controller -
 /* ###################################################################################################################################### */
 /**
+ This handles the display of the meeting inspector screen.
  */
 class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_BaseViewController {
     /* ################################################################## */
@@ -84,11 +85,13 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     
     /* ################################################################## */
     /**
+     This is the meeting associated with this screen.
      */
     var meeting: MeetingInstance? {  didSet { updateUI() } }
     
     /* ################################################################## */
     /**
+     True, if we are viewing in a time that has been cast to our local time.
      */
     var isNormalizedTime: Bool = false
     
@@ -100,66 +103,79 @@ class SwiftBMLSDK_TestHarness_MeetingViewController: SwiftBMLSDK_TestHarness_Bas
     
     /* ################################################################## */
     /**
+     The label for the time and day.
      */
     @IBOutlet weak var timeDayLabel: UILabel?
     
     /* ################################################################## */
     /**
+     The label for the timezone.
      */
     @IBOutlet weak var timeZoneLabel: UILabel?
     
     /* ################################################################## */
     /**
+     The label that displays when the next meeting will be.
      */
     @IBOutlet weak var meetsNextLabel: UILabel?
     
     /* ################################################################## */
     /**
+     The label that displays comments.
      */
     @IBOutlet weak var commentsLabel: UILabel?
     
     /* ################################################################## */
     /**
+     A simple separator view.
      */
     @IBOutlet weak var virtualSeparatorImageView: UIImageView?
     
     /* ################################################################## */
     /**
+     The header for the virtual section.
      */
     @IBOutlet weak var virtualInfoHeaderLabel: UILabel?
 
     /* ################################################################## */
     /**
+     The label for the direct video link.
      */
     @IBOutlet weak var videoLinkLabel: UILabel?
 
     /* ################################################################## */
     /**
+     The label that displays the "extra info" for the virtual meeting.
      */
     @IBOutlet weak var virtualExtraInfoLabel: UILabel?
     
     /* ################################################################## */
     /**
+     A simple separator view
      */
     @IBOutlet weak var locationSeparatorImageView: UIImageView?
     
     /* ################################################################## */
     /**
+     The header for the in-person section.
      */
     @IBOutlet weak var locationHeaderLabel: UILabel?
 
     /* ################################################################## */
     /**
+     The map view that displays the meeting location.
      */
     @IBOutlet weak var mapView: MKMapView?
 
     /* ################################################################## */
     /**
+     The label for the address.
      */
     @IBOutlet weak var addressLabel: UILabel?
 
     /* ################################################################## */
     /**
+     The stack view that holds the formats.
      */
     @IBOutlet weak var formatsStackView: UIStackView?
 }
@@ -334,6 +350,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
     
     /* ################################################################## */
     /**
+     This sets up the comments label.
      */
     func setComments() {
         if let comments = meeting?.comments,
@@ -385,6 +402,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
 
     /* ################################################################## */
     /**
+     This sets up the in-person location stuff.
      */
     func setLocation() {
         setMapView()
@@ -396,6 +414,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
     
     /* ################################################################## */
     /**
+     This sets up the map view.
      */
     func setMapView() {
         if let meeting = meeting,
@@ -413,6 +432,7 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
 
     /* ################################################################## */
     /**
+     This establishes the in-person address.
      */
     func setAddress() {
         if let postalAddress = meeting?.inPersonAddress {

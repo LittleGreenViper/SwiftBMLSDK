@@ -25,6 +25,7 @@ import SwiftBMLSDK
 // MARK: - Server Virtual Search Custom View Controller (4) -
 /* ###################################################################################################################################### */
 /**
+ This has a pickerview, but shows each meeting, in-place, so it uses a second pickerview.
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: SwiftBMLSDK_TestHarness_BaseViewController, VirtualServiceControllerProtocol {
     /* ################################################################## */
@@ -125,6 +126,7 @@ class SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     The 0-based day index.
      */
     var currentDayIndex = 0 {
         didSet {
@@ -136,6 +138,7 @@ class SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     The 0-based time index.
      */
     var currentTimeIndex = 0 {
         didSet {
@@ -146,6 +149,7 @@ class SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: SwiftBMLSDK_TestHarn
     
     /* ################################################################## */
     /**
+     The sorted and filtered table data.
      */
     var tableFood: [MeetingInstance] {
         guard let dayTimePicker = dayTimePicker,
@@ -163,6 +167,9 @@ class SwiftBMLSDK_TestHarness_VirtualCustom5ViewController: SwiftBMLSDK_TestHarn
 extension SwiftBMLSDK_TestHarness_VirtualCustom5ViewController {
     /* ################################################################## */
     /**
+     This maps weekdays to the user's local layout.
+     - parameter inWeekdayIndex: The 1-based (1 == Sunday) day index.
+     - returns: A tuple, containing the converted index (also 1-based), and the weekday name (localized).
      */
     static func mapWeekday(_ inWeekdayIndex: Int) -> (weekdayIndex: Int, string: String, short: String) {
         var currentDay = inWeekdayIndex

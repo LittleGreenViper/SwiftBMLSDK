@@ -131,6 +131,12 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
         }
     }
     
+    /* ################################################# */
+    /**
+     This is the complete response to the last query. We ask for all of the virtual and hybrid meetings at once from the server, and store them in the order received.
+     */
+    private var _meetings = [CachedMeeting]()
+    
     // MARK: Public SDK Properties and Methods
     
     /* ################################################# */
@@ -191,23 +197,26 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
         }
     }
     
-    // MARK: Public Stored Properties
+    // MARK: Public Computed Properties
     
     /* ################################################# */
     /**
      This is the complete response to the last query. We ask for all of the virtual and hybrid meetings at once from the server, and store them in the order received.
      */
-    public var meetings = [CachedMeeting]()
-    
-    // MARK: Public Computed Properties
+    public var meetings: [CachedMeeting] {
+        get { _meetings }
+        set { _meetings = newValue }
+    }
     
     /* ################################################# */
     /**
+     These are meetings that have both a virtual component, and an in-person (physical location) component.
      */
     public var hybridMeetings: [CachedMeeting] { meetings.filter { .hybrid == $0.meeting.meetingType } }
     
     /* ################################################# */
     /**
+     These are virtual-only meetings (no physical location).
      */
     public var virtualMeetings: [CachedMeeting] { meetings.filter { .virtual == $0.meeting.meetingType } }
     
@@ -664,10 +673,10 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 /* ###################################################################################################################################### */
 // MARK: - Array Extension, for Arrays of meetings -
 /* ###################################################################################################################################### */
-public extension Array where Element==SwiftBMLSDK_Parser.Meeting {
+public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
     /* ################################################# */
     /**
-     This returns all of the in-person meeting coordinates in an array.
+     This returns all of the location coordinates in an array of meeting instances.
      */
     var allCoords: [CLLocationCoordinate2D] { compactMap { $0.coords } }
 }

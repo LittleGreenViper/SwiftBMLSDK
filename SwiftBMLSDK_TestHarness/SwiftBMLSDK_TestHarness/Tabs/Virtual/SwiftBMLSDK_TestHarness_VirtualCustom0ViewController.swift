@@ -25,6 +25,7 @@ import SwiftBMLSDK
 // MARK: - Server Virtual Search Custom View Controller (0) -
 /* ###################################################################################################################################### */
 /**
+ Page showing meetings accessed by buttons.
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarness_BaseViewController, VirtualServiceControllerProtocol {
     /* ################################################################################################################################## */
@@ -40,45 +41,56 @@ class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarn
     // MARK: Enums for the Selected Button
     /* ################################################################################################################################## */
     /**
+     This is used to denote which weekday to filter for (1-based).
+     
+     > NOTE: The days will be orderd according to the user's local layout.
      */
     enum ButtonWeekday: Int {
         /* ############################################################## */
         /**
+         This is meetings that are currently in progress.
          */
         case inProgress = 0
         
         /* ############################################################## */
         /**
+         Meetings on Sunday
          */
         case sunday
         
         /* ############################################################## */
         /**
-         */
+         Meetings on Monday
+        */
         case monday
         
         /* ############################################################## */
         /**
+         Meetings on Tuesday
          */
         case tuesday
         
         /* ############################################################## */
         /**
+         Meetings on Wednesday
          */
         case wednesday
         
         /* ############################################################## */
         /**
+         Meetings on Thursday
          */
         case thursday
         
         /* ############################################################## */
         /**
+         Meetings on Friday
          */
         case friday
         
         /* ############################################################## */
         /**
+         Meetings on Saturday
          */
         case saturday
     }
@@ -97,41 +109,49 @@ class SwiftBMLSDK_TestHarness_VirtualCustom0ViewController: SwiftBMLSDK_TestHarn
 
     /* ################################################################## */
     /**
+     In-progress
      */
     @IBOutlet weak var button0: UIButton?
 
     /* ################################################################## */
     /**
+     The first day
      */
     @IBOutlet weak var button1: UIButton?
 
     /* ################################################################## */
     /**
+     The second day
      */
     @IBOutlet weak var button2: UIButton?
 
     /* ################################################################## */
     /**
+     The third day
      */
     @IBOutlet weak var button3: UIButton?
 
     /* ################################################################## */
     /**
+     The fourth day
      */
     @IBOutlet weak var button4: UIButton?
 
     /* ################################################################## */
     /**
+     The fifth day
      */
     @IBOutlet weak var button5: UIButton?
 
     /* ################################################################## */
     /**
+     The sixth day
      */
     @IBOutlet weak var button6: UIButton?
 
     /* ################################################################## */
     /**
+     The Day Of Rest
      */
     @IBOutlet weak var button7: UIButton?
 }
@@ -174,6 +194,10 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
     
     /* ################################################################## */
     /**
+     Called just before a segue is executed to switch to another screen.
+     
+     - parameter for: The segue instance
+     - parameter sender: Our meeting list data (cast to Any?).
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inListData: Any?) {
         guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_ListViewController,
@@ -190,6 +214,9 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
 extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
     /* ################################################################## */
     /**
+     This maps weekdays to the user's local layout.
+     - parameter inWeekdayIndex: The 1-based (1 == Sunday) day index.
+     - returns: A tuple, containing the converted index (also 1-based), and the weekday name (localized).
      */
     static func mapWeekday(_ inWeekdayIndex: Int) -> (weekdayIndex: Int, string: String) {
         var currentDay = inWeekdayIndex
@@ -216,6 +243,9 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
 extension SwiftBMLSDK_TestHarness_VirtualCustom0ViewController {
     /* ################################################################## */
     /**
+     Called when one of the buttons is hit.
+     
+     - parameter inButton: The particular button that was hit.
      */
     @IBAction func buttonHit(_ inButton: UIButton) {
         guard let virtualService = virtualService else { return }

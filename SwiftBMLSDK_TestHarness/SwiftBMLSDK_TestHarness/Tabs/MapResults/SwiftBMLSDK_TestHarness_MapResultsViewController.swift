@@ -175,7 +175,7 @@ extension MKCoordinateRegion: Equatable {
 // MARK: - Map Results Main Tab View Controller -
 /* ###################################################################################################################################### */
 /**
- This manages the main tab controller for the search results.
+ This manages the main tab controller for the map search results.
  */
 class SwiftBMLSDK_TestHarness_MapResultsViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */

@@ -48,16 +48,19 @@ class SwiftBMLSDK_TestHarness_MapViewController: SwiftBMLSDK_TestHarness_BaseVie
 
     /* ################################################################## */
     /**
+     The layer holding the mask.
      */
     private weak var _circleLayer: CALayer?
     
     /* ################################################################## */
     /**
+     The dot, in the center of the screen.
      */
     private weak var _centerDot: CALayer?
     
     /* ################################################################## */
     /**
+     The map view for the screen.
      */
     @IBOutlet weak var mapView: MKMapView?
 }
@@ -73,6 +76,7 @@ extension SwiftBMLSDK_TestHarness_MapViewController {
     func setUpMap() {
         /* ############################################################## */
         /**
+         Sets up the circle/dot mask.
          */
         func setUpMask() {
             /* ######################################################### */
@@ -159,6 +163,10 @@ extension SwiftBMLSDK_TestHarness_MapViewController {
 extension SwiftBMLSDK_TestHarness_MapViewController: MKMapViewDelegate {
     /* ################################################################## */
     /**
+     Called when the map region changes. We use it to update our search radius/center.
+     
+     - parameter inMapView: The map view that changed.
+     - paramater regionDidChangeAnimated: True, if animated.
      */
     func mapView(_ inMapView: MKMapView, regionDidChangeAnimated: Bool) {
         let span = inMapView.region.span

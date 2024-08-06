@@ -25,6 +25,7 @@ import CoreLocation
 // MARK: - Main Tab Bar Controller Class -
 /* ###################################################################################################################################### */
 /**
+ This is the main Tab Bar Controller for the app.
  */
 class SwiftBMLSDK_TestHarness_TabBarController: UITabBarController {
     /* ################################################################## */
@@ -53,16 +54,6 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
         locationManager.delegate = self
         tabBar.items?.forEach { $0.title = $0.title?.localizedVariant }
     }
-    
-    /* ################################################################## */
-    /**
-     Called when the view is about to appear.
-     - parameter inIsAnimated: True, if the appearance is animated.
-     */
-    override func viewWillAppear(_ inIsAnimated: Bool) {
-        super.viewWillAppear(inIsAnimated)
-//        startLookingUpMyLocation()
-    }
 }
 
 /* ###################################################################################################################################### */
@@ -82,6 +73,7 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
     
     /* ################################################################## */
     /**
+     This updates the tab bar item enabled states, to match the current app state.
      */
     func updateEnablements() {
         guard let count = tabBar.items?.count,

@@ -1,3 +1,7 @@
+ **1.0.17** *August 6, 2024*
+ 
+ - Documentation cleanup. No API changes.
+ 
  **1.0.16** *July 31, 2024*
  
  - If a meeting has no timezone, it can be skipped (specify "IGNORE_NO_TZ" as an environment variable). This allows meetings to "opt out," by not specifying a timezone.

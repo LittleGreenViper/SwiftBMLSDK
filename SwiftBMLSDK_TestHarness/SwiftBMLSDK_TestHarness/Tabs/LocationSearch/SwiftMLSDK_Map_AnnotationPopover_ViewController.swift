@@ -8,24 +8,34 @@ import RVS_UIKit_Toolbox
 import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
 
+/* ###################################################################################################################################### */
+// MARK: - Custom Table Cell -
+/* ###################################################################################################################################### */
+/**
+ This is a custom cell class, for our table view.
+ */
 class SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell: UITableViewCell {
     /* ################################################################## */
     /**
+     The table cell reuse ID.
      */
     static let reuseID = "SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell"
     
     /* ################################################################## */
     /**
+     The standard row height.
      */
     static let rowHeight = CGFloat(48)
     
     /* ################################################################## */
     /**
+     The label that displays the meeting name.
      */
     @IBOutlet var meetingNameLabel: UILabel?
     
     /* ################################################################## */
     /**
+     The label that displays the start time.
      */
     @IBOutlet var startTimeLabel: UILabel?
 }

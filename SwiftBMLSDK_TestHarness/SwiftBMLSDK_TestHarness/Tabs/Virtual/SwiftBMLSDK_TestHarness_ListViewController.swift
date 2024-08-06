@@ -45,9 +45,10 @@ fileprivate extension Date {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - Server Virtual Search Main Tab View Controller -
+// MARK: - Server Virtual Search List View Controller -
 /* ###################################################################################################################################### */
 /**
+ This shows a table of meetings. It has expandable headers.
  */
 class SwiftBMLSDK_TestHarness_ListViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################################################################################## */
@@ -84,16 +85,19 @@ class SwiftBMLSDK_TestHarness_ListViewController: SwiftBMLSDK_TestHarness_TabBas
     
     /* ################################################################## */
     /**
+     This keeps track of which section is open.
      */
     var openSections = (morning: false, afternoon: false, evening: false)
     
     /* ################################################################## */
     /**
+     This is the table of meetings.
      */
     @IBOutlet weak var meetingsTableView: UITableView?
     
     /* ################################################################## */
     /**
+     This is the busy throbber.
      */
     @IBOutlet weak var throbberView: UIView?
 }

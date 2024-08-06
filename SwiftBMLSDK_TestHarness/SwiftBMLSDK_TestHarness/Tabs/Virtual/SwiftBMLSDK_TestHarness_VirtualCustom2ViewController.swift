@@ -25,6 +25,7 @@ import SwiftBMLSDK
 // MARK: - Server Virtual Search Custom View Controller (2) -
 /* ###################################################################################################################################### */
 /**
+ Page showing a simple table, with expandable section headers.
  */
 class SwiftBMLSDK_TestHarness_VirtualCustom2ViewController: SwiftBMLSDK_TestHarness_ListViewController, VirtualServiceControllerProtocol {
     /* ################################################################## */
@@ -35,6 +36,7 @@ class SwiftBMLSDK_TestHarness_VirtualCustom2ViewController: SwiftBMLSDK_TestHarn
 
     /* ################################################################## */
     /**
+     The wekday segmented switch.
      */
     @IBOutlet weak var weekdayHeaderSegmentedSwitch: UISegmentedControl?
 }
@@ -45,6 +47,9 @@ class SwiftBMLSDK_TestHarness_VirtualCustom2ViewController: SwiftBMLSDK_TestHarn
 extension SwiftBMLSDK_TestHarness_VirtualCustom2ViewController {
     /* ################################################################## */
     /**
+     Called when one of the weekdays is selected.
+     
+     - parameter inSwitch: The segmented switch instance.
      */
     @IBAction func weekdaySelected(_ inSwitch: UISegmentedControl! = nil) {
         let selectedSegment = inSwitch?.selectedSegmentIndex ?? 0
@@ -71,6 +76,7 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom2ViewController {
 extension SwiftBMLSDK_TestHarness_VirtualCustom2ViewController {
     /* ################################################################## */
     /**
+     Populates the weekday segmented switch, honoring the local user's layout.
      */
     func setUpWeekdayControl() {
         for index in 0..<7 {

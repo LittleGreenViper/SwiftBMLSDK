@@ -29,41 +29,49 @@ import SwiftBMLSDK
 class SwiftBMLSDK_TestHarness_InfoViewController: SwiftBMLSDK_TestHarness_TabBaseViewController {
     /* ################################################################## */
     /**
+     This has the organization[s] information. It is programmatically populated.
      */
-    var organizationContainers: [UIStackView] = []
+    var organizationContainer: [UIStackView] = []
     
     /* ################################################################## */
     /**
+     This has most of the screen in it.
      */
     @IBOutlet weak var mainContainerView: UIStackView?
     
     /* ################################################################## */
     /**
+     The prompt for the number of meetings.
      */
     @IBOutlet weak var numberOfMeetingsPromptLabel: UILabel?
     
     /* ################################################################## */
     /**
+     The number of meetings.
      */
     @IBOutlet weak var numberOfMeetingsLabel: UILabel?
     
     /* ################################################################## */
     /**
+     The prompt for the number of servers.
      */
     @IBOutlet weak var numberOfServersPromptLabel: UILabel?
     
     /* ################################################################## */
     /**
+     The number of servers.
      */
     @IBOutlet weak var numberOfServersLabel: UILabel?
     
     /* ################################################################## */
     /**
+     The prompt for the list of organizations.
      */
     @IBOutlet weak var organizationListPromptLabel: UILabel?
     
     /* ################################################################## */
     /**
+     The main "busy throbber" view.
      */
     @IBOutlet weak var throbberView: UIView?
 }
@@ -104,14 +112,15 @@ extension SwiftBMLSDK_TestHarness_InfoViewController {
 extension SwiftBMLSDK_TestHarness_InfoViewController {
     /* ################################################################## */
     /**
+     This fetches the server information from the server, and populates the screen.
      */
     func getServerInfo() {
         prefs.clearSearchResults()
         myTabController?.updateEnablements()
         throbberView?.isHidden = false
         mainContainerView?.isHidden = true
-        organizationContainers.forEach { $0.removeFromSuperview() }
-        organizationContainers = []
+        organizationContainer.forEach { $0.removeFromSuperview() }
+        organizationContainer = []
         prefs.getServerInfo {
             self.throbberView?.isHidden = true
             self.numberOfMeetingsLabel?.text = String(self.prefs.serverInfo?.totalMeetings ?? 0)
@@ -129,7 +138,7 @@ extension SwiftBMLSDK_TestHarness_InfoViewController {
                 let value = UILabel()
                 value.text = String($0.value)
                 container.addArrangedSubview(value)
-                self.organizationContainers.append(container)
+                self.organizationContainer.append(container)
                 self.mainContainerView?.addArrangedSubview(container)
             }
             self.mainContainerView?.isHidden = false

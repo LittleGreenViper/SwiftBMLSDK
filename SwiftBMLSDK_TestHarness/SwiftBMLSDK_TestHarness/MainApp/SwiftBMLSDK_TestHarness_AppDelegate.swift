@@ -24,6 +24,7 @@ import SwiftBMLSDK
 // MARK: - Main Application Delegate Class -
 /* ###################################################################################################################################### */
 /**
+ This is the main app delegate. It doesn't do much, as we are running the app as a scene app.
  */
 @main
 class SwiftBMLSDK_TestHarness_AppDelegate: UIResponder { }
@@ -34,15 +35,24 @@ class SwiftBMLSDK_TestHarness_AppDelegate: UIResponder { }
 extension SwiftBMLSDK_TestHarness_AppDelegate: UIApplicationDelegate {
     /* ################################################################## */
     /**
+     Called when the application initially launches, and has set up everything.
+     
+     - parameter: The application (ignored).
+     - parameter didFinishLaunchingWithOptions: The launch options (also ignored).
+     - returns: True (always)
      */
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        return true
-    }
+    func application(_: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool { true }
 
     /* ################################################################## */
     /**
+     Called when the app is being asked for the scene configuration.
+     
+     - parameter: The application (ignored).
+     - parameter configurationForConnecting: The configuration that we need.
+     - parameter options: The connection options (also ignored).
+     - returns: The default configuration.
      */
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    func application(_: UIApplication, configurationForConnecting inConnectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: inConnectingSceneSession.role)
     }
 }
