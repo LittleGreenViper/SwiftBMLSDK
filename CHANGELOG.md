@@ -1,3 +1,7 @@
+ **1.0.18** *August 22, 2024*
+ 
+ - Added a weekday string to the JSON dump, as that should help NLP model training.
+ 
  **1.0.17** *August 6, 2024*
  
  - Documentation cleanup. No API changes.

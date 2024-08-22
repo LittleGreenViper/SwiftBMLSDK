@@ -1030,11 +1030,15 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
             try container.encode(typeString, forKey: _CustomCodingKeys(stringValue: "meetingType")!)
         }
 
-        if 0 < weekday {
-            try container.encode(weekday, forKey: _CustomCodingKeys(stringValue: "weekday")!)
+        if (1..<8).contains(weekday) {
+            try container.encode(weekday, forKey: _CustomCodingKeys(stringValue: "weekdayInt")!)
+            // We hardcode, to provide consistency.
+            let weekdayString = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][weekday - 1]
+            try container.encode(weekdayString, forKey: _CustomCodingKeys(stringValue: "weekdayString")!)
         }
         
         let formatter = DateFormatter()
+        // We hardcode, to provide consistency.
         formatter.dateFormat = "HH:mm:ss"
         let timeString = formatter.string(from: startTime)
         if !timeString.isEmpty {
