@@ -325,7 +325,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
             /**
              Returns the format, as single string, with values separarated by tabs.
              */
-            public var asString: String { "\(key)\t\(name)\t\(description)" } // \t\(language)\t\(id)" } These confuse ML.
+            public var asString: String { "\(name) (\(description))" }
             
             // MARK: Comparable Conformance
             
@@ -1069,7 +1069,7 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
             try formats.forEach {
                 let formatString = $0.asString
                 if !formatString.isEmpty {
-                    try container.encode(formatString, forKey: _CustomCodingKeys(stringValue: "format-\(formatIndex)")!)
+                    try container.encode(formatString, forKey: _CustomCodingKeys(stringValue: "format-\($0.id)")!)
                     formatIndex += 1
                 }
             }
