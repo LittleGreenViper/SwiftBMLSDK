@@ -1017,7 +1017,23 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
      - parameter to: The encoder to load with our values.
      */
     public func encode(to inEncoder: Encoder) throws {
+        guard (1..<8).contains(weekday) else { return }
+        
         var container = inEncoder.container(keyedBy: _CustomCodingKeys.self)
+        
+        try container.encode(id, forKey: _CustomCodingKeys(stringValue: "id")!)
+
+        // > NOTE: We hardcode English here, as that is our ML parsing language.
+        
+        var descriptionString = "\"\(name)\" is " +
+                                (.hybrid == meetingType ? "a hybrid" : .virtual == meetingType ? "a virtual" : "an in-person") + " \((.na == organization ? "NA" : "Unknown")) meeting"
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        let weekdayString = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+        descriptionString += ", that meets every \(weekdayString[weekday - 1]), at \(formatter.string(from: startTime)), and lasts for \(Int(duration / 60)) minutes."
+
+        try container.encode(descriptionString, forKey: _CustomCodingKeys(stringValue: "description")!)
         
         // These three must always be present.
         try container.encode(serverID, forKey: _CustomCodingKeys(stringValue: "serverID")!)
@@ -1037,7 +1053,6 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
             try container.encode(weekdayString, forKey: _CustomCodingKeys(stringValue: "weekdayString")!)
         }
         
-        let formatter = DateFormatter()
         // We hardcode, to provide consistency.
         formatter.dateFormat = "HH:mm:ss"
         let timeString = formatter.string(from: startTime)
