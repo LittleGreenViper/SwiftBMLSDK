@@ -1243,12 +1243,14 @@ extension SwiftBMLSDK_Parser.Meeting {
         let addressString = basicInPersonAddress
         
         if !addressString.isEmpty {
-            descriptionString += "\nIt meets at \(addressString)."
+            descriptionString += "\nIt meets at \(addressString.replacingOccurrences(of: "\n", with: ", "))."
         }
         
         if let coords = coords,
            CLLocationCoordinate2DIsValid(coords) {
-            descriptionString += "\nIts latitude/longitude is \(coords.latitude), \(coords.longitude)."
+            let lat = (coords.latitude * 100000).rounded(.toNearestOrEven) / 100000
+            let lng = (coords.longitude * 100000).rounded(.toNearestOrEven) / 100000
+            descriptionString += "\nIts latitude/longitude is \(lat), \(lng)."
         }
         
         formats.forEach {
