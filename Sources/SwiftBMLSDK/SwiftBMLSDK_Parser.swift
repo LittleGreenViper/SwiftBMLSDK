@@ -1023,20 +1023,11 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
         
         try container.encode(id, forKey: _CustomCodingKeys(stringValue: "id")!)
 
-        // > NOTE: We hardcode English here, as that is our ML parsing language.
-        
-        var descriptionString = "\"\(name)\" is " +
-                                (.hybrid == meetingType ? "a hybrid" : .virtual == meetingType ? "a virtual" : "an in-person") + " \((.na == organization ? "NA" : "Unknown")) meeting"
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        let weekdayString = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
-        descriptionString += ", that meets every \(weekdayString[weekday - 1]), at \(formatter.string(from: startTime)), and lasts for \(Int(duration / 60)) minutes."
-
         try container.encode(descriptionString, forKey: _CustomCodingKeys(stringValue: "description")!)
         
         // These three must always be present.
         try container.encode(serverID, forKey: _CustomCodingKeys(stringValue: "serverID")!)
+        
         try container.encode(localMeetingID, forKey: _CustomCodingKeys(stringValue: "localMeetingID")!)
         
         // These are included in the encoder, but we don't care about them, for the decoder.
@@ -1054,6 +1045,7 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
         }
         
         // We hardcode, to provide consistency.
+        let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss"
         let timeString = formatter.string(from: startTime)
         if !timeString.isEmpty {
@@ -1228,6 +1220,47 @@ extension SwiftBMLSDK_Parser.Meeting {
         return ret
     }
 
+    
+    /* ############################################# */
+    /**
+     This returns a natural-language, English description of the meeting (used for ML stuff).
+     */
+    public var descriptionString: String {
+        var descriptionString = "\"\(name)\" is " +
+                                (.hybrid == meetingType ? "a hybrid" : .virtual == meetingType ? "a virtual" : "an in-person") + " \((.na == organization ? "NA" : "Unknown")) meeting"
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a"
+        let weekdayString = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+        descriptionString += ", that meets every \(weekdayString[weekday - 1]), at \(formatter.string(from: startTime)), and lasts for \(Int(duration / 60)) minutes."
+        
+        let timeZoneString = timeZone.localizedName(for: .standard, locale: .current) ?? ""
+        
+        if !timeZoneString.isEmpty {
+            descriptionString += "\nIts time zone is \(timeZoneString)."
+        }
+        
+        let addressString = basicInPersonAddress
+        
+        if !addressString.isEmpty {
+            descriptionString += "\nIt meets at \(addressString)."
+        }
+        
+        if let coords = coords,
+           CLLocationCoordinate2DIsValid(coords) {
+            descriptionString += "\nIts latitude/longitude is \(coords.latitude), \(coords.longitude)."
+        }
+        
+        formats.forEach {
+            let formatString = $0.description
+            if !formatString.isEmpty {
+                descriptionString += "\n\(formatString)"
+            }
+        }
+        
+        return descriptionString
+    }
+    
     // MARK: Public Non-Mutating Instance Methods
     
     /* ################################################################## */

@@ -1,3 +1,7 @@
+ **1.0.19** *TBD*
+ 
+ - Added a readable description string, for use in ML applications.
+ 
  **1.0.18** *August 22, 2024*
  
  - Added a weekday string to the JSON dump, as that should help NLP model training.
