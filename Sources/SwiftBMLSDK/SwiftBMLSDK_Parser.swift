@@ -1486,7 +1486,11 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
      
      This is different from the input JSON, as it has the organization and "cleaning" provided by the parser. It also keeps it at 2 dimensions, for easy integration into ML stuff.
      */
-    var asJSONData: Data? { try? JSONEncoder().encode(self) }
+    var asJSONData: Data? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .sortedKeys
+        return try? encoder.encode(self)
+    }
 }
 
 /* ###################################################################################################################################### */

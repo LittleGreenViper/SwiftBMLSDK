@@ -1,3 +1,7 @@
+ **1.0.20** *August 28, 2024*
+ 
+ - Added simple sorting to the JSON output. Not perfect, but keeps it consistent.
+ 
  **1.0.19** *August 28, 2024*
  
  - Made some changes to the JSON output of the Meeting Array extension.
