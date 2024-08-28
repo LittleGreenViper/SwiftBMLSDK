@@ -1,6 +1,7 @@
- **1.0.19** *TBD*
+ **1.0.19** *August 28, 2024*
  
- - Added a readable description string, for use in ML applications.
+ - Made some changes to the JSON output of the Meeting Array extension.
+ - Updated the dependencies in the test harness app.
  
  **1.0.18** *August 22, 2024*
  
