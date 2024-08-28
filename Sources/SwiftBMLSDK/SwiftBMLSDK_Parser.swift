@@ -362,7 +362,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         /**
          This is how many seconds there are, in a week.
          */
-        private static let _oneWeekInSeconds = TimeInterval(604800)
+        static let oneWeekInSeconds = TimeInterval(604800)
 
         // MARK: Internal Initializer
                 
@@ -1023,8 +1023,6 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
         
         try container.encode(id, forKey: _CustomCodingKeys(stringValue: "id")!)
 
-        try container.encode(descriptionString, forKey: _CustomCodingKeys(stringValue: "description")!)
-        
         // These three must always be present.
         try container.encode(serverID, forKey: _CustomCodingKeys(stringValue: "serverID")!)
         
@@ -1219,49 +1217,6 @@ extension SwiftBMLSDK_Parser.Meeting {
 
         return ret
     }
-
-    
-    /* ############################################# */
-    /**
-     This returns a natural-language, English description of the meeting (used for ML stuff).
-     */
-    public var descriptionString: String {
-        var descriptionString = "\"\(name)\" is " +
-                                (.hybrid == meetingType ? "a hybrid" : .virtual == meetingType ? "a virtual" : "an in-person") + " \((.na == organization ? "NA" : "Unknown")) meeting"
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
-        let weekdayString = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
-        descriptionString += ", that meets every \(weekdayString[weekday - 1]), at \(formatter.string(from: startTime)), and lasts for \(Int(duration / 60)) minutes."
-        
-        let timeZoneString = timeZone.localizedName(for: .standard, locale: .current) ?? ""
-        
-        if !timeZoneString.isEmpty {
-            descriptionString += "\nIts time zone is \(timeZoneString)."
-        }
-        
-        let addressString = basicInPersonAddress
-        
-        if !addressString.isEmpty {
-            descriptionString += "\nIt meets at \(addressString.replacingOccurrences(of: "\n", with: ", "))."
-        }
-        
-        if let coords = coords,
-           CLLocationCoordinate2DIsValid(coords) {
-            let lat = (coords.latitude * 100000).rounded(.toNearestOrEven) / 100000
-            let lng = (coords.longitude * 100000).rounded(.toNearestOrEven) / 100000
-            descriptionString += "\nIts latitude/longitude is \(lat), \(lng)."
-        }
-        
-        formats.forEach {
-            let formatString = $0.description
-            if !formatString.isEmpty {
-                descriptionString += "\n\(formatString)"
-            }
-        }
-        
-        return descriptionString
-    }
     
     // MARK: Public Non-Mutating Instance Methods
     
@@ -1392,7 +1347,7 @@ extension SwiftBMLSDK_Parser.Meeting {
         
         guard .distantFuture > nextStart else { return .distantPast }
         
-        return nextStart.addingTimeInterval(-Self._oneWeekInSeconds)
+        return nextStart.addingTimeInterval(-Self.oneWeekInSeconds)
     }
 }
 
