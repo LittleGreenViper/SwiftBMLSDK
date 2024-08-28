@@ -357,12 +357,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
          This will always be in the meeting's timezone (no adjustment to local).
          */
         private var _cachedNextDate: Date?
-        
-        /* ################################################# */
-        /**
-         This is how many seconds there are, in a week.
-         */
-        static let oneWeekInSeconds = TimeInterval(604800)
 
         // MARK: Internal Initializer
                 
@@ -542,6 +536,12 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
         // MARK: Public Interface
         
+        /* ################################################# */
+        /**
+         This is how many seconds there are, in a week.
+         */
+        public static let oneWeekInSeconds = TimeInterval(604800)
+
         /* ############################################################################################################################## */
         // MARK: Meeting Type Enum
         /* ############################################################################################################################## */
@@ -1036,10 +1036,7 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
         }
 
         if (1..<8).contains(weekday) {
-            try container.encode(weekday, forKey: _CustomCodingKeys(stringValue: "weekdayInt")!)
-            // We hardcode, to provide consistency.
-            let weekdayString = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][weekday - 1]
-            try container.encode(weekdayString, forKey: _CustomCodingKeys(stringValue: "weekdayString")!)
+            try container.encode(weekday, forKey: _CustomCodingKeys(stringValue: "weekday")!)
         }
         
         // We hardcode, to provide consistency.
@@ -1106,49 +1103,50 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
         }
 
         if let latitude = coords?.latitude,
-           let longitude = coords?.longitude {
-            try? container.encode(Double(round(1000000.0 * latitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "coords_lat")!)
-            try? container.encode(Double(round(1000000.0 * longitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "coords_lng")!)
+           let longitude = coords?.longitude,
+           CLLocationCoordinate2DIsValid(coords!) {
+            try? container.encode(Double(round(1000000.0 * latitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "latitude")!)
+            try? container.encode(Double(round(1000000.0 * longitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "longitude")!)
         }
         
         if let inPersonVenueName = inPersonVenueName,
            !inPersonVenueName.isEmpty {
-            try? container.encode(inPersonVenueName, forKey: _CustomCodingKeys(stringValue: "inPersonVenueName")!)
+            try? container.encode(inPersonVenueName, forKey: _CustomCodingKeys(stringValue: "address_VenueName")!)
         }
         
         if let string = inPersonAddress?.street,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_street")!)
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_Street")!)
         }
         
         if let string = inPersonAddress?.subLocality,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_subLocality")!)
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_SubLocality")!)
         }
         
         if let string = inPersonAddress?.city,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_city")!)
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_City")!)
         }
         
         if let string = inPersonAddress?.state,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_state")!)
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_State")!)
         }
         
         if let string = inPersonAddress?.subAdministrativeArea,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_subAdministrativeArea")!)
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_SubAdministrativeArea")!)
         }
         
         if let string = inPersonAddress?.postalCode,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_postalCode")!)
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_PostalCode")!)
         }
         
         if let string = inPersonAddress?.country,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "inPersonAddress_country")!)
+            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_Country")!)
         }
     }
 }
