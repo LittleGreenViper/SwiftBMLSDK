@@ -547,7 +547,6 @@ extension SwiftBMLSDK_Query {
             let maxRadius = 0 < inSpecification.locationRadius ? inSpecification.locationRadius : 100000
             
             var searchRadius = CLLocationDistance(1)
-            var resultCount = 0
             var searchInProgress = false
             var abort = false
             var lastParser: SwiftBMLSDK_Parser?
@@ -559,26 +558,20 @@ extension SwiftBMLSDK_Query {
                     meetingSearch(specification: specification) { inParser, inError in
                         defer { searchInProgress = false }
 
-                        guard nil == inError,
-                              let parser = inParser
-                        else {
-                            inCompletion(nil, inError)
-                            abort = true
-                            return
-                        }
-                        
-                        resultCount = parser.meetings.count
-                        
-                        if inMinNumber <= resultCount {
+                        if nil == inError,
+                           let parser = inParser,
+                           !parser.meetings.isEmpty {
                             lastParser = parser
-                        } else {
-                            searchRadius *= 0.01
+                            if inMinNumber <= parser.meetings.count {
+                                abort = true
+                            }
                         }
+                        
+                        searchRadius *= 1.1
                     }
                 }
             }
             
-            guard !abort else { return }
             inCompletion(lastParser, nil)
         } else {
             inCompletion(nil, nil)

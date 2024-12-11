@@ -303,9 +303,17 @@ extension SwiftBMLSDK_TestHarness_Prefs {
      */
     public func performSearch(completion inCompletion: @escaping () -> Void) {
         clearSearchResults()
-        queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .inPerson(isExclusive: false), locationCenter: locationCenter, locationRadius: locationRadius)) { inSearchResults, inError in
-            Self._searchResults = inSearchResults
-            DispatchQueue.main.async { inCompletion() }
+        if isAutoRadius,
+           0 < minimumAutoRadiusMeetings {
+            queryInstance.meetingAutoRadiusSearch(minimumNumberOfResults: minimumAutoRadiusMeetings, specification: SwiftBMLSDK_Query.SearchSpecification(type: .inPerson(isExclusive: false), locationCenter: locationCenter, locationRadius: locationRadius)) { inSearchResults, inError in
+                Self._searchResults = inSearchResults
+                DispatchQueue.main.async { inCompletion() }
+            }
+        } else {
+            queryInstance.meetingSearch(specification: SwiftBMLSDK_Query.SearchSpecification(type: .inPerson(isExclusive: false), locationCenter: locationCenter, locationRadius: locationRadius)) { inSearchResults, inError in
+                Self._searchResults = inSearchResults
+                DispatchQueue.main.async { inCompletion() }
+            }
         }
     }
 
