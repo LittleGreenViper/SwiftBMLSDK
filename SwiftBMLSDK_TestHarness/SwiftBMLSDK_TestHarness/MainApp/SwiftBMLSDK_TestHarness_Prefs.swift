@@ -69,7 +69,7 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
     enum Keys: String {
         /* ############################################################## */
         /**
-         The maximum search radius, in meters.
+         The maximum search radius, in meters If auto_radius is true, then this is the absolute maximum, before giving up.
          */
         case locationCenter_maxRadius = "kMaxRadius"
         
@@ -87,13 +87,27 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
         
         /* ############################################################## */
         /**
+         This is true, if we are doing an auto-radius search.
+         */
+        case auto_radius = "kAuto"
+        
+        /* ############################################################## */
+        /**
+         The minimum number of meetings for auto-radius (ignored if auto_radius is false).
+         */
+        case auto_radius_minimum = "kAutoMin"
+
+        /* ############################################################## */
+        /**
          These are all the keys, in an Array of String.
          */
         static var allKeys: [String] {
             [
                 locationCenter_maxRadius.rawValue,
                 locationCenter_latitude.rawValue,
-                locationCenter_longitude.rawValue
+                locationCenter_longitude.rawValue,
+                auto_radius.rawValue,
+                auto_radius_minimum.rawValue
             ]
         }
     }
@@ -177,6 +191,30 @@ extension SwiftBMLSDK_TestHarness_Prefs {
             isDirty = true
             values[Keys.locationCenter_latitude.rawValue] = newValue.latitude
             values[Keys.locationCenter_longitude.rawValue] = newValue.longitude
+        }
+    }
+    
+    /* ################################################################## */
+    /**
+     Returns true, if the search is an auto-radius search.
+     */
+    public var isAutoRadius: Bool {
+        get { values[Keys.auto_radius.rawValue] as? Bool ?? false }
+        set {
+            isDirty = true
+            values[Keys.auto_radius.rawValue] = newValue
+        }
+    }
+
+    /* ################################################################## */
+    /**
+     The minimum number of meetings to find, for an auto-radius search (ignored if isAutoRadius is false).
+     */
+    public var minimumAutoRadiusMeetings: Int {
+        get { values[Keys.auto_radius_minimum.rawValue] as? Int ?? 10 }
+        set {
+            isDirty = true
+            values[Keys.auto_radius_minimum.rawValue] = newValue
         }
     }
 

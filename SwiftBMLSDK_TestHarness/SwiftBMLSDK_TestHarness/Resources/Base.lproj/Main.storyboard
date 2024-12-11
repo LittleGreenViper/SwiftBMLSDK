@@ -320,14 +320,18 @@
                                                     </switch>
                                                 </subviews>
                                                 <constraints>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="A4A-oZ-rZC"/>
                                                     <constraint firstAttribute="height" constant="30" id="fey-Mc-yqG"/>
                                                 </constraints>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="qKo-fd-cn8" userLabel="Location Search Stack View">
-                                                <rect key="frame" x="0.0" y="38" width="361" height="489"/>
+                                                <rect key="frame" x="0.0" y="38" width="361" height="590"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ELj-al-UUY">
-                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="309"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="30"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="bnO-Su-Lji"/>
+                                                        </constraints>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <state key="normal" title="SLUG-LOCATION-MAP-BUTTON"/>
                                                         <connections>
@@ -336,16 +340,16 @@
                                                         </connections>
                                                     </button>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LsP-XH-BIc">
-                                                        <rect key="frame" x="0.0" y="321" width="361" height="34"/>
+                                                        <rect key="frame" x="0.0" y="42" width="361" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="SLUG-LOCATION-LATITUDE-LABEL" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="agx-9y-v01">
-                                                                <rect key="frame" x="0.0" y="0.0" width="153" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="153" height="30"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="SLUG-LOCATION-LATITUDE-PLACEHOLDER" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AEx-Ua-DTG">
-                                                                <rect key="frame" x="161" y="0.0" width="200" height="34"/>
+                                                                <rect key="frame" x="161" y="0.0" width="200" height="30"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="saw-u2-QzJ"/>
                                                                 </constraints>
@@ -358,20 +362,21 @@
                                                             </textField>
                                                         </subviews>
                                                         <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="bFs-zH-GEv"/>
                                                             <constraint firstAttribute="trailing" secondItem="AEx-Ua-DTG" secondAttribute="trailing" id="yVt-Z6-tHB"/>
                                                         </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="kPg-PP-XaK">
-                                                        <rect key="frame" x="0.0" y="367" width="361" height="34"/>
+                                                        <rect key="frame" x="0.0" y="84" width="361" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="SLUG-LOCATION-LONGITUDE-LABEL" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m7e-iG-r8o">
-                                                                <rect key="frame" x="0.0" y="0.0" width="153" height="34"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="153" height="30"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="SLUG-LOCATION-LONGITUDE-PLACEHOLDER" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NmO-Tk-t4M">
-                                                                <rect key="frame" x="161" y="0.0" width="200" height="34"/>
+                                                                <rect key="frame" x="161" y="0.0" width="200" height="30"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numbersAndPunctuation" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                                 <connections>
@@ -381,11 +386,12 @@
                                                             </textField>
                                                         </subviews>
                                                         <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="2Vp-FD-RnD"/>
                                                             <constraint firstAttribute="trailing" secondItem="NmO-Tk-t4M" secondAttribute="trailing" id="MNc-eY-139"/>
                                                         </constraints>
                                                     </stackView>
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LvB-zs-Ms0">
-                                                        <rect key="frame" x="13" y="413" width="335" height="30"/>
+                                                        <rect key="frame" x="13" y="126" width="335" height="30"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mlr-i5-WYL">
                                                                 <rect key="frame" x="0.0" y="0.0" width="278" height="30"/>
@@ -404,43 +410,21 @@
                                                             </switch>
                                                         </subviews>
                                                         <constraints>
+                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="36C-IB-Ea0"/>
                                                             <constraint firstAttribute="height" constant="30" id="JML-SB-hHL"/>
                                                         </constraints>
                                                     </stackView>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="l5L-67-bLm">
-                                                        <rect key="frame" x="0.0" y="455" width="361" height="34"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="SLUG-LOCATION-RADIUS-LABEL" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Edd-FN-LNP">
-                                                                <rect key="frame" x="0.0" y="0.0" width="153" height="34"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="SLUG-LOCATION-RADIUS-PLACEHOLDER" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qAh-RW-nQh">
-                                                                <rect key="frame" x="161" y="0.0" width="200" height="34"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numbersAndPunctuation" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
-                                                                <connections>
-                                                                    <action selector="textFieldTextChanged:" destination="QCj-Xx-X0G" eventType="editingChanged" id="JvY-gq-i04"/>
-                                                                    <outlet property="delegate" destination="QCj-Xx-X0G" id="0hP-fS-GFZ"/>
-                                                                </connections>
-                                                            </textField>
-                                                        </subviews>
-                                                        <constraints>
-                                                            <constraint firstAttribute="trailing" secondItem="qAh-RW-nQh" secondAttribute="trailing" id="m5E-aH-jGP"/>
-                                                        </constraints>
-                                                    </stackView>
                                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fJz-XR-Wt4">
-                                                        <rect key="frame" x="-126.66666666666669" y="489" width="614.33333333333337" height="0.0"/>
+                                                        <rect key="frame" x="-126.66666666666669" y="162" width="614.33333333333337" height="30"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="SLUG-AUTO-RADIUS-LABEL-TEXT" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yXL-qV-wfh">
-                                                                <rect key="frame" x="0.0" y="0.0" width="268.66666666666669" height="0.0"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="268.66666666666669" height="30"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="10" borderStyle="roundedRect" placeholder="SLUG-AUTO-RADIUS-NUMBER-PLACEHOLDER" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bLB-68-cnH">
-                                                                <rect key="frame" x="276.66666666666663" y="0.0" width="337.66666666666663" height="0.0"/>
+                                                                <rect key="frame" x="276.66666666666663" y="0.0" width="337.66666666666663" height="30"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                                 <connections>
@@ -452,6 +436,31 @@
                                                         </subviews>
                                                         <constraints>
                                                             <constraint firstAttribute="trailing" secondItem="bLB-68-cnH" secondAttribute="trailing" id="jDA-Gg-L3C"/>
+                                                            <constraint firstAttribute="height" constant="30" id="lfm-XG-UvC"/>
+                                                        </constraints>
+                                                    </stackView>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="l5L-67-bLm">
+                                                        <rect key="frame" x="0.0" y="168" width="361" height="422"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="SLUG-LOCATION-RADIUS-LABEL" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Edd-FN-LNP">
+                                                                <rect key="frame" x="0.0" y="0.0" width="153" height="422"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="SLUG-LOCATION-RADIUS-PLACEHOLDER" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qAh-RW-nQh">
+                                                                <rect key="frame" x="161" y="0.0" width="200" height="422"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numbersAndPunctuation" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
+                                                                <connections>
+                                                                    <action selector="textFieldTextChanged:" destination="QCj-Xx-X0G" eventType="editingChanged" id="JvY-gq-i04"/>
+                                                                    <outlet property="delegate" destination="QCj-Xx-X0G" id="0hP-fS-GFZ"/>
+                                                                </connections>
+                                                            </textField>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="j2w-rv-XVY"/>
+                                                            <constraint firstAttribute="trailing" secondItem="qAh-RW-nQh" secondAttribute="trailing" id="m5E-aH-jGP"/>
                                                         </constraints>
                                                     </stackView>
                                                 </subviews>
@@ -467,7 +476,10 @@
                                                 </constraints>
                                             </stackView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m83-0C-6PB">
-                                                <rect key="frame" x="89.666666666666686" y="535" width="182" height="131"/>
+                                                <rect key="frame" x="89.666666666666686" y="636" width="182" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="r9I-4j-ncJ"/>
+                                                </constraints>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="SLUG-PERFORM-SEARCH"/>
                                                 <connections>
@@ -1495,7 +1507,7 @@
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
         <namedColor name="AccentColor">
-            <color red="0.31400001049041748" green="0.37999999523162842" blue="0.89399999380111694" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.0" green="0.51800000667572021" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

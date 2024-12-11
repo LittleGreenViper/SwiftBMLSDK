@@ -256,7 +256,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
     @IBAction func autoRadiusSwitchHit(_ inControl: UIControl) {
         if let control = inControl as? UISwitch {
             autoRadiusContainer?.isHidden = !control.isOn
-            manualRadiusContainer?.isHidden = control.isOn
+            prefs.isAutoRadius = control.isOn
         } else {
             autoRadiusSwitch?.setOn(!(autoRadiusSwitch?.isOn ?? true), animated: true)
             autoRadiusSwitch?.sendActions(for: .valueChanged)
@@ -270,7 +270,9 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
      - parameter inTextField: The text field that changed.
      */
     @IBAction func autoRadiusTextChanged(_ inTextField: UITextField) {
-        inTextField.text = String(format: "%d", Int(inTextField.text ?? "0") ?? 0)
+        let min = Int(inTextField.text ?? "0") ?? 0
+        inTextField.text = String(format: "%d", min)
+        prefs.minimumAutoRadiusMeetings = min
     }
 }
 
@@ -329,6 +331,9 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
         performSearchButton?.setTitle(performSearchButton?.title(for: .normal)?.localizedVariant, for: .normal)
         autoRadiusTextFieldLabel?.text = autoRadiusTextFieldLabel?.text?.localizedVariant
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
+        autoRadiusSwitch?.isOn = prefs.isAutoRadius
+        autoRadiusContainer?.isHidden = !prefs.isAutoRadius
+        autoRadiusTextField?.text = String(format: "%d", prefs.minimumAutoRadiusMeetings)
         if nil == prefs.locationRegion {
             throbberView?.isHidden = false
             prefs.locationRadius = 0 < prefs.locationRadius ? prefs.locationRadius : Self._defaultRadiusInMeters
