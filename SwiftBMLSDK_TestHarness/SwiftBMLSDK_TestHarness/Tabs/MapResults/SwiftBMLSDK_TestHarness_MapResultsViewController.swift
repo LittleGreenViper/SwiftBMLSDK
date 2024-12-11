@@ -28,7 +28,7 @@ import SwiftBMLSDK
 /**
  Allows comparison of two regions.
  */
-extension MKCoordinateRegion: Equatable {
+extension MKCoordinateRegion: @retroactive Equatable {
     /* ################################################################## */
     /**
      This allows comparing two regions for equality.

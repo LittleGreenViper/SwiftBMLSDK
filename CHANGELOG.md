@@ -1,3 +1,7 @@
+ **1.1.0** *December 11, 2024*
+ 
+ - Added an auto-radius search to the query struct.
+ 
  **1.0.20** *August 28, 2024*
  
  - Added simple sorting to the JSON output. Not perfect, but keeps it consistent.

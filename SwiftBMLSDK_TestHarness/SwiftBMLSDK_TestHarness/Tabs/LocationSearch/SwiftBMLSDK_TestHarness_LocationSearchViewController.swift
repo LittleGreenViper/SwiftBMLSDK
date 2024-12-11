@@ -109,6 +109,36 @@ class SwiftBMLSDK_TestHarness_LocationSearchViewController: SwiftBMLSDK_TestHarn
     /* ################################################################## */
     /**
      */
+    @IBOutlet weak var autoRadiusLabelButton: UIButton?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var autoRadiusSwitch: UISwitch?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var manualRadiusContainer: UIView?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var autoRadiusContainer: UIView?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var autoRadiusTextFieldLabel: UILabel?
+    
+    /* ################################################################## */
+    /**
+     */
+    @IBOutlet weak var autoRadiusTextField: UITextField?
+    
+    /* ################################################################## */
+    /**
+     */
     @IBOutlet weak var throbberView: UIView?
 }
 
@@ -155,7 +185,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
             }
         }
     }
-
+    
     /* ################################################################## */
     /**
      Called when text changes in one of the search text fields.
@@ -182,7 +212,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
         prefs.locationRadius = radius
         myTabController?.updateEnablements()
     }
-
+    
     /* ################################################################## */
     /**
      Called when either the label or toggle for the location search row is selected.
@@ -215,6 +245,32 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
                 locationItemsStackView?.isHidden = true
             }
         }
+    }
+    
+    /* ################################################################## */
+    /**
+     Called when the Auto-Radius switch or label was hit.
+     
+     - parameter inControl: The control that was selected.
+     */
+    @IBAction func autoRadiusSwitchHit(_ inControl: UIControl) {
+        if let control = inControl as? UISwitch {
+            autoRadiusContainer?.isHidden = !control.isOn
+            manualRadiusContainer?.isHidden = control.isOn
+        } else {
+            autoRadiusSwitch?.setOn(!(autoRadiusSwitch?.isOn ?? true), animated: true)
+            autoRadiusSwitch?.sendActions(for: .valueChanged)
+        }
+    }
+    
+    /* ################################################################## */
+    /**
+     Called when text in the auto-radius field is changed.
+     
+     - parameter inTextField: The text field that changed.
+     */
+    @IBAction func autoRadiusTextChanged(_ inTextField: UITextField) {
+        inTextField.text = String(format: "%d", Int(inTextField.text ?? "0") ?? 0)
     }
 }
 
@@ -268,7 +324,10 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
         longitudeTextField?.placeholder = longitudeTextField?.placeholder?.localizedVariant
         radiusLabel?.text = radiusLabel?.text?.localizedVariant
         radiusTextField?.placeholder = radiusTextField?.placeholder?.localizedVariant
+        autoRadiusLabelButton?.setTitle(autoRadiusLabelButton?.title(for: .normal)?.localizedVariant, for: .normal)
+        autoRadiusTextField?.placeholder = autoRadiusTextField?.placeholder?.localizedVariant
         performSearchButton?.setTitle(performSearchButton?.title(for: .normal)?.localizedVariant, for: .normal)
+        autoRadiusTextFieldLabel?.text = autoRadiusTextFieldLabel?.text?.localizedVariant
         throbberView?.backgroundColor = .systemBackground.withAlphaComponent(0.5)
         if nil == prefs.locationRegion {
             throbberView?.isHidden = false

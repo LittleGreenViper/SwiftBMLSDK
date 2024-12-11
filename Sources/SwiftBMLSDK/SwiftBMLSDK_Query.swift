@@ -526,3 +526,62 @@ extension SwiftBMLSDK_Query {
         }.resume()
     }
 }
+
+/* ###################################################################################################################################### */
+// MARK: - Adds An Auto-Radius Search -
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_Query {
+    /* ################################################# */
+    /**
+     Perform a server-based search.
+     
+     - parameter specification: The search specification.
+     - parameter completion: A tail completion proc (may be called in any thread).
+     */
+    public func meetingAutoRadiusSearch(minimumNumberOfResults inMinNumber: Int, specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
+        if case .virtual(let isExclusive) = inSpecification.type,
+           isExclusive {
+            inCompletion(nil, nil)
+        } else if CLLocationCoordinate2DIsValid(inSpecification.locationCenter),
+                  0 < inMinNumber {
+            let maxRadius = 0 < inSpecification.locationRadius ? inSpecification.locationRadius : 100000
+            
+            var searchRadius = CLLocationDistance(1)
+            var resultCount = 0
+            var searchInProgress = false
+            var abort = false
+            var lastParser: SwiftBMLSDK_Parser?
+            
+            while searchRadius <= maxRadius && nil == lastParser && !abort {
+                if !searchInProgress {
+                    searchInProgress = true
+                    let specification = SearchSpecification(type: inSpecification.type, locationCenter: inSpecification.locationCenter, locationRadius: searchRadius)
+                    meetingSearch(specification: specification) { inParser, inError in
+                        defer { searchInProgress = false }
+
+                        guard nil == inError,
+                              let parser = inParser
+                        else {
+                            inCompletion(nil, inError)
+                            abort = true
+                            return
+                        }
+                        
+                        resultCount = parser.meetings.count
+                        
+                        if inMinNumber <= resultCount {
+                            lastParser = parser
+                        } else {
+                            searchRadius *= 0.01
+                        }
+                    }
+                }
+            }
+            
+            guard !abort else { return }
+            inCompletion(lastParser, nil)
+        } else {
+            inCompletion(nil, nil)
+        }
+    }
+}

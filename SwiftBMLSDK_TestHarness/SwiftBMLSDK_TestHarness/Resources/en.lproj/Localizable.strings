@@ -34,6 +34,9 @@
 "SLUG-LOCATION-LONGITUDE-PLACEHOLDER"           =   "Enter Longitude";
 "SLUG-LOCATION-RADIUS-PLACEHOLDER"              =   "Enter Radius, in Meters";
 "SLUG-PERFORM-SEARCH"                           =   "SEARCH FOR MEETINGS";
+"SLUG-AUTO-RADIUS-SELECTION-TEXT"               =   "Auto-Radius:";
+"SLUG-AUTO-RADIUS-LABEL-TEXT"                   =   "Minimum:";
+"SLUG-AUTO-RADIUS-NUMBER-PLACEHOLDER"           =   "Num";
 
 "SLUG-DIRECT-URI-ZOOM"                          =   "Zoom";
 "SLUG-DIRECT-URI-GOTOMEETING"                   =   "GotoMeeting";
