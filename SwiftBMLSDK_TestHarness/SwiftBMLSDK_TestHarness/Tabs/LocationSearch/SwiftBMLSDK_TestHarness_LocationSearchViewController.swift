@@ -160,15 +160,6 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
 extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
     /* ################################################################## */
     /**
-     Called when the open map button is hit
-     
-     - parameter: The button (ignored).
-     */
-    @IBAction func openMapButtonHit(_: Any) {
-    }
-    
-    /* ################################################################## */
-    /**
      Called when the new search button is hit.
      
      - parameter: The button (ignored).
@@ -177,11 +168,13 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
         prefs.clearSearchResults()
         myTabController?.updateEnablements()
         throbberView?.isHidden = false
-        prefs.performSearch {
-            self.throbberView?.isHidden = true
-            self.myTabController?.updateEnablements()
-            if !(self.prefs.searchResults?.meetings ?? []).isEmpty {
-                self.myTabController?.selectedIndex = 2
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.prefs.performSearch {
+                self.throbberView?.isHidden = true
+                self.myTabController?.updateEnablements()
+                if !(self.prefs.searchResults?.meetings ?? []).isEmpty {
+                    self.myTabController?.selectedIndex = 2
+                }
             }
         }
     }
@@ -200,6 +193,8 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
               let radText = radiusTextField?.text
         else { return }
         
+        prefs.clearSearchResults()
+
         let center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         
         guard CLLocationCoordinate2DIsValid(center) else { return }
@@ -224,6 +219,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
             locationToggleSwitch?.setOn(!(locationToggleSwitch?.isOn ?? false), animated: true)
             locationToggleSwitch?.sendActions(for: .valueChanged)
         } else if let toggle = inControl as? UISwitch {
+            prefs.clearSearchResults()
             if toggle.isOn {
                 var center = prefs.locationCenter
                 let radius = 0 < prefs.locationRadius ? prefs.locationRadius : Self._defaultRadiusInMeters
@@ -255,6 +251,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
      */
     @IBAction func autoRadiusSwitchHit(_ inControl: UIControl) {
         if let control = inControl as? UISwitch {
+            prefs.clearSearchResults()
             autoRadiusContainer?.isHidden = !control.isOn
             prefs.isAutoRadius = control.isOn
         } else {
@@ -270,6 +267,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
      - parameter inTextField: The text field that changed.
      */
     @IBAction func autoRadiusTextChanged(_ inTextField: UITextField) {
+        prefs.clearSearchResults()
         let min = Int(inTextField.text ?? "0") ?? 0
         inTextField.text = String(format: "%d", min)
         prefs.minimumAutoRadiusMeetings = min

@@ -51,6 +51,7 @@ extension SwiftBMLSDK_TestHarness_TabBarController {
      */
     override func viewDidLoad() {
         super.viewDidLoad()
+        SwiftBMLSDK_TestHarness_Prefs.mainTabController = self
         locationManager.delegate = self
         tabBar.items?.forEach { $0.title = $0.title?.localizedVariant }
     }

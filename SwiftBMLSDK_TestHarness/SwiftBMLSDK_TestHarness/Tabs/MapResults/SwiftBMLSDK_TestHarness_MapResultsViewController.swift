@@ -245,11 +245,14 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
      - parameter sender: The meeting instance.
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
-        guard let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
-              let meetingInstance = inMeeting as? MeetingInstance
-        else { return }
-        
-        destination.meeting = meetingInstance
+        if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
+           let meetingInstance = inMeeting as? MeetingInstance {
+            destination.meeting = meetingInstance
+        } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingListViewController,
+                  let searchResults = prefs.searchResults?.inPersonMeetings,
+                  !searchResults.isEmpty {
+            destination.meetings = searchResults
+        }
     }
 }
 

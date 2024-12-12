@@ -46,8 +46,8 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
     /**
      This has the results of any search we did.
      */
-    private static var _searchResults: SwiftBMLSDK_Parser?
-    
+    private static var _searchResults: SwiftBMLSDK_Parser? { didSet { mainTabController?.updateEnablements() } }
+
     /* ################################################################## */
     /**
      This has the results of a server info query.
@@ -59,6 +59,12 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
      This is our query instance.
      */
     private static var _queryInstance = SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))
+    
+    /* ################################################################## */
+    /**
+     The main tab controller registers itself, here.
+     */
+    public static var mainTabController: SwiftBMLSDK_TestHarness_TabBarController?
 
     /* ################################################################################################################################## */
     // MARK: RVS_PersistentPrefs Conformance

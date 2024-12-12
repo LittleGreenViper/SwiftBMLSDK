@@ -234,7 +234,7 @@ public struct SwiftBMLSDK_Query {
             if !meetingIDs.isEmpty {
                 let ids = meetingIDs.map {
                     let serverID = Int($0 >> 44)
-                    let meetingID = Int($0 & 0x0000FFFFFFFFFFFF)
+                    let meetingID = Int($0 & 0x00000FFFFFFFFFFF)
                     
                     return "(\(serverID),\(meetingID))"
                 }.joined(separator: ",")

@@ -28,6 +28,51 @@
             </objects>
             <point key="canvasLocation" x="-1360" y="-970"/>
         </scene>
+        <!--SwiftBMLSDK Test Harness Meeting List View Controller-->
+        <scene sceneID="gTb-yq-01t">
+            <objects>
+                <viewController id="ueE-98-uFd" customClass="SwiftBMLSDK_TestHarness_MeetingListViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="AW4-Wv-h4I">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="X3n-Pz-gSk">
+                                <rect key="frame" x="16" y="103" width="361" height="715"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="simple-table" id="Ipm-zi-rHg">
+                                        <rect key="frame" x="0.0" y="50" width="361" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ipm-zi-rHg" id="j4g-2X-ITI">
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="ueE-98-uFd" id="Dm8-pc-eFa"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="2uY-gl-gl7"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="X3n-Pz-gSk" firstAttribute="top" secondItem="2uY-gl-gl7" secondAttribute="top" id="0zP-lI-CVa"/>
+                            <constraint firstItem="X3n-Pz-gSk" firstAttribute="bottom" secondItem="2uY-gl-gl7" secondAttribute="bottom" id="4e7-xc-3fo"/>
+                            <constraint firstItem="2uY-gl-gl7" firstAttribute="trailing" secondItem="X3n-Pz-gSk" secondAttribute="trailing" constant="16" id="CMy-el-KKl"/>
+                            <constraint firstItem="X3n-Pz-gSk" firstAttribute="leading" secondItem="2uY-gl-gl7" secondAttribute="leading" constant="16" id="YPy-kV-EGJ"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="G3i-Fr-HKt"/>
+                    <connections>
+                        <outlet property="tableView" destination="X3n-Pz-gSk" id="5EG-Ua-AwQ"/>
+                        <segue destination="y7V-0G-Fls" kind="show" identifier="show-meeting" id="wt8-PE-Q8Q"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kJf-10-acz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-835.87786259541986" y="108.45070422535211"/>
+        </scene>
         <!--Map Results Tab-->
         <scene sceneID="Z7l-Ny-MDp">
             <objects>
@@ -56,7 +101,13 @@
                     <tabBarItem key="tabBarItem" enabled="NO" title="SLUG-TAB-2-TITLE" id="kl0-Bc-U46">
                         <imageReference key="image" image="map" catalog="system" symbolScale="large"/>
                     </tabBarItem>
-                    <navigationItem key="navigationItem" title="Title" id="M0S-m6-dFr"/>
+                    <navigationItem key="navigationItem" title="Title" id="M0S-m6-dFr">
+                        <barButtonItem key="rightBarButtonItem" image="list.dash" catalog="system" id="Pyu-0Q-ZFm">
+                            <connections>
+                                <segue destination="ueE-98-uFd" kind="show" id="hrP-yQ-bGf"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="Jqj-pi-R5r" id="agL-28-8r2"/>
                         <segue destination="y7V-0G-Fls" kind="show" identifier="show-meeting" id="qZN-aA-zsS"/>
@@ -335,7 +386,6 @@
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <state key="normal" title="SLUG-LOCATION-MAP-BUTTON"/>
                                                         <connections>
-                                                            <action selector="openMapButtonHit:" destination="QCj-Xx-X0G" eventType="touchUpInside" id="CIu-oF-6v3"/>
                                                             <segue destination="ZbC-2V-hIk" kind="show" id="Kx9-Et-zQ1"/>
                                                         </connections>
                                                     </button>
@@ -506,7 +556,7 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="S55-mT-kF9"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="JLo-Lw-och"/>
                             </scrollView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XsO-vw-PHG">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XsO-vw-PHG">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="hMu-HB-3vv">
@@ -703,11 +753,11 @@
             <objects>
                 <viewController id="y7V-0G-Fls" customClass="SwiftBMLSDK_TestHarness_MeetingViewController" customModule="SwiftBMLSDK_TestHarness" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NnY-6A-lXo">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="417"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kdJ-fu-ayT">
-                                <rect key="frame" x="0.0" y="59" width="393" height="324"/>
+                                <rect key="frame" x="0.0" y="103" width="393" height="715"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="xvz-mT-MiO">
                                         <rect key="frame" x="16" y="0.0" width="361" height="700"/>
@@ -719,7 +769,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timezone" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oa9-Ry-glJ">
-                                                <rect key="frame" x="143.33333333333334" y="28.666666666666671" width="74.666666666666657" height="20.333333333333329"/>
+                                                <rect key="frame" x="143.33333333333334" y="28.666666666666657" width="74.666666666666657" height="20.333333333333329"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -756,7 +806,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ngw-2W-8J2">
-                                                <rect key="frame" x="162" y="190.33333333333334" width="37" height="18"/>
+                                                <rect key="frame" x="162" y="190.33333333333331" width="37" height="18"/>
                                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -1499,10 +1549,11 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="2JD-up-rXd"/>
-        <segue reference="bXJ-jn-p1s"/>
+        <segue reference="wt8-PE-Q8Q"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="globe" catalog="system" width="128" height="123"/>
+        <image name="list.dash" catalog="system" width="128" height="85"/>
         <image name="magnifyingglass" catalog="system" width="128" height="117"/>
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
