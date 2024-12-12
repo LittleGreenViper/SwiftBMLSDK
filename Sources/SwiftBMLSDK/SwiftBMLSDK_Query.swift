@@ -231,28 +231,39 @@ public struct SwiftBMLSDK_Query {
                 }
             }
             
-            switch type {
-            case .any:
-                break
-            
-            case .inPerson(let isExclusive):
-                ret.append(URLQueryItem(name: "type", value: String(isExclusive ? 2 : 1)))
+            if !meetingIDs.isEmpty {
+                let ids = meetingIDs.map {
+                    let serverID = Int($0 >> 44)
+                    let meetingID = Int($0 & 0x0000FFFFFFFFFFFF)
+                    
+                    return "(\(serverID),\(meetingID))"
+                }.joined(separator: ",")
                 
-            case .virtual(let isExclusive):
-                ret.append(URLQueryItem(name: "type", value: String(isExclusive ? -2 : -1)))
-                if isExclusive {
-                    return ret
+                ret.append(URLQueryItem(name: "ids", value: ids))
+            } else {
+                switch type {
+                case .any:
+                    break
+                    
+                case .inPerson(let isExclusive):
+                    ret.append(URLQueryItem(name: "type", value: String(isExclusive ? 2 : 1)))
+                    
+                case .virtual(let isExclusive):
+                    ret.append(URLQueryItem(name: "type", value: String(isExclusive ? -2 : -1)))
+                    if isExclusive {
+                        return ret
+                    }
+                    
+                case .hybrid:
+                    ret.append(URLQueryItem(name: "type", value: String(3)))
                 }
-            
-            case .hybrid:
-                ret.append(URLQueryItem(name: "type", value: String(3)))
-            }
-            
-            if CLLocationCoordinate2DIsValid(locationCenter),
-               0 < locationRadius {
-                ret.append(URLQueryItem(name: "geocenter_lng", value: String(locationCenter.longitude)))
-                ret.append(URLQueryItem(name: "geocenter_lat", value: String(locationCenter.latitude)))
-                ret.append(URLQueryItem(name: "geo_radius", value: String(locationRadius / 1000)))
+                
+                if CLLocationCoordinate2DIsValid(locationCenter),
+                   0 < locationRadius {
+                    ret.append(URLQueryItem(name: "geocenter_lng", value: String(locationCenter.longitude)))
+                    ret.append(URLQueryItem(name: "geocenter_lat", value: String(locationCenter.latitude)))
+                    ret.append(URLQueryItem(name: "geo_radius", value: String(locationRadius / 1000)))
+                }
             }
             
             return ret
@@ -318,18 +329,26 @@ public struct SwiftBMLSDK_Query {
         
         /* ############################################# */
         /**
+         This returns only meetings that have specific IDs. If this is not empty, then all the other specification parameters are ignored.
+         */
+        public let meetingIDs: [UInt64]
+        
+        /* ############################################# */
+        /**
          This is the default initializer. All parameters are optional, with blank/none defaults.
          
          - parameters:
             - type: The meeting type. Default is any type.
             - locationCenter: The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search. Ignored if the type is exclusive virtual.
             - locationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Ignored if the type is exclusive virtual.
+            - meetingIDs: If this is not empty, then ``type``, ``locationCenter``, and ``locationRadius`` are all ignored, and the search will be for specific meetings by the IDs passed in. Optional. Default is empty.
             - pageSize: The number of results per page. If this is 0, then no results are returned, and only the meta is populated. If left out, or set to a negative number, then all results are returned in one page.
             - page: The page number (0-based). If `pageSize` is 0 or less, this is ignored. If over the maximum number of pages, an empty page is returned.
          */
         public init(type inType: SearchForMeetingType = .any,
                     locationCenter inLocationCenter: CLLocationCoordinate2D = CLLocationCoordinate2D(),
                     locationRadius inLocationRadius: Double = 0,
+                    meetingIDs inMeetingIDs: [UInt64] = [],
                     pageSize inPageSize: Int = -1,
                     page inPageNumber: Int = 0
         ) {
@@ -338,6 +357,7 @@ public struct SwiftBMLSDK_Query {
             type = inType
             locationRadius = inLocationRadius
             locationCenter = inLocationCenter
+            meetingIDs = inMeetingIDs
         }
     }
     
