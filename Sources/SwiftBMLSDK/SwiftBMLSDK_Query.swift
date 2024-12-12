@@ -52,7 +52,7 @@ import CoreLocation // For coordinates
  
  ## Querying the Server
  
- There are only two public query methods:
+ There are only three public query methods:
  
  - ``serverInfo(completion:)``
  This is a method that fetches the general information structure from the server, and presents it as a ``ServerInfo`` struct.
@@ -60,6 +60,9 @@ import CoreLocation // For coordinates
  - ``meetingSearch(specification:completion:)``
  This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function.
  
+ - ``meetingAutoRadiusSearch(minimumNumberOfResults:specification:completion:)``
+ This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (``SearchSpecification.locationCenter``), until the minimum number of meetings specified have been found. The ``SearchSpecification.locationRadius`` specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).
+
  # Dependencies
  
  This type has no dependencies, other than the Foundation and CoreLocation SDKs, provided by Apple.
@@ -364,12 +367,12 @@ public struct SwiftBMLSDK_Query {
 /* ###################################################################################################################################### */
 // MARK: Computed Properties
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_Query {
+public extension SwiftBMLSDK_Query {
     /* ################################################# */
     /**
      Accessor for the base URI.
      */
-    public var serverBaseURI: URL? {
+    var serverBaseURI: URL? {
         get { _serverBaseURI }
         set { _serverBaseURI = newValue }
     }
@@ -378,14 +381,14 @@ extension SwiftBMLSDK_Query {
 /* ###################################################################################################################################### */
 // MARK: Instance Methods
 /* ###################################################################################################################################### */
-extension SwiftBMLSDK_Query {
+public extension SwiftBMLSDK_Query {
     /* ################################################# */
     /**
      Fetches the server info.
      
      - parameter completion: A tail completion proc (may be called in any thread).
      */
-    public func serverInfo(completion inCompletion: @escaping ServerInfoResultCompletion) {
+    func serverInfo(completion inCompletion: @escaping ServerInfoResultCompletion) {
         guard let baseURLString = serverBaseURI?.absoluteString,
               let url = URL(string: "\(baseURLString)?info")
         else {
@@ -481,12 +484,12 @@ extension SwiftBMLSDK_Query {
     
     /* ################################################# */
     /**
-     Perform a server-based search.
-     
+     This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function.
+
      - parameter specification: The search specification.
      - parameter completion: A tail completion proc (may be called in any thread).
      */
-    public func meetingSearch(specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
+    func meetingSearch(specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
         guard let url = serverBaseURI?.appending(queryItems: inSpecification.urlQueryItems) else {
             inCompletion(nil, nil)
             
@@ -525,20 +528,16 @@ extension SwiftBMLSDK_Query {
             }
         }.resume()
     }
-}
 
-/* ###################################################################################################################################### */
-// MARK: - Adds An Auto-Radius Search -
-/* ###################################################################################################################################### */
-extension SwiftBMLSDK_Query {
     /* ################################################# */
     /**
-     Perform a server-based search.
-     
+     This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (``SearchSpecification.locationCenter``), until the minimum number of meetings specified have been found. The ``SearchSpecification.locationRadius`` specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).
+
+     - parameter minimumNumberOfResults: The minimum number of results. At least this many results must be returned (or the search can give up, if it reaches the maximum radius).
      - parameter specification: The search specification.
      - parameter completion: A tail completion proc (may be called in any thread).
      */
-    public func meetingAutoRadiusSearch(minimumNumberOfResults inMinNumber: Int, specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
+    func meetingAutoRadiusSearch(minimumNumberOfResults inMinNumber: Int, specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
         if case .virtual(let isExclusive) = inSpecification.type,
            isExclusive {
             inCompletion(nil, nil)
@@ -551,7 +550,7 @@ extension SwiftBMLSDK_Query {
             var abort = false
             var lastParser: SwiftBMLSDK_Parser?
             
-            while searchRadius <= maxRadius && nil == lastParser && !abort {
+            while searchRadius <= maxRadius && !abort {
                 if !searchInProgress {
                     searchInProgress = true
                     let specification = SearchSpecification(type: inSpecification.type, locationCenter: inSpecification.locationCenter, locationRadius: searchRadius)

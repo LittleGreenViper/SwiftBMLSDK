@@ -234,8 +234,8 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
                 
                 Self.setFloatingPointTextField(latitudeTextField, to: center.latitude)
                 Self.setFloatingPointTextField(longitudeTextField, to: center.longitude)
-                Self.setFloatingPointTextField(radiusTextField, to: radius)
-                
+                radiusTextField?.text = String(format: "%d", Int(radius))
+
                 prefs.locationRadius = radius
                 prefs.locationCenter = center
                 
@@ -334,6 +334,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
         autoRadiusSwitch?.isOn = prefs.isAutoRadius
         autoRadiusContainer?.isHidden = !prefs.isAutoRadius
         autoRadiusTextField?.text = String(format: "%d", prefs.minimumAutoRadiusMeetings)
+
         if nil == prefs.locationRegion {
             throbberView?.isHidden = false
             prefs.locationRadius = 0 < prefs.locationRadius ? prefs.locationRadius : Self._defaultRadiusInMeters
@@ -357,7 +358,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController {
         
         Self.setFloatingPointTextField(latitudeTextField, to: center.latitude)
         Self.setFloatingPointTextField(longitudeTextField, to: center.longitude)
-        Self.setFloatingPointTextField(radiusTextField, to: radius)
+        radiusTextField?.text = String(format: "%d", Int(radius))
 
         prefs.isDirty = false
     }
