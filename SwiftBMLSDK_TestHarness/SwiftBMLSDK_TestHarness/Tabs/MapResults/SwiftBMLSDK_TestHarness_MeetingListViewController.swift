@@ -62,6 +62,9 @@ class SwiftBMLSDK_TestHarness_MeetingListViewController: SwiftBMLSDK_TestHarness
 // MARK: Base Class Overrides
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_MeetingListViewController {
+    /* ############################################################## */
+    /**
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         idSearchBarButton?.title = idSearchBarButton?.title?.localizedVariant
@@ -89,7 +92,7 @@ extension SwiftBMLSDK_TestHarness_MeetingListViewController: UITableViewDataSour
     /* ############################################################## */
     /**
      */
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { meetings.count }
+    func tableView(_: UITableView, numberOfRowsInSection: Int) -> Int { meetings.count }
 
     /* ############################################################## */
     /**
