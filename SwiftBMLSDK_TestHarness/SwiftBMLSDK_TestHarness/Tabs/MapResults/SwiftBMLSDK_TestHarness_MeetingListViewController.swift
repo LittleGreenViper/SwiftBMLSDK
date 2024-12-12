@@ -48,9 +48,38 @@ class SwiftBMLSDK_TestHarness_MeetingListViewController: SwiftBMLSDK_TestHarness
     
     /* ############################################################## */
     /**
+     */
+    @IBOutlet weak var idSearchBarButton: UIBarButtonItem?
+    
+    /* ############################################################## */
+    /**
      The main table view
      */
     @IBOutlet weak var tableView: UITableView?
+}
+
+/* ###################################################################################################################################### */
+// MARK: Base Class Overrides
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_MeetingListViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        idSearchBarButton?.title = idSearchBarButton?.title?.localizedVariant
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: Callbacks
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_MeetingListViewController {
+    /* ############################################################## */
+    /**
+     */
+    @IBAction func idSearchButtonHit(_: UIBarButtonItem) {
+        let ids = meetings.map { $0.id }
+        
+        print("IDs: \(ids)")
+    }
 }
 
 /* ###################################################################################################################################### */

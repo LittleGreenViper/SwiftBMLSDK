@@ -63,8 +63,15 @@
                             <constraint firstItem="X3n-Pz-gSk" firstAttribute="leading" secondItem="2uY-gl-gl7" secondAttribute="leading" constant="16" id="YPy-kV-EGJ"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="G3i-Fr-HKt"/>
+                    <navigationItem key="navigationItem" id="G3i-Fr-HKt">
+                        <barButtonItem key="rightBarButtonItem" title="SLUG-ID-SEARCH-BAR-BUTTON" id="Avm-SP-NqZ">
+                            <connections>
+                                <action selector="idSearchButtonHit:" destination="ueE-98-uFd" id="7BO-qD-9qP"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="idSearchBarButton" destination="Avm-SP-NqZ" id="y92-Ix-F5v"/>
                         <outlet property="tableView" destination="X3n-Pz-gSk" id="5EG-Ua-AwQ"/>
                         <segue destination="y7V-0G-Fls" kind="show" identifier="show-meeting" id="wt8-PE-Q8Q"/>
                     </connections>
@@ -1558,7 +1565,7 @@
         <image name="map" catalog="system" width="128" height="112"/>
         <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
         <namedColor name="AccentColor">
-            <color red="0.31400001049041748" green="0.37999999523162842" blue="0.89399999380111694" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

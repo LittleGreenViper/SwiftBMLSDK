@@ -46,7 +46,7 @@ class SwiftBMLSDK_TestHarness_Prefs: RVS_PersistentPrefs {
     /**
      This has the results of any search we did.
      */
-    private static var _searchResults: SwiftBMLSDK_Parser? { didSet { mainTabController?.updateEnablements() } }
+    private static var _searchResults: SwiftBMLSDK_Parser? { didSet { DispatchQueue.main.async { mainTabController?.updateEnablements() } } }
 
     /* ################################################################## */
     /**
@@ -310,6 +310,7 @@ extension SwiftBMLSDK_TestHarness_Prefs {
     public func performSearch(completion inCompletion: @escaping () -> Void) {
         clearSearchResults()
         if isAutoRadius,
+           0 < locationRadius,
            0 < minimumAutoRadiusMeetings {
             queryInstance.meetingAutoRadiusSearch(minimumNumberOfResults: minimumAutoRadiusMeetings, specification: SwiftBMLSDK_Query.SearchSpecification(type: .inPerson(isExclusive: false), locationCenter: locationCenter, locationRadius: locationRadius)) { inSearchResults, inError in
                 Self._searchResults = inSearchResults
