@@ -566,7 +566,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
                 guard let ret = ret,
                       nil == getenv("SKIP_CANOPEN"),
                       UIApplication.shared.canOpenURL(ret)
-            else { return nil != getenv("SKIP_CANOPEN") ? ret : nil }
+                else { return nil != getenv("SKIP_CANOPEN") ? ret : nil }
             #endif
             
             return ret

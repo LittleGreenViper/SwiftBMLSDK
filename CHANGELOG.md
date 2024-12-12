@@ -1,4 +1,4 @@
- **1.1.0** *December 11, 2024*
+ **1.1.0** *December 12, 2024*
  
  - Added an auto-radius search to the query struct.
  
