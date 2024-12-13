@@ -72,7 +72,7 @@ extension SwiftBMLSDK_TestHarness_MeetingListViewController {
         prefs.queryInstance.meetingSearch(specification: specification) { inSearchResults, inError in
             if let searchResults = inSearchResults?.meetings,
                !searchResults.isEmpty {
-                self.meetings = searchResults
+                self.meetings = searchResults.sorted()
             }
             DispatchQueue.main.async { inCompletion() }
         }
@@ -128,7 +128,7 @@ extension SwiftBMLSDK_TestHarness_MeetingListViewController: UITableViewDataSour
         
         var meeting = meetings[inIndexPath.row]
 
-        let nextDate = meeting.getNextStartDate(isAdjusted: true)
+        let nextDate = meeting.getNextStartDate(isAdjusted: false)
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
         let weekday = formatter.string(from: nextDate)

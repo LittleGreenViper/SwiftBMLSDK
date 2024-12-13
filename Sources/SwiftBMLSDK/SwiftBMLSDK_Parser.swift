@@ -251,7 +251,43 @@ public struct SwiftBMLSDK_Parser: Encodable {
      
      > NOTE: There is a platform-dependent extension that adds the ``SwiftBMLSDK_Parser/Meeting/directAppURI`` computed property to this type.
      */
-    public struct Meeting {
+    public struct Meeting: Comparable {
+        // MARK: Comparable Conformance
+        /* ############################################# */
+        /**
+         - parameter lhs: The left-hand side of the comparison.
+         - parameter rhs: The right-hand side of the comparison.
+         
+         - returns: True, if lhs < rhs
+         */
+        public static func < (lhs: SwiftBMLSDK_Parser.Meeting, rhs: SwiftBMLSDK_Parser.Meeting) -> Bool {
+            if let nextLHSCahcedDate = lhs._cachedNextDate,
+               let nextRHSCahcedDate = rhs._cachedNextDate,
+               nextLHSCahcedDate != nextRHSCahcedDate {
+                return nextLHSCahcedDate < nextRHSCahcedDate
+            } else {
+                let lhsAdjustedNow = Date.now._convert(from: .current, to: lhs.timeZone)
+                let rhsAdjustedNow = Date.now._convert(from: .current, to: rhs.timeZone)
+
+                // We make the components from scratch, because that's faster.
+                let lhsHour = lhs.integerStartTime / 100
+                let lhsMinute = lhs.integerStartTime - (lhsHour * 100)
+                let rhsHour = rhs.integerStartTime / 100
+                let rhsMinute = rhs.integerStartTime - (rhsHour * 100)
+
+                let lhsDateComp = DateComponents(hour: lhsHour, minute: lhsMinute, weekday: lhs.weekday)
+                let rhsDateComp = DateComponents(hour: rhsHour, minute: rhsMinute, weekday: rhs.weekday)
+
+                // The reason for all the cache shenanigans, is because `Calendar.current.nextDate` is REALLY EXPENSIVE, in regards to performance, so we try to use a cache, where possible.
+                if let lhsNextDate = Calendar.current.nextDate(after: lhsAdjustedNow, matching: lhsDateComp, matchingPolicy: .nextTimePreservingSmallerComponents),
+                   let rhsNextDate = Calendar.current.nextDate(after: rhsAdjustedNow, matching: rhsDateComp, matchingPolicy: .nextTimePreservingSmallerComponents) {
+                    return lhsNextDate < rhsNextDate ? true : lhsNextDate > rhsNextDate ? false : lhs.sortableMeetingType < rhs.sortableMeetingType ? true : lhs.sortableMeetingType > rhs.sortableMeetingType ? false : lhs.name < rhs.name
+                } else {
+                    return false
+                }
+            }
+        }
+        
         /* ############################################################################################################################## */
         // MARK: Format Information Container
         /* ############################################################################################################################## */

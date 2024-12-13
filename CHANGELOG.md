@@ -1,3 +1,7 @@
+ **1.1.2** *December 12, 2024*
+ 
+ - Made the meetings sortable.
+ 
  **1.1.1** *December 12, 2024*
  
   - Added an ID-specific search.

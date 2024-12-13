@@ -251,7 +251,7 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
         } else if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingListViewController,
                   let searchResults = prefs.searchResults?.inPersonMeetings,
                   !searchResults.isEmpty {
-            destination.meetings = searchResults
+            destination.meetings = searchResults.sorted()
         }
     }
 }
