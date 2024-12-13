@@ -1,3 +1,7 @@
+ **1.1.3** *December 13, 2024*
+ 
+ - Added the `distanceFrom(_:)` method to the meeting struct.
+ 
  **1.1.2** *December 12, 2024*
  
  - Made the meetings sortable.

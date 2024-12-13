@@ -879,6 +879,19 @@ public struct SwiftBMLSDK_Parser: Encodable {
             else { return nil }
             return CLLocation(latitude: lat, longitude: lng)
         }
+        
+        /* ################################################################## */
+        /**
+         This returns the distance between the instance, and another location, provided as coordinates.
+         
+         - parameter inCoords: The coordinates we are measuring from.
+         - returns: The distance, in meters (always positive). -1, if no distance possible.
+         */
+        public func distanceFrom(_ inCoords: CLLocationCoordinate2D) -> CLLocationDistance {
+            guard let coords = location?.coordinate else { return -1 }
+            let compLocation = CLLocation(latitude: inCoords.latitude, longitude: inCoords.longitude)
+            return CLLocation(latitude: coords.latitude, longitude: coords.longitude).distance(from: compLocation)
+        }
     }
 
     // MARK: Public Immutable Properties
