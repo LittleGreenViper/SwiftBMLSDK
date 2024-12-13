@@ -1,3 +1,7 @@
+ **1.1.1** *December 12, 2024*
+ 
+  - Added an ID-specific search.
+
  **1.1.0** *December 12, 2024*
  
  - Added an auto-radius search to the query struct.

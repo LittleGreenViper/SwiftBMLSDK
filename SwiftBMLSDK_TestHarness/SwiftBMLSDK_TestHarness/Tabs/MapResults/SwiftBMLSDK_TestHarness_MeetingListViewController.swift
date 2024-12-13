@@ -59,6 +59,27 @@ class SwiftBMLSDK_TestHarness_MeetingListViewController: SwiftBMLSDK_TestHarness
 }
 
 /* ###################################################################################################################################### */
+// MARK: Instance Methods
+/* ###################################################################################################################################### */
+extension SwiftBMLSDK_TestHarness_MeetingListViewController {
+    /* ############################################################## */
+    /**
+     - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.
+     */
+    public func performSearch(completion inCompletion: @escaping () -> Void) {
+        let meetingIDs = meetings.map(\.id)
+        let specification = SwiftBMLSDK_Query.SearchSpecification(type: .inPerson(isExclusive: false), meetingIDs: meetingIDs)
+        prefs.queryInstance.meetingSearch(specification: specification) { inSearchResults, inError in
+            if let searchResults = inSearchResults?.meetings,
+               !searchResults.isEmpty {
+                self.meetings = searchResults
+            }
+            DispatchQueue.main.async { inCompletion() }
+        }
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: Base Class Overrides
 /* ###################################################################################################################################### */
 extension SwiftBMLSDK_TestHarness_MeetingListViewController {
@@ -82,6 +103,11 @@ extension SwiftBMLSDK_TestHarness_MeetingListViewController {
         let ids = meetings.map { $0.id }
         
         print("IDs: \(ids)")
+        
+        performSearch {
+            print("Meetings: \(self.meetings)")
+            self.tableView?.reloadData()
+        }
     }
 }
 
