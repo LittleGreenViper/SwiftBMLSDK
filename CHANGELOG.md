@@ -1,3 +1,7 @@
+ **1.1.4** *December 13, 2024*
+ 
+ - Added the `distanceInMeters` property to the meeting struct.
+ 
  **1.1.3** *December 13, 2024*
  
  - Added the `distanceFrom(_:)` method to the meeting struct.

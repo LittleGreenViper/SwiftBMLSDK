@@ -120,7 +120,13 @@ public struct SwiftBMLSDK_Parser: Encodable {
      
      - parameter inDictionary: The partly-parsed raw JSON
      */
-    private static func _parseMeeting(_ inDictionary: [String: Any]) -> Meeting? { Meeting(inDictionary) }
+    private static func _parseMeeting(_ inDictionary: [String: Any]) -> Meeting? { Meeting(inDictionary, searchCenter: _searchCenter) }
+    
+    /* ################################################# */
+    /**
+     This holds the search center of the last search. Used for distance calculations.
+     */
+    private static var _searchCenter: CLLocationCoordinate2D?
     
     // MARK: Internal Initializer
     
@@ -137,6 +143,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
               let meetingsJSON = simpleJSON["meetings"] as? [[String: Any]],
               !meetingsJSON.isEmpty
         else { return nil }
+        Self._searchCenter = CLLocationCoordinate2DIsValid(inSpecification.locationCenter) ? inSpecification.locationCenter : nil
         self.meta = meta
         self.meetings = meetingsJSON.compactMap {
             let ret = Self._parseMeeting($0)
@@ -401,8 +408,9 @@ public struct SwiftBMLSDK_Parser: Encodable {
          This is a failable initializer, it parses an input dictionary.
          
          - parameter inDictionary: The semi-parsed JSON record for the meeting.
+         - parameter searchCenter: The center for a distance search. Nil, if not a distance search.
          */
-        internal init?(_ inDictionary: [String: Any]) {
+        internal init?(_ inDictionary: [String: Any], searchCenter inSearchCenter: CLLocationCoordinate2D?) {
             /* ########################################### */
             /**
              "Cleans" a URI.
@@ -568,6 +576,17 @@ public struct SwiftBMLSDK_Parser: Encodable {
             }
             
             self.coords = coords
+            
+            if let searchCenter = inSearchCenter,
+               let coords = coords,
+               CLLocationCoordinate2DIsValid(coords),
+               CLLocationCoordinate2DIsValid(searchCenter) {
+                let myLocation = CLLocation(latitude: coords.latitude, longitude: coords.longitude)
+                let compLocation = CLLocation(latitude: searchCenter.latitude, longitude: searchCenter.longitude)
+                self.distanceInMeters = myLocation.distance(from: compLocation)
+            } else {
+                self.distanceInMeters = -1
+            }
         }
 
         // MARK: Public Interface
@@ -685,6 +704,12 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
         // MARK: Public Instance Properties
         
+        /* ################################################################## */
+        /**
+         The distance of this meeting, from the search center, or a specified "distance from" refinement. -1, if invalid.
+         */
+        public let distanceInMeters: CLLocationDistance
+
         /* ################################################# */
         /**
          This is the unique ID (within the found set) for the data source server.

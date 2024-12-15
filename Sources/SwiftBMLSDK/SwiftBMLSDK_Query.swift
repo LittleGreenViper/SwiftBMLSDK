@@ -565,7 +565,7 @@ public extension SwiftBMLSDK_Query {
                   0 < inMinNumber {
             let maxRadius = 0 < inSpecification.locationRadius ? inSpecification.locationRadius : 100000
             
-            var searchRadius = CLLocationDistance(1)
+            var searchRadius = CLLocationDistance(10)   // We start with ten meters.
             var searchInProgress = false
             var abort = false
             var lastParser: SwiftBMLSDK_Parser?
