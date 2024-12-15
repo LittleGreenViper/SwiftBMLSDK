@@ -313,11 +313,11 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 - language: The language code.
              */
             internal init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) {
-                key = inKey
-                name = inName
-                description = inDescription
-                language = inLanguage
-                id = inID
+                key = inKey.removingPercentEncoding ?? ""
+                name = inName.removingPercentEncoding ?? ""
+                description = inDescription.removingPercentEncoding ?? ""
+                language = inLanguage.removingPercentEncoding ?? ""
+                id = inID.removingPercentEncoding ?? ""
             }
 
             /* ############################################# */
@@ -486,7 +486,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
             self.formats = (inDictionary["formats"] as? [[String: Any]] ?? []).compactMap { Format($0) }.sorted()
 
-            self.name = (inDictionary["name"] as? String) ?? ""
+            self.name = ((inDictionary["name"] as? String)?.removingPercentEncoding ?? "")
 
             var fixedCoords = CLLocationCoordinate2D()
             
@@ -508,7 +508,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 self.timeZone = .current
             }
 
-            if let comments = inDictionary["comments"] as? String,
+            if let comments = (inDictionary["comments"] as? String)?.removingPercentEncoding,
                !comments.isEmpty {
                 self.comments = comments
             } else {
@@ -527,9 +527,9 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 mutableGoPostal.postalCode = (physicalAddress["postal_code"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 mutableGoPostal.country = (physicalAddress["nation"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 self.inPersonAddress = mutableGoPostal
-                let locationInfo = (physicalAddress["info"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                let locationInfo = (physicalAddress["info"]?.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 self.locationInfo = locationInfo.isEmpty ? nil : locationInfo
-                let inPersonVenueName = physicalAddress["name"]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                let inPersonVenueName = physicalAddress["name"]?.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
                 self.inPersonVenueName = inPersonVenueName.isEmpty ? nil : inPersonVenueName
             } else {
                 coords = nil
@@ -560,7 +560,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 
                 splitsville = (virtualMeetingInfo["info"] ?? "").split(separator: "#@-@#")
                 splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
-                let virtualInfo = splitString.trimmingCharacters(in: .whitespacesAndNewlines)
+                let virtualInfo = splitString.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
                 self.virtualInfo = virtualInfo.isEmpty ? nil : virtualInfo
             } else {
                 self.virtualURL = nil

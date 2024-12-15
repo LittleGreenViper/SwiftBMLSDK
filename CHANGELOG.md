@@ -1,3 +1,7 @@
+ **1.1.5** *December 15, 2024*
+ 
+ - Remove percent encoding (data hygiene).
+ 
  **1.1.4** *December 13, 2024*
  
  - Added the `distanceInMeters` property to the meeting struct.
