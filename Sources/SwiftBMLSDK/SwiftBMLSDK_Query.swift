@@ -586,7 +586,7 @@ public extension SwiftBMLSDK_Query {
                             }
                         }
                         
-                        searchRadius *= 1.1
+                        searchRadius *= 10000 > searchRadius ? 1.2 : 1.1
                     }
                 }
             }

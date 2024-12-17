@@ -1,3 +1,7 @@
+ **1.1.6** *December 17, 2024*
+ 
+ - I now change the way the search radius expands, depending on its scope.
+ 
  **1.1.5** *December 15, 2024*
  
  - Remove percent encoding (data hygiene).
