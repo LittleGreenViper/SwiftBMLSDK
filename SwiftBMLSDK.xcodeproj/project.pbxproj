@@ -32,6 +32,7 @@
 		D4045C202B76895A0086E1B7 /* MeetingDump.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MeetingDump.json; sourceTree = "<group>"; };
 		D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftBMLSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftBMLSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D42F770F2D368C9100911642 /* SwiftBMLSDK_TestHarness.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SwiftBMLSDK_TestHarness.xcodeproj; path = ../SwiftBMLSDK_TestHarness/SwiftBMLSDK_TestHarness.xcodeproj; sourceTree = "<group>"; };
 		D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Tests.swift; sourceTree = "<group>"; };
 		D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftBMLSDK_Parser_ExtensionTests.swift; sourceTree = "<group>"; };
 		D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftBMLSDK.docc; sourceTree = "<group>"; };
@@ -105,6 +106,7 @@
 		D4675D162B73C1E400139CC3 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				D42F770F2D368C9100911642 /* SwiftBMLSDK_TestHarness.xcodeproj */,
 				D4675D172B73C1E400139CC3 /* SwiftBMLSDKTests */,
 			);
 			path = Tests;

@@ -1,3 +1,7 @@
+ **1.1.7** *January 14, 2025*
+ 
+ - Added "Belt and supenders" URL decoding to the various text fields, as there might actually be double-encoded data (data hygiene).
+ 
  **1.1.6** *December 17, 2024*
  
  - I now change the way the search radius expands, depending on its scope.
