@@ -26,6 +26,13 @@
 			remoteGlobalIDString = D41620342B73C17F00E6E0CA;
 			remoteInfo = SwiftMLSDK;
 		};
+		D42334F92D36929100680F95 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D42F770F2D368C9100911642 /* SwiftBMLSDK_TestHarness.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D488D2912B82CE3F000979D9;
+			remoteInfo = SwiftBMLSDK_TestHarness;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +87,14 @@
 			children = (
 				D41620352B73C17F00E6E0CA /* SwiftBMLSDK.framework */,
 				D416203F2B73C17F00E6E0CA /* SwiftBMLSDKTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D42334F62D36929100680F95 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D42334FA2D36929100680F95 /* SwiftBMLSDK_TestHarness.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -202,6 +217,12 @@
 			);
 			productRefGroup = D41620362B73C17F00E6E0CA /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = D42334F62D36929100680F95 /* Products */;
+					ProjectRef = D42F770F2D368C9100911642 /* SwiftBMLSDK_TestHarness.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				D41620342B73C17F00E6E0CA /* SwiftBMLSDK */,
@@ -209,6 +230,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		D42334FA2D36929100680F95 /* SwiftBMLSDK_TestHarness.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = SwiftBMLSDK_TestHarness.app;
+			remoteRef = D42334F92D36929100680F95 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		D41620332B73C17F00E6E0CA /* Resources */ = {
