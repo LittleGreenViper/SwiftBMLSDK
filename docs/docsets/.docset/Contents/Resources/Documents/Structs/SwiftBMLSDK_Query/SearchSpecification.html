@@ -297,9 +297,36 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV4type14locationCenter0G6Radius8pageSize0J0A2E0D14ForMeetingTypeO_So22CLLocationCoordinate2DVSdS2itcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(type:locationCenter:locationRadius:pageSize:page:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV4type14locationCenter0G6Radius8pageSize0J0A2E0D14ForMeetingTypeO_So22CLLocationCoordinate2DVSdS2itcfc">init(type:<wbr>locationCenter:<wbr>locationRadius:<wbr>pageSize:<wbr>page:<wbr>)</a>
+                    <a name="/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV10meetingIDsSays6UInt64VGvp"></a>
+                    <a name="//apple_ref/swift/Property/meetingIDs" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV10meetingIDsSays6UInt64VGvp">meetingIDs</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This returns only meetings that have specific IDs. If this is not empty, then all the other specification parameters are ignored.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">meetingIDs</span><span class="p">:</span> <span class="p">[</span><span class="kt">UInt64</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV4type14locationCenter0G6Radius10meetingIDs8pageSize0L0A2E0D14ForMeetingTypeO_So22CLLocationCoordinate2DVSdSays6UInt64VGS2itcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(type:locationCenter:locationRadius:meetingIDs:pageSize:page:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV4type14locationCenter0G6Radius10meetingIDs8pageSize0L0A2E0D14ForMeetingTypeO_So22CLLocationCoordinate2DVSdSays6UInt64VGS2itcfc">init(type:<wbr>locationCenter:<wbr>locationRadius:<wbr>meetingIDs:<wbr>pageSize:<wbr>page:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -317,6 +344,7 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n"><a href="../../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV4typeAE0D14ForMeetingTypeOvp">type</a></span> <span class="nv">inType</span><span class="p">:</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Query/SearchSpecification/SearchForMeetingType.html">SearchForMeetingType</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">any</span><span class="p">,</span>
             <span class="n"><a href="../../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV14locationCenterSo22CLLocationCoordinate2DVvp">locationCenter</a></span> <span class="nv">inLocationCenter</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span> <span class="o">=</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">(),</span>
             <span class="n"><a href="../../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV14locationRadiusSdvp">locationRadius</a></span> <span class="nv">inLocationRadius</span><span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n"><a href="../../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV10meetingIDsSays6UInt64VGvp">meetingIDs</a></span> <span class="nv">inMeetingIDs</span><span class="p">:</span> <span class="p">[</span><span class="kt">UInt64</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
             <span class="n"><a href="../../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV8pageSizeSivp">pageSize</a></span> <span class="nv">inPageSize</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">page</span> <span class="nv">inPageNumber</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="p">)</span></code></pre>
@@ -366,6 +394,18 @@
                             <tr>
                               <td>
                                 <code>
+                                <em>meetingIDs</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If this is not empty, then <code><a href="../../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV4typeAE0D14ForMeetingTypeOvp">type</a></code>, <code><a href="../../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV14locationCenterSo22CLLocationCoordinate2DVvp">locationCenter</a></code>, and <code><a href="../../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV14locationRadiusSdvp">locationRadius</a></code> are all ignored, and the search will be for specific meetings by the IDs passed in. Optional. Default is empty.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
                                 <em>pageSize</em>
                                 </code>
                               </td>
@@ -401,7 +441,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-08-06)</p>
+      <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-05-26)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>

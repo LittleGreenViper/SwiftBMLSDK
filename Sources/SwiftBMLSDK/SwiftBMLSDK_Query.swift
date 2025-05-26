@@ -1,5 +1,5 @@
 /*
- © Copyright 2024, Little Green Viper Software Development LLC
+ © Copyright 2024 - 2025, Little Green Viper Software Development LLC
  LICENSE:
  
  MIT License
@@ -365,7 +365,7 @@ public struct SwiftBMLSDK_Query {
     /**
      The session that is used to manage interactions with the server.
      */
-    private let _session = URLSession(configuration: .default)
+    private let _session: URLSession
     
     /* ################################################# */
     /**
@@ -381,6 +381,10 @@ public struct SwiftBMLSDK_Query {
      */
     public init(serverBaseURI inServerBaseURI: URL? = nil) {
         _serverBaseURI = inServerBaseURI
+        let config = URLSessionConfiguration.default
+        // This is for working in the simulator. Sometimes, it borks QUIC
+        config.httpAdditionalHeaders = ["Alt-Svc": "clear"]
+        _session = URLSession(configuration: config)
     }
 }
 

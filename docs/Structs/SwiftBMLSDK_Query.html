@@ -144,13 +144,15 @@
 <p>There are limited parameters to queries, as it is expected that most of the filtering and sorting will be performed on the found set of meeting instances.</p>
 <h2 id='querying-the-server' class='heading'>Querying the Server</h2>
 
-<p>There are only two public query methods:</p>
+<p>There are only three public query methods:</p>
 
 <ul>
 <li><p><code>serverInfo(completion:)</code>
 This is a method that fetches the general information structure from the server, and presents it as a <code>ServerInfo</code> struct.</p></li>
 <li><p><code>meetingSearch(specification:completion:)</code>
 This actually queries the server for a set of meetings, based on a <code>SearchSpecification</code> instance, and provides an instance of <code><a href="../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></code> to a completion function.</p></li>
+<li><p><code>meetingAutoRadiusSearch(minimumNumberOfResults:specification:completion:)</code>
+This actually queries the server for a set of meetings, based on a <code>SearchSpecification</code> instance, and provides an instance of <code><a href="../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></code> to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (<code>SearchSpecification.locationCenter</code>), until the minimum number of meetings specified have been found. The <code>SearchSpecification.locationRadius</code> specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).</p></li>
 </ul>
 <h1 id='dependencies' class='heading'>Dependencies</h1>
 
@@ -390,7 +392,7 @@ This actually queries the server for a set of meetings, based on a <code>SearchS
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">serverBaseURI</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">serverBaseURI</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -430,7 +432,7 @@ This actually queries the server for a set of meetings, based on a <code>SearchS
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">serverInfo</span><span class="p">(</span><span class="n">completion</span> <span class="nv">inCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Structs/SwiftBMLSDK_Query.html#/s:11SwiftBMLSDK0aB6_QueryV26ServerInfoResultCompletiona">ServerInfoResultCompletion</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">serverInfo</span><span class="p">(</span><span class="n">completion</span> <span class="nv">inCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Structs/SwiftBMLSDK_Query.html#/s:11SwiftBMLSDK0aB6_QueryV26ServerInfoResultCompletiona">ServerInfoResultCompletion</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -469,14 +471,14 @@ This actually queries the server for a set of meetings, based on a <code>SearchS
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Perform a server-based search.</p>
+                        <p>This actually queries the server for a set of meetings, based on a <code><a href="../Structs/SwiftBMLSDK_Query/SearchSpecification.html">SearchSpecification</a></code> instance, and provides an instance of <code><a href="../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></code> to a completion function.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">meetingSearch</span><span class="p">(</span><span class="n">specification</span> <span class="nv">inSpecification</span><span class="p">:</span> <span class="kt"><a href="../Structs/SwiftBMLSDK_Query/SearchSpecification.html">SearchSpecification</a></span><span class="p">,</span> <span class="n">completion</span> <span class="nv">inCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Structs/SwiftBMLSDK_Query.html#/s:11SwiftBMLSDK0aB6_QueryV0C16ResultCompletiona">QueryResultCompletion</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">meetingSearch</span><span class="p">(</span><span class="n">specification</span> <span class="nv">inSpecification</span><span class="p">:</span> <span class="kt"><a href="../Structs/SwiftBMLSDK_Query/SearchSpecification.html">SearchSpecification</a></span><span class="p">,</span> <span class="n">completion</span> <span class="nv">inCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Structs/SwiftBMLSDK_Query.html#/s:11SwiftBMLSDK0aB6_QueryV0C16ResultCompletiona">QueryResultCompletion</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -484,6 +486,76 @@ This actually queries the server for a set of meetings, based on a <code>SearchS
                         <h4>Parameters</h4>
                         <table class="graybox">
                           <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>specification</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The search specification.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A tail completion proc (may be called in any thread).</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB6_QueryV23meetingAutoRadiusSearch22minimumNumberOfResults13specification10completionySi_AC0G13SpecificationVyAA0aB7_ParserVSg_s5Error_pSgtctF"></a>
+                    <a name="//apple_ref/swift/Method/meetingAutoRadiusSearch(minimumNumberOfResults:specification:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB6_QueryV23meetingAutoRadiusSearch22minimumNumberOfResults13specification10completionySi_AC0G13SpecificationVyAA0aB7_ParserVSg_s5Error_pSgtctF">meetingAutoRadiusSearch(minimumNumberOfResults:<wbr>specification:<wbr>completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This actually queries the server for a set of meetings, based on a <code><a href="../Structs/SwiftBMLSDK_Query/SearchSpecification.html">SearchSpecification</a></code> instance, and provides an instance of <code><a href="../Structs/SwiftBMLSDK_Parser.html">SwiftBMLSDK_Parser</a></code> to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (<code><a href="../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV14locationCenterSo22CLLocationCoordinate2DVvp">SearchSpecification.locationCenter</a></code>), until the minimum number of meetings specified have been found. The <code><a href="../Structs/SwiftBMLSDK_Query/SearchSpecification.html#/s:11SwiftBMLSDK0aB6_QueryV19SearchSpecificationV14locationRadiusSdvp">SearchSpecification.locationRadius</a></code> specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">meetingAutoRadiusSearch</span><span class="p">(</span><span class="n">minimumNumberOfResults</span> <span class="nv">inMinNumber</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">specification</span> <span class="nv">inSpecification</span><span class="p">:</span> <span class="kt"><a href="../Structs/SwiftBMLSDK_Query/SearchSpecification.html">SearchSpecification</a></span><span class="p">,</span> <span class="n">completion</span> <span class="nv">inCompletion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Structs/SwiftBMLSDK_Query.html#/s:11SwiftBMLSDK0aB6_QueryV0C16ResultCompletiona">QueryResultCompletion</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>minimumNumberOfResults</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The minimum number of results. At least this many results must be returned (or the search can give up, if it reaches the maximum radius).</p>
+                                </div>
+                              </td>
+                            </tr>
                             <tr>
                               <td>
                                 <code>
@@ -522,7 +594,7 @@ This actually queries the server for a set of meetings, based on a <code>SearchS
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-08-06)</p>
+      <p>&copy; 2025 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2025-05-26)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>

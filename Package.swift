@@ -1,6 +1,6 @@
 // swift-tools-version:5.7
 /*
- © Copyright 2024, Little Green Viper Software Development LLC
+ © Copyright 2024 - 2025, Little Green Viper Software Development LLC
  LICENSE:
  
  MIT License

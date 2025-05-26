@@ -1,3 +1,7 @@
+ **1.1.8** *May 26, 2025*
+ 
+ - Added a rather ineffective QUIC fix for simulator network issues. I think I'll have to wait for Apple to fix it.
+ 
  **1.1.7** *January 14, 2025*
  
  - Added "Belt and supenders" URL decoding to the various text fields, as there might actually be double-encoded data (data hygiene).
