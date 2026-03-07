@@ -1,3 +1,7 @@
+ **1.2.1** *March 7, 2026*
+ 
+ - Fixed visibility issue.
+ 
  **1.2.0** *March 7, 2026*
  
  - Added support for localized address and time.

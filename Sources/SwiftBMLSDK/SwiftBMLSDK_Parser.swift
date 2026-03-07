@@ -1022,7 +1022,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         /* ################################################################## */
         /**
          */
-        mutating func localizedWeekdayTimeString(
+        public mutating func localizedWeekdayTimeString(
             style: LocalWeekdayTimeStyle = .userPreferredTime,
             locale: Locale = .autoupdatingCurrent,
             calendar: Calendar = .autoupdatingCurrent,
@@ -1380,7 +1380,7 @@ extension SwiftBMLSDK_Parser.Meeting {
     /**
      Internal Enum for the time localization.
      */
-    enum LocalWeekdayTimeStyle {
+    public enum LocalWeekdayTimeStyle {
         case userPreferredTime     // e.g. "Sunday, 10:30 PM" or locale equivalent
         case twentyFourHourCompact // e.g. "Sunday, 2230"
     }
