@@ -371,8 +371,8 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController: UITextFieldDeleg
      Called when the user enters text. We use this to filter for only numbers and whatnot
      
      - parameter inTextField: The text field getting the characters.
-     - parameter shouldChangeCharactersIn: The range of characters in the existing text, being replaced.
-     - parameter replacementString: The string that we want to replace them with.
+     - parameter inRange: The range of characters in the existing text, being replaced.
+     - parameter inString: The string that we want to replace them with.
      */
     func textField(_ inTextField: UITextField, shouldChangeCharactersIn inRange: NSRange, replacementString inString: String) -> Bool {
         guard let testString = (inTextField.text as NSString?)?.replacingCharacters(in: inRange, with: inString),
@@ -397,7 +397,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController: CLLocationManage
      Callback to handle errors. We simply turn off autolocation, and proceed.
      
      - parameter inManager: The Location Manager object that had the error.
-     - parameter didFailWithError: the error
+     - parameter inError: the error
      */
     func locationManager(_ inManager: CLLocationManager, didFailWithError inError: Error) {
         guard !_tryAgain else {
@@ -417,7 +417,7 @@ extension SwiftBMLSDK_TestHarness_LocationSearchViewController: CLLocationManage
      Callback to handle found locations.
      
      - parameter inManager: The Location Manager object that had the event.
-     - parameter didUpdateLocations: an array of updated locations.
+     - parameter inLocations: an array of updated locations.
      */
     func locationManager(_ inManager: CLLocationManager, didUpdateLocations inLocations: [CLLocation]) {
         // Ignore cached locations. Wait for the real.

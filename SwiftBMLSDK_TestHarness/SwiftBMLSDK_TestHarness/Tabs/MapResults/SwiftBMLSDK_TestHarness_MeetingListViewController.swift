@@ -64,7 +64,7 @@ class SwiftBMLSDK_TestHarness_MeetingListViewController: SwiftBMLSDK_TestHarness
 extension SwiftBMLSDK_TestHarness_MeetingListViewController {
     /* ############################################################## */
     /**
-     - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.
+     - parameter inCompletion: A tail completion proc, with no parameters. It is called in the main thread.
      */
     public func performSearch(completion inCompletion: @escaping () -> Void) {
         let meetingIDs = meetings.map(\.id)

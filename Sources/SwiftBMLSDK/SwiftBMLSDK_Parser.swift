@@ -22,6 +22,82 @@ import CoreLocation // For coordinates
 import Contacts     // For the in-person address
 
 /* ###################################################################################################################################### */
+// MARK: - Calendar Extension -
+/* ###################################################################################################################################### */
+fileprivate extension Calendar {
+    /* ################################################################## */
+    /**
+     Converts 1...7 where 1 = Sunday into 0...6 where 0 = this calendar's firstWeekday.
+     - parameter inWeekdayIndex: 1 is Sunday weekday index.
+     - returns: localized weekday strings ordered in this calendar's preferred week-start order.
+     */
+    func _userWeekStartIndex(fromSundayBasedWeekday inWeekdayIndex: Int) -> Int {
+        precondition((1...7).contains(inWeekdayIndex))
+        return (inWeekdayIndex - firstWeekday + 7) % 7
+    }
+    
+    /* ################################################################## */
+    /**
+     Internal tool to return the basic symbol set for localization.
+     - parameter inStyle: The style for the emitted string.
+     - returns: localized weekday strings ordered in this calendar's preferred week-start order.
+     */
+    func _localizedWeekdaySymbols(style inStyle: WeekdayStyle = .full) -> [String] {
+        let base: [String]
+        switch inStyle {
+        case .full:
+            base = weekdaySymbols
+        case .short:
+            base = shortWeekdaySymbols
+        case .veryShort:
+            base = veryShortWeekdaySymbols
+        case .standaloneFull:
+            base = standaloneWeekdaySymbols
+        case .standaloneShort:
+            base = shortStandaloneWeekdaySymbols
+        case .standaloneVeryShort:
+            base = veryShortStandaloneWeekdaySymbols
+        }
+        
+        let start = firstWeekday - 1   // convert 1...7 to 0...6
+        return Array(base[start...] + base[..<start])
+    }
+    
+    /* ################################################################## */
+    /**
+     Converts a weekday index into a localized string.
+     - parameter inWeekdayIndex: 1 is Sunday weekday index.
+     - parameter inStyle: The style for the emitted string.
+     - returns: the localized weekday string for a Sunday-based 1...7 input.
+     */
+    func _localizedWeekdayString(
+        fromSundayBasedWeekday inWeekdayIndex: Int,
+        style inStyle: WeekdayStyle = .full
+    ) -> String {
+        let index = _userWeekStartIndex(fromSundayBasedWeekday: inWeekdayIndex)
+        return _localizedWeekdaySymbols(style: inStyle)[index]
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Calendar Extension Extension -
+/* ###################################################################################################################################### */
+public extension Calendar {
+    /* ################################################################## */
+    /**
+     The style to use for display of localized weekday/time.
+     */
+    enum WeekdayStyle {
+        case full
+        case short
+        case veryShort
+        case standaloneFull
+        case standaloneShort
+        case standaloneVeryShort
+    }
+}
+
+/* ###################################################################################################################################### */
 // MARK: - CoreLocation Extension -
 /* ###################################################################################################################################### */
 /**
@@ -907,6 +983,74 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################################## */
         /**
+         This returns any of the currently logged-in user's connections that are attending this meeting.
+         
+         - returns: A locality-relevant address string.
+         
+         > NOTE: The venue name is not a part of this.
+         */
+        var localizedInPersonAddressString: String? {
+            if let address = self.inPersonAddress {
+                return CNPostalAddressFormatter.string(from: address, style: .mailingAddress)
+            }
+            
+            return nil
+        }
+        
+        /* ################################################################## */
+        /**
+         This returns the meeting start day index, localized to the user's environment.
+         */
+        var localWeekdayIndex: Int { Calendar.autoupdatingCurrent._userWeekStartIndex(fromSundayBasedWeekday: self.weekday) }
+        
+        /* ################################################################## */
+        /**
+         This returns the meeting start day as a string, localized to the user's environment.
+         
+         - parameter inStyle: The style of weekday display. Optional, and default is `.standaloneFull`. Values are:
+            - .full
+            - .short
+            - .veryShort
+            - .standaloneFull
+            - .standaloneShort
+            - .standaloneVeryShort
+         
+         - returns: The localized string.
+         */
+        func localWeekdayString(style inStyle: Calendar.WeekdayStyle = .standaloneFull) -> String { Calendar.autoupdatingCurrent._localizedWeekdayString(fromSundayBasedWeekday: self.weekday) }
+
+        /* ################################################################## */
+        /**
+         */
+        mutating func localizedWeekdayTimeString(
+            style: LocalWeekdayTimeStyle = .userPreferredTime,
+            locale: Locale = .autoupdatingCurrent,
+            calendar: Calendar = .autoupdatingCurrent,
+            timeZone: TimeZone = .autoupdatingCurrent,
+            adjusted: Bool = false
+        ) -> String {
+            let formatter = DateFormatter()
+            formatter.locale = locale
+            formatter.calendar = calendar
+            formatter.timeZone = timeZone
+
+            switch style {
+            case .userPreferredTime:
+                // EEEE = full weekday
+                // j = locale-preferred hour cycle (12h vs 24h)
+                // mm = minutes
+                formatter.setLocalizedDateFormatFromTemplate("EEEE jm")
+
+            case .twentyFourHourCompact:
+                // Force 24-hour compact time.
+                formatter.setLocalizedDateFormatFromTemplate("EEEE HHmm")
+            }
+
+            return formatter.string(from: self.getNextStartDate(isAdjusted: adjusted))
+        }
+
+        /* ################################################################## */
+        /**
          This returns the distance between the instance, and another location, provided as coordinates.
          
          - parameter inCoords: The coordinates we are measuring from.
@@ -956,7 +1100,7 @@ extension SwiftBMLSDK_Parser.Meeting: Hashable {
     /**
      Public Hashable Conformance
      
-     - parameter into: (INOUT) -The hasher to be loaded.
+     - parameter inOutHasher: (INOUT) -The hasher to be loaded.
      */
     public func hash(into inOutHasher: inout Hasher) { inOutHasher.combine(id) }
 }
@@ -1088,7 +1232,7 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
      
      If a value is not valid, it is not included in the encoding.
      
-     - parameter to: The encoder to load with our values.
+     - parameter inEncoder: The encoder to load with our values.
      */
     public func encode(to inEncoder: Encoder) throws {
         guard (1..<8).contains(weekday) else { return }
@@ -1232,6 +1376,15 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
  This extension adds some basic interpretation methods to the base class.
  */
 extension SwiftBMLSDK_Parser.Meeting {
+    /* ################################################################## */
+    /**
+     Internal Enum for the time localization.
+     */
+    enum LocalWeekdayTimeStyle {
+        case userPreferredTime     // e.g. "Sunday, 10:30 PM" or locale equivalent
+        case twentyFourHourCompact // e.g. "Sunday, 2230"
+    }
+
     // MARK: Public Computed Properties
     
     /* ################################################################## */
@@ -1298,7 +1451,7 @@ extension SwiftBMLSDK_Parser.Meeting {
      
      > NOTE: May return nil, as not all meetings have a valid coordinate.
      
-     - parameter from: The coordinates of the location we are comparing to the meeting's location.
+     - parameter inFrom: The coordinates of the location we are comparing to the meeting's location.
      - returns: An optional (may be nil) float, with the exact distance between the meeting's location, and the input. It is always positive (or 0), if not nil.
      */
     public func distanceInMeters(from inFrom: CLLocationCoordinate2D) -> CLLocationDistance? {
@@ -1376,7 +1529,7 @@ extension SwiftBMLSDK_Parser.Meeting {
      then, if we check at 8PM (Eastern), the next meeting start will be at 8PM, the same day (Central). If we are at Central Time, and the meeting is at Eastern Time, then checking at 8PM (Central),
      will show us the meeting starting at 8PM, the next day (In the Eastern Time zone). If isAdjusted is true, then the result will be 9PM (today), and 7PM (tomorrow) (User local), respectively.
      
-     - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
+     - parameter inAdjust: If true (default is false), then the date will be converted to our local timezone.
      - returns: The date of the next meeting (can be ignored, for purposes of updating the cache).
      
      > NOTE: If the date is invalid, then the distant future will be returned.
@@ -1409,7 +1562,7 @@ extension SwiftBMLSDK_Parser.Meeting {
     /**
      This is the start time of the previous meeting, in the meeting's local timezone (unless `isAdjusted` is true).
      
-     - parameter isAdjusted: If true (default is false), then the date will be converted to our local timezone.
+     - parameter inAdjust: If true (default is false), then the date will be converted to our local timezone.
      - returns: The date of the last meeting.
 
      > NOTE: If the date is invalid, then the distant past will be returned.

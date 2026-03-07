@@ -99,7 +99,7 @@ extension SwiftMLSDK_Map_AnnotationPopover_ViewController {
      Performs a reverse geocode.
      
      - parameter inCoords: The coordinate to reverse.
-     - parameter completion: The tail completion proc, with a list of placemarks, and any error that occurred. This may be called in any thread.
+     - parameter inCompletion: The tail completion proc, with a list of placemarks, and any error that occurred. This may be called in any thread.
      */
     static func reverseGeocode(_ inCoords: CLLocationCoordinate2D, completion inCompletion: @escaping (_: [CLPlacemark]?, _: Error?) -> Void)  {
         guard CLLocationCoordinate2DIsValid(inCoords)
@@ -152,18 +152,18 @@ extension SwiftMLSDK_Map_AnnotationPopover_ViewController: UITableViewDataSource
     /**
      Returns one cell. We use regular default cells.
      
-     - parameter: The table view (ignored)
+     - parameter inTableView: The table view (ignored)
      - parameter numberOfRowsInSection: The section (also ignored)
      - returns: An integer, with the number of rows.
      */
-    func tableView(_: UITableView, numberOfRowsInSection: Int) -> Int { meetings.count }
+    func tableView(_ inTableView: UITableView, numberOfRowsInSection: Int) -> Int { meetings.count }
     
     /* ################################################################## */
     /**
      Returns one cell. We use regular default cells.
      
-     - parameter: The table view
-     - parameter cellForRowAt: The index path of the cell we want.
+     - parameter inTableView: The table view
+     - parameter inIndexPath: The index path of the cell we want.
      */
     func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
         guard let ret = inTableView.dequeueReusableCell(withIdentifier: SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell.reuseID, for: inIndexPath) as? SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell else { return UITableViewCell() }

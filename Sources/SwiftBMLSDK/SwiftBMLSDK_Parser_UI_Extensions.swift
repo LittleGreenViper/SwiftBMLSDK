@@ -189,7 +189,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
         /**
          Initializer. The meeting is immediately asked for the next date.
          
-         - parameter meeting: The meeting instance to be stored here.
+         - parameter inMeeting: The meeting instance to be stored here.
          */
         public init(meeting inMeeting: SwiftBMLSDK_Parser.Meeting) {
             meeting = inMeeting
@@ -228,8 +228,8 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
      
      Instantiating this class executes an immediate fetch.
      
-     - parameter serverURL: The URL to the meeting server.
-     - parameter completion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
+     - parameter inServerURL: The URL to the meeting server.
+     - parameter inCompletion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
      */
     public init(serverURL inServerURL: URL, completion inCompletion: @escaping FetchCallback) {
         _fetchMeetings(query: SwiftBMLSDK_Query(serverBaseURI: inServerURL), completion: inCompletion)
@@ -241,8 +241,8 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
      
      Instantiating this class executes an immediate fetch.
      
-     - parameter query: A "primed" query instance (an instance that has a server URL).
-     - parameter completion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
+     - parameter inQuery: A "primed" query instance (an instance that has a server URL).
+     - parameter inCompletion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
      */
     public init(query inQuery: SwiftBMLSDK_Query, completion inCompletion: @escaping FetchCallback) {
         _fetchMeetings(query: inQuery, completion: inCompletion)
@@ -257,7 +257,7 @@ extension SwiftBMLSDK_MeetingLocalTimezoneCollection {
     /**
      This forces the meetings cache to be recalculated from scratch.
      
-     - parameter completion: An optional, simple, one-parameter (This instance) tail completion proc. Always called in the main thread.
+     - parameter inCompletion: An optional, simple, one-parameter (This instance) tail completion proc. Always called in the main thread.
      */
     public func refreshCaches(completion inCompletion: ((_: SwiftBMLSDK_MeetingLocalTimezoneCollection) -> Void)? = nil) {
         meetings = meetings.map { CachedMeeting(meeting: $0.meeting) }

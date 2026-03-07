@@ -132,7 +132,7 @@ extension MKCoordinateRegion: @retroactive Equatable {
     /**
      This initializes a region to encompass all of the given coordinates.
      
-     - parameter coordinates: This is an array of long/lat coordinates.
+     - parameter inCoordinateArray: This is an array of long/lat coordinates.
      */
     public init?(coordinates inCoordinateArray: [CLLocationCoordinate2D]) {
         // first create a region centered around the Prime Meridian (longitude 0). We don't transform.
@@ -241,8 +241,8 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
     /**
      Called before we switch to the meeting inspector.
      
-     - parameter for: The segue we are executing.
-     - parameter sender: The meeting instance.
+     - parameter inSegue: The segue we are executing.
+     - parameter inMeeting: The meeting instance.
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
         if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
@@ -274,8 +274,8 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController {
     /**
      This is called when one of the annotations is tapped.
      
-     - parameter users: The array of users, associated with the annotation.
-     - parameter view: The annotation marker view (anchor for the popover).
+     - parameter inMeetings: The array of meetings, associated with the annotation.
+     - parameter inView: The annotation marker view (anchor for the popover).
      */
     func annotationHit(meetings inMeetings: [MeetingInstance], view inView: UIView) {
         guard let view = inView as? SwiftBMLSDK_MapMarker else { return }
@@ -432,17 +432,17 @@ extension SwiftBMLSDK_TestHarness_MapResultsViewController: MKMapViewDelegate {
     /**
      This is called when the map will change its region.
      
-     - parameter: The map view (ignored)
+     - parameter inMapView: The map view (ignored)
      - parameter regionWillChangeAnimated: True, if the change is animated (ignored)
      */
-    func mapView(_: MKMapView, regionWillChangeAnimated: Bool) {
+    func mapView(_ inMapView: MKMapView, regionWillChangeAnimated: Bool) {
     }
     
     /* ################################################################## */
     /**
      This is called when the map has changed its region.
      
-     - parameter: The map view (ignored)
+     - parameter inMapView: The map view
      - parameter regionDidChangeAnimated: True, if the change is animated (ignored)
      */
     func mapView(_ inMapView: MKMapView, regionDidChangeAnimated: Bool) {

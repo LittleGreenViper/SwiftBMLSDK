@@ -37,11 +37,11 @@ extension SwiftBMLSDK_TestHarness_AppDelegate: UIApplicationDelegate {
     /**
      Called when the application initially launches, and has set up everything.
      
-     - parameter: The application (ignored).
+     - parameter inApplication: The application (ignored).
      - parameter didFinishLaunchingWithOptions: The launch options (also ignored).
      - returns: True (always)
      */
-    func application(_: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool { true }
+    func application(_ inApplication: UIApplication, didFinishLaunchingWithOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool { true }
 
     /* ################################################################## */
     /**

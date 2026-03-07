@@ -61,7 +61,7 @@ import CoreLocation // For coordinates
  This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function.
  
  - ``meetingAutoRadiusSearch(minimumNumberOfResults:specification:completion:)``
- This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (``SearchSpecification.locationCenter``), until the minimum number of meetings specified have been found. The ``SearchSpecification.locationRadius`` specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).
+ This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (``SearchSpecification/locationCenter``), until the minimum number of meetings specified have been found. The ``SearchSpecification/locationRadius`` specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).
 
  # Dependencies
  
@@ -338,12 +338,12 @@ public struct SwiftBMLSDK_Query {
          This is the default initializer. All parameters are optional, with blank/none defaults.
          
          - parameters:
-            - type: The meeting type. Default is any type.
-            - locationCenter: The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search. Ignored if the type is exclusive virtual.
-            - locationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Ignored if the type is exclusive virtual.
-            - meetingIDs: If this is not empty, then ``type``, ``locationCenter``, and ``locationRadius`` are all ignored, and the search will be for specific meetings by the IDs passed in. Optional. Default is empty.
-            - pageSize: The number of results per page. If this is 0, then no results are returned, and only the meta is populated. If left out, or set to a negative number, then all results are returned in one page.
-            - page: The page number (0-based). If `pageSize` is 0 or less, this is ignored. If over the maximum number of pages, an empty page is returned.
+            - inType: The meeting type. Default is any type.
+            - inLocationCenter: The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search. Ignored if the type is exclusive virtual.
+            - inLocationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Ignored if the type is exclusive virtual.
+            - inMeetingIDs: If this is not empty, then ``type``, ``locationCenter``, and ``locationRadius`` are all ignored, and the search will be for specific meetings by the IDs passed in. Optional. Default is empty.
+            - inPageSize: The number of results per page. If this is 0, then no results are returned, and only the meta is populated. If left out, or set to a negative number, then all results are returned in one page.
+            - inPageNumber: The page number (0-based). If `pageSize` is 0 or less, this is ignored. If over the maximum number of pages, an empty page is returned.
          */
         public init(type inType: SearchForMeetingType = .any,
                     locationCenter inLocationCenter: CLLocationCoordinate2D = CLLocationCoordinate2D(),
@@ -377,7 +377,7 @@ public struct SwiftBMLSDK_Query {
     /**
      Default initializer.
      
-     - parameter serverBaseURI: The URL to the "base (main directory) of an instance of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer). Optional. Can be omitted.
+     - parameter inServerBaseURI: The URL to the "base (main directory) of an instance of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer). Optional. Can be omitted.
      */
     public init(serverBaseURI inServerBaseURI: URL? = nil) {
         _serverBaseURI = inServerBaseURI
@@ -410,7 +410,7 @@ public extension SwiftBMLSDK_Query {
     /**
      Fetches the server info.
      
-     - parameter completion: A tail completion proc (may be called in any thread).
+     - parameter inCompletion: A tail completion proc (may be called in any thread).
      */
     func serverInfo(completion inCompletion: @escaping ServerInfoResultCompletion) {
         guard let baseURLString = serverBaseURI?.absoluteString,
@@ -510,8 +510,8 @@ public extension SwiftBMLSDK_Query {
     /**
      This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function.
 
-     - parameter specification: The search specification.
-     - parameter completion: A tail completion proc (may be called in any thread).
+     - parameter inSpecification: The search specification.
+     - parameter inCompletion: A tail completion proc (may be called in any thread).
      */
     func meetingSearch(specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
         guard let url = serverBaseURI?.appending(queryItems: inSpecification.urlQueryItems) else {
@@ -555,11 +555,11 @@ public extension SwiftBMLSDK_Query {
 
     /* ################################################# */
     /**
-     This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (``SearchSpecification.locationCenter``), until the minimum number of meetings specified have been found. The ``SearchSpecification.locationRadius`` specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).
+     This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (``SearchSpecification/locationCenter``), until the minimum number of meetings specified have been found. The ``SearchSpecification/locationRadius`` specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).
 
-     - parameter minimumNumberOfResults: The minimum number of results. At least this many results must be returned (or the search can give up, if it reaches the maximum radius).
-     - parameter specification: The search specification.
-     - parameter completion: A tail completion proc (may be called in any thread).
+     - parameter inMinNumber: The minimum number of results. At least this many results must be returned (or the search can give up, if it reaches the maximum radius).
+     - parameter inSpecification: The search specification.
+     - parameter inCompletion: A tail completion proc (may be called in any thread).
      */
     func meetingAutoRadiusSearch(minimumNumberOfResults inMinNumber: Int, specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
         if case .virtual(let isExclusive) = inSpecification.type,

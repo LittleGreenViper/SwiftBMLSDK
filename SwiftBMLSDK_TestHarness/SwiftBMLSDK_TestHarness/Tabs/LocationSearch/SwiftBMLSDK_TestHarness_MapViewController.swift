@@ -166,7 +166,7 @@ extension SwiftBMLSDK_TestHarness_MapViewController: MKMapViewDelegate {
      Called when the map region changes. We use it to update our search radius/center.
      
      - parameter inMapView: The map view that changed.
-     - paramater regionDidChangeAnimated: True, if animated.
+     - parameter regionDidChangeAnimated: True, if animated.
      */
     func mapView(_ inMapView: MKMapView, regionDidChangeAnimated: Bool) {
         let span = inMapView.region.span

@@ -21,7 +21,6 @@
 		D449EBF62C020AF200929D0F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D449EBF52C020AF200929D0F /* LaunchScreen.storyboard */; };
 		D4596F4E2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4596F4D2B9278B3008B7D12 /* SwiftMLSDK_Map_AnnotationPopover_ViewController.swift */; };
 		D476D4532B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D476D4522B924F270015AFEF /* SwiftBMLSDK_MapMarker.swift */; };
-		D47B17BC2C0208AA00B3452D /* Warnings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D47B17BB2C0208AA00B3452D /* Warnings.xcconfig */; };
 		D47C81722B85204800783B49 /* RVS_Persistent_Prefs in Frameworks */ = {isa = PBXBuildFile; productRef = D47C81712B85204800783B49 /* RVS_Persistent_Prefs */; };
 		D47C81742B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C81732B85207600783B49 /* SwiftBMLSDK_TestHarness_Prefs.swift */; };
 		D485D21B2C0A024700B16BE4 /* SwiftBMLSDK_TestHarness_VirtualCustom0ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D485D21A2C0A024700B16BE4 /* SwiftBMLSDK_TestHarness_VirtualCustom0ViewController.swift */; };
@@ -254,7 +253,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 2630;
 				TargetAttributes = {
 					D488D2902B82CE3F000979D9 = {
 						CreatedOnToolsVersion = 15.2;
@@ -295,7 +294,6 @@
 				D40622132B83B73F009FFAB3 /* InfoPlist.strings in Resources */,
 				D406220E2B83B705009FFAB3 /* Localizable.strings in Resources */,
 				D488D29E2B82CE40000979D9 /* Assets.xcassets in Resources */,
-				D47B17BC2C0208AA00B3452D /* Warnings.xcconfig in Resources */,
 				D488D29C2B82CE3F000979D9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,6 +397,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = P53V4JS928;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -422,6 +421,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -463,6 +463,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = P53V4JS928;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -479,6 +480,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -491,7 +493,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0000;
-				DEVELOPMENT_TEAM = P53V4JS928;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftBMLSDK_TestHarness/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
@@ -508,7 +509,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.8;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.littlegreenviper.SwiftBMLSDK-TestHarness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -524,7 +525,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0000;
-				DEVELOPMENT_TEAM = P53V4JS928;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftBMLSDK_TestHarness/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
@@ -541,7 +541,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.8;
+				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.littlegreenviper.SwiftBMLSDK-TestHarness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -579,7 +579,7 @@
 			repositoryURL = "https://github.com/RiftValleySoftware/RVS_Generic_Swift_Toolbox";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.15.2;
+				minimumVersion = 1.17.0;
 			};
 		};
 		D42740172B913C220019DC48 /* XCRemoteSwiftPackageReference "RVS_UIKit_Toolbox" */ = {
@@ -587,7 +587,7 @@
 			repositoryURL = "https://github.com/RiftValleySoftware/RVS_UIKit_Toolbox";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.6.1;
+				minimumVersion = 1.7.2;
 			};
 		};
 		D47C81702B85204800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */ = {
@@ -595,7 +595,7 @@
 			repositoryURL = "https://github.com/RiftValleySoftware/RVS_PersistentPrefs";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.10;
+				minimumVersion = 1.6.0;
 			};
 		};
 		D49D883C2C0CB3DB002B232F /* XCRemoteSwiftPackageReference "RVS_CalendarInput" */ = {
@@ -603,7 +603,7 @@
 			repositoryURL = "https://github.com/RiftValleySoftware/RVS_CalendarInput";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.3.5;
+				minimumVersion = 1.3.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -305,7 +305,7 @@ extension SwiftBMLSDK_TestHarness_Prefs {
     /**
      This fetches the meetings from the aggregator, using the current settings. This populates the `searchResults` property.
      
-     - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.
+     - parameter inCompletion: A tail completion proc, with no parameters. It is called in the main thread.
      */
     public func performSearch(completion inCompletion: @escaping () -> Void) {
         clearSearchResults()
@@ -328,7 +328,7 @@ extension SwiftBMLSDK_TestHarness_Prefs {
     /**
      This fetches the server info from the aggregator. This populates the `serverInfo` property.
      
-     - parameter completion: A tail completion proc, with no parameters. It is called in the main thread.
+     - parameter inCompletion: A tail completion proc, with no parameters. It is called in the main thread.
      */
     public func getServerInfo(completion inCompletion: @escaping () -> Void) {
         Self._serverInfo = nil

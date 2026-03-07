@@ -1,3 +1,9 @@
+ **1.2.0** *March 7, 2026*
+ 
+ - Added support for localized address and time.
+ - Updated the tools.
+ - Fixed some documentation issues.
+ 
  **1.1.8** *May 26, 2025*
  
  - Added a rather ineffective QUIC fix for simulator network issues. I think I'll have to wait for Apple to fix it.

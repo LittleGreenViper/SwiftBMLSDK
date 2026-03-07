@@ -246,8 +246,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      Called before we switch to the meeting inspector.
      
-     - parameter for: The segue we are executing.
-     - parameter sender: The meeting instance.
+     - parameter inSegue: The segue we are executing.
+     - parameter inMeeting: The meeting instance.
      */
     override func prepare(for inSegue: UIStoryboardSegue, sender inMeeting: Any?) {
         if let destination = inSegue.destination as? SwiftBMLSDK_TestHarness_MeetingViewController,
@@ -316,7 +316,7 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController {
     /**
      Fetches all of the virtual meetings (hybrid and pure virtual).
      
-     - parameter completion: A tail completion proc. This is always called in the main thread.
+     - parameter inCompletion: A tail completion proc. This is always called in the main thread.
      */
     func findMeetings(completion inCompletion: (() -> Void)?) {
         _virtualService = SwiftBMLSDK_MeetingLocalTimezoneCollection(query: prefs.queryInstance) { inCollection in
@@ -377,8 +377,8 @@ extension SwiftBMLSDK_TestHarness_VirtualViewController: UITableViewDataSource {
     
     /* ################################################################## */
     /**
-     - parameter: The table view
-     - parameter cellForRowAt: The indexpath to the requested cell.
+     - parameter inTableView: The table view
+     - parameter inIndexPath: The indexpath to the requested cell.
      - returns: A new (or reused) table cell.
      */
     func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {

@@ -94,7 +94,7 @@ extension SwiftBMLSDK_TestHarness_TabBarController: CLLocationManagerDelegate {
      Callback to handle found locations.
      
      - parameter inManager: The Location Manager object that had the event.
-     - parameter didUpdateLocations: an array of updated locations.
+     - parameter inLocations: an array of updated locations.
      */
     func locationManager(_ inManager: CLLocationManager, didUpdateLocations inLocations: [CLLocation]) {
         // Ignore cached locations. Wait for the real.
