@@ -1,6 +1,7 @@
- **1.2.2** *March 7, 2026*
+ **1.2.3** *March 7, 2026*
  
  - Fixed visibility issue.
+ - Fixed documentation issue.
  
  **1.2.0** *March 7, 2026*
  

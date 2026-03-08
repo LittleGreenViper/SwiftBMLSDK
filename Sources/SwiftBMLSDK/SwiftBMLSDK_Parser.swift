@@ -983,7 +983,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################################## */
         /**
-         This returns any of the currently logged-in user's connections that are attending this meeting.
+         This returns the address of an in-person meeting, in a localized format.
          
          - returns: A locality-relevant address string.
          
@@ -1021,20 +1021,27 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
         /* ################################################################## */
         /**
-         */
+         This returns a localized format weekday and time string (e.g. "Wednesday 7:30PM," or "Wednesday 1930"). This is when the meeting starts.
+         - parameter inStyle: This is the style of string the user wants. Optional. Default is the user's preferred time format. You can also force 24-hour format.
+         - parameter inLocale: The user's locale. Optional. Default is .autoupdatingCurrent.
+         - parameter inCalendar: The calendar we want. Optional. Default is .autoupdatingCurrent.
+         - parameter inTimeZone: The time zone for our local user. Optional. Default is .autoupdatingCurrent.
+         - parameter inIsAdjusted: True, if we want the time adjusted to our local time zone.
+         - returns: The string with the start weekday and time.
+        */
         public mutating func localizedWeekdayTimeString(
-            style: LocalWeekdayTimeStyle = .userPreferredTime,
-            locale: Locale = .autoupdatingCurrent,
-            calendar: Calendar = .autoupdatingCurrent,
-            timeZone: TimeZone = .autoupdatingCurrent,
-            adjusted: Bool = false
+            style inStyle: LocalWeekdayTimeStyle = .userPreferredTime,
+            locale inLocale: Locale = .autoupdatingCurrent,
+            calendar inCalendar: Calendar = .autoupdatingCurrent,
+            timeZone inTimeZone: TimeZone = .autoupdatingCurrent,
+            adjusted inIsAdjusted: Bool = false
         ) -> String {
             let formatter = DateFormatter()
-            formatter.locale = locale
-            formatter.calendar = calendar
-            formatter.timeZone = timeZone
+            formatter.locale = inLocale
+            formatter.calendar = inCalendar
+            formatter.timeZone = inTimeZone
 
-            switch style {
+            switch inStyle {
             case .userPreferredTime:
                 // EEEE = full weekday
                 // j = locale-preferred hour cycle (12h vs 24h)
@@ -1046,7 +1053,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 formatter.setLocalizedDateFormatFromTemplate("EEEE HHmm")
             }
 
-            return formatter.string(from: self.getNextStartDate(isAdjusted: adjusted))
+            return formatter.string(from: self.getNextStartDate(isAdjusted: inIsAdjusted))
         }
 
         /* ################################################################## */
