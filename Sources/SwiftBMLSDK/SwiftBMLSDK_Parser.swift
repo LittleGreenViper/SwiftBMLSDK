@@ -20,6 +20,7 @@
 import Foundation
 import CoreLocation // For coordinates
 import Contacts     // For the in-person address
+import MapKit       // For the Array extension that returns location data for meetings.
 
 /* ###################################################################################################################################### */
 // MARK: - Calendar Extension -
@@ -1724,6 +1725,63 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
         return try? encoder.encode(self)
+    }
+    
+    /* ################################################# */
+    /**
+     A region that encloses all meetings with valid physical coordinates.
+     
+     Meetings without coordinates are ignored.
+     
+     If the array contains no meetings with valid coordinates, this returns nil.
+     */
+    var mapRegion: MKCoordinateRegion? {
+        let coordinates = compactMap { $0.coords }.filter { CLLocationCoordinate2DIsValid($0) }
+        
+        guard !coordinates.isEmpty else { return nil }
+        
+        if 1 == coordinates.count,
+           let coordinate = coordinates.first {
+            return MKCoordinateRegion(
+                center: coordinate,
+                span: MKCoordinateSpan(
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05
+                )
+            )
+        }
+        
+        var minLatitude = coordinates[0].latitude
+        var maxLatitude = coordinates[0].latitude
+        var minLongitude = coordinates[0].longitude
+        var maxLongitude = coordinates[0].longitude
+        
+        coordinates.forEach {
+            minLatitude = Swift.min(minLatitude, $0.latitude)
+            maxLatitude = Swift.max(maxLatitude, $0.latitude)
+            minLongitude = Swift.min(minLongitude, $0.longitude)
+            maxLongitude = Swift.max(maxLongitude, $0.longitude)
+        }
+        
+        let center = CLLocationCoordinate2D(
+            latitude: (minLatitude + maxLatitude) * 0.5,
+            longitude: (minLongitude + maxLongitude) * 0.5
+        )
+        
+        let latitudeDelta = Swift.max((maxLatitude - minLatitude), 0)
+        let longitudeDelta = Swift.max((maxLongitude - minLongitude), 0)
+        
+        guard !latitudeDelta.isZero,
+              !longitudeDelta.isZero
+        else { return nil }
+        
+        return MKCoordinateRegion(
+            center: center,
+            span: MKCoordinateSpan(
+                latitudeDelta: latitudeDelta,
+                longitudeDelta: longitudeDelta
+            )
+        )
     }
 }
 

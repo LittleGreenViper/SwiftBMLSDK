@@ -1,3 +1,7 @@
+ **1.2.4** *March 8, 2026*
+ 
+ - Added the mapRegion computed property to the meeting array extension.
+ 
  **1.2.3** *March 7, 2026*
  
  - Fixed visibility issue.
