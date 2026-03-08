@@ -989,7 +989,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          
          > NOTE: The venue name is not a part of this.
          */
-        var localizedInPersonAddressString: String? {
+        public var localizedInPersonAddressString: String? {
             if let address = self.inPersonAddress {
                 return CNPostalAddressFormatter.string(from: address, style: .mailingAddress)
             }
@@ -1001,7 +1001,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         /**
          This returns the meeting start day index, localized to the user's environment.
          */
-        var localWeekdayIndex: Int { Calendar.autoupdatingCurrent._userWeekStartIndex(fromSundayBasedWeekday: self.weekday) }
+        public var localWeekdayIndex: Int { Calendar.autoupdatingCurrent._userWeekStartIndex(fromSundayBasedWeekday: self.weekday) }
         
         /* ################################################################## */
         /**
@@ -1017,7 +1017,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          
          - returns: The localized string.
          */
-        func localWeekdayString(style inStyle: Calendar.WeekdayStyle = .standaloneFull) -> String { Calendar.autoupdatingCurrent._localizedWeekdayString(fromSundayBasedWeekday: self.weekday) }
+        public func localWeekdayString(style inStyle: Calendar.WeekdayStyle = .standaloneFull) -> String { Calendar.autoupdatingCurrent._localizedWeekdayString(fromSundayBasedWeekday: self.weekday) }
 
         /* ################################################################## */
         /**

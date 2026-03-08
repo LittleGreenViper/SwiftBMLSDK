@@ -1,4 +1,4 @@
- **1.2.1** *March 7, 2026*
+ **1.2.2** *March 7, 2026*
  
  - Fixed visibility issue.
  
