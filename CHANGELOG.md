@@ -1,3 +1,8 @@
+ **1.2.5** *March 13, 2026*
+ 
+ - Added the ability to have a priority assigned to a search.
+ - Updated the file headers.
+ 
  **1.2.4** *March 8, 2026*
  
  - Added the mapRegion computed property to the meeting array extension.

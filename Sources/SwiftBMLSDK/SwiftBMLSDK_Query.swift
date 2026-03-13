@@ -1,5 +1,5 @@
 /*
- © Copyright 2024 - 2025, Little Green Viper Software Development LLC
+ © Copyright 2024 - 2026, Little Green Viper Software Development LLC
  LICENSE:
  
  MIT License
@@ -511,9 +511,12 @@ public extension SwiftBMLSDK_Query {
      This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function.
 
      - parameter inSpecification: The search specification.
+     - parameter inPriority: The priority (0 -> 1). Optional. Default is default priority (0.5).
      - parameter inCompletion: A tail completion proc (may be called in any thread).
      */
-    func meetingSearch(specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
+    func meetingSearch(specification inSpecification: SearchSpecification,
+                       priority inPriority: Float = URLSessionTask.defaultPriority,
+                       completion inCompletion: @escaping QueryResultCompletion) {
         guard let url = serverBaseURI?.appending(queryItems: inSpecification.urlQueryItems) else {
             inCompletion(nil, nil)
             
@@ -526,7 +529,7 @@ public extension SwiftBMLSDK_Query {
             print("URL Request: \(urlRequest.url?.absoluteString ?? "ERROR")")
         #endif
 
-        _session.dataTask(with: urlRequest) { inData, inResponse, inError in
+        let task = _session.dataTask(with: urlRequest) { inData, inResponse, inError in
             guard let response = inResponse as? HTTPURLResponse,
                   nil == inError
             else {
@@ -550,7 +553,10 @@ public extension SwiftBMLSDK_Query {
             } else {
                 inCompletion(nil, inError)
             }
-        }.resume()
+        }
+        
+        task.priority = inPriority
+        task.resume()
     }
 
     /* ################################################# */
@@ -559,9 +565,13 @@ public extension SwiftBMLSDK_Query {
 
      - parameter inMinNumber: The minimum number of results. At least this many results must be returned (or the search can give up, if it reaches the maximum radius).
      - parameter inSpecification: The search specification.
+     - parameter inPriority: The priority (0 -> 1). Optional. Default is default priority (0.5).
      - parameter inCompletion: A tail completion proc (may be called in any thread).
      */
-    func meetingAutoRadiusSearch(minimumNumberOfResults inMinNumber: Int, specification inSpecification: SearchSpecification, completion inCompletion: @escaping QueryResultCompletion) {
+    func meetingAutoRadiusSearch(minimumNumberOfResults inMinNumber: Int,
+                                 specification inSpecification: SearchSpecification,
+                                 priority inPriority: Float = URLSessionTask.defaultPriority,
+                                 completion inCompletion: @escaping QueryResultCompletion) {
         if case .virtual(let isExclusive) = inSpecification.type,
            isExclusive {
             inCompletion(nil, nil)
@@ -578,7 +588,7 @@ public extension SwiftBMLSDK_Query {
                 if !searchInProgress {
                     searchInProgress = true
                     let specification = SearchSpecification(type: inSpecification.type, locationCenter: inSpecification.locationCenter, locationRadius: searchRadius)
-                    meetingSearch(specification: specification) { inParser, inError in
+                    meetingSearch(specification: specification, priority: inPriority) { inParser, inError in
                         defer { searchInProgress = false }
 
                         if nil == inError,
