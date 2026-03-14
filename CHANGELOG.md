@@ -1,3 +1,7 @@
+ **1.3.0** *March 14, 2026*
+ 
+ - Added a dependency to PhoneNumberKit, and an extractor for phone URLs.
+ 
  **1.2.5** *March 13, 2026*
  
  - Added the ability to have a priority assigned to a search.

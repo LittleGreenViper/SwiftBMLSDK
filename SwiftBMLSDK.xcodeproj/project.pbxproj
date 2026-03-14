@@ -214,6 +214,7 @@
 			mainGroup = D416202B2B73C17F00E6E0CA;
 			packageReferences = (
 				D47C816D2B85202800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */,
+				D4C42DBE2F658C7C0037A706 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 			);
 			productRefGroup = D41620362B73C17F00E6E0CA /* Products */;
 			projectDirPath = "";
@@ -597,6 +598,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.6.0;
+			};
+		};
+		D4C42DBE2F658C7C0037A706 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:marmelroy/PhoneNumberKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.2.7;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

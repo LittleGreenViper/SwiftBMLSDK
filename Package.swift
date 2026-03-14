@@ -28,12 +28,27 @@ let package = Package(
         .macOS(.v13),
         .watchOS(.v9)
     ],
+
     products: [
         .library(
             name: "SwiftBMLSDK",
             targets: ["SwiftBMLSDK"]
         )],
+
+    dependencies: [
+        .package(
+            url: "https://github.com/marmelroy/PhoneNumberKit",
+            from: "4.2.7"
+        )],
+
     targets: [
-        .target(name: "SwiftBMLSDK")
+        .target(name: "SwiftBMLSDK",
+                dependencies: [
+                    .product(
+                        name: "PhoneNumberKit",
+                        package: "PhoneNumberKit"
+                    )
+                ]
+               )
     ]
 )
