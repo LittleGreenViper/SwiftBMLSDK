@@ -89,11 +89,40 @@ public extension Calendar {
      The style to use for display of localized weekday/time.
      */
     enum WeekdayStyle {
+        /* ############################################################## */
+        /**
+         "wednesday"
+         */
         case full
+
+        /* ############################################################## */
+        /**
+         "wed"
+         */
         case short
+
+        /* ############################################################## */
+        /**
+         "w"
+         */
         case veryShort
+
+        /* ############################################################## */
+        /**
+         "Wednesday"
+         */
         case standaloneFull
+
+        /* ############################################################## */
+        /**
+         "Wed"
+         */
         case standaloneShort
+
+        /* ############################################################## */
+        /**
+         "W"
+         */
         case standaloneVeryShort
     }
 }
@@ -1028,35 +1057,55 @@ public struct SwiftBMLSDK_Parser: Encodable {
          - parameter inCalendar: The calendar we want. Optional. Default is .autoupdatingCurrent.
          - parameter inTimeZone: The time zone for our local user. Optional. Default is .autoupdatingCurrent.
          - parameter inIsAdjusted: True, if we want the time adjusted to our local time zone.
+         - parameter inIncludeDuration: Optional (default is false). If true, the the string will display the time as "XXX-YYY", with "YYY, being the end time.
          - returns: The string with the start weekday and time.
-        */
+         */
         public mutating func localizedWeekdayTimeString(
             style inStyle: LocalWeekdayTimeStyle = .userPreferredTime,
             locale inLocale: Locale = .autoupdatingCurrent,
             calendar inCalendar: Calendar = .autoupdatingCurrent,
             timeZone inTimeZone: TimeZone = .autoupdatingCurrent,
-            adjusted inIsAdjusted: Bool = false
+            adjusted inIsAdjusted: Bool = false,
+            includeDuration inIncludeDuration: Bool = false
         ) -> String {
-            let formatter = DateFormatter()
-            formatter.locale = inLocale
-            formatter.calendar = inCalendar
-            formatter.timeZone = inTimeZone
+            let startDate = self.getNextStartDate(isAdjusted: inIsAdjusted)
+            
+            let startFormatter = DateFormatter()
+            startFormatter.locale = inLocale
+            startFormatter.calendar = inCalendar
+            startFormatter.timeZone = inTimeZone
+
+            let endFormatter = DateFormatter()
+            endFormatter.locale = inLocale
+            endFormatter.calendar = inCalendar
+            endFormatter.timeZone = inTimeZone
 
             switch inStyle {
             case .userPreferredTime:
-                // EEEE = full weekday
-                // j = locale-preferred hour cycle (12h vs 24h)
-                // mm = minutes
-                formatter.setLocalizedDateFormatFromTemplate("EEEE jm")
+                // Full weekday + locale-preferred time.
+                startFormatter.setLocalizedDateFormatFromTemplate("EEEE jm")
+                
+                // Time only, locale-preferred hour cycle.
+                endFormatter.setLocalizedDateFormatFromTemplate("jm")
 
             case .twentyFourHourCompact:
-                // Force 24-hour compact time.
-                formatter.setLocalizedDateFormatFromTemplate("EEEE HHmm")
+                // Full weekday + forced compact 24-hour time.
+                startFormatter.setLocalizedDateFormatFromTemplate("EEEE HHmm")
+                
+                // Time only, forced compact 24-hour time.
+                endFormatter.setLocalizedDateFormatFromTemplate("HHmm")
             }
 
-            return formatter.string(from: self.getNextStartDate(isAdjusted: inIsAdjusted))
+            let startString = startFormatter.string(from: startDate)
+            
+            guard inIncludeDuration else { return startString }
+            
+            let endDate = startDate.addingTimeInterval(self.duration)
+            let endString = endFormatter.string(from: endDate)
+            
+            return "\(startString)-\(endString)"
         }
-
+        
         /* ################################################################## */
         /**
          This returns the distance between the instance, and another location, provided as coordinates.
@@ -1389,8 +1438,17 @@ extension SwiftBMLSDK_Parser.Meeting {
      Internal Enum for the time localization.
      */
     public enum LocalWeekdayTimeStyle {
-        case userPreferredTime     // e.g. "Sunday, 10:30 PM" or locale equivalent
-        case twentyFourHourCompact // e.g. "Sunday, 2230"
+        /* ############################################################## */
+        /**
+         e.g. "Sunday, 10:30 PM" or locale equivalent
+         */
+        case userPreferredTime
+
+        /* ############################################################## */
+        /**
+         e.g. "Sunday, 2230"
+         */
+        case twentyFourHourCompact
     }
 
     // MARK: Public Computed Properties

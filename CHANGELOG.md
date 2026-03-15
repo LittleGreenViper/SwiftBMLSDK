@@ -1,3 +1,9 @@
+ **1.3.1** *March 15, 2026*
+ 
+ - Updated the documentation.
+ - Added the ability to get the duration included into the localized time string.
+ - Updated the PhoneNumberKit version.
+ 
  **1.3.0** *March 14, 2026*
  
  - Added a dependency to PhoneNumberKit, and an extractor for phone URLs.

@@ -19,62 +19,62 @@
 
 import Foundation
 import CoreLocation
-import PhoneNumberKit
 
 #if canImport(UIKit)
     import UIKit
 #endif
 
-/* ###################################################################### */
-/**
- Extracts a dialable tel URL from a mixed phone/passcode string.
- 
- For example:
- `tel:6465588656,,558544927#  Pass: 247247`
- becomes:
- `tel:6465588656,,558544927#`
- 
- - parameter inRawString: The raw source string.
- - returns: A valid dialable URL, or nil if no dialable number could be found.
- */
-private func _extractDialableTelURL(from inRawString: String) -> URL? {
-    let lowercased = inRawString.lowercased()
-    
-    guard let telRange = lowercased.range(of: "tel:") else { return nil }
-    
-    let afterTel = inRawString[telRange.upperBound...]
-    
-    let allowedDialCharacters = CharacterSet(charactersIn: "+0123456789,#*;")
-    
-    let dialPortionScalars = afterTel.unicodeScalars.prefix { inScalar in
-        allowedDialCharacters.contains(inScalar)
+#if !SWIFTBMLSDK_DOCS
+    import PhoneNumberKit
+
+    /* ###################################################################### */
+    /**
+     Extracts a dialable tel URL from a mixed phone/passcode string.
+     */
+    private func _extractDialableTelURL(from inRawString: String) -> URL? {
+        let lowercased = inRawString.lowercased()
+
+        guard let telRange = lowercased.range(of: "tel:") else { return nil }
+
+        let afterTel = inRawString[telRange.upperBound...]
+
+        let allowedDialCharacters = CharacterSet(charactersIn: "+0123456789,#*;")
+
+        let dialPortionScalars = afterTel.unicodeScalars.prefix { inScalar in
+            allowedDialCharacters.contains(inScalar)
+        }
+
+        let dialPortion = String(String.UnicodeScalarView(dialPortionScalars))
+
+        guard !dialPortion.isEmpty else { return nil }
+
+        let baseNumber = dialPortion
+            .split(separator: ",", maxSplits: 1, omittingEmptySubsequences: false)
+            .first
+            .map(String.init)?
+            .replacingOccurrences(of: ";", with: "")
+            .replacingOccurrences(of: "#", with: "")
+            .replacingOccurrences(of: "*", with: "")
+
+        guard let baseNumber,
+              !baseNumber.isEmpty else { return nil }
+
+        let phoneNumberKit = PhoneNumberUtility()
+
+        do {
+            _ = try phoneNumberKit.parse(baseNumber, withRegion: "US", ignoreType: true)
+            return URL(string: "tel:\(dialPortion)")
+        } catch {
+            return nil
+        }
     }
-    
-    let dialPortion = String(String.UnicodeScalarView(dialPortionScalars))
-    
-    guard !dialPortion.isEmpty else { return nil }
-    
-    /* We validate only the actual phone number portion, not pauses / DTMF suffixes. */
-    let baseNumber = dialPortion
-        .split(separator: ",", maxSplits: 1, omittingEmptySubsequences: false)
-        .first
-        .map(String.init)?
-        .replacingOccurrences(of: ";", with: "")
-        .replacingOccurrences(of: "#", with: "")
-        .replacingOccurrences(of: "*", with: "")
-    
-    guard let baseNumber,
-          !baseNumber.isEmpty else { return nil }
-    
-    let phoneNumberKit = PhoneNumberUtility()
-    
-    do {
-        _ = try phoneNumberKit.parse(baseNumber, withRegion: "US", ignoreType: true)
-        return URL(string: "tel:\(dialPortion)")
-    } catch {
-        return nil
-    }
-}
+#else
+    /* ###################################################################### */
+    /**
+     Fallback implementation used during documentation builds.
+     */
+    private func _extractDialableTelURL(from inRawString: String) -> URL? { nil }
+#endif
 
 /* ###################################################################################################################################### */
 // MARK: - Utility String Extension -

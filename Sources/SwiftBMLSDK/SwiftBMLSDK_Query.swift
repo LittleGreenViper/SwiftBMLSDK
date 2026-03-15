@@ -57,10 +57,10 @@ import CoreLocation // For coordinates
  - ``serverInfo(completion:)``
  This is a method that fetches the general information structure from the server, and presents it as a ``ServerInfo`` struct.
  
- - ``meetingSearch(specification:completion:)``
+ - ``SwiftBMLSDK_Query/meetingSearch(specification:priority:completion:)``
  This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function.
  
- - ``meetingAutoRadiusSearch(minimumNumberOfResults:specification:completion:)``
+ - ``SwiftBMLSDK_Query/meetingAutoRadiusSearch(minimumNumberOfResults:specification:priority:completion:)``
  This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (``SearchSpecification/locationCenter``), until the minimum number of meetings specified have been found. The ``SearchSpecification/locationRadius`` specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).
 
  # Dependencies
@@ -269,6 +269,12 @@ public struct SwiftBMLSDK_Query {
             return ret
         }
 
+        /* ############################################################################################################################## */
+        // MARK: Search Specification Type Enum
+        /* ############################################################################################################################## */
+        /**
+         Determines which meeting types we want.
+         */
         public enum SearchForMeetingType {
             /* ############################################# */
             /**

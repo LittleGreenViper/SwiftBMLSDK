@@ -19,6 +19,9 @@
  */
 
 import PackageDescription
+import Foundation
+
+let isDocsBuild = ProcessInfo.processInfo.environment["SWIFTBMLSDK_DOCS"] == "1"
 
 let package = Package(
     name: "SwiftBMLSDK",
@@ -28,27 +31,27 @@ let package = Package(
         .macOS(.v13),
         .watchOS(.v9)
     ],
-
     products: [
         .library(
             name: "SwiftBMLSDK",
             targets: ["SwiftBMLSDK"]
-        )],
-
-    dependencies: [
+        )
+    ],
+    dependencies: isDocsBuild ? [] : [
         .package(
             url: "https://github.com/marmelroy/PhoneNumberKit",
-            from: "4.2.7"
-        )],
-
+            from: "4.2.8"
+        )
+    ],
     targets: [
-        .target(name: "SwiftBMLSDK",
-                dependencies: [
-                    .product(
-                        name: "PhoneNumberKit",
-                        package: "PhoneNumberKit"
-                    )
-                ]
-               )
+        .target(
+            name: "SwiftBMLSDK",
+            dependencies: isDocsBuild ? [] : [
+                .product(name: "PhoneNumberKit", package: "PhoneNumberKit")
+            ],
+            swiftSettings: isDocsBuild ? [
+                .define("SWIFTBMLSDK_DOCS")
+            ] : []
+        )
     ]
 )

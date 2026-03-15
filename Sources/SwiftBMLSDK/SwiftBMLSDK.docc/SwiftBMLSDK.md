@@ -1,10 +1,10 @@
 # ``SwiftBMLSDK``
 
+![Icon](icon.png)
+
 A native Swift client SDK for the `LGV_MeetingServer` Web server.
 
 ## Overview
-
-![Icon](icon.png)
 
 Use the SwiftBMLSDK to query instances of the [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer) meeting aggregator server.
 
@@ -36,11 +36,13 @@ This is a query that fetches basic information from the server.
 
 ### Meeting Search Queries
 
-This is how you do a meeting search. Create a ``SwiftBMLSDK_Query/SearchSpecification`` instance, and pass that to the ``SwiftBMLSDK_Query/meetingSearch(specification:completion:)`` method.
+This is how you do a meeting search. Create a ``SwiftBMLSDK_Query/SearchSpecification`` instance, and pass that to the ``SwiftBMLSDK_Query/meetingSearch(specification:priority:completion:)`` method.
 
 - ``SwiftBMLSDK_Query/SearchSpecification``
 
-- ``SwiftBMLSDK_Query/meetingSearch(specification:completion:)``
+- ``SwiftBMLSDK_Query/meetingSearch(specification:priority:completion:)``
+
+- ``SwiftBMLSDK_Query/meetingAutoRadiusSearch(minimumNumberOfResults:specification:priority:completion:)``
 
 - ``SwiftBMLSDK_Parser``
 
@@ -55,3 +57,7 @@ You can create an instance of ``SwiftBMLSDK_MeetingLocalTimezoneCollection``, an
 - ``SwiftBMLSDK_Parser/Meeting/directAppURI``
 
 - ``SwiftBMLSDK_MeetingProtocol``
+
+## Dependencies
+
+This SDK depends upon the [PhoneNumberKit](https://github.com/marmelroy/PhoneNumberKit) package, for formatting usable phone numbers from meeting data.
