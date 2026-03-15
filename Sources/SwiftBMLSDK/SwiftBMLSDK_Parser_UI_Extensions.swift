@@ -219,20 +219,26 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
         
         /* ############################################# */
         /**
-         This is a smart accessor for the next date. If the date has passed, we fetch it again, before returning it.
+         This is a smart accessor for the next date. If the cached date has passed,
+         we fetch it again before returning it.
          */
         public var nextDate: Date {
-            guard .now <= _cachedNextDate else { return _cachedNextDate }
-            _cachedNextDate = meeting.getNextStartDate(isAdjusted: true)
+            guard .now <= _cachedNextDate else {
+                _cachedNextDate = meeting.nextOccurrenceDateFast()
+                return _cachedNextDate
+            }
+            
             return _cachedNextDate
         }
-        
+
         /* ############################################# */
         /**
-         This returns true, if the meeting is currently in progress.
+         This returns `true` if the meeting is currently in progress.
          */
         public var isInProgress: Bool {
-            let prevDate = meeting.getPreviousStartDate(isAdjusted: true)
+            guard 0 < meeting.duration else { return false }
+            
+            let prevDate = meeting.previousOccurrenceDateFast()
             let lastDate = prevDate.addingTimeInterval(meeting.duration)
             return (prevDate..<lastDate).contains(.now)
         }

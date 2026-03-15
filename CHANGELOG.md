@@ -1,3 +1,7 @@
+ **1.4.0** *March 15, 2026*
+ 
+ - Completely got rid of the mutating date calculators.
+ 
  **1.3.10** *March 15, 2026*
  
  - I return an empty distance string, for zero distance.

@@ -1722,64 +1722,9 @@ extension SwiftBMLSDK_Parser.Meeting {
      - returns: true, if the meeting is currently in progress.
      */
     public func isMeetingInProgress() -> Bool {
-        let startsIn = self.meetingStartsIn()
-        return startsIn <= 0 && startsIn > -duration
-    }
-
-    // MARK: Public Mutating Instance Methods
-
-    /* ################################################################## */
-    /**
-     This is the start time of the next meeting, in the meeting's local timezone (unless `isAdjusted` is true).
-     
-     The meeting's start date is always compared to our local time, so that means, for example, if we are at Eastern Time (US), and the meeting is at Central Time (US), and starts at 8PM (local),
-     then, if we check at 8PM (Eastern), the next meeting start will be at 8PM, the same day (Central). If we are at Central Time, and the meeting is at Eastern Time, then checking at 8PM (Central),
-     will show us the meeting starting at 8PM, the next day (In the Eastern Time zone). If isAdjusted is true, then the result will be 9PM (today), and 7PM (tomorrow) (User local), respectively.
-     
-     - parameter inAdjust: If true (default is false), then the date will be converted to our local timezone.
-     - returns: The date of the next meeting (can be ignored, for purposes of updating the cache).
-     
-     > NOTE: If the date is invalid, then the distant future will be returned.
-     */
-    @discardableResult
-    mutating public func getNextStartDate(isAdjusted inAdjust: Bool = false) -> Date {
-        let adjustedNow = Date.now._convert(from: .current, to: timeZone)
-
-        if let cachedDate = _cachedNextDate,
-           adjustedNow > cachedDate {
-            _cachedNextDate = nil
-        }
-        
-        // We make the components from scratch, because that's faster.
-        let hour = integerStartTime / 100
-        let minute = integerStartTime - (hour * 100)
-        
-        let dateComp = DateComponents(hour: hour, minute: minute, weekday: weekday)
-        
-        // The reason for all the cache shenanigans, is because `Calendar.current.nextDate` is REALLY EXPENSIVE, in regards to performance, so we try to use a cache, where possible.
-        if let nextDate = _cachedNextDate ?? Calendar.current.nextDate(after: adjustedNow, matching: dateComp, matchingPolicy: .nextTimePreservingSmallerComponents) {
-            _cachedNextDate = nextDate
-            return inAdjust ? nextDate._convert(from: timeZone, to: .current) : nextDate
-        }
-        
-        return Date.distantFuture
-    }
-    
-    /* ################################################################## */
-    /**
-     This is the start time of the previous meeting, in the meeting's local timezone (unless `isAdjusted` is true).
-     
-     - parameter inAdjust: If true (default is false), then the date will be converted to our local timezone.
-     - returns: The date of the last meeting.
-
-     > NOTE: If the date is invalid, then the distant past will be returned.
-     */
-    mutating public func getPreviousStartDate(isAdjusted inAdjust: Bool = false) -> Date {
-        let nextStart = getNextStartDate(isAdjusted: inAdjust)
-        
-        guard .distantFuture > nextStart else { return .distantPast }
-        
-        return nextStart.addingTimeInterval(-Self.oneWeekInSeconds)
+        let previousStart = self.previousOccurrenceDateFast()
+        let end = previousStart.addingTimeInterval(self.duration)
+        return previousStart <= .now && .now < end
     }
 }
 
