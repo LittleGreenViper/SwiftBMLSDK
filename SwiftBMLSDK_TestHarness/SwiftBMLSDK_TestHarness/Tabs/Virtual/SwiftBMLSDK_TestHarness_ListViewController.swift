@@ -263,14 +263,19 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
     func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
         let ret = inTableView.dequeueReusableCell(withIdentifier: "simple-table", for: inIndexPath)
         
-        var meeting = tableFood[inIndexPath.section].meetings[inIndexPath.row]
-
-        let nextDate = meeting.getNextStartDate(isAdjusted: true)
+        let meeting = tableFood[inIndexPath.section].meetings[inIndexPath.row]
+        let nextDate = meeting.nextOccurrenceDateFast()
+        
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
+        formatter.locale = .current
+        formatter.timeZone = meeting.timeZone
+        
+        formatter.setLocalizedDateFormatFromTemplate("EEEE")
         let weekday = formatter.string(from: nextDate)
-        formatter.dateFormat = "h:mm a"
+        
+        formatter.setLocalizedDateFormatFromTemplate("h:mm a")
         let time = formatter.string(from: nextDate)
+        
         let dayTime = String(format: "SLUG-WEEKDAY-TIME-FORMAT".localizedVariant, weekday, time)
         ret.textLabel?.text = meeting.name + "\n" + dayTime
         ret.textLabel?.numberOfLines = 0
@@ -278,7 +283,9 @@ extension SwiftBMLSDK_TestHarness_ListViewController: UITableViewDataSource {
         ret.textLabel?.minimumScaleFactor = 0.5
         ret.textLabel?.lineBreakMode = .byTruncatingTail
         
-        ret.backgroundColor = (1 == inIndexPath.row % 2) ? UIColor.label.withAlphaComponent(Self._alternateRowOpacity) : UIColor.clear
+        ret.backgroundColor = (1 == inIndexPath.row % 2)
+        ? UIColor.label.withAlphaComponent(Self._alternateRowOpacity)
+        : UIColor.clear
         
         return ret
     }

@@ -980,14 +980,18 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################# */
         /**
-         The start time, adjusted to user timezone, as a military-style integer (HHMM).
-         
-         Returns -1, if the time could not be calculated.
+         The next meeting start time, expressed in the user's current timezone,
+         as a military-style integer (`HHMM`).
+
+         This interprets the next absolute occurrence of the meeting in the user's
+         local timezone, without mutating the receiver.
+
+         - returns: The adjusted start time as `HHMM`, or `-1` if it cannot be derived.
          */
         public var adjustedIntegerStartTime: Int {
-            var mutableSelf = self
-            let starter = mutableSelf.getNextStartDate(isAdjusted: true)
-            let components = Calendar.current.dateComponents([.hour, .minute], from: starter)
+            let starter = self.nextOccurrenceDateFast()
+            let calendar = Calendar.autoupdatingCurrent
+            let components = calendar.dateComponents([.hour, .minute], from: starter)
             
             guard let hour = components.hour,
                   (0..<24).contains(hour),
@@ -1051,16 +1055,28 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
         /* ################################################################## */
         /**
-         This returns a localized format weekday and time string (e.g. "Wednesday 7:30PM," or "Wednesday 1930"). This is when the meeting starts.
-         - parameter inStyle: This is the style of string the user wants. Optional. Default is the user's preferred time format. You can also force 24-hour format.
-         - parameter inLocale: The user's locale. Optional. Default is .autoupdatingCurrent.
-         - parameter inCalendar: The calendar we want. Optional. Default is .autoupdatingCurrent.
-         - parameter inTimeZone: The time zone for our local user. Optional. Default is .autoupdatingCurrent.
-         - parameter inIsAdjusted: True, if we want the time adjusted to our local time zone.
-         - parameter inIncludeDuration: Optional (default is false). If true, the the string will display the time as "XXX-YYY", with "YYY, being the end time.
-         - returns: The string with the start weekday and time.
+         This returns a localized weekday/time string for the receiver's next occurrence
+         (for example, `"Wednesday 7:30 PM"` or `"Wednesday 1930"`).
+
+         The next occurrence is computed as an absolute `Date` using the receiver's local
+         meeting weekday, start time, and `timeZone`. That absolute date is then formatted
+         in either the meeting's local timezone or a caller-supplied display timezone.
+
+         - parameter inStyle: The style of string the user wants. Optional. Default is the
+           user's preferred time format. You can also force 24-hour format.
+         - parameter inLocale: The locale used for formatting. Optional. Default is
+           `.autoupdatingCurrent`.
+         - parameter inCalendar: The calendar used for formatting. Optional. Default is
+           `.autoupdatingCurrent`.
+         - parameter inTimeZone: The timezone to use when `inIsAdjusted` is `true`.
+           Optional. Default is `.autoupdatingCurrent`.
+         - parameter inIsAdjusted: If `true`, format the result in `inTimeZone`. If `false`
+           (the default), format in the meeting's local timezone.
+         - parameter inIncludeDuration: Optional (default is `false`). If `true`, the string
+           will display the time as a range, such as `"Wednesday 7:30 PM-8:30 PM"`.
+         - returns: The formatted weekday/time string for the next start.
          */
-        public mutating func localizedWeekdayTimeString(
+        public func localizedWeekdayTimeString(
             style inStyle: LocalWeekdayTimeStyle = .userPreferredTime,
             locale inLocale: Locale = .autoupdatingCurrent,
             calendar inCalendar: Calendar = .autoupdatingCurrent,
@@ -1068,31 +1084,30 @@ public struct SwiftBMLSDK_Parser: Encodable {
             adjusted inIsAdjusted: Bool = false,
             includeDuration inIncludeDuration: Bool = false
         ) -> String {
-            let startDate = self.getNextStartDate(isAdjusted: inIsAdjusted)
+            let startDate = self.nextOccurrenceDateFast()
+            
+            let displayTimeZone = inIsAdjusted ? inTimeZone : self.timeZone
+            
+            var displayCalendar = inCalendar
+            displayCalendar.timeZone = displayTimeZone
             
             let startFormatter = DateFormatter()
             startFormatter.locale = inLocale
-            startFormatter.calendar = inCalendar
-            startFormatter.timeZone = inTimeZone
+            startFormatter.calendar = displayCalendar
+            startFormatter.timeZone = displayTimeZone
 
             let endFormatter = DateFormatter()
             endFormatter.locale = inLocale
-            endFormatter.calendar = inCalendar
-            endFormatter.timeZone = inTimeZone
+            endFormatter.calendar = displayCalendar
+            endFormatter.timeZone = displayTimeZone
 
             switch inStyle {
             case .userPreferredTime:
-                // Full weekday + locale-preferred time.
                 startFormatter.setLocalizedDateFormatFromTemplate("EEEE jm")
-                
-                // Time only, locale-preferred hour cycle.
                 endFormatter.setLocalizedDateFormatFromTemplate("jm")
 
             case .twentyFourHourCompact:
-                // Full weekday + forced compact 24-hour time.
                 startFormatter.setLocalizedDateFormatFromTemplate("EEEE HHmm")
-                
-                // Time only, forced compact 24-hour time.
                 endFormatter.setLocalizedDateFormatFromTemplate("HHmm")
             }
 
@@ -1677,17 +1692,15 @@ extension SwiftBMLSDK_Parser.Meeting {
         )
     }
 
-    // MARK: Public Mutating Instance Methods
-
     /* ################################################################## */
     /**
      Returns the number of seconds until the meeting starts.
      
      - returns: The number of seconds, before the next start.
      */
-    mutating public func meetingStartsIn() -> TimeInterval {
+    public func meetingStartsIn() -> TimeInterval {
         let now = Date.now
-        let meetingStartTime = getNextStartDate(isAdjusted: true)
+        let meetingStartTime = nextOccurrenceDateFast()
         var ret = now.distance(to: meetingStartTime)
         
         if 0 > ret {
@@ -1701,18 +1714,14 @@ extension SwiftBMLSDK_Parser.Meeting {
 
     /* ################################################################## */
     /**
-     Returns true, if the meeting is currently in progress.
-     
-     > NOTE: This is possibly an expensive (in performance) operation, as it may reset the cache.
-     
-     - returns: The number of seconds, before the next start.
+     - returns: true, if the meeting is currently in progress.
      */
-    mutating public func isMeetingInProgress() -> Bool {
-        let meetingStartTime = getPreviousStartDate(isAdjusted: true)
-        let meetingEndTime = meetingStartTime.addingTimeInterval(duration)
-        
-        return (meetingStartTime..<meetingEndTime).contains(.now)
+    public func isMeetingInProgress() -> Bool {
+        let startsIn = self.meetingStartsIn()
+        return startsIn <= 0 && startsIn > -duration
     }
+
+    // MARK: Public Mutating Instance Methods
 
     /* ################################################################## */
     /**
@@ -1766,6 +1775,126 @@ extension SwiftBMLSDK_Parser.Meeting {
         guard .distantFuture > nextStart else { return .distantPast }
         
         return nextStart.addingTimeInterval(-Self.oneWeekInSeconds)
+    }
+}
+
+/* ###################################################################################################################################### */
+// MARK: - Meeting Extension: Fast Ocurrence Calculation Support -
+/* ###################################################################################################################################### */
+public extension SwiftBMLSDK_Parser.Meeting {
+    /* ################################################################## */
+    /**
+     Returns the receiver interpreted in the meeting's local timezone.
+     
+     - returns: Date components in the meeting's local timezone.
+     */
+    var meetingLocalComponents: DateComponents {
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = self.timeZone
+        
+        return calendar.dateComponents(
+            [.year, .month, .day, .weekday, .hour, .minute, .second],
+            from: self.nextOccurrenceDateFast()
+        )
+    }
+
+    /* ################################################################## */
+    /**
+     Returns the next real-world occurrence of the receiver, expressed as an absolute `Date`.
+     
+     This version avoids `Calendar.nextDate(...)` for better performance. It computes
+     the next occurrence manually from the receiver's local weekday and local start time,
+     interpreted in the receiver's `timeZone`.
+     
+     - parameter inReferenceDate: The point in time from which the next occurrence
+     should be calculated. Optional. Default is `Date()`.
+     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
+     Default is  the current autoupdating.
+     - returns: The next upcoming occurrence of this meeting as an absolute `Date`.
+     */
+    func nextOccurrenceDateFast(
+        from inReferenceDate: Date = Date(),
+        calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
+    ) -> Date {
+        var calendar = Calendar(identifier: inCalendarIdentifier)
+        calendar.timeZone = self.timeZone
+        
+        let nowComponents = calendar.dateComponents(
+            [.weekday, .hour, .minute, .second],
+            from: inReferenceDate
+        )
+        
+        let currentWeekday = nowComponents.weekday ?? 1
+        let currentSeconds =
+        ((nowComponents.hour ?? 0) * 3600) +
+        ((nowComponents.minute ?? 0) * 60) +
+        (nowComponents.second ?? 0)
+        
+        let hour = self.integerStartTime / 100
+        let minute = self.integerStartTime % 100
+        let meetingSeconds = (hour * 3600) + (minute * 60)
+        
+        var dayOffset = (self.weekday - currentWeekday + 7) % 7
+        
+        if 0 == dayOffset,
+           meetingSeconds <= currentSeconds {
+            dayOffset = 7
+        }
+        
+        let startOfToday = calendar.startOfDay(for: inReferenceDate)
+        
+        let targetDate = calendar.date(
+            byAdding: .day,
+            value: dayOffset,
+            to: startOfToday
+        ) ?? startOfToday
+        
+        return calendar.date(
+            byAdding: .second,
+            value: meetingSeconds,
+            to: targetDate
+        ) ?? targetDate
+    }
+    
+    /* ################################################################## */
+    /**
+     Returns the previous real-world occurrence of the receiver, expressed as an absolute `Date`.
+     
+     This version avoids `Calendar.nextDate(...)` for better performance. It computes
+     the next occurrence manually from the receiver's local weekday and local start time,
+     interpreted in the receiver's `timeZone`.
+     
+     - parameter inReferenceDate: The point in time from which the next occurrence
+     should be calculated. Optional. Default is `Date()`.
+     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
+     Default is  the current autoupdating.
+     - returns: The next upcoming occurrence of this meeting as an absolute `Date`.
+     */
+    func previousOccurrenceDateFast(
+        from inReferenceDate: Date = Date(),
+        calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
+    ) -> Date {
+        self.nextOccurrenceDateFast(from: inReferenceDate, calendar: inCalendarIdentifier).addingTimeInterval(60 * 60 * 24 * -7)
+    }
+    
+    /* ################################################################## */
+    /**
+     Returns a numeric sort key for the receiver's next occurrence.
+     
+     - parameter inReferenceDate: The point in time from which the next occurrence
+     should be calculated. Optional. Default is `Date()`.
+     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
+     Default is the current autoupdating.
+     - returns: A sortable numeric key.
+     */
+    func sortingKeyFast(
+        from inReferenceDate: Date = Date(),
+        calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
+    ) -> TimeInterval {
+        self.nextOccurrenceDateFast(
+            from: inReferenceDate,
+            calendar: inCalendarIdentifier
+        ).timeIntervalSinceReferenceDate
     }
 }
 
@@ -2006,114 +2135,4 @@ public extension SwiftBMLSDK_Parser {
      Returns meetings that are only hybrid.
      */
     var hybridMeetings: [Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.hybrid] }
-}
-
-/* ###################################################################################################################################### */
-// MARK: - Meeting Extension: Fast Sorting Support -
-/* ###################################################################################################################################### */
-public extension SwiftBMLSDK_Parser.Meeting {
-    /* ################################################################## */
-    /**
-     Returns the next real-world occurrence of the receiver, expressed as an absolute `Date`.
-
-     This version avoids `Calendar.nextDate(...)` for better performance. It computes
-     the next occurrence manually from the receiver's local weekday and local start time,
-     interpreted in the receiver's `timeZone`.
-
-     - parameter inReferenceDate: The point in time from which the next occurrence
-       should be calculated. Optional. Default is `Date()`.
-     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
-       Default is  the current autoupdating.
-     - returns: The next upcoming occurrence of this meeting as an absolute `Date`.
-     */
-    func nextOccurrenceDateFast(
-        from inReferenceDate: Date = Date(),
-        calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
-    ) -> Date {
-        var calendar = Calendar(identifier: inCalendarIdentifier)
-        calendar.timeZone = self.timeZone
-
-        let nowComponents = calendar.dateComponents(
-            [.weekday, .hour, .minute, .second],
-            from: inReferenceDate
-        )
-
-        let meetingTimeComponents = calendar.dateComponents(
-            [.hour, .minute, .second],
-            from: self.startTime
-        )
-
-        let currentWeekday = nowComponents.weekday ?? 1
-        let currentSeconds =
-            ((nowComponents.hour ?? 0) * 3600) +
-            ((nowComponents.minute ?? 0) * 60) +
-            (nowComponents.second ?? 0)
-
-        let meetingSeconds =
-            ((meetingTimeComponents.hour ?? 0) * 3600) +
-            ((meetingTimeComponents.minute ?? 0) * 60) +
-            (meetingTimeComponents.second ?? 0)
-
-        var dayOffset = (self.weekday - currentWeekday + 7) % 7
-
-        if 0 == dayOffset,
-           meetingSeconds <= currentSeconds {
-            dayOffset = 7
-        }
-
-        let startOfToday = calendar.startOfDay(for: inReferenceDate)
-
-        let targetDate = calendar.date(
-            byAdding: .day,
-            value: dayOffset,
-            to: startOfToday
-        ) ?? startOfToday
-
-        return calendar.date(
-            byAdding: .second,
-            value: meetingSeconds,
-            to: targetDate
-        ) ?? targetDate
-    }
-    
-    /* ################################################################## */
-    /**
-     Returns the previous real-world occurrence of the receiver, expressed as an absolute `Date`.
-
-     This version avoids `Calendar.nextDate(...)` for better performance. It computes
-     the next occurrence manually from the receiver's local weekday and local start time,
-     interpreted in the receiver's `timeZone`.
-
-     - parameter inReferenceDate: The point in time from which the next occurrence
-       should be calculated. Optional. Default is `Date()`.
-     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
-       Default is  the current autoupdating.
-     - returns: The next upcoming occurrence of this meeting as an absolute `Date`.
-     */
-    func previousOccurrenceDateFast(
-        from inReferenceDate: Date = Date(),
-        calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
-    ) -> Date {
-        self.nextOccurrenceDateFast(from: inReferenceDate, calendar: inCalendarIdentifier).addingTimeInterval(60 * 60 * 24 * -7)
-    }
-    
-    /* ################################################################## */
-    /**
-     Returns a numeric sort key for the receiver's next occurrence.
-
-     - parameter inReferenceDate: The point in time from which the next occurrence
-       should be calculated. Optional. Default is `Date()`.
-     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
-       Default is the current autoupdating.
-     - returns: A sortable numeric key.
-     */
-    func sortingKeyFast(
-        from inReferenceDate: Date = Date(),
-        calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
-    ) -> TimeInterval {
-        self.nextOccurrenceDateFast(
-            from: inReferenceDate,
-            calendar: inCalendarIdentifier
-        ).timeIntervalSinceReferenceDate
-    }
 }

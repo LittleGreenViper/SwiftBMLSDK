@@ -1056,9 +1056,11 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The start time, adjusted to user timezone, as a military-style integer (HHMM).</p>
+                        <p>The next meeting start time, expressed in the user&rsquo;s current timezone,
+as a military-style integer (<code>HHMM</code>).</p>
 
-<p>Returns -1, if the time could not be calculated.</p>
+<p>This interprets the next absolute occurrence of the meeting in the user&rsquo;s
+local timezone, without mutating the receiver.</p>
 
                       </div>
                       <div class="declaration">
@@ -1068,6 +1070,10 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">adjustedIntegerStartTime</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The adjusted start time as <code>HHMM</code>, or <code>-1</code> if it cannot be derived.</p>
                       </div>
                     </section>
                   </div>
@@ -1239,14 +1245,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>This returns a localized format weekday and time string (e.g. &ldquo;Wednesday 7:30PM,&rdquo; or &ldquo;Wednesday 1930&rdquo;). This is when the meeting starts.</p>
+                        <p>This returns a localized weekday/time string for the receiver&rsquo;s next occurrence
+(for example, <code>&quot;Wednesday 7:30 PM&quot;</code> or <code>&quot;Wednesday 1930&quot;</code>).</p>
+
+<p>The next occurrence is computed as an absolute <code>Date</code> using the receiver&rsquo;s local
+meeting weekday, start time, and <code><a href="../../Structs/SwiftBMLSDK_Parser/Meeting.html#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8timeZone10Foundation04TimeF0Vvp">timeZone</a></code>. That absolute date is then formatted
+in either the meeting&rsquo;s local timezone or a caller-supplied display timezone.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">localizedWeekdayTimeString</span><span class="p">(</span>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">localizedWeekdayTimeString</span><span class="p">(</span>
     <span class="n">style</span> <span class="nv">inStyle</span><span class="p">:</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser/Meeting/LocalWeekdayTimeStyle.html">LocalWeekdayTimeStyle</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">userPreferredTime</span><span class="p">,</span>
     <span class="n">locale</span> <span class="nv">inLocale</span><span class="p">:</span> <span class="kt">Locale</span> <span class="o">=</span> <span class="o">.</span><span class="n">autoupdatingCurrent</span><span class="p">,</span>
     <span class="n">calendar</span> <span class="nv">inCalendar</span><span class="p">:</span> <span class="kt">Calendar</span> <span class="o">=</span> <span class="o">.</span><span class="n">autoupdatingCurrent</span><span class="p">,</span>
@@ -1269,7 +1280,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>This is the style of string the user wants. Optional. Default is the user&rsquo;s preferred time format. You can also force 24-hour format.</p>
+                                  <p>The style of string the user wants. Optional. Default is the
+user&rsquo;s preferred time format. You can also force 24-hour format.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1281,7 +1293,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The user&rsquo;s locale. Optional. Default is .autoupdatingCurrent.</p>
+                                  <p>The locale used for formatting. Optional. Default is
+<code>.autoupdatingCurrent</code>.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1293,7 +1306,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The calendar we want. Optional. Default is .autoupdatingCurrent.</p>
+                                  <p>The calendar used for formatting. Optional. Default is
+<code>.autoupdatingCurrent</code>.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1305,7 +1319,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>The time zone for our local user. Optional. Default is .autoupdatingCurrent.</p>
+                                  <p>The timezone to use when <code>inIsAdjusted</code> is <code>true</code>.
+Optional. Default is <code>.autoupdatingCurrent</code>.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1317,7 +1332,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>True, if we want the time adjusted to our local time zone.</p>
+                                  <p>If <code>true</code>, format the result in <code>inTimeZone</code>. If <code>false</code>
+(the default), format in the meeting&rsquo;s local timezone.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1329,7 +1345,8 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>Optional (default is false). If true, the the string will display the time as &ldquo;XXX-YYY&rdquo;, with &ldquo;YYY, being the end time.</p>
+                                  <p>Optional (default is <code>false</code>). If <code>true</code>, the string
+will display the time as a range, such as <code>&quot;Wednesday 7:30 PM-8:30 PM&quot;</code>.</p>
                                 </div>
                               </td>
                             </tr>
@@ -1338,7 +1355,7 @@
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>The string with the start weekday and time.</p>
+                        <p>The formatted weekday/time string for the next start.</p>
                       </div>
                     </section>
                   </div>
@@ -2243,19 +2260,6 @@ to display. Optional. Default is <code>0...1</code>.</p>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Public%20Mutating%20Instance%20Methods"></a>
-                <a name="//apple_ref/swift/Section/Public Mutating Instance Methods" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Public%20Mutating%20Instance%20Methods"></a>
-                  <h3 class="section-name"><span>Public Mutating Instance Methods</span>
-</h3>
-                </div>
-              </div>
-              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -2276,7 +2280,7 @@ to display. Optional. Default is <code>0...1</code>.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">meetingStartsIn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">meetingStartsIn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
 
                         </div>
                       </div>
@@ -2300,29 +2304,36 @@ to display. Optional. Default is <code>0...1</code>.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Returns true, if the meeting is currently in progress.</p>
-<div class="aside aside-note">
-    <p class="aside-title">Note</p>
-    <p>This is possibly an expensive (in performance) operation, as it may reset the cache.</p>
-
-</div>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">isMeetingInProgress</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">isMeetingInProgress</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>The number of seconds, before the next start.</p>
+                        <p>true, if the meeting is currently in progress.</p>
                       </div>
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20Mutating%20Instance%20Methods"></a>
+                <a name="//apple_ref/swift/Section/Public Mutating Instance Methods" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Mutating%20Instance%20Methods"></a>
+                  <h3 class="section-name"><span>Public Mutating Instance Methods</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
                 <li class="item">
                   <div>
                     <code>
@@ -2442,15 +2453,46 @@ will show us the meeting starting at 8PM, the next day (In the Eastern Time zone
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Meeting%20Extension%3A%20Fast%20Sorting%20Support"></a>
-                <a name="//apple_ref/swift/Section/Meeting Extension: Fast Sorting Support" class="dashAnchor"></a>
+                <a name="/Meeting%20Extension%3A%20Fast%20Ocurrence%20Calculation%20Support"></a>
+                <a name="//apple_ref/swift/Section/Meeting Extension: Fast Ocurrence Calculation Support" class="dashAnchor"></a>
                 <div class="section-name-container">
-                  <a class="section-name-link" href="#/Meeting%20Extension%3A%20Fast%20Sorting%20Support"></a>
-                  <h3 class="section-name"><span>Meeting Extension: Fast Sorting Support</span>
+                  <a class="section-name-link" href="#/Meeting%20Extension%3A%20Fast%20Ocurrence%20Calculation%20Support"></a>
+                  <h3 class="section-name"><span>Meeting Extension: Fast Ocurrence Calculation Support</span>
 </h3>
                 </div>
               </div>
               <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV22meetingLocalComponents10Foundation04DateG0Vvp"></a>
+                    <a name="//apple_ref/swift/Property/meetingLocalComponents" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV22meetingLocalComponents10Foundation04DateG0Vvp">meetingLocalComponents</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the receiver interpreted in the meeting&rsquo;s local timezone.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">meetingLocalComponents</span><span class="p">:</span> <span class="kt">DateComponents</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Date components in the meeting&rsquo;s local timezone.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
                 <li class="item">
                   <div>
                     <code>

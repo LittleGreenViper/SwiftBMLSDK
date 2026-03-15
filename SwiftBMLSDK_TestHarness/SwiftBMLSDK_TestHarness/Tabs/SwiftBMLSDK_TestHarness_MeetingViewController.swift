@@ -234,45 +234,64 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
     /* ################################################################## */
     /**
      Set the time and day label.
+
+     This displays the meeting weekday and time in the meeting's local timezone,
+     using the fast non-mutating next-occurrence calculator.
      */
     func setTimeAndDay() {
-        guard var meeting = meeting else { return }
+        guard let meeting = meeting else { return }
         
-        let nextStart = meeting.getNextStartDate(isAdjusted: isNormalizedTime)
-        var nextEnd: Date?
-        var displayString: String = ""
+        let nextStart = meeting.nextOccurrenceDateFast()
+        let nextEnd = 0 < meeting.duration
+            ? nextStart.addingTimeInterval(TimeInterval(meeting.duration))
+            : nil
         
-        if 0 < meeting.duration {
-            nextEnd = nextStart.addingTimeInterval(TimeInterval(meeting.duration))
-        }
+        let weekdayFormatter = DateFormatter()
+        weekdayFormatter.locale = .current
+        weekdayFormatter.timeZone = meeting.timeZone
+        weekdayFormatter.setLocalizedDateFormatFromTemplate("EEEE")
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale.current
-        dateFormatter.setLocalizedDateFormatFromTemplate("EEEE")
-        let weekday = dateFormatter.string(from: nextStart)
-
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = .current
+        timeFormatter.timeZone = meeting.timeZone
+        timeFormatter.timeStyle = .short
+        timeFormatter.dateStyle = .none
+        
+        let weekday = weekdayFormatter.string(from: nextStart)
+        let startTime = timeFormatter.string(from: nextStart)
+        
+        let displayString: String
+        
         if let nextEnd = nextEnd {
-            let startTime = nextStart.localizedTime
-            let endTime = nextEnd.localizedTime
-            displayString = String(format: "SLUG-MEETING-DAY-AND-TIME-RANGE-LABEL-FORMAT".localizedVariant, weekday, startTime, endTime)
+            let endTime = timeFormatter.string(from: nextEnd)
+            displayString = String(
+                format: "SLUG-MEETING-DAY-AND-TIME-RANGE-LABEL-FORMAT".localizedVariant,
+                weekday,
+                startTime,
+                endTime
+            )
         } else {
-            let startTime = nextStart.localizedTime
-            displayString = String(format: "SLUG-MEETING-DAY-AND-TIME-LABEL-FORMAT".localizedVariant, weekday, startTime)
+            displayString = String(
+                format: "SLUG-MEETING-DAY-AND-TIME-LABEL-FORMAT".localizedVariant,
+                weekday,
+                startTime
+            )
         }
         
         if !displayString.isEmpty {
+            timeDayLabel?.isHidden = false
             timeDayLabel?.text = displayString
         } else {
             timeDayLabel?.isHidden = true
         }
     }
-
+    
     /* ################################################################## */
     /**
      Set the next meeting label.
      */
     func setMeetsNext() {
-        guard var meeting = meeting else { return }
+        guard let meeting = meeting else { return }
 
         guard !meeting.isMeetingInProgress() else {
             meetsNextLabel?.isHidden = false
@@ -330,18 +349,35 @@ extension SwiftBMLSDK_TestHarness_MeetingViewController {
      This sets the label that displays the meeting timezone.
      */
     func setMeetingTimeZone() {
-        guard var meetingInstance = meeting else { return }
-        let nativeTime = meetingInstance.getNextStartDate(isAdjusted: false)
+        guard let meetingInstance = meeting else { return }
+        
+        let nativeTime = meetingInstance.nextOccurrenceDateFast()
         
         if let myCurrentTimezoneName = TimeZone.current.localizedName(for: .standard, locale: .current),
            let zoneName = meetingInstance.timeZone.localizedName(for: .standard, locale: .current),
            !zoneName.isEmpty,
            myCurrentTimezoneName != zoneName {
             timeZoneLabel?.isHidden = false
+            
             if isNormalizedTime {
-                timeZoneLabel?.text = String(format: "SLUG-TIMEZONE-FORMAT".localizedVariant, zoneName, nativeTime.localizedTime)
+                let formatter = DateFormatter()
+                formatter.locale = .current
+                formatter.timeZone = meetingInstance.timeZone
+                formatter.dateStyle = .none
+                formatter.timeStyle = .short
+                
+                let nativeTimeString = formatter.string(from: nativeTime)
+                
+                timeZoneLabel?.text = String(
+                    format: "SLUG-TIMEZONE-FORMAT".localizedVariant,
+                    zoneName,
+                    nativeTimeString
+                )
             } else {
-                timeZoneLabel?.text = String(format: "SLUG-TIMEZONE-NO-TIME-FORMAT".localizedVariant, zoneName)
+                timeZoneLabel?.text = String(
+                    format: "SLUG-TIMEZONE-NO-TIME-FORMAT".localizedVariant,
+                    zoneName
+                )
             }
         } else {
             timeZoneLabel?.isHidden = true

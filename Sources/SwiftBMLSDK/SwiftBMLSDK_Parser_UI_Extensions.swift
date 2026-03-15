@@ -245,7 +245,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
          */
         public init(meeting inMeeting: SwiftBMLSDK_Parser.Meeting) {
             meeting = inMeeting
-            _cachedNextDate = meeting.getNextStartDate(isAdjusted: true)
+            _cachedNextDate = meeting.nextOccurrenceDateFast()
         }
     }
     

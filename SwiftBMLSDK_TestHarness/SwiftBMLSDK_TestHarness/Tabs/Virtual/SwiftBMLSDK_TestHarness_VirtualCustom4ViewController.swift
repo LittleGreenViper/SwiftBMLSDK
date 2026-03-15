@@ -56,11 +56,12 @@ extension MeetingInstance {
      This allows us to return a string for the meeting time.
      */
     var timeString: String {
-        var mutableSelf = self
-        let nextDate = mutableSelf.getNextStartDate(isAdjusted: true)
+        let nextDate = self.nextOccurrenceDateFast()
         let formatter = DateFormatter()
-        formatter.dateFormat = .none
-        formatter.dateFormat = "h:mm a"
+        formatter.locale = .current
+        formatter.timeZone = self.timeZone
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
         return formatter.string(from: nextDate)
     }
 }

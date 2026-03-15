@@ -1,3 +1,7 @@
+ **1.3.9** *March 15, 2026*
+ 
+ - I now use the new fast date calculator, wherever possible.
+ 
  **1.3.8** *March 15, 2026*
  
  - Added a couple of fast date calculators, so no more stupid mutating functions.

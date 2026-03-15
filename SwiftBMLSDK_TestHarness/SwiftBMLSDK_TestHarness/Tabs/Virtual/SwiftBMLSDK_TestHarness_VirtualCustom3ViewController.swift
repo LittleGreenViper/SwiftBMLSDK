@@ -63,13 +63,18 @@ extension SwiftBMLSDK_TestHarness_VirtualCustom3ViewController_TableCell {
      */
     override func layoutSubviews() {
         super.layoutSubviews()
+        
         meetingNameLabel?.text = meetingInstance?.name
-        guard var meeting = meetingInstance else { return }
-
-        let nextDate = meeting.getNextStartDate(isAdjusted: true)
+        guard let meeting = meetingInstance else { return }
+        
+        let nextDate = meeting.nextOccurrenceDateFast()
+        
         let formatter = DateFormatter()
-        formatter.dateFormat = .none
-        formatter.dateFormat = "h:mm a"
+        formatter.locale = .current
+        formatter.timeZone = meeting.timeZone
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        
         timeLabel?.text = formatter.string(from: nextDate)
     }
 }

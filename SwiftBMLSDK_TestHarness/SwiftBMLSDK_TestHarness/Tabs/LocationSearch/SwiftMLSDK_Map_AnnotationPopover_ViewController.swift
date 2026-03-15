@@ -181,20 +181,36 @@ extension SwiftMLSDK_Map_AnnotationPopover_ViewController: UITableViewDataSource
      - parameter inIndexPath: The index path of the cell we want.
      */
     func tableView(_ inTableView: UITableView, cellForRowAt inIndexPath: IndexPath) -> UITableViewCell {
-        guard let ret = inTableView.dequeueReusableCell(withIdentifier: SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell.reuseID, for: inIndexPath) as? SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell else { return UITableViewCell() }
+        guard let ret = inTableView.dequeueReusableCell(
+            withIdentifier: SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell.reuseID,
+            for: inIndexPath
+        ) as? SwiftMLSDK_Map_AnnotationPopover_ViewController_TableCell else { return UITableViewCell() }
+        
         ret.backgroundColor = .clear
+        
         guard (0..<meetings.count).contains(inIndexPath.row) else { return ret }
-        var meeting = meetings[inIndexPath.row]
-        let nextDate = meeting.getNextStartDate(isAdjusted: true)
+        
+        let meeting = meetings[inIndexPath.row]
+        let nextDate = meeting.nextOccurrenceDateFast()
+        
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE"
+        formatter.locale = .current
+        formatter.timeZone = meeting.timeZone
+        
+        formatter.setLocalizedDateFormatFromTemplate("EEEE")
         let weekday = formatter.string(from: nextDate)
-        formatter.dateFormat = "h:mm a"
+        
+        formatter.setLocalizedDateFormatFromTemplate("h:mm a")
         let time = formatter.string(from: nextDate)
+        
         let dayTime = String(format: "SLUG-WEEKDAY-TIME-FORMAT".localizedVariant, weekday, time)
+        
         ret.meetingNameLabel?.text = meeting.name
         ret.startTimeLabel?.text = dayTime
-        ret.backgroundColor = (1 == inIndexPath.row % 2) ? UIColor.label.withAlphaComponent(Self._alternateRowOpacity) : UIColor.clear
+        ret.backgroundColor = (1 == inIndexPath.row % 2)
+        ? UIColor.label.withAlphaComponent(Self._alternateRowOpacity)
+        : UIColor.clear
+        
         return ret
     }
 }
