@@ -1,3 +1,7 @@
+ **1.3.7** *March 15, 2026*
+ 
+ - Made the Meeting type identifiable.
+ 
  **1.3.6** *March 15, 2026*
  
  - Added localized handling of distance to meetings.

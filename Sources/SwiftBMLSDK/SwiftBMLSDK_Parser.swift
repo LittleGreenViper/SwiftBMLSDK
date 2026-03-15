@@ -364,7 +364,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
      
      > NOTE: There is a platform-dependent extension that adds the ``SwiftBMLSDK_Parser/Meeting/directAppURI`` computed property to this type.
      */
-    public struct Meeting: Comparable {
+    public struct Meeting: Comparable, Identifiable {
         // MARK: Comparable Conformance
         /* ############################################# */
         /**
