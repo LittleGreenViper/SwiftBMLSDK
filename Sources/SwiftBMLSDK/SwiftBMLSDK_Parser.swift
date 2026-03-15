@@ -1743,6 +1743,30 @@ extension SwiftBMLSDK_Parser.Meeting {
                 )
             )
     }
+    
+    /* ################################################################## */
+    /**
+     Returns the distance from the receiver's coordinates to the supplied location
+     as a localized string, using an SDK-defined width style.
+
+     - parameter inLocation: The location from which the distance is measured.
+     - parameter inWidth: The localized unit-width style used for formatting.
+       Optional. Default is `.abbreviated`.
+     - parameter inPrecision: The minimum and maximum number of fraction digits
+       to display. Optional. Default is `0...1`.
+     - returns: A localized distance string.
+     */
+    func distanceStringFrom(
+        location inLocation: CLLocationCoordinate2D,
+        width inWidth: DistanceStringWidth = .abbreviated,
+        precision inPrecision: ClosedRange<Int> = 0...1
+    ) -> String {
+        self.distanceStringFrom(
+            location: inLocation,
+            width: inWidth.unitWidth,
+            precision: inPrecision
+        )
+    }
 }
 
 /* ###################################################################################################################################### */
