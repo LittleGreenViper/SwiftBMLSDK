@@ -19,7 +19,7 @@
 
 import CoreLocation
 import MapKit
-import RVS_Persistent_Prefs
+import RVS_PersistentPrefs
 import RVS_Generic_Swift_Toolbox
 import SwiftBMLSDK
 import Contacts

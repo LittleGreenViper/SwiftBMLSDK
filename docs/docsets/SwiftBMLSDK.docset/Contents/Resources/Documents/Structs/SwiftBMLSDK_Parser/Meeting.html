@@ -2010,6 +2010,239 @@ Nested structures, like the coordinates and the formats, are converted to top-le
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12distanceFrom8location10Foundation11MeasurementVySo12NSUnitLengthCGSo22CLLocationCoordinate2DV_tF"></a>
+                    <a name="//apple_ref/swift/Method/distanceFrom(location:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV12distanceFrom8location10Foundation11MeasurementVySo12NSUnitLengthCGSo22CLLocationCoordinate2DV_tF">distanceFrom(location:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the distance from the receiver&rsquo;s coordinates to the supplied location.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">distanceFrom</span><span class="p">(</span><span class="n"><a href="../../Structs/SwiftBMLSDK_Parser/Meeting.html#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8locationSo10CLLocationCSgvp">location</a></span> <span class="nv">inLocation</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Measurement</span><span class="o">&lt;</span><span class="kt">UnitLength</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inLocation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The location from which the distance is measured.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The distance as a <code>Measurement&lt;UnitLength&gt;</code>, stored in meters.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV18distanceStringFrom8location5width9precisionSSSo22CLLocationCoordinate2DV_10Foundation11MeasurementVALSo11NSDimensionCRbzrlE11FormatStyleV9UnitWidthVySo12NSUnitLengthC__GSNySiGtF"></a>
+                    <a name="//apple_ref/swift/Method/distanceStringFrom(location:width:precision:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV18distanceStringFrom8location5width9precisionSSSo22CLLocationCoordinate2DV_10Foundation11MeasurementVALSo11NSDimensionCRbzrlE11FormatStyleV9UnitWidthVySo12NSUnitLengthC__GSNySiGtF">distanceStringFrom(location:<wbr>width:<wbr>precision:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the distance from the receiver&rsquo;s coordinates to the supplied location
+as a localized display string.</p>
+
+<p>This uses Swift&rsquo;s modern measurement-formatting API, and formats the distance
+using a road/travel-oriented presentation for the current locale. The caller
+can control both the display width and the allowed fractional precision.</p>
+
+<p>Typical width values are:</p>
+
+<ul>
+<li><code>.abbreviated</code>: Compact output, such as <code>1.2 mi</code> or <code>850 m</code></li>
+<li><code>.wide</code>: More explicit output, such as <code>1.2 miles</code></li>
+<li><code>.narrow</code>: Very compact output where supported by the locale</li>
+</ul>
+
+<p>The precision is supplied as a closed integer range representing the minimum
+and maximum number of fraction digits to display. For example:</p>
+
+<ul>
+<li><code>0...1</code>: Show zero or one fractional digit</li>
+<li><code>0...2</code>: Show zero, one, or two fractional digits</li>
+<li><p><code>1...1</code>: Always show exactly one fractional digit</p></li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">distanceStringFrom</span><span class="p">(</span>
+    <span class="n"><a href="../../Structs/SwiftBMLSDK_Parser/Meeting.html#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8locationSo10CLLocationCSgvp">location</a></span> <span class="nv">inLocation</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">,</span>
+    <span class="n">width</span> <span class="nv">inWidth</span><span class="p">:</span> <span class="kt">Measurement</span><span class="o">&lt;</span><span class="kt">UnitLength</span><span class="o">&gt;.</span><span class="kt">FormatStyle</span><span class="o">.</span><span class="kt">UnitWidth</span> <span class="o">=</span> <span class="o">.</span><span class="n">abbreviated</span><span class="p">,</span>
+    <span class="n">precision</span> <span class="nv">inPrecision</span><span class="p">:</span> <span class="kt">ClosedRange</span><span class="o">&lt;</span><span class="kt">Int</span><span class="o">&gt;</span> <span class="o">=</span> <span class="mi">0</span><span class="o">...</span><span class="mi">1</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inLocation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The location from which the distance is measured.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inWidth</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The localized unit-width style used for formatting.
+Optional. Default is <code>.abbreviated</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inPrecision</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The minimum and maximum number of fraction digits
+to display. Optional. Default is <code>0...1</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A localized distance string.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV18distanceStringFrom8location5width9precisionSSSo22CLLocationCoordinate2DV_AE08DistanceF5WidthOSNySiGtF"></a>
+                    <a name="//apple_ref/swift/Method/distanceStringFrom(location:width:precision:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV18distanceStringFrom8location5width9precisionSSSo22CLLocationCoordinate2DV_AE08DistanceF5WidthOSNySiGtF">distanceStringFrom(location:<wbr>width:<wbr>precision:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the distance from the receiver&rsquo;s coordinates to the supplied location
+as a localized string, using an SDK-defined width style.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">distanceStringFrom</span><span class="p">(</span>
+    <span class="n"><a href="../../Structs/SwiftBMLSDK_Parser/Meeting.html#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8locationSo10CLLocationCSgvp">location</a></span> <span class="nv">inLocation</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">,</span>
+    <span class="n">width</span> <span class="nv">inWidth</span><span class="p">:</span> <span class="kt"><a href="../../Structs/SwiftBMLSDK_Parser/Meeting/DistanceStringWidth.html">DistanceStringWidth</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">abbreviated</span><span class="p">,</span>
+    <span class="n">precision</span> <span class="nv">inPrecision</span><span class="p">:</span> <span class="kt">ClosedRange</span><span class="o">&lt;</span><span class="kt">Int</span><span class="o">&gt;</span> <span class="o">=</span> <span class="mi">0</span><span class="o">...</span><span class="mi">1</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inLocation</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The location from which the distance is measured.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inWidth</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The localized unit-width style used for formatting.
+Optional. Default is <code>.abbreviated</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inPrecision</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The minimum and maximum number of fraction digits
+to display. Optional. Default is <code>0...1</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A localized distance string.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
