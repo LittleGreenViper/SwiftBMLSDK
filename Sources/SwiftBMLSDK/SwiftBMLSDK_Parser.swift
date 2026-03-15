@@ -1441,6 +1441,38 @@ extension SwiftBMLSDK_Parser.Meeting {
 
     /* ################################################################## */
     /**
+     These are the supported display widths for localized distance strings.
+     */
+    public enum DistanceStringWidth {
+        /// Localized abbreviated units (for example, "mi").
+        case abbreviated
+
+        /// Localized narrow units.
+        case narrow
+
+        /// Localized wide units (for example, "miles").
+        case wide
+
+        /* ############################################################## */
+        /**
+         The Foundation width value that corresponds to the receiver.
+         */
+        fileprivate var unitWidth: DistanceUnitWidth {
+            switch self {
+            case .abbreviated:
+                return .abbreviated
+
+            case .narrow:
+                return .narrow
+
+            case .wide:
+                return .wide
+            }
+        }
+    }
+
+    /* ################################################################## */
+    /**
      Internal Enum for the time localization.
      */
     public enum LocalWeekdayTimeStyle {
