@@ -1640,6 +1640,71 @@ extension SwiftBMLSDK_Parser.Meeting {
         
         return nextStart.addingTimeInterval(-Self.oneWeekInSeconds)
     }
+    
+    /* ################################################################## */
+    /**
+     Returns the distance from the receiver's coordinates to the supplied location.
+     
+     - parameter inLocation: The location from which the distance is measured.
+     - returns: The distance as a `Measurement<UnitLength>`, stored in meters.
+     */
+    func distanceFrom(location inLocation: CLLocationCoordinate2D) -> Measurement<UnitLength> {
+        guard let myCoords = self.coords else {
+            return .init(value: 0, unit: .meters)
+        }
+        
+        let meetingLocation = CLLocation(latitude: myCoords.latitude, longitude: myCoords.longitude)
+        let startingLocation = CLLocation(latitude: inLocation.latitude, longitude: inLocation.longitude)
+        
+        return .init(
+            value: meetingLocation.distance(from: startingLocation),
+            unit: .meters
+        )
+    }
+    
+    /* ################################################################## */
+    /**
+     Returns the distance from the receiver's coordinates to the supplied location
+     as a localized display string.
+     
+     This uses Swift's modern measurement-formatting API, and formats the distance
+     using a road/travel-oriented presentation for the current locale. The caller
+     can control both the display width and the allowed fractional precision.
+     
+     Typical width values are:
+     
+     - `.abbreviated`: Compact output, such as `1.2 mi` or `850 m`
+     - `.wide`: More explicit output, such as `1.2 miles`
+     - `.narrow`: Very compact output where supported by the locale
+     
+     The precision is supplied as a closed integer range representing the minimum
+     and maximum number of fraction digits to display. For example:
+     
+     - `0...1`: Show zero or one fractional digit
+     - `0...2`: Show zero, one, or two fractional digits
+     - `1...1`: Always show exactly one fractional digit
+     
+     - parameter inLocation: The location from which the distance is measured.
+     - parameter inWidth: The localized unit-width style used for formatting.
+       Optional. Default is `.abbreviated`.
+     - parameter inPrecision: The minimum and maximum number of fraction digits
+       to display. Optional. Default is `0...1`.
+     - returns: A localized distance string.
+     */
+    func distanceStringFrom(
+        location inLocation: CLLocationCoordinate2D,
+        width inWidth: Measurement<UnitLength>.FormatStyle.UnitWidth = .abbreviated,
+        precision inPrecision: ClosedRange<Int> = 0...1
+    ) -> String {
+        self.distanceFrom(location: inLocation)
+            .formatted(
+                .measurement(
+                    width: inWidth,
+                    usage: .road,
+                    numberFormatStyle: .number.precision(.fractionLength(inPrecision))
+                )
+            )
+    }
 }
 
 /* ###################################################################################################################################### */

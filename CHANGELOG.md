@@ -1,3 +1,7 @@
+ **1.3.2** *March 15, 2026*
+ 
+ - Added localized handling of distance to meetings.
+ 
  **1.3.1** *March 15, 2026*
  
  - Updated the documentation.
