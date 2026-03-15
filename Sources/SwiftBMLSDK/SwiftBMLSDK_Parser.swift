@@ -1435,6 +1435,12 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
 extension SwiftBMLSDK_Parser.Meeting {
     /* ################################################################## */
     /**
+     Use this for the distance string generator.
+     */
+    public typealias DistanceUnitWidth = Measurement<UnitLength>.FormatStyle.UnitWidth
+
+    /* ################################################################## */
+    /**
      Internal Enum for the time localization.
      */
     public enum LocalWeekdayTimeStyle {

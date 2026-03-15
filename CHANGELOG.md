@@ -1,4 +1,4 @@
- **1.3.2** *March 15, 2026*
+ **1.3.3** *March 15, 2026*
  
  - Added localized handling of distance to meetings.
  
