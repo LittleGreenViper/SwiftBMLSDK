@@ -2442,6 +2442,228 @@ will show us the meeting starting at 8PM, the next day (In the Eastern Time zone
             </div>
             <div class="task-group">
               <div class="task-name-container">
+                <a name="/Meeting%20Extension%3A%20Fast%20Sorting%20Support"></a>
+                <a name="//apple_ref/swift/Section/Meeting Extension: Fast Sorting Support" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Meeting%20Extension%3A%20Fast%20Sorting%20Support"></a>
+                  <h3 class="section-name"><span>Meeting Extension: Fast Sorting Support</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV22nextOccurrenceDateFast4from8calendar10Foundation0G0VAK_AI8CalendarV10IdentifierOtF"></a>
+                    <a name="//apple_ref/swift/Method/nextOccurrenceDateFast(from:calendar:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV22nextOccurrenceDateFast4from8calendar10Foundation0G0VAK_AI8CalendarV10IdentifierOtF">nextOccurrenceDateFast(from:<wbr>calendar:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the next real-world occurrence of the receiver, expressed as an absolute <code>Date</code>.</p>
+
+<p>This version avoids <code>Calendar.nextDate(...)</code> for better performance. It computes
+the next occurrence manually from the receiver&rsquo;s local weekday and local start time,
+interpreted in the receiver&rsquo;s <code><a href="../../Structs/SwiftBMLSDK_Parser/Meeting.html#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8timeZone10Foundation04TimeF0Vvp">timeZone</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">nextOccurrenceDateFast</span><span class="p">(</span>
+    <span class="n">from</span> <span class="nv">inReferenceDate</span><span class="p">:</span> <span class="kt">Date</span> <span class="o">=</span> <span class="kt">Date</span><span class="p">(),</span>
+    <span class="n">calendar</span> <span class="nv">inCalendarIdentifier</span><span class="p">:</span> <span class="kt">Calendar</span><span class="o">.</span><span class="kt">Identifier</span> <span class="o">=</span> <span class="kt">Calendar</span><span class="o">.</span><span class="n">autoupdatingCurrent</span><span class="o">.</span><span class="n">identifier</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Date</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inReferenceDate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The point in time from which the next occurrence
+should be calculated. Optional. Default is <code>Date()</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inCalendarIdentifier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The calendar used for date math. Optional.
+Default is  the current autoupdating.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The next upcoming occurrence of this meeting as an absolute <code>Date</code>.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV26previousOccurrenceDateFast4from8calendar10Foundation0G0VAK_AI8CalendarV10IdentifierOtF"></a>
+                    <a name="//apple_ref/swift/Method/previousOccurrenceDateFast(from:calendar:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV26previousOccurrenceDateFast4from8calendar10Foundation0G0VAK_AI8CalendarV10IdentifierOtF">previousOccurrenceDateFast(from:<wbr>calendar:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the previous real-world occurrence of the receiver, expressed as an absolute <code>Date</code>.</p>
+
+<p>This version avoids <code>Calendar.nextDate(...)</code> for better performance. It computes
+the next occurrence manually from the receiver&rsquo;s local weekday and local start time,
+interpreted in the receiver&rsquo;s <code><a href="../../Structs/SwiftBMLSDK_Parser/Meeting.html#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV8timeZone10Foundation04TimeF0Vvp">timeZone</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">previousOccurrenceDateFast</span><span class="p">(</span>
+    <span class="n">from</span> <span class="nv">inReferenceDate</span><span class="p">:</span> <span class="kt">Date</span> <span class="o">=</span> <span class="kt">Date</span><span class="p">(),</span>
+    <span class="n">calendar</span> <span class="nv">inCalendarIdentifier</span><span class="p">:</span> <span class="kt">Calendar</span><span class="o">.</span><span class="kt">Identifier</span> <span class="o">=</span> <span class="kt">Calendar</span><span class="o">.</span><span class="n">autoupdatingCurrent</span><span class="o">.</span><span class="n">identifier</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Date</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inReferenceDate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The point in time from which the next occurrence
+should be calculated. Optional. Default is <code>Date()</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inCalendarIdentifier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The calendar used for date math. Optional.
+Default is  the current autoupdating.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The next upcoming occurrence of this meeting as an absolute <code>Date</code>.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:11SwiftBMLSDK0aB7_ParserV7MeetingV14sortingKeyFast4from8calendarSd10Foundation4DateV_AI8CalendarV10IdentifierOtF"></a>
+                    <a name="//apple_ref/swift/Method/sortingKeyFast(from:calendar:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:11SwiftBMLSDK0aB7_ParserV7MeetingV14sortingKeyFast4from8calendarSd10Foundation4DateV_AI8CalendarV10IdentifierOtF">sortingKeyFast(from:<wbr>calendar:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns a numeric sort key for the receiver&rsquo;s next occurrence.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">sortingKeyFast</span><span class="p">(</span>
+    <span class="n">from</span> <span class="nv">inReferenceDate</span><span class="p">:</span> <span class="kt">Date</span> <span class="o">=</span> <span class="kt">Date</span><span class="p">(),</span>
+    <span class="n">calendar</span> <span class="nv">inCalendarIdentifier</span><span class="p">:</span> <span class="kt">Calendar</span><span class="o">.</span><span class="kt">Identifier</span> <span class="o">=</span> <span class="kt">Calendar</span><span class="o">.</span><span class="n">autoupdatingCurrent</span><span class="o">.</span><span class="n">identifier</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inReferenceDate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The point in time from which the next occurrence
+should be calculated. Optional. Default is <code>Date()</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>inCalendarIdentifier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The calendar used for date math. Optional.
+Default is the current autoupdating.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A sortable numeric key.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
                 <a name="/Public%20Enum%20For%20Virtual%20Direct%20URLs"></a>
                 <a name="//apple_ref/swift/Section/Public Enum For Virtual Direct URLs" class="dashAnchor"></a>
                 <div class="section-name-container">

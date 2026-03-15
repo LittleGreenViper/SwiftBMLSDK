@@ -1,3 +1,7 @@
+ **1.3.8** *March 15, 2026*
+ 
+ - Added a couple of fast date calculators, so no more stupid mutating functions.
+ 
  **1.3.7** *March 15, 2026*
  
  - Made the Meeting type identifiable.

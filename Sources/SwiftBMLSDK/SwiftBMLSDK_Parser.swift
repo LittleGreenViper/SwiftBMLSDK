@@ -2007,3 +2007,113 @@ public extension SwiftBMLSDK_Parser {
      */
     var hybridMeetings: [Meeting] { meetings[SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType.hybrid] }
 }
+
+/* ###################################################################################################################################### */
+// MARK: - Meeting Extension: Fast Sorting Support -
+/* ###################################################################################################################################### */
+public extension SwiftBMLSDK_Parser.Meeting {
+    /* ################################################################## */
+    /**
+     Returns the next real-world occurrence of the receiver, expressed as an absolute `Date`.
+
+     This version avoids `Calendar.nextDate(...)` for better performance. It computes
+     the next occurrence manually from the receiver's local weekday and local start time,
+     interpreted in the receiver's `timeZone`.
+
+     - parameter inReferenceDate: The point in time from which the next occurrence
+       should be calculated. Optional. Default is `Date()`.
+     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
+       Default is  the current autoupdating.
+     - returns: The next upcoming occurrence of this meeting as an absolute `Date`.
+     */
+    func nextOccurrenceDateFast(
+        from inReferenceDate: Date = Date(),
+        calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
+    ) -> Date {
+        var calendar = Calendar(identifier: inCalendarIdentifier)
+        calendar.timeZone = self.timeZone
+
+        let nowComponents = calendar.dateComponents(
+            [.weekday, .hour, .minute, .second],
+            from: inReferenceDate
+        )
+
+        let meetingTimeComponents = calendar.dateComponents(
+            [.hour, .minute, .second],
+            from: self.startTime
+        )
+
+        let currentWeekday = nowComponents.weekday ?? 1
+        let currentSeconds =
+            ((nowComponents.hour ?? 0) * 3600) +
+            ((nowComponents.minute ?? 0) * 60) +
+            (nowComponents.second ?? 0)
+
+        let meetingSeconds =
+            ((meetingTimeComponents.hour ?? 0) * 3600) +
+            ((meetingTimeComponents.minute ?? 0) * 60) +
+            (meetingTimeComponents.second ?? 0)
+
+        var dayOffset = (self.weekday - currentWeekday + 7) % 7
+
+        if 0 == dayOffset,
+           meetingSeconds <= currentSeconds {
+            dayOffset = 7
+        }
+
+        let startOfToday = calendar.startOfDay(for: inReferenceDate)
+
+        let targetDate = calendar.date(
+            byAdding: .day,
+            value: dayOffset,
+            to: startOfToday
+        ) ?? startOfToday
+
+        return calendar.date(
+            byAdding: .second,
+            value: meetingSeconds,
+            to: targetDate
+        ) ?? targetDate
+    }
+    
+    /* ################################################################## */
+    /**
+     Returns the previous real-world occurrence of the receiver, expressed as an absolute `Date`.
+
+     This version avoids `Calendar.nextDate(...)` for better performance. It computes
+     the next occurrence manually from the receiver's local weekday and local start time,
+     interpreted in the receiver's `timeZone`.
+
+     - parameter inReferenceDate: The point in time from which the next occurrence
+       should be calculated. Optional. Default is `Date()`.
+     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
+       Default is  the current autoupdating.
+     - returns: The next upcoming occurrence of this meeting as an absolute `Date`.
+     */
+    func previousOccurrenceDateFast(
+        from inReferenceDate: Date = Date(),
+        calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
+    ) -> Date {
+        self.nextOccurrenceDateFast(from: inReferenceDate, calendar: inCalendarIdentifier).addingTimeInterval(60 * 60 * 24 * -7)
+    }
+    
+    /* ################################################################## */
+    /**
+     Returns a numeric sort key for the receiver's next occurrence.
+
+     - parameter inReferenceDate: The point in time from which the next occurrence
+       should be calculated. Optional. Default is `Date()`.
+     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
+       Default is the current autoupdating.
+     - returns: A sortable numeric key.
+     */
+    func sortingKeyFast(
+        from inReferenceDate: Date = Date(),
+        calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
+    ) -> TimeInterval {
+        self.nextOccurrenceDateFast(
+            from: inReferenceDate,
+            calendar: inCalendarIdentifier
+        ).timeIntervalSinceReferenceDate
+    }
+}
