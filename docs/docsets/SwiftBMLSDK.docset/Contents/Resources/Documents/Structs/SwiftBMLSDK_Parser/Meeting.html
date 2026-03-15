@@ -2111,8 +2111,10 @@ and maximum number of fraction digits to display. For example:</p>
 <ul>
 <li><code>0...1</code>: Show zero or one fractional digit</li>
 <li><code>0...2</code>: Show zero, one, or two fractional digits</li>
-<li><p><code>1...1</code>: Always show exactly one fractional digit</p></li>
+<li><code>1...1</code>: Always show exactly one fractional digit</li>
 </ul>
+
+<p>If the calculated distance is exactly zero, this returns an empty string.</p>
 
                       </div>
                       <div class="declaration">
@@ -2174,7 +2176,7 @@ to display. Optional. Default is <code>0...1</code>.</p>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>A localized distance string.</p>
+                        <p>A localized distance string, or an empty string if the distance is zero.</p>
                       </div>
                     </section>
                   </div>

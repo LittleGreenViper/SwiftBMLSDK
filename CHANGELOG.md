@@ -1,3 +1,7 @@
+ **1.3.10** *March 15, 2026*
+ 
+ - I return an empty distance string, for zero distance.
+ 
  **1.3.9** *March 15, 2026*
  
  - I now use the new fast date calculator, wherever possible.

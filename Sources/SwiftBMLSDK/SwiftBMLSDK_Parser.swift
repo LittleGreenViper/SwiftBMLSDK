@@ -1646,26 +1646,31 @@ extension SwiftBMLSDK_Parser.Meeting {
      - `0...2`: Show zero, one, or two fractional digits
      - `1...1`: Always show exactly one fractional digit
      
+     If the calculated distance is exactly zero, this returns an empty string.
+     
      - parameter inLocation: The location from which the distance is measured.
      - parameter inWidth: The localized unit-width style used for formatting.
        Optional. Default is `.abbreviated`.
      - parameter inPrecision: The minimum and maximum number of fraction digits
        to display. Optional. Default is `0...1`.
-     - returns: A localized distance string.
+     - returns: A localized distance string, or an empty string if the distance is zero.
      */
     public func distanceStringFrom(
         location inLocation: CLLocationCoordinate2D,
         width inWidth: Measurement<UnitLength>.FormatStyle.UnitWidth = .abbreviated,
         precision inPrecision: ClosedRange<Int> = 0...1
     ) -> String {
-        self.distanceFrom(location: inLocation)
-            .formatted(
-                .measurement(
-                    width: inWidth,
-                    usage: .road,
-                    numberFormatStyle: .number.precision(.fractionLength(inPrecision))
-                )
+        let distance = self.distanceFrom(location: inLocation)
+        
+        guard 0 < distance.value else { return "" }
+        
+        return distance.formatted(
+            .measurement(
+                width: inWidth,
+                usage: .road,
+                numberFormatStyle: .number.precision(.fractionLength(inPrecision))
             )
+        )
     }
     
     /* ################################################################## */
