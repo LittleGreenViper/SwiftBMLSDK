@@ -774,6 +774,38 @@ public struct SwiftBMLSDK_Parser: Encodable {
              */
             public var debugDescription: String { "\t\t(\(key))\t\(name)\t(\(language))\n\t\t\t\t\(description)\n\t\t\t\t\(id)" }
         }
+        
+        /* ################################################################## */
+        /**
+         */
+        private static func _floatingTimeDate(from inString: String) -> Date? {
+            let parts = inString.split(separator: ":").compactMap { Int($0) }
+            guard 2 <= parts.count else { return nil }
+
+            let hour = parts[0]
+            let minute = parts[1]
+            let second = parts.count > 2 ? parts[2] : 0
+
+            guard (0..<24).contains(hour),
+                  (0..<60).contains(minute),
+                  (0..<60).contains(second)
+            else { return nil }
+
+            var calendar = Calendar(identifier: .gregorian)
+            calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .gmt
+
+            var components = DateComponents()
+            components.calendar = calendar
+            components.timeZone = calendar.timeZone
+            components.year = 2001
+            components.month = 1
+            components.day = 1
+            components.hour = hour
+            components.minute = minute
+            components.second = second
+
+            return calendar.date(from: components)
+        }
 
         // MARK: Private Properties
         
@@ -844,14 +876,9 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 return ret
             }
 
-            let dateFormatter = DateFormatter()
-            dateFormatter.calendar = Calendar(identifier: .iso8601)
-            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            dateFormatter.dateFormat = "HH:mm:ss"
-
             guard let serverID = inDictionary["server_id"] as? Int,
                   let startTimeStr = inDictionary["start_time"] as? String,
-                  let startTime = dateFormatter.date(from: startTimeStr),
+                  let startTime = Self._floatingTimeDate(from: startTimeStr),
                   let localMeetingID = inDictionary["meeting_id"] as? Int,
                   let weekday = inDictionary["weekday"] as? Int,
                   (1..<8).contains(weekday),
@@ -1257,7 +1284,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          */
         public var integerStartTime: Int {
             var calendar = Calendar(identifier: .gregorian)
-            calendar.timeZone = self.timeZone
+            calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .gmt
 
             let components = calendar.dateComponents([.hour, .minute], from: self.startTime)
 
@@ -1344,7 +1371,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          - returns: The localized string.
          */
         public func localWeekdayString(style inStyle: Calendar.WeekdayStyle = .standaloneFull) -> String { Calendar.autoupdatingCurrent._localizedWeekdayString(fromSundayBasedWeekday: self.weekday) }
-
+        
         /* ################################################################## */
         /**
          This returns a localized weekday/time string for the receiver's next occurrence
@@ -1818,7 +1845,7 @@ extension SwiftBMLSDK_Parser.Meeting {
      */
     public var startTimeInSecondsFromMidnight: TimeInterval {
         var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = self.timeZone
+        calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .gmt
 
         let components = calendar.dateComponents([.hour, .minute], from: self.startTime)
 
@@ -1836,17 +1863,20 @@ extension SwiftBMLSDK_Parser.Meeting {
      This returns the start time and weekday as date components.
      */
     public var dateComponents: DateComponents? {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = self.timeZone
+        var extractionCalendar = Calendar(identifier: .gregorian)
+        extractionCalendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .gmt
 
-        let components = calendar.dateComponents([.hour, .minute], from: self.startTime)
+        let components = extractionCalendar.dateComponents([.hour, .minute], from: self.startTime)
 
         guard let startHour = components.hour,
               let startMinute = components.minute
         else { return nil }
 
+        var meetingCalendar = Calendar(identifier: .gregorian)
+        meetingCalendar.timeZone = self.timeZone
+
         return DateComponents(
-            calendar: calendar,
+            calendar: meetingCalendar,
             timeZone: self.timeZone,
             hour: startHour,
             minute: startMinute,

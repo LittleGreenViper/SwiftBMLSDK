@@ -1,3 +1,7 @@
+ **1.4.3** *March 16, 2026*
+ 
+ - The time zone conversion wasn't working properly. That's been fixed.
+
  **1.4.2** *March 16, 2026*
  
  - Minor visibility change to the array extension.
