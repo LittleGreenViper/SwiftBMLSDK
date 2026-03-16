@@ -1251,19 +1251,22 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
         /* ################################################# */
         /**
-         The start time, in local meeting timezone, as a military-style integer (HHMM).
-         
-         Returns -1, if the time could not be calculated.
+         The start time, in the meeting's local timezone, as a military-style integer (HHMM).
+
+         Returns -1 if the time could not be calculated.
          */
         public var integerStartTime: Int {
-            let components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
-            
+            var calendar = Calendar(identifier: .gregorian)
+            calendar.timeZone = self.timeZone
+
+            let components = calendar.dateComponents([.hour, .minute], from: self.startTime)
+
             guard let hour = components.hour,
                   (0..<24).contains(hour),
                   let minute = components.minute,
                   (0..<60).contains(minute)
             else { return -1 }
-            
+
             return (hour * 100) + minute
         }
         
@@ -1814,12 +1817,17 @@ extension SwiftBMLSDK_Parser.Meeting {
      It returns -1, if there was a problem.
      */
     public var startTimeInSecondsFromMidnight: TimeInterval {
-        let components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = self.timeZone
+
+        let components = calendar.dateComponents([.hour, .minute], from: self.startTime)
+
         guard let startHour = components.hour,
               let startMinute = components.minute,
               (0..<24).contains(startHour),
               (0..<60).contains(startMinute)
         else { return -1 }
+
         return TimeInterval(startHour * 3600 + startMinute * 60)
     }
     
@@ -1828,11 +1836,22 @@ extension SwiftBMLSDK_Parser.Meeting {
      This returns the start time and weekday as date components.
      */
     public var dateComponents: DateComponents? {
-        let components = Calendar.current.dateComponents([.hour, .minute], from: startTime)
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = self.timeZone
+
+        let components = calendar.dateComponents([.hour, .minute], from: self.startTime)
+
         guard let startHour = components.hour,
               let startMinute = components.minute
-        else { return nil}
-        return DateComponents(calendar: .current, hour: startHour, minute: startMinute, weekday: weekday)
+        else { return nil }
+
+        return DateComponents(
+            calendar: calendar,
+            timeZone: self.timeZone,
+            hour: startHour,
+            minute: startMinute,
+            weekday: weekday
+        )
     }
 
     /* ################################################# */
@@ -2113,7 +2132,12 @@ public extension SwiftBMLSDK_Parser.Meeting {
         from inReferenceDate: Date = Date(),
         calendar inCalendarIdentifier: Calendar.Identifier = Calendar.autoupdatingCurrent.identifier
     ) -> Date {
-        self.nextOccurrenceDateFast(from: inReferenceDate, calendar: inCalendarIdentifier).addingTimeInterval(60 * 60 * 24 * -7)
+        var calendar = Calendar(identifier: inCalendarIdentifier)
+        calendar.timeZone = self.timeZone
+
+        let next = self.nextOccurrenceDateFast(from: inReferenceDate, calendar: inCalendarIdentifier)
+
+        return calendar.date(byAdding: .day, value: -7, to: next) ?? next.addingTimeInterval(-7 * 24 * 60 * 60)
     }
     
     /* ################################################################## */
