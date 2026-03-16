@@ -2218,8 +2218,10 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
     /**
      Subscript that allows us to specify a particular meeting type.
      - parameter inMeetingType: The type of meeting we are looking for.
+     - returns: Meetings of the specified type.
+     > NOTE: This is fileprivate, and not exported.
      */
-    subscript(_ inMeetingType: SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType) -> [SwiftBMLSDK_Parser.Meeting] {
+    fileprivate subscript(_ inMeetingType: SwiftBMLSDK_Query.SearchSpecification.SearchForMeetingType) -> [SwiftBMLSDK_Parser.Meeting] {
         switch inMeetingType {
         case .hybrid:
             return compactMap { .hybrid == $0.meetingType ? $0 : nil }
@@ -2239,6 +2241,7 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
     /**
      Subscript that allows us to filter for multiple weekdays.
      - parameter inWeekdaySet: The weekdays to filter for. This is in the local meeting timezone.
+     - returns: Meetings of the specified type.
      */
     subscript(_ inWeekdaySet: Set<Weekdays>) -> [SwiftBMLSDK_Parser.Meeting] {
         guard !inWeekdaySet.isEmpty else { return self }
@@ -2252,6 +2255,7 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
     /**
      Subscript that allows us to filter for a single weekday. This is in the local meeting timezone.
      - parameter inWeekday: The weekday to filter for. This is in the local meeting timezone.
+     - returns: Meetings of the specified type.
      */
     subscript(_ inWeekday: Weekdays) -> [SwiftBMLSDK_Parser.Meeting] { self[Set<Weekdays>([inWeekday])] }
 
@@ -2260,6 +2264,7 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
      Subscript that allows us to filter for meetings that start within a certain time range. This is in the local meeting timezone.
      
      - parameter inStartTimeRangeInSecondsFromMidnight: An open range, of start times, 0..<86400.
+     - returns: Meetings of the specified type.
      */
     subscript(_ inStartTimeRangeInSecondsFromMidnight: Range<TimeInterval>) -> [SwiftBMLSDK_Parser.Meeting] {
         guard 0 <= inStartTimeRangeInSecondsFromMidnight.lowerBound,

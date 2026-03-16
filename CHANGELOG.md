@@ -1,3 +1,7 @@
+ **1.4.2** *March 16, 2026*
+ 
+ - Minor visibility change to the array extension.
+ 
  **1.4.1** *March 16, 2026*
  
  - Added robust phone number parsing.
