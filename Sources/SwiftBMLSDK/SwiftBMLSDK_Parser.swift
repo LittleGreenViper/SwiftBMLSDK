@@ -18,9 +18,286 @@
  */
 
 import Foundation
-import CoreLocation // For coordinates
-import Contacts     // For the in-person address
-import MapKit       // For the Array extension that returns location data for meetings.
+import CoreLocation         // For coordinates
+import Contacts             // For the in-person address
+import MapKit               // For the Array extension that returns location data for meetings.
+#if canImport(PhoneNumberKit)
+    import PhoneNumberKit   // For parsing phone numbers.
+
+    /* ###################################################################################################################################### */
+    // MARK: - Meeting Extensions -
+    /* ###################################################################################################################################### */
+    /**
+     This extension adds proper phone number parsing.
+     */
+    private extension SwiftBMLSDK_Parser.Meeting {
+        /* ################################################################## */
+        /**
+         Attempts to synthesize a best-effort `tel:` URL from a raw virtual meeting
+         phone string.
+
+         This is intended for dial-in meeting strings that may contain:
+
+         - A plain phone number
+         - An international number
+         - A phone number plus meeting ID / PIN / passcode
+         - An existing `tel:` URL
+         - Descriptive text such as city names or country labels
+
+         The function extracts one primary dial-in number, validates and normalizes it
+         with `PhoneNumberUtility`, then appends any discovered post-dial DTMF content.
+
+         Ambiguous strings containing multiple distinct plausible phone numbers return `nil`.
+
+         - parameter inRawValue: The raw meeting phone string.
+         - parameter inDefaultRegion: The region used for non-international numbers.
+           Default is `"US"`.
+         - returns: A synthesized `tel:` URL, or `nil`.
+         */
+        private static func _dialInURL(from inRawValue: String,
+                                      defaultRegion inDefaultRegion: String = "US") -> URL? {
+            let source = _normalizeDialInSource(inRawValue)
+            guard !source.isEmpty else { return nil }
+
+            let phoneUtility = PhoneNumberUtility()
+
+            let strippedSource: String = {
+                let lower = source.lowercased()
+
+                if lower.hasPrefix("tel://") {
+                    return String(source.dropFirst(6))
+                } else if lower.hasPrefix("tel:") {
+                    return String(source.dropFirst(4))
+                }
+
+                return source
+            }()
+
+            let candidates = _mainPhoneCandidates(in: strippedSource,
+                                                  phoneUtility: phoneUtility,
+                                                  defaultRegion: inDefaultRegion)
+
+            let distinctCandidates = Array(Set(candidates.map(\.normalizedNumber)))
+            guard 1 == distinctCandidates.count,
+                  let mainMatch = candidates.first
+            else { return nil }
+
+            var postDial = ""
+
+            let tail = String(strippedSource[mainMatch.range.upperBound...])
+            postDial += _extractExplicitPostDial(from: tail)
+
+            let labeledPostDial = _extractLabeledPostDial(from: strippedSource,
+                                                          excluding: mainMatch.range)
+            if !labeledPostDial.isEmpty {
+                let normalizedExisting = _normalizedDialPayload(postDial)
+                let normalizedLabeled = _normalizedDialPayload(labeledPostDial)
+
+                if !normalizedExisting.contains(normalizedLabeled) {
+                    postDial += labeledPostDial
+                }
+            }
+
+            let telBody = _percentEncodeTelBody(mainMatch.normalizedNumber + postDial)
+            return URL(string: "tel:\(telBody)")
+        }
+
+        /* ################################################################################################################################## */
+        // MARK: - Private Types -
+        /* ################################################################################################################################## */
+
+        private struct _MainPhoneMatch {
+            let normalizedNumber: String
+            let range: Range<String.Index>
+        }
+
+        /* ################################################################################################################################## */
+        // MARK: - Private Helpers -
+        /* ################################################################################################################################## */
+
+        /* ################################################################## */
+        /**
+         Normalizes the source string.
+         */
+        private static func _normalizeDialInSource(_ inSource: String) -> String {
+            inSource
+                .replacingOccurrences(of: "\u{00A0}", with: " ")
+                .replacingOccurrences(of: "\u{202F}", with: " ")
+                .replacingOccurrences(of: "\u{2007}", with: " ")
+                .replacingOccurrences(of: "\t", with: " ")
+                .replacingOccurrences(of: "\n", with: " ")
+                .replacingOccurrences(of: "\r", with: " ")
+                .replacingOccurrences(of: "—", with: "-")
+                .replacingOccurrences(of: "–", with: "-")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        /* ################################################################## */
+        /**
+         Returns plausible primary phone-number candidates in order of appearance.
+         */
+        private static func _mainPhoneCandidates(in inSource: String,
+                                                 phoneUtility inPhoneUtility: PhoneNumberUtility,
+                                                 defaultRegion inDefaultRegion: String) -> [_MainPhoneMatch] {
+            let pattern = #"""
+            (?x)
+            (?:
+                \+?\d[\d\(\)\.\-\s]{6,}\d
+            )
+            """#
+
+            guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else { return [] }
+
+            let nsRange = NSRange(inSource.startIndex..<inSource.endIndex, in: inSource)
+            let matches = regex.matches(in: inSource, options: [], range: nsRange)
+
+            var results: [_MainPhoneMatch] = []
+            var seen = Set<String>()
+
+            for match in matches {
+                guard let range = Range(match.range, in: inSource) else { continue }
+
+                let rawCandidate = String(inSource[range]).trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !_isClearlyLabeledAsCode(in: inSource, matchRange: range) else { continue }
+
+                do {
+                    let parsed = try inPhoneUtility.parse(rawCandidate,
+                                                          withRegion: inDefaultRegion,
+                                                          ignoreType: true)
+                    let normalized = inPhoneUtility.format(parsed, toType: .e164)
+                    let digitCount = normalized.filter(\.isNumber).count
+
+                    guard 10 <= digitCount else { continue }
+                    guard !seen.contains(normalized) else { continue }
+
+                    seen.insert(normalized)
+                    results.append(.init(normalizedNumber: normalized, range: range))
+                } catch {
+                    continue
+                }
+            }
+
+            return results
+        }
+
+        /* ################################################################## */
+        /**
+         Returns `true` if a candidate appears to be a meeting code rather than a phone number.
+         */
+        private static func _isClearlyLabeledAsCode(in inSource: String,
+                                                    matchRange inMatchRange: Range<String.Index>) -> Bool {
+            let prefixStart = inSource.index(inMatchRange.lowerBound,
+                                             offsetBy: -24,
+                                             limitedBy: inSource.startIndex) ?? inSource.startIndex
+            let prefix = inSource[prefixStart..<inMatchRange.lowerBound].lowercased()
+
+            return prefix.contains("meeting id")
+                || prefix.contains("password")
+                || prefix.contains("passcode")
+                || prefix.contains("pass")
+                || prefix.contains("pin")
+                || prefix.contains(" id")
+                || prefix.hasSuffix("id#")
+        }
+
+        /* ################################################################## */
+        /**
+         Extracts explicit post-dial content that immediately follows the main number.
+         */
+        private static func _extractExplicitPostDial(from inTail: String) -> String {
+            guard !inTail.isEmpty else { return "" }
+
+            var index = inTail.startIndex
+
+            while index < inTail.endIndex, inTail[index].isWhitespace {
+                index = inTail.index(after: index)
+            }
+
+            guard index < inTail.endIndex,
+                  "," == inTail[index] || ";" == inTail[index]
+            else { return "" }
+
+            var result = ""
+
+            while index < inTail.endIndex {
+                let char = inTail[index]
+
+                if char.isWhitespace {
+                    index = inTail.index(after: index)
+                    continue
+                }
+
+                if char.isNumber || "," == char || ";" == char || "#" == char || "*" == char {
+                    result.append(char)
+                    index = inTail.index(after: index)
+                } else {
+                    break
+                }
+            }
+
+            return result
+        }
+
+        /* ################################################################## */
+        /**
+         Extracts labeled DTMF payloads such as meeting IDs, PINs, and passcodes.
+         */
+        private static func _extractLabeledPostDial(from inSource: String,
+                                                    excluding inExcludedRange: Range<String.Index>) -> String {
+            let pattern = #"""
+            (?ix)
+            \b(meeting\s*id|id|pin|passcode|password|pass|code)\b
+            \s*[:#-]?\s*
+            ([0-9][0-9\s-]{1,}[0-9])
+            \s*(#)?
+            """#
+
+            guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else { return "" }
+
+            let nsRange = NSRange(inSource.startIndex..<inSource.endIndex, in: inSource)
+            let matches = regex.matches(in: inSource, options: [], range: nsRange)
+
+            var segments: [String] = []
+
+            for match in matches {
+                guard 3 <= match.numberOfRanges,
+                      let wholeRange = Range(match.range(at: 0), in: inSource),
+                      let valueRange = Range(match.range(at: 2), in: inSource)
+                else { continue }
+
+                guard !wholeRange.overlaps(inExcludedRange) else { continue }
+
+                let digits = inSource[valueRange].filter(\.isNumber)
+                guard !digits.isEmpty else { continue }
+
+                segments.append(",,\(digits)#")
+            }
+
+            return segments.joined()
+        }
+
+        /* ################################################################## */
+        /**
+         Returns a normalized payload for deduplication comparisons.
+         */
+        private static func _normalizedDialPayload(_ inPayload: String) -> String {
+            inPayload.filter { $0.isNumber || "," == $0 || ";" == $0 || "#" == $0 || "*" == $0 }
+        }
+
+        /* ################################################################## */
+        /**
+         Percent-encodes the body of a `tel:` URL.
+         */
+        private static func _percentEncodeTelBody(_ inBody: String) -> String {
+            var allowed = CharacterSet.decimalDigits
+            allowed.insert(charactersIn: "+,;*")
+
+            return inBody.addingPercentEncoding(withAllowedCharacters: allowed) ?? inBody
+        }
+    }
+#else
+    private extension SwiftBMLSDK_Parser.Meeting { private static func _dialInURL(from: String, defaultRegion: String = "US") -> URL? { nil } }
+#endif
 
 /* ###################################################################################################################################### */
 // MARK: - Calendar Extension -
@@ -922,6 +1199,18 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         // MARK: Public Computed Properties
         
+        /* ################################################################## */
+        /**
+         Convenience accessor for the receiver's `virtualPhoneNumber`.
+         */
+        var virtualPhoneURL: URL? {
+            guard let virtualPhoneNumber = virtualPhoneNumber,
+                  !virtualPhoneNumber.isEmpty
+            else { return nil }
+
+            return Self._dialInURL(from: virtualPhoneNumber)
+        }
+
         /* ################################################# */
         /**
          This is a unique ID (within the found set) for this meeting, based on the two local IDs.

@@ -1,3 +1,7 @@
+ **1.4.1** *March 16, 2026*
+ 
+ - Added robust phone number parsing.
+ 
  **1.4.0** *March 15, 2026*
  
  - Completely got rid of the mutating date calculators.
