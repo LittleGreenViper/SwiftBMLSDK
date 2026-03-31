@@ -1,3 +1,7 @@
+ **1.4.4** *March 31, 2026*
+ 
+ - The callbacks needed to be done in the main thread.
+ 
  **1.4.3** *March 16, 2026*
  
  - The time zone conversion wasn't working properly. That's been fixed.

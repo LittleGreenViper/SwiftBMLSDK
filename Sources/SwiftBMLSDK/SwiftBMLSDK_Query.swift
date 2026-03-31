@@ -416,7 +416,7 @@ public extension SwiftBMLSDK_Query {
     /**
      Fetches the server info.
      
-     - parameter inCompletion: A tail completion proc (may be called in any thread).
+     - parameter inCompletion: A tail completion proc (always called in the main thread).
      */
     func serverInfo(completion inCompletion: @escaping ServerInfoResultCompletion) {
         guard let baseURLString = serverBaseURI?.absoluteString,
@@ -432,82 +432,84 @@ public extension SwiftBMLSDK_Query {
             print("URL Request: \(urlRequest.url?.absoluteString ?? "ERROR")")
         #endif
         _session.dataTask(with: urlRequest) { inData, inResponse, inError in
-            guard let response = inResponse as? HTTPURLResponse,
-                  nil == inError
-            else {
-                inCompletion(nil, nil)
-                return
-            }
-            
-            if nil == inError {
-                switch response.statusCode {
-                case 200..<300:
-                    if let data = inData,
-                       "application/json" == response.mimeType {
-                        #if DEBUG
-                            print("Response Data: \(data.debugDescription)")
-                        #endif
+            Task { @MainActor in
+                guard let response = inResponse as? HTTPURLResponse,
+                      nil == inError
+                else {
+                    inCompletion(nil, nil)
+                    return
+                }
+                
+                if nil == inError {
+                    switch response.statusCode {
+                    case 200..<300:
                         if let data = inData,
                            "application/json" == response.mimeType {
                             #if DEBUG
                                 print("Response Data: \(data.debugDescription)")
                             #endif
-                            guard let simpleJSON = try? JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? NSDictionary,
-                                  let version = simpleJSON["server_version"] as? String,
-                                  let lastUpdate = simpleJSON["last_update_timestamp"] as? Int,
-                                  let servicesWrapper = simpleJSON["services"] as? NSDictionary,
-                                  let servicesKeys = servicesWrapper.allKeys as? [String],
-                                  let organizationTemp = simpleJSON["organizations"] as? NSDictionary,
-                                  var organizationsSrc = organizationTemp as? [String: Int]
-                            else {
-                                inCompletion(nil, nil)
-                                return
-                            }
-                            
-                            organizationsSrc.removeValue(forKey: "total_meetings")
- 
-                            let services: [ServerInfo.Service] = servicesKeys.sorted().compactMap { inName in
-                                guard let object = servicesWrapper[inName] as? NSDictionary,
-                                      let service = object as? [String: Any],
-                                      let name = service["service_name"] as? String,
-                                      !name.isEmpty,
-                                      let serversTemp = service["servers"] as? NSDictionary
-                                else { return nil }
-                                
-                                let keys = (serversTemp.allKeys as? [String] ?? []).compactMap({ Int($0) }).sorted()
-
-                                let servers = keys.compactMap { inIntServerKey in
-                                    let strID = "\(inIntServerKey)"
-                                    if let server = serversTemp[strID] as? NSDictionary,
-                                       let name = server["name"] as? String,
-                                       let numMeetings = server["num_meetings"] as? Int,
-                                       let uriString = server["url"] as? String,
-                                       let uri = URL(string: uriString),
-                                       let orgs = server["organizations"] as? NSDictionary,
-                                       let organizations = orgs as? [String: Int],
-                                       !organizations.isEmpty {
-                                        return ServerInfo.Service.Server(id: inIntServerKey, name: name, entryPointURI: uri, numberOfMeetings: numMeetings, organizations: organizations)
-                                    }
-                                    return nil
+                            if let data = inData,
+                               "application/json" == response.mimeType {
+                                #if DEBUG
+                                    print("Response Data: \(data.debugDescription)")
+                                #endif
+                                guard let simpleJSON = try? JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? NSDictionary,
+                                      let version = simpleJSON["server_version"] as? String,
+                                      let lastUpdate = simpleJSON["last_update_timestamp"] as? Int,
+                                      let servicesWrapper = simpleJSON["services"] as? NSDictionary,
+                                      let servicesKeys = servicesWrapper.allKeys as? [String],
+                                      let organizationTemp = simpleJSON["organizations"] as? NSDictionary,
+                                      var organizationsSrc = organizationTemp as? [String: Int]
+                                else {
+                                    inCompletion(nil, nil)
+                                    return
                                 }
                                 
-                                return ServerInfo.Service(name: name, servers: servers)
+                                organizationsSrc.removeValue(forKey: "total_meetings")
+                                
+                                let services: [ServerInfo.Service] = servicesKeys.sorted().compactMap { inName in
+                                    guard let object = servicesWrapper[inName] as? NSDictionary,
+                                          let service = object as? [String: Any],
+                                          let name = service["service_name"] as? String,
+                                          !name.isEmpty,
+                                          let serversTemp = service["servers"] as? NSDictionary
+                                    else { return nil }
+                                    
+                                    let keys = (serversTemp.allKeys as? [String] ?? []).compactMap({ Int($0) }).sorted()
+                                    
+                                    let servers = keys.compactMap { inIntServerKey in
+                                        let strID = "\(inIntServerKey)"
+                                        if let server = serversTemp[strID] as? NSDictionary,
+                                           let name = server["name"] as? String,
+                                           let numMeetings = server["num_meetings"] as? Int,
+                                           let uriString = server["url"] as? String,
+                                           let uri = URL(string: uriString),
+                                           let orgs = server["organizations"] as? NSDictionary,
+                                           let organizations = orgs as? [String: Int],
+                                           !organizations.isEmpty {
+                                            return ServerInfo.Service.Server(id: inIntServerKey, name: name, entryPointURI: uri, numberOfMeetings: numMeetings, organizations: organizations)
+                                        }
+                                        return nil
+                                    }
+                                    
+                                    return ServerInfo.Service(name: name, servers: servers)
+                                }
+                                
+                                let serverInfo = ServerInfo(server_version: version, lastUpdate: Date(timeIntervalSince1970: TimeInterval(lastUpdate)), services: services, organizationTotals: organizationsSrc)
+                                inCompletion(serverInfo, nil)
+                            } else {
+                                fallthrough
                             }
-                            
-                            let serverInfo = ServerInfo(server_version: version, lastUpdate: Date(timeIntervalSince1970: TimeInterval(lastUpdate)), services: services, organizationTotals: organizationsSrc)
-                            inCompletion(serverInfo, nil)
                         } else {
                             fallthrough
                         }
-                    } else {
-                        fallthrough
+                        
+                    default:
+                        inCompletion(nil, nil)
                     }
-                
-                default:
-                    inCompletion(nil, nil)
+                } else {
+                    inCompletion(nil, inError)
                 }
-            } else {
-                inCompletion(nil, inError)
             }
         }.resume()
     }
@@ -518,7 +520,7 @@ public extension SwiftBMLSDK_Query {
 
      - parameter inSpecification: The search specification.
      - parameter inPriority: The priority (0 -> 1). Optional. Default is default priority (0.5).
-     - parameter inCompletion: A tail completion proc (may be called in any thread).
+     - parameter inCompletion: A tail completion proc (always called in the main thread).
      */
     func meetingSearch(specification inSpecification: SearchSpecification,
                        priority inPriority: Float = URLSessionTask.defaultPriority,
@@ -536,28 +538,30 @@ public extension SwiftBMLSDK_Query {
         #endif
 
         let task = _session.dataTask(with: urlRequest) { inData, inResponse, inError in
-            guard let response = inResponse as? HTTPURLResponse,
-                  nil == inError
-            else {
-                inCompletion(nil, nil)
-                return
-            }
-            
-            if nil == inError {
-                switch response.statusCode {
-                case 200..<300:
-                    if let data = inData,
-                       "application/json" == response.mimeType {
-                        inCompletion(SwiftBMLSDK_Parser(jsonData: data, specification: inSpecification), nil)
-                    } else {
-                        fallthrough
-                    }
-                
-                default:
+            Task { @MainActor in
+                guard let response = inResponse as? HTTPURLResponse,
+                      nil == inError
+                else {
                     inCompletion(nil, nil)
+                    return
                 }
-            } else {
-                inCompletion(nil, inError)
+                
+                if nil == inError {
+                    switch response.statusCode {
+                    case 200..<300:
+                        if let data = inData,
+                           "application/json" == response.mimeType {
+                            inCompletion(SwiftBMLSDK_Parser(jsonData: data, specification: inSpecification), nil)
+                        } else {
+                            fallthrough
+                        }
+                    
+                    default:
+                        inCompletion(nil, nil)
+                    }
+                } else {
+                    inCompletion(nil, inError)
+                }
             }
         }
         
@@ -572,7 +576,7 @@ public extension SwiftBMLSDK_Query {
      - parameter inMinNumber: The minimum number of results. At least this many results must be returned (or the search can give up, if it reaches the maximum radius).
      - parameter inSpecification: The search specification.
      - parameter inPriority: The priority (0 -> 1). Optional. Default is default priority (0.5).
-     - parameter inCompletion: A tail completion proc (may be called in any thread).
+     - parameter inCompletion: A tail completion proc (always called in the main thread).
      */
     func meetingAutoRadiusSearch(minimumNumberOfResults inMinNumber: Int,
                                  specification inSpecification: SearchSpecification,
@@ -580,40 +584,43 @@ public extension SwiftBMLSDK_Query {
                                  completion inCompletion: @escaping QueryResultCompletion) {
         if case .virtual(let isExclusive) = inSpecification.type,
            isExclusive {
-            inCompletion(nil, nil)
+            DispatchQueue.main.async { inCompletion(nil, nil) }
         } else if CLLocationCoordinate2DIsValid(inSpecification.locationCenter),
                   0 < inMinNumber {
-            let maxRadius = 0 < inSpecification.locationRadius ? inSpecification.locationRadius : 100000
-            
-            var searchRadius = CLLocationDistance(10)   // We start with ten meters.
-            var searchInProgress = false
-            var abort = false
-            var lastParser: SwiftBMLSDK_Parser?
-            
-            while searchRadius <= maxRadius && !abort {
-                if !searchInProgress {
-                    searchInProgress = true
-                    let specification = SearchSpecification(type: inSpecification.type, locationCenter: inSpecification.locationCenter, locationRadius: searchRadius)
-                    meetingSearch(specification: specification, priority: inPriority) { inParser, inError in
-                        defer { searchInProgress = false }
-
-                        if nil == inError,
-                           let parser = inParser,
-                           !parser.meetings.isEmpty {
-                            lastParser = parser
-                            if inMinNumber <= parser.meetings.count {
-                                abort = true
+            Task { @MainActor in
+                
+                let maxRadius = 0 < inSpecification.locationRadius ? inSpecification.locationRadius : 100000
+                
+                var searchRadius = CLLocationDistance(10)   // We start with ten meters.
+                var searchInProgress = false
+                var abort = false
+                var lastParser: SwiftBMLSDK_Parser?
+                
+                while searchRadius <= maxRadius && !abort {
+                    if !searchInProgress {
+                        searchInProgress = true
+                        let specification = SearchSpecification(type: inSpecification.type, locationCenter: inSpecification.locationCenter, locationRadius: searchRadius)
+                        meetingSearch(specification: specification, priority: inPriority) { inParser, inError in
+                            defer { searchInProgress = false }
+                            
+                            if nil == inError,
+                               let parser = inParser,
+                               !parser.meetings.isEmpty {
+                                lastParser = parser
+                                if inMinNumber <= parser.meetings.count {
+                                    abort = true
+                                }
                             }
+                            
+                            searchRadius *= 10000 > searchRadius ? 1.2 : 1.1
                         }
-                        
-                        searchRadius *= 10000 > searchRadius ? 1.2 : 1.1
                     }
                 }
+                
+                inCompletion(lastParser, nil)
             }
-            
-            inCompletion(lastParser, nil)
         } else {
-            inCompletion(nil, nil)
+            DispatchQueue.main.async { inCompletion(nil, nil) }
         }
     }
 }
