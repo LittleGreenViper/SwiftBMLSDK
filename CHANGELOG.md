@@ -1,3 +1,7 @@
+ **1.4.5** *April 15, 2026*
+ 
+ - Fixed an old bug, where the auto-radius search was being highly inefficient.
+ 
  **1.4.4** *March 31, 2026*
  
  - The callbacks needed to be done in the main thread.

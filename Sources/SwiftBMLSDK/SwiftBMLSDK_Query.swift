@@ -582,45 +582,38 @@ public extension SwiftBMLSDK_Query {
                                  specification inSpecification: SearchSpecification,
                                  priority inPriority: Float = URLSessionTask.defaultPriority,
                                  completion inCompletion: @escaping QueryResultCompletion) {
-        if case .virtual(let isExclusive) = inSpecification.type,
-           isExclusive {
-            DispatchQueue.main.async { inCompletion(nil, nil) }
-        } else if CLLocationCoordinate2DIsValid(inSpecification.locationCenter),
-                  0 < inMinNumber {
-            Task { @MainActor in
-                
-                let maxRadius = 0 < inSpecification.locationRadius ? inSpecification.locationRadius : 100000
-                
-                var searchRadius = CLLocationDistance(10)   // We start with ten meters.
-                var searchInProgress = false
-                var abort = false
-                var lastParser: SwiftBMLSDK_Parser?
-                
-                while searchRadius <= maxRadius && !abort {
-                    if !searchInProgress {
-                        searchInProgress = true
-                        let specification = SearchSpecification(type: inSpecification.type, locationCenter: inSpecification.locationCenter, locationRadius: searchRadius)
-                        meetingSearch(specification: specification, priority: inPriority) { inParser, inError in
-                            defer { searchInProgress = false }
-                            
-                            if nil == inError,
-                               let parser = inParser,
-                               !parser.meetings.isEmpty {
-                                lastParser = parser
-                                if inMinNumber <= parser.meetings.count {
-                                    abort = true
-                                }
-                            }
-                            
-                            searchRadius *= 10000 > searchRadius ? 1.2 : 1.1
+        let targetCount = max(1, inMinNumber)
+        let maxRadius = 0 < inSpecification.locationRadius ? inSpecification.locationRadius : 100_000
+        var radiusStep = CLLocationDistance(0.1)
+        var lastParser: SwiftBMLSDK_Parser?
+        
+        func search(at radiusInKm: CLLocationDistance) {
+            guard radiusInKm <= maxRadius
+            else {
+                DispatchQueue.main.async { inCompletion(nil, nil) }
+                return
+            }
+
+            let specification = SearchSpecification(type: inSpecification.type, locationCenter: inSpecification.locationCenter, locationRadius: radiusStep)
+            meetingSearch(specification: specification, priority: inPriority) { inParser, inError in
+                radiusStep *= 1.1
+                if nil == inError {
+                    if let parser = inParser,
+                       !parser.meetings.isEmpty {
+                        lastParser = parser
+                        if targetCount <= parser.meetings.count {
+                            inCompletion(lastParser, nil)
+                            return
                         }
                     }
+                    
+                    search(at: radiusStep)
+                } else {
+                    DispatchQueue.main.async { inCompletion(nil, inError) }
                 }
-                
-                inCompletion(lastParser, nil)
             }
-        } else {
-            DispatchQueue.main.async { inCompletion(nil, nil) }
         }
+
+        search(at: radiusStep)
     }
 }
