@@ -1,3 +1,7 @@
+ **1.4.6** *April 29, 2026*
+ 
+ - Now make sure to cancel previous operations, before beginning a search.
+ 
  **1.4.5** *April 15, 2026*
  
  - Fixed an old bug, where the auto-radius search was being highly inefficient.
