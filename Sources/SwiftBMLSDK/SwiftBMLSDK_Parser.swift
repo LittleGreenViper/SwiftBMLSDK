@@ -637,11 +637,13 @@ public struct SwiftBMLSDK_Parser: Encodable {
     // MARK: Meeting Data Container
     /* ################################################################################################################################## */
     /**
-     This struct holds a single parsed meeting instance.
+     This class holds a single parsed meeting instance.
      
      > NOTE: There is a platform-dependent extension that adds the ``SwiftBMLSDK_Parser/Meeting/directAppURI`` computed property to this type.
+     
+     > NOTE: This is a class, as opposed to a struct, in order to reduce the memory and performance overhead of using this.
      */
-    public struct Meeting: Comparable, Identifiable {
+    public class Meeting: Comparable, Identifiable {
         // MARK: Comparable Conformance
         /* ############################################# */
         /**
