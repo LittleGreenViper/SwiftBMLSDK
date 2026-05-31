@@ -39,8 +39,8 @@ let package = Package(
     ],
     dependencies: isDocsBuild ? [] : [
         .package(
-            url: "https://github.com/marmelroy/PhoneNumberKit",
-            from: "4.2.8"
+            url: "https://github.com/PhoneNumberKit/PhoneNumberKit",
+            from: "5.0.0"
         )
     ],
     targets: [

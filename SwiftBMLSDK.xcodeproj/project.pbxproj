@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		D4045C222B76895A0086E1B7 /* MeetingDump.json in Resources */ = {isa = PBXBuildFile; fileRef = D4045C202B76895A0086E1B7 /* MeetingDump.json */; };
+		D40DBA582FCCBD1E00D08EC3 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = D40DBA572FCCBD1E00D08EC3 /* PhoneNumberKit */; };
 		D41EAC7C2F66EA390076911A /* SwiftBMLSDK_Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B9834C2B7A4F2700F28F03 /* SwiftBMLSDK_Query.swift */; };
 		D41EAC7D2F66EA390076911A /* SwiftBMLSDK_Parser_UI_Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49927892B8AB70F00EFE8E7 /* SwiftBMLSDK_Parser_UI_Extensions.swift */; };
 		D41EAC7E2F66EA390076911A /* SwiftBMLSDK_Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C9C6232B750C65007FB793 /* SwiftBMLSDK_Parser.swift */; };
 		D41EAC7F2F66EA3F0076911A /* SwiftBMLSDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = D4675D122B73C1CD00139CC3 /* SwiftBMLSDK.docc */; };
-		D41EAC822F66EA540076911A /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = D41EAC812F66EA540076911A /* PhoneNumberKit */; };
 		D45DB3A82B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A72B7804C400BAB475 /* SwiftBMLSDK_Parser_ExtensionTests.swift */; };
 		D472FEAF2B8C0F6800FACFE7 /* SwiftBMLSDK_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45DB3A52B78031B00BAB475 /* SwiftBMLSDK_Tests.swift */; };
 /* End PBXBuildFile section */
@@ -67,7 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D41EAC822F66EA540076911A /* PhoneNumberKit in Frameworks */,
+				D40DBA582FCCBD1E00D08EC3 /* PhoneNumberKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +201,7 @@
 			);
 			name = SwiftBMLSDK;
 			packageProductDependencies = (
-				D41EAC812F66EA540076911A /* PhoneNumberKit */,
+				D40DBA572FCCBD1E00D08EC3 /* PhoneNumberKit */,
 			);
 			productName = SwiftBMLSDKLib;
 			productReference = D41EAC752F66EA0F0076911A /* libSwiftBMLSDK.a */;
@@ -215,7 +215,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2630;
-				LastUpgradeCheck = 2630;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					D416203E2B73C17F00E6E0CA = {
 						CreatedOnToolsVersion = 15.2;
@@ -236,7 +236,7 @@
 			mainGroup = D416202B2B73C17F00E6E0CA;
 			packageReferences = (
 				D47C816D2B85202800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */,
-				D4C42DBE2F658C7C0037A706 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
+				D40DBA562FCCBD1E00D08EC3 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 			);
 			productRefGroup = D41620362B73C17F00E6E0CA /* Products */;
 			projectDirPath = "";
@@ -549,6 +549,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D40DBA562FCCBD1E00D08EC3 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PhoneNumberKit/PhoneNumberKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		D47C816D2B85202800783B49 /* XCRemoteSwiftPackageReference "RVS_PersistentPrefs" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RiftValleySoftware/RVS_PersistentPrefs";
@@ -557,20 +565,12 @@
 				minimumVersion = 1.6.0;
 			};
 		};
-		D4C42DBE2F658C7C0037A706 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:marmelroy/PhoneNumberKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.2.7;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D41EAC812F66EA540076911A /* PhoneNumberKit */ = {
+		D40DBA572FCCBD1E00D08EC3 /* PhoneNumberKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D4C42DBE2F658C7C0037A706 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
+			package = D40DBA562FCCBD1E00D08EC3 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
 		};
 /* End XCSwiftPackageProductDependency section */
