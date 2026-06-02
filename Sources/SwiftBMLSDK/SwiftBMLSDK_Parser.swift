@@ -1360,6 +1360,17 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################################## */
         /**
+         This returns true, if the meeting is currently in progress, now.
+         */
+        public var isMeetingInProgressNow: Bool {
+            let prevTime = self.previousOccurrenceDateFast()
+            let endTime = prevTime.addingTimeInterval(self.duration)
+            
+            return (prevTime...endTime).contains(Date())
+        }
+
+        /* ################################################################## */
+        /**
          This returns the meeting start day as a string, localized to the user's environment.
          
          - parameter inStyle: The style of weekday display. Optional, and default is `.standaloneFull`. Values are:
