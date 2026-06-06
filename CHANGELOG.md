@@ -1,3 +1,8 @@
+ **1.5.0** *June 6, 2026*
+ 
+ - Updated to the new PhoneNumberKit SDK.
+ - Added in progress property.
+ 
  **1.4.6** *April 29, 2026*
  
  - Now make sure to cancel previous operations, before beginning a search.
