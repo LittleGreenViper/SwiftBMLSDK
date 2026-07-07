@@ -432,7 +432,7 @@ public extension SwiftBMLSDK_Query {
             print("URL Request: \(urlRequest.url?.absoluteString ?? "ERROR")")
         #endif
         _session.dataTask(with: urlRequest) { inData, inResponse, inError in
-            Task { @MainActor in
+            DispatchQueue.main.async {
                 guard let response = inResponse as? HTTPURLResponse,
                       nil == inError
                 else {
@@ -539,7 +539,7 @@ public extension SwiftBMLSDK_Query {
 
         _session.delegateQueue.cancelAllOperations()
         let task = _session.dataTask(with: urlRequest) { inData, inResponse, inError in
-            Task { @MainActor in
+            DispatchQueue.main.async {
                 guard let response = inResponse as? HTTPURLResponse,
                       nil == inError
                 else {

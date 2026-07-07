@@ -1,3 +1,7 @@
+ **1.5.1** *July 7, 2026*
+ 
+ - Switched a couple of threading dispatchers.
+ 
  **1.5.0** *June 6, 2026*
  
  - Updated to the new PhoneNumberKit SDK.
