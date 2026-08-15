@@ -27,47 +27,62 @@ import CoreLocation
 #if !SWIFTBMLSDK_DOCS
     import PhoneNumberKit
 
-    /* ###################################################################### */
-    /**
-     Extracts a dialable tel URL from a mixed phone/passcode string.
-     */
-    private func _extractDialableTelURL(from inRawString: String) -> URL? {
-        let lowercased = inRawString.lowercased()
+/* ###################################################################### */
+/**
+ Extracts a dialable tel URL from a mixed phone/passcode string.
+ */
+private func _extractDialableTelURL(from inRawString: String) -> URL? {
+    let lowercased = inRawString.lowercased()
 
-        guard let telRange = lowercased.range(of: "tel:") else { return nil }
+    let candidateString: Substring
 
-        let afterTel = inRawString[telRange.upperBound...]
-
-        let allowedDialCharacters = CharacterSet(charactersIn: "+0123456789,#*;")
-
-        let dialPortionScalars = afterTel.unicodeScalars.prefix { inScalar in
-            allowedDialCharacters.contains(inScalar)
-        }
-
-        let dialPortion = String(String.UnicodeScalarView(dialPortionScalars))
-
-        guard !dialPortion.isEmpty else { return nil }
-
-        let baseNumber = dialPortion
-            .split(separator: ",", maxSplits: 1, omittingEmptySubsequences: false)
-            .first
-            .map(String.init)?
-            .replacingOccurrences(of: ";", with: "")
-            .replacingOccurrences(of: "#", with: "")
-            .replacingOccurrences(of: "*", with: "")
-
-        guard let baseNumber,
-              !baseNumber.isEmpty else { return nil }
-
-        let phoneNumberKit = PhoneNumberUtility()
-
-        do {
-            _ = try phoneNumberKit.parse(baseNumber, withRegion: "US", ignoreType: true)
-            return URL(string: "tel:\(dialPortion)")
-        } catch {
-            return nil
-        }
+    if let telRange = lowercased.range(of: "tel:") {
+        candidateString = inRawString[telRange.upperBound...]
+    } else {
+        candidateString = inRawString[...]
     }
+
+    // Allow ordinary phone-number formatting while extracting.
+    let allowedDialCharacters = CharacterSet(
+        charactersIn: "+0123456789-() ,#*;"
+    )
+
+    let dialPortionScalars = candidateString.unicodeScalars.prefix { inScalar in
+        allowedDialCharacters.contains(inScalar)
+    }
+
+    var dialPortion = String(String.UnicodeScalarView(dialPortionScalars))
+
+    // Remove visual formatting, but preserve dialing controls.
+    dialPortion = dialPortion
+        .replacingOccurrences(of: "-", with: "")
+        .replacingOccurrences(of: "(", with: "")
+        .replacingOccurrences(of: ")", with: "")
+        .replacingOccurrences(of: " ", with: "")
+
+    guard !dialPortion.isEmpty else { return nil }
+
+    // Validate only the actual phone number, not any passcode/extension.
+    let baseNumber = dialPortion
+        .split(separator: ",", maxSplits: 1, omittingEmptySubsequences: false)
+        .first
+        .map(String.init)?
+        .replacingOccurrences(of: ";", with: "")
+        .replacingOccurrences(of: "#", with: "")
+        .replacingOccurrences(of: "*", with: "")
+
+    guard let baseNumber,
+          !baseNumber.isEmpty else { return nil }
+
+    let phoneNumberKit = PhoneNumberUtility()
+
+    do {
+        _ = try phoneNumberKit.parse(baseNumber, withRegion: "US", ignoreType: true)
+        return URL(string: "tel:\(dialPortion)")
+    } catch {
+        return nil
+    }
+}
 #else
     /* ###################################################################### */
     /**

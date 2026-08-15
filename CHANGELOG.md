@@ -1,3 +1,7 @@
+ **1.5.3** *August 15, 2026*
+ 
+ - Fixed a phone number parsing error.
+ 
  **1.5.2** *July 7, 2026*
  
  - Switched a couple of threading dispatchers.
