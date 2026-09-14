@@ -27,7 +27,6 @@ let package = Package(
     name: "SwiftBMLSDK",
     platforms: [
         .iOS(.v16),
-        .tvOS(.v16),
         .macOS(.v13),
         .watchOS(.v9)
     ],
@@ -52,6 +51,11 @@ let package = Package(
             swiftSettings: isDocsBuild ? [
                 .define("SWIFTBMLSDK_DOCS")
             ] : []
+        ),
+        .testTarget(
+            name: "SwiftBMLSDKTests",
+            dependencies: ["SwiftBMLSDK"],
+            resources: [.process("Resources")]
         )
     ]
 )

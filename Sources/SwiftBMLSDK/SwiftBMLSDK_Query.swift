@@ -32,9 +32,9 @@ import CoreLocation // For coordinates
  
  # Supported Systems
  
- This will support iOS 16 (and greater), iPadOS 16 (and greater), tvOS 16 (and greater), macOS 13 (and greater), and watchOS 9 (and greater)
+ Supports iOS/iPadOS 16+, macOS 13+, and watchOS 9+. tvOS is unsupported because the public meeting address uses the Contacts framework, which is unavailable there.
  
- This requires Swift 5 or greater.
+ Normal builds require Swift tools 5.9 or greater through PhoneNumberKit 5. The SDK uses Swift 5 language mode.
 
  # Usage
  
@@ -42,9 +42,9 @@ import CoreLocation // For coordinates
  
  For example:
  
-    `SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://littlegreenviper.com/LGV_MeetingServer/Tests/entrypoint.php"))`
+    `SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://example.org/LGV_MeetingServer/entrypoint.php"))`
  
- creates an instance, based on the LGV test server.
+ creates a query. Replace the example URL with your aggregator's actual entrypoint.
  
  Once the struct is instantiated, it can then be queried. Responses to queries are a ``SwiftBMLSDK_Parser`` instance, which contains and interprets the found set.
  
@@ -65,30 +65,30 @@ import CoreLocation // For coordinates
 
  # Dependencies
  
- This type has no dependencies, other than the Foundation and CoreLocation SDKs, provided by Apple.
+ The query code uses Foundation and CoreLocation. The package also depends on PhoneNumberKit 5 for phone-number parsing.
  */
 public struct SwiftBMLSDK_Query {
     /* ################################################# */
     /**
      This is the completion function for the server info query.
      
-     > NOTE: The completion may be called in any thread!
+     > NOTE: The completion is called asynchronously on the main queue, including when the request cannot be started.
      
-     - parameter: The resultant server response. Can be nil.
-     - parameter: Any errors that occurred. Should usually be nil.
+     - parameter result: The parsed server information, or nil on failure.
+     - parameter error: The transport, HTTP, or decoding error, or nil on success.
      */
-    public typealias ServerInfoResultCompletion = (_: ServerInfo?, _: Error?) -> Void
+    public typealias ServerInfoResultCompletion = (_ result: ServerInfo?, _ error: Error?) -> Void
 
     /* ################################################# */
     /**
      This is the completion function for the meeting search query.
      
-     > NOTE: The completion may be called in any thread!
+     > NOTE: The completion is called asynchronously on the main queue, including when the request cannot be started.
      
-     - parameter: The resultant server response. Can be nil.
-     - parameter: Any errors that occurred. Should usually be nil.
+     - parameter result: The parsed response, or nil on failure. An empty meeting page is a successful response.
+     - parameter error: The transport, HTTP, or decoding error, or nil on success.
      */
-    public typealias QueryResultCompletion = (_: SwiftBMLSDK_Parser?, _: Error?) -> Void
+    public typealias QueryResultCompletion = (_ result: SwiftBMLSDK_Parser?, _ error: Error?) -> Void
 
     /* ################################################################################################################################## */
     // MARK: Server Info Struct
@@ -186,7 +186,7 @@ public struct SwiftBMLSDK_Query {
         
         /* ############################################# */
         /**
-         The total number of meetings in the server.
+         The sum of meeting counts in the parsed service/server entries.
          */
         public var totalMeetings: Int {
             services.reduce(0) { current, next in
@@ -198,7 +198,7 @@ public struct SwiftBMLSDK_Query {
         
         /* ############################################# */
         /**
-         The total number of servers reached by the server.
+         The number of parsed server entries across all services.
          */
         public var totalServers: Int {
             services.reduce(0) { current, next in
@@ -233,8 +233,8 @@ public struct SwiftBMLSDK_Query {
             
             if !meetingIDs.isEmpty {
                 let ids = meetingIDs.map {
-                    let serverID = Int($0 >> 44)
-                    let meetingID = Int($0 & 0x00000FFFFFFFFFFF)
+                    let serverID = $0 >> 44
+                    let meetingID = $0 & 0x00000FFFFFFFFFFF
                     
                     return "(\(serverID),\(meetingID))"
                 }.joined(separator: ",")
@@ -259,6 +259,7 @@ public struct SwiftBMLSDK_Query {
                 }
                 
                 if CLLocationCoordinate2DIsValid(locationCenter),
+                   locationRadius.isFinite,
                    0 < locationRadius {
                     ret.append(URLQueryItem(name: "geocenter_lng", value: String(locationCenter.longitude)))
                     ret.append(URLQueryItem(name: "geocenter_lat", value: String(locationCenter.latitude)))
@@ -323,7 +324,7 @@ public struct SwiftBMLSDK_Query {
         
         /* ############################################# */
         /**
-         The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Ignored if the type is exclusive virtual.
+         The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Nonfinite radii are also ignored. Ignored if the type is exclusive virtual or meeting IDs are supplied.
          */
         public let locationRadius: Double
 
@@ -335,7 +336,7 @@ public struct SwiftBMLSDK_Query {
         
         /* ############################################# */
         /**
-         This returns only meetings that have specific IDs. If this is not empty, then all the other specification parameters are ignored.
+         The composite meeting IDs to fetch. When nonempty, meeting type and location are ignored; paging still applies.
          */
         public let meetingIDs: [UInt64]
         
@@ -346,7 +347,7 @@ public struct SwiftBMLSDK_Query {
          - parameters:
             - inType: The meeting type. Default is any type.
             - inLocationCenter: The center of a location-based search. If `locationRadius` is 0, or less, then this is ignored. It also must be a valid long/lat, or there will not be a location-based search. Ignored if the type is exclusive virtual.
-            - inLocationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Ignored if the type is exclusive virtual.
+            - inLocationRadius: The radius, in meters, of a location-based search. If this is 0 (or negative), then there will not be a location-based search. Nonfinite radii are also ignored. Ignored if the type is exclusive virtual or meeting IDs are supplied.
             - inMeetingIDs: If this is not empty, then ``type``, ``locationCenter``, and ``locationRadius`` are all ignored, and the search will be for specific meetings by the IDs passed in. Optional. Default is empty.
             - inPageSize: The number of results per page. If this is 0, then no results are returned, and only the meta is populated. If left out, or set to a negative number, then all results are returned in one page.
             - inPageNumber: The page number (0-based). If `pageSize` is 0 or less, this is ignored. If over the maximum number of pages, an empty page is returned.
@@ -375,7 +376,7 @@ public struct SwiftBMLSDK_Query {
     
     /* ################################################# */
     /**
-     This is the main directory ("base") URI for the target [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer) instance.
+     This is the entrypoint URL for the target [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer) instance.
      */
     private var _serverBaseURI: URL?
     
@@ -383,7 +384,7 @@ public struct SwiftBMLSDK_Query {
     /**
      Default initializer.
      
-     - parameter inServerBaseURI: The URL to the "base (main directory) of an instance of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer). Optional. Can be omitted.
+     - parameter inServerBaseURI: The complete HTTP or HTTPS entrypoint URL of an instance of [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer). Optional. Can be omitted.
      */
     public init(serverBaseURI inServerBaseURI: URL? = nil) {
         _serverBaseURI = inServerBaseURI
@@ -391,6 +392,67 @@ public struct SwiftBMLSDK_Query {
         // This is for working in the simulator. Sometimes, it borks QUIC
         config.httpAdditionalHeaders = ["Alt-Svc": "clear"]
         _session = URLSession(configuration: config)
+    }
+
+    /* ################################################# */
+    /**
+     Initializes a query with an injected session for deterministic request testing.
+     */
+    internal init(serverBaseURI inServerBaseURI: URL?, session inSession: URLSession) {
+        _serverBaseURI = inServerBaseURI
+        _session = inSession
+    }
+
+    /* ################################################# */
+    /**
+     Executes a JSON request. The caller delivers its parsed result on the main queue.
+     */
+    private func _request(queryItems inQueryItems: [URLQueryItem],
+                          priority inPriority: Float = URLSessionTask.defaultPriority,
+                          completion inCompletion: @escaping (Data?, Error?) -> Void) {
+        guard let baseURL = serverBaseURI,
+              let scheme = baseURL.scheme?.lowercased(),
+              ["http", "https"].contains(scheme),
+              let host = baseURL.host, !host.isEmpty,
+              var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
+        else {
+            inCompletion(nil, URLError(.badURL))
+            return
+        }
+        components.queryItems = (components.queryItems ?? []) + inQueryItems
+        components.fragment = nil
+        guard let url = components.url else {
+            inCompletion(nil, URLError(.badURL))
+            return
+        }
+
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        let task = _session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                inCompletion(nil, error)
+                return
+            }
+            guard let response = response as? HTTPURLResponse else {
+                inCompletion(nil, URLError(.badServerResponse))
+                return
+            }
+            guard (200..<300).contains(response.statusCode) else {
+                inCompletion(nil, URLError(.badServerResponse, userInfo: [
+                    "HTTPStatusCode": response.statusCode,
+                    NSURLErrorFailingURLErrorKey: url
+                ]))
+                return
+            }
+            let mimeType = response.mimeType?.lowercased() ?? ""
+            guard mimeType == "application/json" || (mimeType.hasPrefix("application/") && mimeType.hasSuffix("+json")),
+                  let data = data, !data.isEmpty else {
+                inCompletion(nil, URLError(.cannotDecodeContentData))
+                return
+            }
+            inCompletion(data, nil)
+        }
+        task.priority = inPriority.isFinite ? min(1, max(0, inPriority)) : URLSessionTask.defaultPriority
+        task.resume()
     }
 }
 
@@ -414,207 +476,143 @@ public extension SwiftBMLSDK_Query {
 public extension SwiftBMLSDK_Query {
     /* ################################################# */
     /**
-     Fetches the server info.
-     
-     - parameter inCompletion: A tail completion proc (always called in the main thread).
+     Fetches the aggregator's version, last update, services, and organization totals.
+
+     Existing query items in ``serverBaseURI`` are preserved. Requests made through
+     the same query instance run independently. Malformed individual service or server entries
+     are omitted from the parsed lists.
+
+     - parameter inCompletion: Called once, asynchronously on the main queue. The first
+       argument contains the response on success; the second contains an error on failure.
+       HTTP failures use `URLError.badServerResponse`, with `HTTPStatusCode` in the error's
+       `userInfo`. Invalid response data uses `URLError.cannotDecodeContentData`.
      */
     func serverInfo(completion inCompletion: @escaping ServerInfoResultCompletion) {
-        guard let baseURLString = serverBaseURI?.absoluteString,
-              let url = URL(string: "\(baseURLString)?info")
-        else {
-            inCompletion(nil, nil)
-            return
-        }
-        
-        let urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
-        
-        #if DEBUG
-            print("URL Request: \(urlRequest.url?.absoluteString ?? "ERROR")")
-        #endif
-        _session.dataTask(with: urlRequest) { inData, inResponse, inError in
-            DispatchQueue.main.async {
-                guard let response = inResponse as? HTTPURLResponse,
-                      nil == inError
-                else {
-                    inCompletion(nil, nil)
-                    return
-                }
-                
-                if nil == inError {
-                    switch response.statusCode {
-                    case 200..<300:
-                        if let data = inData,
-                           "application/json" == response.mimeType {
-                            #if DEBUG
-                                print("Response Data: \(data.debugDescription)")
-                            #endif
-                            if let data = inData,
-                               "application/json" == response.mimeType {
-                                #if DEBUG
-                                    print("Response Data: \(data.debugDescription)")
-                                #endif
-                                guard let simpleJSON = try? JSONSerialization.jsonObject(with: data, options: [.allowFragments]) as? NSDictionary,
-                                      let version = simpleJSON["server_version"] as? String,
-                                      let lastUpdate = simpleJSON["last_update_timestamp"] as? Int,
-                                      let servicesWrapper = simpleJSON["services"] as? NSDictionary,
-                                      let servicesKeys = servicesWrapper.allKeys as? [String],
-                                      let organizationTemp = simpleJSON["organizations"] as? NSDictionary,
-                                      var organizationsSrc = organizationTemp as? [String: Int]
-                                else {
-                                    inCompletion(nil, nil)
-                                    return
-                                }
-                                
-                                organizationsSrc.removeValue(forKey: "total_meetings")
-                                
-                                let services: [ServerInfo.Service] = servicesKeys.sorted().compactMap { inName in
-                                    guard let object = servicesWrapper[inName] as? NSDictionary,
-                                          let service = object as? [String: Any],
-                                          let name = service["service_name"] as? String,
-                                          !name.isEmpty,
-                                          let serversTemp = service["servers"] as? NSDictionary
-                                    else { return nil }
-                                    
-                                    let keys = (serversTemp.allKeys as? [String] ?? []).compactMap({ Int($0) }).sorted()
-                                    
-                                    let servers = keys.compactMap { inIntServerKey in
-                                        let strID = "\(inIntServerKey)"
-                                        if let server = serversTemp[strID] as? NSDictionary,
-                                           let name = server["name"] as? String,
-                                           let numMeetings = server["num_meetings"] as? Int,
-                                           let uriString = server["url"] as? String,
-                                           let uri = URL(string: uriString),
-                                           let orgs = server["organizations"] as? NSDictionary,
-                                           let organizations = orgs as? [String: Int],
-                                           !organizations.isEmpty {
-                                            return ServerInfo.Service.Server(id: inIntServerKey, name: name, entryPointURI: uri, numberOfMeetings: numMeetings, organizations: organizations)
-                                        }
-                                        return nil
-                                    }
-                                    
-                                    return ServerInfo.Service(name: name, servers: servers)
-                                }
-                                
-                                let serverInfo = ServerInfo(server_version: version, lastUpdate: Date(timeIntervalSince1970: TimeInterval(lastUpdate)), services: services, organizationTotals: organizationsSrc)
-                                inCompletion(serverInfo, nil)
-                            } else {
-                                fallthrough
-                            }
-                        } else {
-                            fallthrough
-                        }
-                        
-                    default:
-                        inCompletion(nil, nil)
-                    }
-                } else {
-                    inCompletion(nil, inError)
-                }
+        _request(queryItems: [URLQueryItem(name: "info", value: nil)]) { data, error in
+            guard let data = data else {
+                DispatchQueue.main.async { inCompletion(nil, error) }
+                return
             }
-        }.resume()
+            guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                  let version = json["server_version"] as? String,
+                  let lastUpdate = json["last_update_timestamp"] as? TimeInterval,
+                  let servicesJSON = json["services"] as? [String: Any],
+                  var organizations = json["organizations"] as? [String: Int] else {
+                DispatchQueue.main.async { inCompletion(nil, URLError(.cannotDecodeContentData)) }
+                return
+            }
+            organizations.removeValue(forKey: "total_meetings")
+            let services = servicesJSON.keys.sorted().compactMap { key -> ServerInfo.Service? in
+                guard let service = servicesJSON[key] as? [String: Any],
+                      let name = service["service_name"] as? String, !name.isEmpty,
+                      let serversJSON = service["servers"] as? [String: Any] else { return nil }
+                let servers = serversJSON.keys.compactMap { key -> ServerInfo.Service.Server? in
+                    guard let id = Int(key),
+                          let server = serversJSON[key] as? [String: Any],
+                          let name = server["name"] as? String,
+                          let count = server["num_meetings"] as? Int,
+                          let urlString = server["url"] as? String,
+                          let url = URL(string: urlString),
+                          let organizations = server["organizations"] as? [String: Int] else { return nil }
+                    return ServerInfo.Service.Server(id: id, name: name, entryPointURI: url,
+                                                     numberOfMeetings: count, organizations: organizations)
+                }.sorted { $0.id < $1.id }
+                return ServerInfo.Service(name: name, servers: servers)
+            }
+            let info = ServerInfo(server_version: version,
+                                  lastUpdate: Date(timeIntervalSince1970: lastUpdate),
+                                  services: services, organizationTotals: organizations)
+            DispatchQueue.main.async { inCompletion(info, nil) }
+        }
     }
-    
+
     /* ################################################# */
     /**
-     This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function.
+     Searches for one page of meetings matching a specification.
 
-     - parameter inSpecification: The search specification.
-     - parameter inPriority: The priority (0 -> 1). Optional. Default is default priority (0.5).
-     - parameter inCompletion: A tail completion proc (always called in the main thread).
+     Empty and count-only responses return a parser with an empty ``SwiftBMLSDK_Parser/meetings``
+     array. Malformed meeting records are skipped, so the parsed count can be less than
+     the server's ``SwiftBMLSDK_Parser/PageMeta/actualSize``. Requests run independently;
+     starting a search does not cancel another request.
+
+     - parameter inSpecification: Meeting type, IDs, location in meters, and paging options.
+     - parameter inPriority: URL session task priority, clamped to 0...1. Default is 0.5;
+       nonfinite values also use the default.
+     - parameter inCompletion: Called once, asynchronously on the main queue, with either
+       a parser or an error. Transport errors are preserved. HTTP failures use
+       `URLError.badServerResponse` (`HTTPStatusCode` in `userInfo`); malformed JSON or
+       an invalid response schema uses `URLError.cannotDecodeContentData`.
      */
     func meetingSearch(specification inSpecification: SearchSpecification,
                        priority inPriority: Float = URLSessionTask.defaultPriority,
                        completion inCompletion: @escaping QueryResultCompletion) {
-        guard let url = serverBaseURI?.appending(queryItems: inSpecification.urlQueryItems) else {
-            inCompletion(nil, nil)
-            
-            return
-        }
-        
-        let urlRequest = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
-        
-        #if DEBUG
-            print("URL Request: \(urlRequest.url?.absoluteString ?? "ERROR")")
-        #endif
-
-        _session.delegateQueue.cancelAllOperations()
-        let task = _session.dataTask(with: urlRequest) { inData, inResponse, inError in
+        _request(queryItems: inSpecification.urlQueryItems, priority: inPriority) { data, error in
+            guard let data = data else {
+                DispatchQueue.main.async { inCompletion(nil, error) }
+                return
+            }
+            let parser = SwiftBMLSDK_Parser(jsonData: data, specification: inSpecification)
             DispatchQueue.main.async {
-                guard let response = inResponse as? HTTPURLResponse,
-                      nil == inError
-                else {
-                    inCompletion(nil, nil)
-                    return
-                }
-                
-                if nil == inError {
-                    switch response.statusCode {
-                    case 200..<300:
-                        if let data = inData,
-                           "application/json" == response.mimeType {
-                            inCompletion(SwiftBMLSDK_Parser(jsonData: data, specification: inSpecification), nil)
-                        } else {
-                            fallthrough
-                        }
-                    
-                    default:
-                        inCompletion(nil, nil)
-                    }
-                } else {
-                    inCompletion(nil, inError)
-                }
+                inCompletion(parser, parser == nil ? URLError(.cannotDecodeContentData) : nil)
             }
         }
-        
-        task.priority = inPriority
-        task.resume()
     }
 
     /* ################################################# */
     /**
-     This actually queries the server for a set of meetings, based on a ``SearchSpecification`` instance, and provides an instance of ``SwiftBMLSDK_Parser`` to a completion function, but in this case, it does an auto-radius search, extending outwards from the search center (``SearchSpecification/locationCenter``), until the minimum number of meetings specified have been found. The ``SearchSpecification/locationRadius`` specification property is the maximum search radius (If the minimum amount have not been found, by the time the radius reaches this, the search stops, and the current results are returned).
+     Expands a geographic search until enough parsed meetings are found or the maximum
+     radius is reached. The final response can contain fewer meetings than requested.
 
-     - parameter inMinNumber: The minimum number of results. At least this many results must be returned (or the search can give up, if it reaches the maximum radius).
-     - parameter inSpecification: The search specification.
-     - parameter inPriority: The priority (0 -> 1). Optional. Default is default priority (0.5).
-     - parameter inCompletion: A tail completion proc (always called in the main thread).
+     All distances are in meters. The first radius is the smaller of 100 meters and the
+     maximum; each subsequent radius doubles, with a final request at the exact maximum.
+     A nonpositive maximum uses 100,000 meters (100 km). Paging is ignored so the target
+     count is compared against the complete parsed result. On failure, the search stops
+     and returns the error. For ID searches or exclusively virtual searches, location is
+     irrelevant and a single ordinary search uses the original specification.
+
+     - parameter inMinNumber: Target number of parsed meetings, clamped to at least one.
+     - parameter inSpecification: Search type, center, and maximum radius. A geographic
+       search requires valid coordinates and a finite radius; otherwise `.badURL` is returned.
+     - parameter inPriority: URL session task priority, clamped to 0...1. Default is 0.5.
+     - parameter inCompletion: Called once, asynchronously on the main queue, with the
+       successful result (possibly empty) or an error.
      */
     func meetingAutoRadiusSearch(minimumNumberOfResults inMinNumber: Int,
                                  specification inSpecification: SearchSpecification,
                                  priority inPriority: Float = URLSessionTask.defaultPriority,
                                  completion inCompletion: @escaping QueryResultCompletion) {
+        if !inSpecification.meetingIDs.isEmpty {
+            meetingSearch(specification: inSpecification, priority: inPriority, completion: inCompletion)
+            return
+        }
+        if case .virtual(isExclusive: true) = inSpecification.type {
+            meetingSearch(specification: inSpecification, priority: inPriority, completion: inCompletion)
+            return
+        }
+        guard CLLocationCoordinate2DIsValid(inSpecification.locationCenter),
+              inSpecification.locationRadius.isFinite else {
+            DispatchQueue.main.async { inCompletion(nil, URLError(.badURL)) }
+            return
+        }
         let targetCount = max(1, inMinNumber)
-        let maxRadius = 0 < inSpecification.locationRadius ? inSpecification.locationRadius : 100_000
-        var radiusStep = CLLocationDistance(0.1)
-        var lastParser: SwiftBMLSDK_Parser?
-        
-        func search(at radiusInKm: CLLocationDistance) {
-            guard radiusInKm <= maxRadius
-            else {
-                DispatchQueue.main.async { inCompletion(nil, nil) }
-                return
-            }
+        let maxRadius = inSpecification.locationRadius > 0 ? inSpecification.locationRadius : 100_000
 
-            let specification = SearchSpecification(type: inSpecification.type, locationCenter: inSpecification.locationCenter, locationRadius: radiusStep)
-            meetingSearch(specification: specification, priority: inPriority) { inParser, inError in
-                radiusStep *= 1.1
-                if nil == inError {
-                    if let parser = inParser,
-                       !parser.meetings.isEmpty {
-                        lastParser = parser
-                        if targetCount <= parser.meetings.count {
-                            inCompletion(lastParser, nil)
-                            return
-                        }
-                    }
-                    
-                    search(at: radiusStep)
+        func search(at radius: CLLocationDistance) {
+            let specification = SearchSpecification(type: inSpecification.type,
+                                                    locationCenter: inSpecification.locationCenter,
+                                                    locationRadius: radius)
+            meetingSearch(specification: specification, priority: inPriority) { parser, error in
+                guard let parser = parser, error == nil else {
+                    inCompletion(nil, error)
+                    return
+                }
+                if parser.meetings.count >= targetCount || radius >= maxRadius {
+                    inCompletion(parser, nil)
                 } else {
-                    DispatchQueue.main.async { inCompletion(nil, inError) }
+                    search(at: min(maxRadius, radius * 2))
                 }
             }
         }
-
-        search(at: radiusStep)
+        search(at: min(100, maxRadius))
     }
 }

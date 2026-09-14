@@ -1,85 +1,94 @@
-# ``SwiftBMLSDK``
+# SwiftBMLSDK
 
-A native Swift client SDK for the `LGV_MeetingServer` Web server.
+![SwiftBMLSDK icon](icon.png)
 
-## Overview
+A native Swift client for the [LGV_MeetingServer](https://github.com/LittleGreenViper/LGV_MeetingServer) meeting aggregator. Version **1.5.4**.
 
-![Icon](icon.png)
+## Requirements and installation
 
-Use the SwiftBMLSDK to query instances of the [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer) meeting aggregator server.
+Supports iOS/iPadOS 16+, macOS 13+, and watchOS 9+. tvOS is unsupported because the SDK's public address type requires Contacts, which tvOS does not provide. The SDK uses Swift 5 language mode; normal builds require Swift tools 5.9+ through the PhoneNumberKit 5 dependency.
 
-This service manages structured queries, and allows powerful parsing and filtering of search results.
+Add `https://github.com/LittleGreenViper/SwiftBMLSDK` as a Swift package dependency, then add the `SwiftBMLSDK` library product to your target. [PhoneNumberKit](https://github.com/PhoneNumberKit/PhoneNumberKit) is resolved automatically.
 
-## Usage
+## Search for meetings
 
-create an instance of ``SwiftBMLSDK_Query``, and use that to query an external [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer) server.
+Use the complete HTTP or HTTPS entrypoint URL of your aggregator, including the script name when required. Replace the example URL below with your server's URL.
 
-The response to the query will be an instance of ``SwiftBMLSDK_Parser``, which can then be used to access, filter and sort the meetings, contained, therein.
+```swift
+import Foundation
+import SwiftBMLSDK
+import CoreLocation
 
-That's just about the only thing that you need to do, as a user of the SDK. It uses completion procs for most of its responses.
+let query = SwiftBMLSDK_Query(
+    serverBaseURI: URL(string: "https://example.org/LGV_MeetingServer/entrypoint.php")
+)
+let specification = SwiftBMLSDK_Query.SearchSpecification(
+    type: .inPerson(isExclusive: false),
+    locationCenter: CLLocationCoordinate2D(latitude: 40.7128, longitude: -74.0060),
+    locationRadius: 5_000
+)
 
-## Topics
+query.meetingSearch(specification: specification) { results, error in
+    if let error = error {
+        print("Search failed: \(error.localizedDescription)")
+        return
+    }
+    guard let results = results else { return }
+    for meeting in results.meetings {
+        print(meeting.name, meeting.localizedWeekdayTimeString())
+    }
+}
+```
 
-### Making a Query to the Server
+Query completions run once, asynchronously on the main queue, including failures before a request starts. Successful empty searches return a parser with an empty `meetings` array. Transport errors are preserved; HTTP failures return `URLError.badServerResponse`, with `HTTPStatusCode` in the error's `userInfo`. Invalid response content returns `URLError.cannotDecodeContentData`. Requests on the same query instance run independently.
 
-This is the struct that you need to instantiate, in order to execute queries to [the meeting server](https://github.com/LittleGreenViper/LGV_MeetingServer). Everything else comes from that instance.
+## Search options
 
-- ``SwiftBMLSDK_Query``
+- `locationRadius` is in **meters**. Nonpositive or nonfinite radii disable geographic filtering for an ordinary search. Coordinates must be valid; the default center is `(0, 0)`.
+- `.inPerson()` and `.virtual()` include hybrid meetings. Set `isExclusive: true` to exclude hybrids. `.hybrid` selects meetings with both components. Exclusively virtual searches ignore location.
+- `meetingIDs` accepts the composite `meeting.id` values. IDs override type and location filters; paging still applies.
+- `pageSize` defaults to `-1` (all results). Use `0` for metadata only, or a positive size and zero-based `page` for paging.
+- `meetingAutoRadiusSearch(minimumNumberOfResults:specification:priority:completion:)` expands from 100 meters (or a smaller maximum), doubling until the target count or exact maximum radius is reached. A nonpositive maximum means 100 km. Geographic auto-radius searches ignore paging and may return fewer meetings than requested. ID or exclusively virtual specifications perform a single ordinary search.
+- `serverInfo(completion:)` returns the aggregator version, last update, services, and organization totals.
 
-### Meeting Server Information Queries
+The parser preserves server order, skips invalid meeting records, and applies the requested meeting type. Metadata counts come from the server and can exceed the number of accepted meetings. Missing or invalid timezones cause a record to be skipped by default. Setting the process environment variable `IGNORE_NO_TZ` accepts those records using the device's current timezone.
 
-This is a query that fetches basic information from the server.
+## Dates, filtering, and display
 
-- ``SwiftBMLSDK_Query/serverInfo(completion:)``
+`weekday` uses Sunday = 1 through Saturday = 7 in the meeting's timezone. `startTime` stores a floating clock time on January 1, 2001, in GMT; it is not an actual meeting date. Prefer these helpers:
 
-- ``SwiftBMLSDK_Query/ServerInfo``
+- `nextOccurrenceDateFast(from:calendar:)` returns the next absolute occurrence strictly after the reference date.
+- `previousOccurrenceDateFast(from:calendar:)` returns the most recent occurrence at or before the reference date.
+- `localizedWeekdayTimeString(adjusted: true)` displays the next occurrence in the user's timezone. The default, `adjusted: false`, displays the meeting's timezone. `includeDuration: true` adds the end time.
+- `isMeetingInProgressNow` includes the start and excludes the end. Zero-duration meetings are never in progress.
 
-### Meeting Search Queries
+Occurrence calculations preserve local clock time across daylight-saving changes. Missing hours move forward while preserving minutes and seconds; repeated hours use the first occurrence.
 
-This is how you do a meeting search. Create a ``SwiftBMLSDK_Query/SearchSpecification`` instance, and pass that to the ``SwiftBMLSDK_Query/meetingSearch(specification:completion:)`` method.
+```swift
+func mondayMorningMeetings(in results: SwiftBMLSDK_Parser) -> [SwiftBMLSDK_Parser.Meeting] {
+    let morning: Range<TimeInterval> = 32_400..<43_200
+    return results.inPersonMeetings[.monday][morning]
+}
+```
 
-- ``SwiftBMLSDK_Query/SearchSpecification``
+Weekday and time filters use each meeting's own timezone. Use a `Range<TimeInterval>` for time filtering: an integer range selects Swift's standard array-index subscript. `localWeekdayIndex` changes weekday ordering to match the user's calendar, without timezone conversion.
 
-- ``SwiftBMLSDK_Query/meetingSearch(specification:priority:completion:)``
+Meeting arrays expose `allCoords`, `mapRegion`, and `asJSONData`. Exported JSON uses the SDK's flattened field names and is **not** the server's input schema. `distanceInMeters` is `-1` when no geographic search distance is available; `distanceInMeters(from:)` returns an optional distance for an explicit coordinate.
 
-- ``SwiftBMLSDK_Query/meetingSearch(minimumNumberOfResults:specification:priority:completion:)``
+`SwiftBMLSDK_MeetingLocalTimezoneCollection` fetches virtual and hybrid meetings once and caches upcoming dates. Use it on the main thread. `refreshCaches` recalculates stored dates without fetching the server; the fetch callback has no error argument, so use `SwiftBMLSDK_Query` directly when you need error details.
 
-- ``SwiftBMLSDK_Parser``
+## App and phone links
 
-### Useful Classes
+`directAppURI` converts recognized meeting URLs into app links. On iOS and iPadOS, read it on the main thread and declare the schemes your app uses in `LSApplicationQueriesSchemes`: `zoomus`, `lmi-g2m`, `skype`, `gmeet`, `discord`, and `org.jitsi.meet`. The SDK checks `canOpenURL`; macOS and watchOS generate links without checking installation. A generated URL does not guarantee that a particular service or app version accepts it. The `SKIP_CANOPEN` environment variable bypasses this check for testing.
 
-You can create an instance of ``SwiftBMLSDK_MeetingLocalTimezoneCollection``, and use that to manage all the meetings (which are represented in the user's local timezone).
+`directPhoneURI` creates a normalized `tel:` URL, retaining pauses and numeric meeting IDs or PINs. Numbers without an international prefix use the US region. Ambiguous multiple-number strings return `nil`. This property does not test whether the device can place calls.
 
-- ``SwiftBMLSDK_MeetingLocalTimezoneCollection``
+## Documentation and tests
 
-### Useful Extensions
+The source uses block-style HeaderDoc comments for Xcode Quick Help and DocC. Open the package in Xcode and choose **Product → Build Documentation** for the API reference and guides. The catalog is in `Sources/SwiftBMLSDK/SwiftBMLSDK.docc`.
 
-- ``SwiftBMLSDK_Parser/Meeting/directAppURI``
+Run `swift test` on macOS to run the meeting-dump checks and deterministic regressions. The query regressions use local HTTP stubs and do not contact a live server.
 
-- ``SwiftBMLSDK_MeetingProtocol``
+`SWIFTBMLSDK_DOCS=1` omits PhoneNumberKit for documentation-only builds; phone URL helpers return `nil` in that configuration. Use normal builds for runtime validation. The existing `docs/` directory contains separately generated Jazzy documentation.
 
-## Dependencies
-
-This SDK depends upon the [PhoneNumberKit](https://github.com/marmelroy/PhoneNumberKit) package, for formatting usable phone numbers from meeting data.
-
-## License
-
-### [MIT License](https://opensource.org/license/mit)
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
+See [CHANGELOG.md](CHANGELOG.md) for release history. Licensed under the [MIT License](LICENSE).

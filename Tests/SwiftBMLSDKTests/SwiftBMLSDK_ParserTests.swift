@@ -38,7 +38,8 @@ final class SwiftBMLSDK_ParserTests: SwiftBMLSDK_TestCase {
         XCTAssertEqual(Self.parser?.meta.totalPages, 1)
         XCTAssertEqual(Self.parser?.meta.page, 0)
         XCTAssertGreaterThan(Self.parser?.meta.searchTime ?? 0, 0)
-        XCTAssertEqual(Self.parser?.meta.actualSize ?? 0, Self.parser?.meetings.count ?? -1)
+        XCTAssertEqual(Self.parser?.meta.actualSize, Self.numberOfMeetingsInDump)
+        XCTAssertEqual(Self.parser?.meetings.count, Self.numberOfParsedMeetings)
     }
 
     /* ################################################################## */

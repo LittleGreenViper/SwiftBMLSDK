@@ -20,75 +20,8 @@
 import Foundation
 import CoreLocation
 
-#if canImport(UIKit)
+#if canImport(UIKit) && !os(watchOS)
     import UIKit
-#endif
-
-#if !SWIFTBMLSDK_DOCS
-    import PhoneNumberKit
-
-/* ###################################################################### */
-/**
- Extracts a dialable tel URL from a mixed phone/passcode string.
- */
-private func _extractDialableTelURL(from inRawString: String) -> URL? {
-    let lowercased = inRawString.lowercased()
-
-    let candidateString: Substring
-
-    if let telRange = lowercased.range(of: "tel:") {
-        candidateString = inRawString[telRange.upperBound...]
-    } else {
-        candidateString = inRawString[...]
-    }
-
-    // Allow ordinary phone-number formatting while extracting.
-    let allowedDialCharacters = CharacterSet(
-        charactersIn: "+0123456789-() ,#*;"
-    )
-
-    let dialPortionScalars = candidateString.unicodeScalars.prefix { inScalar in
-        allowedDialCharacters.contains(inScalar)
-    }
-
-    var dialPortion = String(String.UnicodeScalarView(dialPortionScalars))
-
-    // Remove visual formatting, but preserve dialing controls.
-    dialPortion = dialPortion
-        .replacingOccurrences(of: "-", with: "")
-        .replacingOccurrences(of: "(", with: "")
-        .replacingOccurrences(of: ")", with: "")
-        .replacingOccurrences(of: " ", with: "")
-
-    guard !dialPortion.isEmpty else { return nil }
-
-    // Validate only the actual phone number, not any passcode/extension.
-    let baseNumber = dialPortion
-        .split(separator: ",", maxSplits: 1, omittingEmptySubsequences: false)
-        .first
-        .map(String.init)?
-        .replacingOccurrences(of: ";", with: "")
-        .replacingOccurrences(of: "#", with: "")
-        .replacingOccurrences(of: "*", with: "")
-
-    guard let baseNumber,
-          !baseNumber.isEmpty else { return nil }
-
-    let phoneNumberKit = PhoneNumberUtility()
-
-    do {
-        _ = try phoneNumberKit.parse(baseNumber, withRegion: "US", ignoreType: true)
-        return URL(string: "tel:\(dialPortion)")
-    } catch {
-        return nil
-    }
-}
-#else
-    /* ###################################################################### */
-    /**
-     Fallback implementation used during documentation builds.
-     */
-    private func _extractDialableTelURL(from inRawString: String) -> URL? { nil }
 #endif
 
 /* ###################################################################################################################################### */
@@ -100,54 +33,10 @@ fileprivate extension StringProtocol {
      This simply strips out all non-decimal characters in the string, leaving only valid decimal digits.
      */
     var _decimalOnly: String {
-        let decimalDigits = CharacterSet(charactersIn: "0123456789")
-        return String(self).filter {
-            // The higher-order function stuff will convert each character into an aggregate integer, which then becomes a Unicode scalar. Very primitive, but shouldn't be a problem for us, as we only need a very limited ASCII set.
-            guard let cha = UnicodeScalar($0.unicodeScalars.map { $0.value }.reduce(0, +)) else { return false }
-            
-            return decimalDigits.contains(cha)
-        }
+        String(self).filter { $0.isASCII && $0.isNumber }
     }
     
-    /* ################################################################## */
-    /**
-     This simply strips out all non-phone characters in the string, leaving only valid phone characters.
-     */
-    var _phoneNumber: String {
-        let phoneDigits = CharacterSet(charactersIn: "0123456789+-,()")
-        return String(self).filter {
-            // The higher-order function stuff will convert each character into a Unicode scalar. Very primitive, but shouldn't be a problem for us, as we only need a very limited ASCII set.
-            guard let cha = UnicodeScalar($0.unicodeScalars.map { $0.value }.reduce(0, +)) else { return false }
-            
-            return phoneDigits.contains(cha)
-        }
-    }
-    
-    /* ################################################################## */
-    /**
-     This tests a string to see if a given substring is present at the start.
-     
-     - parameter inSubstring: The substring to test.
-     
-     - returns: true, if the string begins with the given substring.
-     */
-    func _beginsWith (_ inSubstring: String) -> Bool {
-        var ret: Bool = false
-        if let range = self.range(of: inSubstring) {
-            ret = (range.lowerBound == self.startIndex)
-        }
-        return ret
-    }
-    
-    /* ################################################################## */
-    /**
-     The following computed property comes from this: http://stackoverflow.com/a/27736118/879365
-     
-     This extension function cleans up a URI string.
-     
-     - returns: a string, cleaned for URI.
-     */
-    var _urlEncodedString: String? { addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) }
+
 }
 
 /* ###################################################################################################################################### */
@@ -159,7 +48,14 @@ fileprivate extension StringProtocol {
 public protocol SwiftBMLSDK_MeetingProtocol {
     /* ################################################# */
     /**
-     If the URL for the virtual meeting is one that can open an app on the user's device, a direct URL scheme version of the URL is returned.
+     An app-specific URL for a recognized meeting link, or nil.
+
+     On iOS and iPadOS, access this property on the main thread. The SDK checks
+     `UIApplication.canOpenURL`; the host app must allow the relevant schemes in
+     `LSApplicationQueriesSchemes`: `zoomus`, `lmi-g2m`, `skype`, `gmeet`, `discord`,
+     or `org.jitsi.meet`. On macOS and watchOS, the URL is generated without checking
+     whether an application is installed. `SKIP_CANOPEN` bypasses the check for testing.
+     A generated link does not guarantee that the service or installed app accepts it.
      */
     var directAppURI: URL? { get }
 }
@@ -170,7 +66,9 @@ public protocol SwiftBMLSDK_MeetingProtocol {
 /**
  This class can be used to manage meetings in the user's local timezone. It is especially useful for virtual meetings.
  
- Virtual meetings are always considered in local (to the user) timezone. We collect all of the meetings at once, and store them here, so they are easier and faster to manage.
+ Initialization fetches virtual and hybrid meetings once. Cached dates are absolute instants;
+ format them in the user's timezone for display. The underlying meetings retain their original
+ schedules and timezones. This mutable collection is intended for use on the main thread.
  
  This is a class, so we don't go making too many massive copies of the data. We can store this as a reference.
  */
@@ -180,7 +78,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
      This clears the cache, and makes a new call, to get the meetings.
      
      - parameter query: A query instance, primed with the meeting server.
-     - parameter completion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
+     - parameter completion: An escaping tail completion proc, with a single parameter (this instance). Called asynchronously on the main queue.
      */
     private func _fetchMeetings(query inQuery: SwiftBMLSDK_Query, completion inCompletion: @escaping FetchCallback) {
         meetings = []
@@ -200,7 +98,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
     
     /* ################################################# */
     /**
-     This is the complete response to the last query. We ask for all of the virtual and hybrid meetings at once from the server, and store them in the order received.
+     Cached meetings from the initial virtual-and-hybrid fetch, in server order. Callers may replace this array; no automatic network refresh occurs.
      */
     private var _meetings = [CachedMeeting]()
     
@@ -208,16 +106,16 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
     
     /* ################################################# */
     /**
-     The callback from the meeting fetch. This can be called in any thread.
+     The callback after the initial fetch, including failure. A failed fetch leaves an empty collection; use the query API directly if you need the error. Called asynchronously on the main queue.
      
-     - parameter: This collection.
+     - parameter collection: The populated collection, or an empty collection on failure.
      */
-    public typealias FetchCallback = (_: SwiftBMLSDK_MeetingLocalTimezoneCollection) -> Void
+    public typealias FetchCallback = (_ collection: SwiftBMLSDK_MeetingLocalTimezoneCollection) -> Void
     
     /* ################################################# */
     /**
      Each meeting is an instance, associated with the date of the next occurrence.
-     If the date is nil, or after now, the meeting is queried for the next ocurrence, and that is cached.
+     When the cached start is reached or passed, the next access recalculates it. Replacing the meeting also refreshes the cached date.
      */
     public class CachedMeeting {
         /* ############################################# */
@@ -228,9 +126,11 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
         
         /* ############################################# */
         /**
-         The meeting is a simple stored property. It needs to be a var, in order to allow date caching (getNextStartDate is mutating).
+         The underlying meeting. Assigning a replacement immediately recalculates ``nextDate``.
          */
-        public var meeting: SwiftBMLSDK_Parser.Meeting
+        public var meeting: SwiftBMLSDK_Parser.Meeting {
+            didSet { _cachedNextDate = meeting.nextOccurrenceDateFast() }
+        }
         
         /* ############################################# */
         /**
@@ -238,7 +138,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
          we fetch it again before returning it.
          */
         public var nextDate: Date {
-            guard .now <= _cachedNextDate else {
+            guard .now < _cachedNextDate else {
                 _cachedNextDate = meeting.nextOccurrenceDateFast()
                 return _cachedNextDate
             }
@@ -250,13 +150,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
         /**
          This returns `true` if the meeting is currently in progress.
          */
-        public var isInProgress: Bool {
-            guard 0 < meeting.duration else { return false }
-            
-            let prevDate = meeting.previousOccurrenceDateFast()
-            let lastDate = prevDate.addingTimeInterval(meeting.duration)
-            return (prevDate..<lastDate).contains(.now)
-        }
+        public var isInProgress: Bool { meeting.isMeetingInProgress() }
         
         /* ############################################# */
         /**
@@ -274,7 +168,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
     
     /* ################################################# */
     /**
-     This is the complete response to the last query. We ask for all of the virtual and hybrid meetings at once from the server, and store them in the order received.
+     Cached meetings from the initial virtual-and-hybrid fetch, in server order. Callers may replace this array; no automatic network refresh occurs.
      */
     public var meetings: [CachedMeeting] {
         get { _meetings }
@@ -302,7 +196,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
      Instantiating this class executes an immediate fetch.
      
      - parameter inServerURL: The URL to the meeting server.
-     - parameter inCompletion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
+     - parameter inCompletion: An escaping tail completion proc, with a single parameter (this instance). Called asynchronously on the main queue.
      */
     public init(serverURL inServerURL: URL, completion inCompletion: @escaping FetchCallback) {
         _fetchMeetings(query: SwiftBMLSDK_Query(serverBaseURI: inServerURL), completion: inCompletion)
@@ -315,7 +209,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
      Instantiating this class executes an immediate fetch.
      
      - parameter inQuery: A "primed" query instance (an instance that has a server URL).
-     - parameter inCompletion: An escaping tail completion proc, with a single parameter (this instance). This can be called in any thread.
+     - parameter inCompletion: An escaping tail completion proc, with a single parameter (this instance). Called asynchronously on the main queue.
      */
     public init(query inQuery: SwiftBMLSDK_Query, completion inCompletion: @escaping FetchCallback) {
         _fetchMeetings(query: inQuery, completion: inCompletion)
@@ -328,7 +222,7 @@ public class SwiftBMLSDK_MeetingLocalTimezoneCollection {
 extension SwiftBMLSDK_MeetingLocalTimezoneCollection {
     /* ################################################# */
     /**
-     This forces the meetings cache to be recalculated from scratch.
+     Rebuilds the occurrence caches for the currently stored meetings. This does not fetch new data from the server. Call on the main thread; the optional completion is dispatched asynchronously to the main queue.
      
      - parameter inCompletion: An optional, simple, one-parameter (This instance) tail completion proc. Always called in the main thread.
      */
@@ -345,45 +239,13 @@ extension SwiftBMLSDK_MeetingLocalTimezoneCollection {
  This extension uses UIKit to determine the proper app for app-specific URIs.
  */
 extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
-    /* ################################################################## */
-    /**
-     "Cleans" a URI.
-     
-     - parameter urlString: The URL, as a String. It can be optional.
-     
-     - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
-     */
-    private static func _cleanURI(urlString inURLString: String?) -> String? {
-        guard var ret: String = inURLString?.trimmingCharacters(in: .whitespacesAndNewlines),
-              let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
-        else { return nil }
-        
-        // We assume non-HTTP is TEL
-        let wasTel = !ret.lowercased()._beginsWith("http")
-        
-        // Yeah, this is pathetic, but it's quick, simple, and works a charm.
-        ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
-
-        if ret.isEmpty {
-            return nil
-        }
-        
-        if wasTel {
-            ret = "tel:" + ret._phoneNumber
-        } else {
-            ret = "https://" + ret
-        }
-        
-        return ret
-    }
-
     // MARK: Public API
     
     /* ################################################################################################################################## */
     // MARK: Public Enum For Virtual Direct URLs
     /* ################################################################################################################################## */
     /**
-     This enum helps us to create direct (as in opening the app directly) URLs, for various services.
+     Identifies the SDK's app-link converters. Each case can hold a source web URL; a case without a URL is a service descriptor and does not produce a link.
      */
     public enum DirectVirtual: CaseIterable {
         /* ############################################# */
@@ -430,32 +292,6 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
         
         /* ############################################# */
         /**
-         This returns the bundle ID (for Mac apps) for the given service.
-         */
-        private var _appBundleID: String {
-            switch self {
-            case .zoom:
-                return "zoomus"
-                
-            case .gotomeeting:
-                return "lmi-g2m"
-
-            case .skype:
-                return "skype"
-
-            case .meet:
-                return "gmeet"
-
-            case .discord:
-                return "discord"
-
-            case .jitsi:
-                return "jitsi"
-            }
-        }
-        
-        /* ############################################# */
-        /**
          This returns the protocol for the given service.
          */
         private var _serviceProtocol: String {
@@ -482,160 +318,51 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
         /* ############################################# */
         /**
-         This returns the host for the given service.
-         */
-        private var _serviceURLHost: String {
-            switch self {
-            case .zoom:
-                return "zoom"
-
-            case .gotomeeting:
-                return "gotomeeting.com"
-
-            case .skype:
-                return "skype.com"
-
-            case .meet:
-                return "meet.google.com"
-
-            case .discord:
-                return "discordapp.com"
-
-            case .jitsi:
-                return "jitsi.meet"
-            }
-        }
-
-        /* ############################################# */
-        /**
          This returns a URL to open the relevant app for the URI.
          
          If the app is not installed on the phone, then nil is returned.
          */
         internal var directURL: URL? {
-            var ret: URL?
-            var confNum: String = ""
-            
+            let ret: URL?
             switch self {
-            case .zoom(let inURL):
-                var pwd: String = ""
-                
-                if let query = inURL?.query,
-                   !query.isEmpty {
-                    pwd = query.split(separator: "&").reduce("") { (current, next) in
-                        if current.isEmpty,
-                           next.starts(with: "pwd=") {
-                            return String(next[next.index(next.startIndex, offsetBy: 4)...])
-                        }
-                        
-                        return ""
-                    }
+            case .zoom(let url):
+                guard let url = url,
+                      let conference = url.pathComponents.map({ $0._decimalOnly }).first(where: { $0.count > 8 }) else { return nil }
+                var components = URLComponents()
+                components.scheme = _serviceProtocol
+                components.host = "zoom.us"
+                components.path = "/join"
+                components.queryItems = [URLQueryItem(name: "confno", value: conference)]
+                if let password = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.first(where: { $0.name == "pwd" })?.value {
+                    components.queryItems?.append(URLQueryItem(name: "pwd", value: password))
                 }
-                
-                guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty
-                else { return nil }
-                
-                // Primitive, but it will work. It gets an element that has a run of more than eight positive numeric characters, and assumes that is the conference code.
-                // The conference code should come before the password (which might also be a string of numbers).
-                // This cleans out query strings.
-                let numStringArray: [String] = comp.compactMap {
-                    let str = String($0._decimalOnly)
-                    
-                    return str.isEmpty ? nil : str
-                }
-                
-                for elem in numStringArray where 8 < elem.count {
-                    confNum = elem
-                    break
-                }
+                ret = components.url
 
-                guard !confNum.isEmpty else { return nil }
-                
-                let retString = "\(_serviceProtocol)://zoom.us/join?confno=\(confNum)" + (!pwd.isEmpty ? "&pwd=\(pwd)" : "")
+            case .gotomeeting(let url):
+                guard let conference = url?.pathComponents.map({ $0._decimalOnly }).first(where: { $0.count > 8 }) else { return nil }
+                ret = URL(string: "\(_serviceProtocol)://gotomeeting.com/join/\(conference)")
 
-                ret = URL(string: retString)
+            case .skype(let url), .meet(let url), .jitsi(let url):
+                guard let url = url,
+                      var components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+                      components.path.split(separator: "/").count > 0,
+                      !(components.host ?? "").isEmpty else { return nil }
+                components.scheme = _serviceProtocol
+                ret = components.url
 
-            case .gotomeeting(let inURL):
-                guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty
-                else { return nil }
-                
-                let numStringArray: [String] = comp.compactMap {
-                    let str = String($0._decimalOnly)
-                    
-                    return str.isEmpty ? nil : str
-                }
-                
-                for elem in numStringArray where 8 < elem.count {
-                    confNum = elem
-                    break
-                }
-
-                guard !confNum.isEmpty else { return nil }
-                
-                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/join/\(confNum)"
-
-                ret = URL(string: retString)
-
-            case .skype(let inURL):
-                guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty
-                else { return nil }
-                
-                confNum = comp[0]
-
-                guard !confNum.isEmpty else { return nil }
-                
-                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/\(confNum)"
-
-                ret = URL(string: retString)
-
-            case .meet(let inURL):
-                guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty
-                else { return nil }
-                
-                confNum = comp[0]
-
-                guard !confNum.isEmpty else { return nil }
-                
-                let retString = "\(_serviceProtocol)://\(_serviceURLHost)/\(confNum)"
-
-                ret = URL(string: retString)
-
-            case .discord(let inURL):
-                guard let comp = inURL?.pathComponents,
-                      !comp.isEmpty
-                else { return nil }
-                
-                let guild = comp[1]
-                
-                if 1 < comp.count {
-                    let channel = comp[2]
-                    
-                    let retString = "\(_serviceProtocol)://channels/\(guild)/\(channel)"
-                    
-                    ret = URL(string: retString)
-                } else {
-                    let retString = "\(_serviceProtocol)://channels/\(guild)"
-                    
-                    ret = URL(string: retString)
-                }
-
-            case .jitsi(let inURL):
-                guard let comp = inURL?.pathComponents,
-                      1 < comp.count
-                else { return nil }
-                
-                let server = comp[0]
-                let id = comp[1]
-                let retString = "\(_serviceProtocol)://\(server)/\(id)"
-                
-                ret = URL(string: retString)
+            case .discord(let url):
+                guard let url = url else { return nil }
+                var path = url.pathComponents.filter { $0 != "/" && !$0.isEmpty }
+                if path.first == "channels" { path.removeFirst() }
+                guard !path.isEmpty else { return nil }
+                var components = URLComponents()
+                components.scheme = _serviceProtocol
+                components.host = "channels"
+                components.path = "/" + path.joined(separator: "/")
+                ret = components.url
             }
-            
-            #if canImport(UIKit)
+
+            #if canImport(UIKit) && !os(watchOS)
                 guard let ret = ret,
                       nil == getenv("SKIP_CANOPEN"),
                       UIApplication.shared.canOpenURL(ret)
@@ -653,30 +380,33 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
          - returns: The enum case ( or nil, if none).
          */
         internal static func factory(url inURL: URL) -> DirectVirtual? {
-            var ret: DirectVirtual?
-            
-            if inURL.host?.contains(DirectVirtual.zoom(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.zoom(inURL)
-            } else if inURL.host?.contains(DirectVirtual.gotomeeting(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.gotomeeting(inURL)
-            } else if inURL.host?.contains(DirectVirtual.skype(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.skype(inURL)
-            } else if inURL.host?.contains(DirectVirtual.meet(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.meet(inURL)
-            } else if inURL.host?.contains(DirectVirtual.discord(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.discord(inURL)
-            } else if inURL.host?.contains(DirectVirtual.jitsi(nil)._serviceURLHost) ?? false {
-                ret = DirectVirtual.jitsi(inURL)
+            guard let host = inURL.host?.lowercased(),
+                  ["https", "http"].contains(inURL.scheme?.lowercased() ?? "") else { return nil }
+            func matches(_ domain: String) -> Bool { host == domain || host.hasSuffix("." + domain) }
+            let result: DirectVirtual?
+            if matches("zoom.us") || matches("zoomgov.com") {
+                result = .zoom(inURL)
+            } else if matches("gotomeeting.com") {
+                result = .gotomeeting(inURL)
+            } else if matches("skype.com") {
+                result = .skype(inURL)
+            } else if host == "meet.google.com" {
+                result = .meet(inURL)
+            } else if matches("discordapp.com") || matches("discord.com") {
+                result = .discord(inURL)
+            } else if host == "meet.jit.si" || host == "jitsi.meet" {
+                result = .jitsi(inURL)
+            } else {
+                result = nil
             }
-            
-            return nil != ret?.directURL ? ret : nil
+            return result?.directURL == nil ? nil : result
         }
 
         // MARK: Public Computed Properties
         
         /* ############################################# */
         /**
-         This returns a localization token for the app name.
+         A localization key, such as `SLUG-DIRECT-URI-ZOOM`. The host application supplies the translated app name; the SDK does not localize this string.
          */
         public var appName: String {
             switch self {
@@ -703,7 +433,7 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
     /* ################################################# */
     /**
-     This returns the enum.
+     The recognized app-link service for ``virtualURL``, or nil if its HTTPS URL is unsupported, malformed, or unavailable according to the platform check.
      */
     public var directApp: DirectVirtual? {
         guard let virtualURL = virtualURL,
@@ -715,21 +445,29 @@ extension SwiftBMLSDK_Parser.Meeting: SwiftBMLSDK_MeetingProtocol {
 
     /* ################################################# */
     /**
-     If the URL for the virtual meeting is one that can open an app on the user's device, a direct URL scheme version of the URL is returned.
+     An app-specific URL for a recognized meeting link, or nil.
+
+     On iOS and iPadOS, access this property on the main thread. The SDK checks
+     `UIApplication.canOpenURL`; the host app must allow the relevant schemes in
+     `LSApplicationQueriesSchemes`: `zoomus`, `lmi-g2m`, `skype`, `gmeet`, `discord`,
+     or `org.jitsi.meet`. On macOS and watchOS, the URL is generated without checking
+     whether an application is installed. `SKIP_CANOPEN` bypasses the check for testing.
+     A generated link does not guarantee that the service or installed app accepts it.
      */
     public var directAppURI: URL? { directApp?.directURL }
 
     /* ################################################# */
     /**
-     If we have a valid direct phone URL, it is returned here.
+     A best-effort `tel:` URL from ``virtualPhoneNumber``, normalized with PhoneNumberKit.
+
+     Unprefixed numbers use the US region. International numbers should include `+` and
+     a country code. Explicit pauses and numeric meeting IDs or PINs are retained; `#`
+     is percent-encoded so it remains dial data. Ambiguous strings containing multiple
+     distinct numbers return nil. This does not check whether the device can place calls.
+     Documentation-only builds without PhoneNumberKit return nil.
      */
-    public var directPhoneURI: URL? {
-        guard let phoneNumber = virtualPhoneNumber,
-              let url = _extractDialableTelURL(from: phoneNumber)
-        else { return nil }
-        
-        return url
-    }
+    public var directPhoneURI: URL? { virtualPhoneURL }
+
 }
 
 /* ###################################################################################################################################### */

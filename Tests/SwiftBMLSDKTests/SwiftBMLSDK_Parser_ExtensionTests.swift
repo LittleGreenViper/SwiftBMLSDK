@@ -26,33 +26,33 @@ import XCTest
 final class SwiftBMLSDK_Parser_ExtensionTests: SwiftBMLSDK_TestCase {
     /* ################################################################## */
     /**
-     This is how many in-person (or hybrid) meetings we expect to be in the dump.
+     This is how many in-person (or hybrid) meetings we expect after parsing the dump and rejecting invalid records.
      */
-    static let numberOfInPersonMeetings = 30029
+    static let numberOfInPersonMeetings = 29239
 
     /* ################################################################## */
     /**
-     This is how many in-person (no hybrid) meetings we expect to be in the dump.
+     This is how many in-person (no hybrid) meetings we expect after parsing the dump and rejecting invalid records.
      */
-    static let numberOfInPersonOnlyMeetings = 28723
+    static let numberOfInPersonOnlyMeetings = 28116
     
     /* ################################################################## */
     /**
-     This is how many virtual (or hybrid) meetings we expect to be in the dump.
+     This is how many virtual (or hybrid) meetings we expect after parsing the dump and rejecting invalid records.
      */
-    static let numberOfVirtualMeetings = 5652
+    static let numberOfVirtualMeetings = 5440
 
     /* ################################################################## */
     /**
-     This is how many virtual (no hybrid) meetings we expect to be in the dump.
+     This is how many virtual (no hybrid) meetings we expect after parsing the dump and rejecting invalid records.
      */
-    static let numberOfVirtualOnlyMeetings = 4346
+    static let numberOfVirtualOnlyMeetings = 4317
 
     /* ################################################################## */
     /**
-     This is how many hybrid meetings we expect to be in the dump.
+     This is how many hybrid meetings we expect after parsing the dump and rejecting invalid records.
      */
-    static let numberOfHybridMeetings = 1306
+    static let numberOfHybridMeetings = 1123
     
     /* ################################################################## */
     /**

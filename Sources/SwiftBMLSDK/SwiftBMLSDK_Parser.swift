@@ -21,7 +21,7 @@ import Foundation
 import CoreLocation         // For coordinates
 import Contacts             // For the in-person address
 import MapKit               // For the Array extension that returns location data for meetings.
-#if canImport(PhoneNumberKit)
+#if !SWIFTBMLSDK_DOCS && canImport(PhoneNumberKit)
     import PhoneNumberKit   // For parsing phone numbers.
 
     /* ###################################################################################################################################### */
@@ -56,7 +56,7 @@ import MapKit               // For the Array extension that returns location dat
          */
         private static func _dialInURL(from inRawValue: String,
                                       defaultRegion inDefaultRegion: String = "US") -> URL? {
-            let source = _normalizeDialInSource(inRawValue)
+            let source = _normalizeDialInSource(inRawValue.removingPercentEncoding ?? inRawValue)
             guard !source.isEmpty else { return nil }
 
             let phoneUtility = PhoneNumberUtility()
@@ -165,9 +165,6 @@ import MapKit               // For the Array extension that returns location dat
                                                           withRegion: inDefaultRegion,
                                                           ignoreType: true)
                     let normalized = inPhoneUtility.format(parsed, toType: .e164)
-                    let digitCount = normalized.filter(\.isNumber).count
-
-                    guard 10 <= digitCount else { continue }
                     guard !seen.contains(normalized) else { continue }
 
                     seen.insert(normalized)
@@ -186,18 +183,9 @@ import MapKit               // For the Array extension that returns location dat
          */
         private static func _isClearlyLabeledAsCode(in inSource: String,
                                                     matchRange inMatchRange: Range<String.Index>) -> Bool {
-            let prefixStart = inSource.index(inMatchRange.lowerBound,
-                                             offsetBy: -24,
-                                             limitedBy: inSource.startIndex) ?? inSource.startIndex
-            let prefix = inSource[prefixStart..<inMatchRange.lowerBound].lowercased()
-
-            return prefix.contains("meeting id")
-                || prefix.contains("password")
-                || prefix.contains("passcode")
-                || prefix.contains("pass")
-                || prefix.contains("pin")
-                || prefix.contains(" id")
-                || prefix.hasSuffix("id#")
+            let prefix = String(inSource[..<inMatchRange.lowerBound])
+            let pattern = #"(?i)(?:\b(?:meeting\s*id|id|password|passcode|pass|pin|code)\s*[:#-]?\s*|[,;#*]\s*)$"#
+            return prefix.range(of: pattern, options: .regularExpression) != nil
         }
 
         /* ################################################################## */
@@ -244,13 +232,7 @@ import MapKit               // For the Array extension that returns location dat
          */
         private static func _extractLabeledPostDial(from inSource: String,
                                                     excluding inExcludedRange: Range<String.Index>) -> String {
-            let pattern = #"""
-            (?ix)
-            \b(meeting\s*id|id|pin|passcode|password|pass|code)\b
-            \s*[:#-]?\s*
-            ([0-9][0-9\s-]{1,}[0-9])
-            \s*(#)?
-            """#
+            let pattern = #"(?i)\b(meeting\s*id|id|pin|passcode|password|pass|code)\b\s*[:#-]?\s*([0-9](?:[0-9\s-]*[0-9])?)\s*(#)?"#
 
             guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else { return "" }
 
@@ -298,6 +280,20 @@ import MapKit               // For the Array extension that returns location dat
 #else
     private extension SwiftBMLSDK_Parser.Meeting { private static func _dialInURL(from: String, defaultRegion: String = "US") -> URL? { nil } }
 #endif
+
+/* ###################################################################################################################################### */
+// MARK: - Meeting Text Decoding -
+/* ###################################################################################################################################### */
+fileprivate extension String {
+    /* ################################################################## */
+    /**
+     Removes up to two layers of percent encoding, retaining the last valid text.
+     */
+    var _decodedMeetingText: String {
+        let once = removingPercentEncoding ?? self
+        return once.removingPercentEncoding ?? once
+    }
+}
 
 /* ###################################################################################################################################### */
 // MARK: - Calendar Extension -
@@ -368,37 +364,37 @@ public extension Calendar {
     enum WeekdayStyle {
         /* ############################################################## */
         /**
-         "wednesday"
+         The full weekday name used within a date.
          */
         case full
 
         /* ############################################################## */
         /**
-         "wed"
+         The abbreviated weekday name used within a date.
          */
         case short
 
         /* ############################################################## */
         /**
-         "w"
+         The shortest weekday name used within a date.
          */
         case veryShort
 
         /* ############################################################## */
         /**
-         "Wednesday"
+         The full weekday name for a stand-alone label.
          */
         case standaloneFull
 
         /* ############################################################## */
         /**
-         "Wed"
+         The abbreviated weekday name for a stand-alone label.
          */
         case standaloneShort
 
         /* ############################################################## */
         /**
-         "W"
+         The shortest weekday name for a stand-alone label.
          */
         case standaloneVeryShort
     }
@@ -422,43 +418,26 @@ fileprivate extension CLLocationCoordinate2D {
 }
 
 /* ###################################################################################################################################### */
-// MARK: - File Private Date Extension -
-/* ###################################################################################################################################### */
-/**
- This extension allows us to convert a date to a certain time zone.
- */
-fileprivate extension Date {
-    /* ################################################################## */
-    /**
-     Convert a date between two timezones.
-     
-     Inspired by [this SO answer](https://stackoverflow.com/a/54064820/879365)
-     
-     - parameter from: The source timezone.
-     - paremeter to: The destination timezone.
-     
-     - returns: The converted date
-     */
-    func _convert(from inFromTimeZone: TimeZone, to inToTimeZone: TimeZone) -> Date {
-        addingTimeInterval(TimeInterval(inToTimeZone.secondsFromGMT(for: self) - inFromTimeZone.secondsFromGMT(for: self)))
-    }
-}
-
-/* ###################################################################################################################################### */
 // MARK: - Meeting JSON Page Parser -
 /* ###################################################################################################################################### */
 /**
  This struct will contain one page of results from a meeting search, and is one of the response parameters to the ``SwiftBMLSDK_Query/QueryResultCompletion`` completion callback.
  
- This is a **baseline** parser; it doesn't really do anything more than make a simple map of the input JSON into an array of structs. It doesn't change the sorting, and provides a read-only, struct property view.
+ The parser preserves server order while skipping invalid meeting records and applying the
+ requested meeting type. Meeting IDs take precedence over the type filter. A valid empty or
+ count-only response produces an empty ``meetings`` array.
+
+ ``meta`` preserves the server's counts; ``meetings`` contains only records accepted by the
+ parser, so their counts may differ. Each ``Meeting`` is a class with immutable stored data.
+ Encoding a parser or its meetings produces the SDK's export schema, not the server's input schema.
  
  The parser then automatically populates a ``meta`` instance, that reports the page metadata from the server, and a ``meetings`` array, of all meeting instances, and some functional interfaces.
  
  # Supported Systems
  
- This will support iOS 16 (and greater), iPadOS 16 (and greater), tvOS 16 (and greater), macOS 13 (and greater), and watchOS 9 (and greater)
+ Supports iOS/iPadOS 16+, macOS 13+, and watchOS 9+. tvOS is unsupported because the public meeting address uses the Contacts framework, which is unavailable there.
  
- This requires Swift 5 or greater.
+ Normal builds require Swift tools 5.9 or greater through the PhoneNumberKit 5 dependency. The SDK uses Swift 5 language mode.
  
  # Usage
  
@@ -466,7 +445,7 @@ fileprivate extension Date {
  
  # Dependencies
  
- This parser has no dependencies, other than the Foundation, CoreLocation, and Contacts SDKs, provided by Apple.
+ This parser uses Apple's Foundation, CoreLocation, Contacts, and MapKit frameworks, and PhoneNumberKit 5 for dial-in numbers.
  */
 public struct SwiftBMLSDK_Parser: Encodable {
     // MARK: - Internal Private Functionality -
@@ -478,6 +457,10 @@ public struct SwiftBMLSDK_Parser: Encodable {
      - parameter inDictionary: The partly-parsed raw JSON
      */
     private static func _parseMeta(_ inDictionary: [String: Any]) -> PageMeta? {
+        // Older server versions use only { "total": 0 } for an empty search.
+        if inDictionary.count == 1, let total = inDictionary["total"] as? Int, total == 0 {
+            return PageMeta()
+        }
         guard let actualSize = inDictionary["actual_size"] as? Int,
               let pageSize = inDictionary["page_size"] as? Int,
               let startingIndex = inDictionary["starting_index"] as? Int,
@@ -497,39 +480,27 @@ public struct SwiftBMLSDK_Parser: Encodable {
         )
     }
 
-    /* ################################################# */
-    /**
-     This parses the meetings from the raw dictionary.
-     
-     - parameter inDictionary: The partly-parsed raw JSON
-     */
-    private static func _parseMeeting(_ inDictionary: [String: Any]) -> Meeting? { Meeting(inDictionary, searchCenter: _searchCenter) }
-    
-    /* ################################################# */
-    /**
-     This holds the search center of the last search. Used for distance calculations.
-     */
-    private static var _searchCenter: CLLocationCoordinate2D?
-    
     // MARK: Internal Initializer
     
     /* ################################################# */
     /**
      This is a failable initializer. It parses the JSON data.
      
-     - parameter jsonData: A Data instance, with the raw JSON dump.
+     - parameter inJSONData: Raw server JSON, including metadata and a meeting array.
+     - parameter inSpecification: The request whose type and geographic center apply to these records.
      */
     internal init?(jsonData inJSONData: Data, specification inSpecification: SwiftBMLSDK_Query.SearchSpecification) {
         guard let simpleJSON = try? JSONSerialization.jsonObject(with: inJSONData, options: [.allowFragments]) as? NSDictionary,
               let metaJSON = simpleJSON["meta"] as? [String: Any],
               let meta = Self._parseMeta(metaJSON),
-              let meetingsJSON = simpleJSON["meetings"] as? [[String: Any]],
-              !meetingsJSON.isEmpty
+              let meetingsJSON = simpleJSON["meetings"] as? [[String: Any]]
         else { return nil }
-        Self._searchCenter = CLLocationCoordinate2DIsValid(inSpecification.locationCenter) ? inSpecification.locationCenter : nil
+        let searchCenter = inSpecification.urlQueryItems.contains { $0.name == "geo_radius" }
+            ? inSpecification.locationCenter : nil
         self.meta = meta
         self.meetings = meetingsJSON.compactMap {
-            let ret = Self._parseMeeting($0)
+            let ret = Meeting($0, searchCenter: searchCenter)
+            guard inSpecification.meetingIDs.isEmpty else { return ret }
             switch inSpecification.type {
             case .any:
                 return ret
@@ -541,7 +512,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 return .virtual == ret?.meetingType || (!isExclusive && .hybrid == ret?.meetingType) ? ret : nil
                 
             case .inPerson(let isExclusive):
-                return (.inPerson == ret?.meetingType || (!isExclusive && .hybrid == ret?.meetingType)) /*&& (!(ret?.inPersonVenueName ?? "").isEmpty || !(ret?.inPersonAddress?.street ?? "").isEmpty)*/ ? ret : nil
+                return (.inPerson == ret?.meetingType || (!isExclusive && .hybrid == ret?.meetingType)) ? ret : nil
             }
         }
     }
@@ -637,7 +608,16 @@ public struct SwiftBMLSDK_Parser: Encodable {
     // MARK: Meeting Data Container
     /* ################################################################################################################################## */
     /**
-     This class holds a single parsed meeting instance.
+     A weekly meeting with a venue, a virtual URL, a dial-in number, or a combination of these.
+
+     ``weekday`` and ``startTime`` describe the schedule in ``timeZone``. Use
+     ``nextOccurrenceDateFast(from:calendar:)`` for an absolute date suitable for display or comparison.
+     Equality and hashing use ``id``. Ordering uses the next absolute occurrence, then meeting type,
+     name, and ID; records with the same ID compare equal.
+
+     The parser requires a valid weekday, clock time, representable IDs, and usable meeting details.
+     Records with a missing or invalid timezone are skipped by default. Setting the process environment
+     variable `IGNORE_NO_TZ` accepts those records using the device's current timezone instead.
      
      > NOTE: There is a platform-dependent extension that adds the ``SwiftBMLSDK_Parser/Meeting/directAppURI`` computed property to this type.
      
@@ -650,36 +630,20 @@ public struct SwiftBMLSDK_Parser: Encodable {
          - parameter lhs: The left-hand side of the comparison.
          - parameter rhs: The right-hand side of the comparison.
          
-         - returns: True, if lhs < rhs
+         - returns: True if lhs sorts before rhs by next occurrence, type, name, and ID.
          */
         public static func < (lhs: SwiftBMLSDK_Parser.Meeting, rhs: SwiftBMLSDK_Parser.Meeting) -> Bool {
-            if let nextLHSCahcedDate = lhs._cachedNextDate,
-               let nextRHSCahcedDate = rhs._cachedNextDate,
-               nextLHSCahcedDate != nextRHSCahcedDate {
-                return nextLHSCahcedDate < nextRHSCahcedDate
-            } else {
-                let lhsAdjustedNow = Date.now._convert(from: .current, to: lhs.timeZone)
-                let rhsAdjustedNow = Date.now._convert(from: .current, to: rhs.timeZone)
-
-                // We make the components from scratch, because that's faster.
-                let lhsHour = lhs.integerStartTime / 100
-                let lhsMinute = lhs.integerStartTime - (lhsHour * 100)
-                let rhsHour = rhs.integerStartTime / 100
-                let rhsMinute = rhs.integerStartTime - (rhsHour * 100)
-
-                let lhsDateComp = DateComponents(hour: lhsHour, minute: lhsMinute, weekday: lhs.weekday)
-                let rhsDateComp = DateComponents(hour: rhsHour, minute: rhsMinute, weekday: rhs.weekday)
-
-                // The reason for all the cache shenanigans, is because `Calendar.current.nextDate` is REALLY EXPENSIVE, in regards to performance, so we try to use a cache, where possible.
-                if let lhsNextDate = Calendar.current.nextDate(after: lhsAdjustedNow, matching: lhsDateComp, matchingPolicy: .nextTimePreservingSmallerComponents),
-                   let rhsNextDate = Calendar.current.nextDate(after: rhsAdjustedNow, matching: rhsDateComp, matchingPolicy: .nextTimePreservingSmallerComponents) {
-                    return lhsNextDate < rhsNextDate ? true : lhsNextDate > rhsNextDate ? false : lhs.sortableMeetingType < rhs.sortableMeetingType ? true : lhs.sortableMeetingType > rhs.sortableMeetingType ? false : lhs.name < rhs.name
-                } else {
-                    return false
-                }
-            }
+            guard lhs.id != rhs.id else { return false }
+            let now = Date()
+            let leftDate = lhs.nextOccurrenceDateFast(from: now)
+            let rightDate = rhs.nextOccurrenceDateFast(from: now)
+            if leftDate != rightDate { return leftDate < rightDate }
+            if lhs.sortableMeetingType != rhs.sortableMeetingType { return lhs.sortableMeetingType < rhs.sortableMeetingType }
+            if lhs.name != rhs.name { return lhs.name < rhs.name }
+            return lhs.id < rhs.id
         }
         
+
         /* ############################################################################################################################## */
         // MARK: Format Information Container
         /* ############################################################################################################################## */
@@ -698,16 +662,16 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 - language: The language code.
              */
             internal init(key inKey: String, name inName: String, description inDescription: String, language inLanguage: String, id inID: String) {
-                key = inKey.removingPercentEncoding?.removingPercentEncoding ?? ""  // Twice, because there may be icky data.
-                name = inName.removingPercentEncoding?.removingPercentEncoding ?? ""
-                description = inDescription.removingPercentEncoding?.removingPercentEncoding ?? ""
-                language = inLanguage.removingPercentEncoding?.removingPercentEncoding ?? ""
-                id = inID.removingPercentEncoding?.removingPercentEncoding ?? ""
+                key = inKey._decodedMeetingText  // Twice, because there may be icky data.
+                name = inName._decodedMeetingText
+                description = inDescription._decodedMeetingText
+                language = inLanguage._decodedMeetingText
+                id = inID._decodedMeetingText
             }
 
             /* ############################################# */
             /**
-             A failable initializer. This initializer parses "raw" format data, and populates the instance properties.
+             Parses raw format data, substituting empty text or ID 0 for missing fields.
              
              - parameter inDictionary: A simple String-keyed dictionary of partly-parsed values.
              */
@@ -737,7 +701,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
             
             /* ############################################# */
             /**
-             This is the [ISO 639-2](https://www.loc.gov/standards/iso639-2/php/code_list.php) code for the language used for the name and description.
+             The server-supplied language code for the name and description (for example, `en`).
              */
             public let language: String
 
@@ -751,7 +715,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
             
             /* ############################################# */
             /**
-             Returns the format, as single string, with values separarated by tabs.
+             Returns the format name followed by its description in parentheses: `Name (Description)`.
              */
             public var asString: String { "\(name) (\(description))" }
             
@@ -764,7 +728,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
              - parameter lhs: The left-hand side of the comparison.
              - parameter rhs: The right-hand side of the comparison.
              
-             - returns: True, if the lhs ID is less than the rhs ID.
+             - returns: True if the left format key sorts before the right format key.
              */
             public static func < (lhs: Format, rhs: Format) -> Bool { lhs.key < rhs.key }
             
@@ -779,14 +743,14 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################################## */
         /**
+         Parses an HH:mm or HH:mm:ss wall-clock value on January 1, 2001, in GMT.
          */
         private static func _floatingTimeDate(from inString: String) -> Date? {
-            let parts = inString.split(separator: ":").compactMap { Int($0) }
-            guard 2 <= parts.count else { return nil }
-
-            let hour = parts[0]
-            let minute = parts[1]
-            let second = parts.count > 2 ? parts[2] : 0
+            let fields = inString.split(separator: ":", omittingEmptySubsequences: false)
+            guard (2...3).contains(fields.count),
+                  fields.allSatisfy({ !$0.isEmpty && $0.allSatisfy({ $0.isASCII && $0.isNumber }) }),
+                  let hour = Int(fields[0]), let minute = Int(fields[1]),
+                  let second = fields.count == 3 ? Int(fields[2]) : 0 else { return nil }
 
             guard (0..<24).contains(hour),
                   (0..<60).contains(minute),
@@ -809,15 +773,6 @@ public struct SwiftBMLSDK_Parser: Encodable {
             return calendar.date(from: components)
         }
 
-        // MARK: Private Properties
-        
-        /* ################################################# */
-        /**
-         This is actually meant to be used by the `getNextStartDate()` extension method, but Swift [wisely] doesn't let stored properties get declared in extensions.
-         This will always be in the meeting's timezone (no adjustment to local).
-         */
-        private var _cachedNextDate: Date?
-
         // MARK: Internal Initializer
                 
         /* ################################################# */
@@ -837,51 +792,26 @@ public struct SwiftBMLSDK_Parser: Encodable {
              - returns: an optional String. This is the given URI, "cleaned up" ("https://" or "tel:" may be prefixed)
              */
             func cleanURI(urlString inURLString: String?) -> String? {
-                /* ####################################### */
-                /**
-                 This tests a string to see if a given substring is present at the start.
-                 
-                 - Parameters:
-                 - inString: The string to test.
-                 - inSubstring: The substring to test for.
-                 
-                 - returns: true, if the string begins with the given substring.
-                 */
-                func string (_ inString: String, beginsWith inSubstring: String) -> Bool {
-                    var ret: Bool = false
-                    if let range = inString.range(of: inSubstring) {
-                        ret = (range.lowerBound == inString.startIndex)
-                    }
-                    return ret
+                guard var value = inURLString?.trimmingCharacters(in: .whitespacesAndNewlines),
+                      !value.isEmpty else { return nil }
+                if value.lowercased().hasPrefix("tel://") {
+                    value = "tel:" + value.dropFirst(6)
+                } else if value.lowercased().hasPrefix("http://") {
+                    value = "https://" + value.dropFirst(7)
+                } else if !value.lowercased().hasPrefix("https://"), !value.lowercased().hasPrefix("tel:") {
+                    value = "https://" + value
                 }
-                
-                guard var ret: String = inURLString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed),
-                      let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
-                else { return nil }
-                
-                // We specifically look for tel URIs.
-                let wasTel = string(ret.lowercased(), beginsWith: "tel:")
-                
-                // Yeah, this is pathetic, but it's quick, simple, and works a charm.
-                ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
-                
-                if ret.isEmpty {
-                    return nil
-                }
-                
-                if wasTel {
-                    ret = "tel:" + ret
-                } else {
-                    ret = "https://" + ret
-                }
-                
-                return ret
+                guard let url = URL(string: value),
+                      url.scheme?.lowercased() == "tel" || !(url.host ?? "").isEmpty else { return nil }
+                return url.absoluteString
             }
 
             guard let serverID = inDictionary["server_id"] as? Int,
+                  (0...0xFFFFF).contains(serverID),
                   let startTimeStr = inDictionary["start_time"] as? String,
                   let startTime = Self._floatingTimeDate(from: startTimeStr),
                   let localMeetingID = inDictionary["meeting_id"] as? Int,
+                  localMeetingID >= 0, UInt64(localMeetingID) <= 0xFFFFFFFFFFF,
                   let weekday = inDictionary["weekday"] as? Int,
                   (1..<8).contains(weekday),
                   let organizationStr = inDictionary["organization_key"] as? String
@@ -898,7 +828,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
             self.formats = (inDictionary["formats"] as? [[String: Any]] ?? []).compactMap { Format($0) }.sorted()
 
-            self.name = ((inDictionary["name"] as? String)?.removingPercentEncoding?.removingPercentEncoding ?? "")
+            self.name = ((inDictionary["name"] as? String)?._decodedMeetingText ?? "")
 
             var fixedCoords = CLLocationCoordinate2D()
             
@@ -920,7 +850,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 self.timeZone = .current
             }
 
-            if let comments = (inDictionary["comments"] as? String)?.removingPercentEncoding?.removingPercentEncoding,  // Twice, because sometimes, there may be two levels of bad data.
+            if let comments = (inDictionary["comments"] as? String)?._decodedMeetingText,  // Twice, because sometimes, there may be two levels of bad data.
                !comments.isEmpty {
                 self.comments = comments
             } else {
@@ -939,9 +869,9 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 mutableGoPostal.postalCode = (physicalAddress["postal_code"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 mutableGoPostal.country = (physicalAddress["nation"]?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 self.inPersonAddress = mutableGoPostal
-                let locationInfo = (physicalAddress["info"]?.removingPercentEncoding?.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
+                let locationInfo = (physicalAddress["info"]?._decodedMeetingText.trimmingCharacters(in: .whitespacesAndNewlines)) ?? ""
                 self.locationInfo = locationInfo.isEmpty ? nil : locationInfo
-                let inPersonVenueName = physicalAddress["name"]?.removingPercentEncoding?.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                let inPersonVenueName = physicalAddress["name"]?._decodedMeetingText.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
                 self.inPersonVenueName = inPersonVenueName.isEmpty ? nil : inPersonVenueName
             } else {
                 coords = nil
@@ -972,7 +902,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 
                 splitsville = (virtualMeetingInfo["info"] ?? "").split(separator: "#@-@#")
                 splitString = 1 < splitsville.count ? String(splitsville[1]) : !splitsville.isEmpty ? String(splitsville[0]) : ""
-                let virtualInfo = splitString.removingPercentEncoding?.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                let virtualInfo = splitString._decodedMeetingText.trimmingCharacters(in: .whitespacesAndNewlines)
                 self.virtualInfo = virtualInfo.isEmpty ? nil : virtualInfo
             } else {
                 self.virtualURL = nil
@@ -1118,7 +1048,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################################## */
         /**
-         The distance of this meeting, from the search center, or a specified "distance from" refinement. -1, if invalid.
+         The distance in meters from the geographic request center to the meeting. Returns -1 when the request has no geographic filter or the meeting has no physical coordinates. This stored value is not changed by other distance helpers.
          */
         public let distanceInMeters: CLLocationDistance
 
@@ -1142,13 +1072,17 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################# */
         /**
-         This is the time of day that the meeting starts (date-independent).
+         The meeting's wall-clock start time, stored on January 1, 2001, in GMT.
+
+         This value is a container for hour, minute, and second; it is not a real meeting occurrence.
+         Extract or format it using GMT. For a real date, use ``nextOccurrenceDateFast(from:calendar:)``;
+         for display, use ``localizedWeekdayTimeString(style:locale:calendar:timeZone:adjusted:includeDuration:)``.
          */
         public let startTime: Date
         
         /* ################################################# */
         /**
-         This is the duration, in seconds, of the meeting.
+         The duration in seconds. Missing, negative, or 24-hour-or-longer values use 3,600 seconds. Zero is retained and is never considered in progress.
          */
         public let duration: TimeInterval
         
@@ -1172,7 +1106,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################# */
         /**
-         This contains an array of formats that apply to the meeting.
+         The meeting formats, sorted by their keys.
          */
         public let formats: [Format]
 
@@ -1180,7 +1114,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################# */
         /**
-         This is the physical location of this meeting, or a location used to determine local timezone. It is optional.
+         The validated physical coordinates, if a usable street address is retained. Virtual-only meetings and the known default NAWS office location have no coordinates.
          */
         public let coords: CLLocationCoordinate2D?
         
@@ -1242,7 +1176,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
 
         /* ################################################# */
         /**
-         This is a unique ID (within the found set) for this meeting, based on the two local IDs.
+         The composite ID: the server ID occupies the upper 20 bits, and the local meeting ID occupies the lower 44 bits. Pass this value to ``SwiftBMLSDK_Query/SearchSpecification/meetingIDs`` to fetch a specific meeting.
          */
         public var id: UInt64 { (UInt64(serverID) << 44) + UInt64(localMeetingID) }
 
@@ -1354,24 +1288,19 @@ public struct SwiftBMLSDK_Parser: Encodable {
         
         /* ################################################################## */
         /**
-         This returns the meeting start day index, localized to the user's environment.
+         The meeting's scheduled weekday as a zero-based index relative to the device calendar's first weekday. This changes week ordering, not the meeting's timezone.
          */
         public var localWeekdayIndex: Int { Calendar.autoupdatingCurrent._userWeekStartIndex(fromSundayBasedWeekday: self.weekday) }
         
         /* ################################################################## */
         /**
-         This returns true, if the meeting is currently in progress, now.
+         True during the interval from the previous occurrence up to, but excluding, its end. Equivalent to ``isMeetingInProgress()``.
          */
-        public var isMeetingInProgressNow: Bool {
-            let prevTime = self.previousOccurrenceDateFast()
-            let endTime = prevTime.addingTimeInterval(self.duration)
-            
-            return (prevTime...endTime).contains(Date())
-        }
+        public var isMeetingInProgressNow: Bool { isMeetingInProgress() }
 
         /* ################################################################## */
         /**
-         This returns the meeting start day as a string, localized to the user's environment.
+         Returns the meeting's scheduled weekday name in the device locale. It does not shift the weekday into the device timezone; use ``localizedWeekdayTimeString(style:locale:calendar:timeZone:adjusted:includeDuration:)`` with `adjusted: true` for that.
          
          - parameter inStyle: The style of weekday display. Optional, and default is `.standaloneFull`. Values are:
             - .full
@@ -1383,7 +1312,7 @@ public struct SwiftBMLSDK_Parser: Encodable {
          
          - returns: The localized string.
          */
-        public func localWeekdayString(style inStyle: Calendar.WeekdayStyle = .standaloneFull) -> String { Calendar.autoupdatingCurrent._localizedWeekdayString(fromSundayBasedWeekday: self.weekday) }
+        public func localWeekdayString(style inStyle: Calendar.WeekdayStyle = .standaloneFull) -> String { Calendar.autoupdatingCurrent._localizedWeekdayString(fromSundayBasedWeekday: self.weekday, style: inStyle) }
         
         /* ################################################################## */
         /**
@@ -1439,8 +1368,8 @@ public struct SwiftBMLSDK_Parser: Encodable {
                 endFormatter.setLocalizedDateFormatFromTemplate("jm")
 
             case .twentyFourHourCompact:
-                startFormatter.setLocalizedDateFormatFromTemplate("EEEE HHmm")
-                endFormatter.setLocalizedDateFormatFromTemplate("HHmm")
+                startFormatter.dateFormat = "EEEE HHmm"
+                endFormatter.dateFormat = "HHmm"
             }
 
             let startString = startFormatter.string(from: startDate)
@@ -1458,10 +1387,10 @@ public struct SwiftBMLSDK_Parser: Encodable {
          This returns the distance between the instance, and another location, provided as coordinates.
          
          - parameter inCoords: The coordinates we are measuring from.
-         - returns: The distance, in meters (always positive). -1, if no distance possible.
+         - returns: The nonnegative distance in meters, or -1 if either location is invalid or unavailable.
          */
         public func distanceFrom(_ inCoords: CLLocationCoordinate2D) -> CLLocationDistance {
-            guard let coords = location?.coordinate else { return -1 }
+            guard let coords = location?.coordinate, CLLocationCoordinate2DIsValid(inCoords) else { return -1 }
             let compLocation = CLLocation(latitude: inCoords.latitude, longitude: inCoords.longitude)
             return CLLocation(latitude: coords.latitude, longitude: coords.longitude).distance(from: compLocation)
         }
@@ -1519,6 +1448,9 @@ extension SwiftBMLSDK_Parser.Meeting: CustomStringConvertible {
      */
     public var description: String {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.timeZone = .gmt
         formatter.dateFormat = "HH:mm:ss"
         let timeString = formatter.string(from: startTime)
         var ret = "Meeting:\n\t"
@@ -1632,11 +1564,12 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
      The reason for the "flat" encoding, is that many ML parsers like fairly simple data, without nesting.
      Nested structures, like the coordinates and the formats, are converted to top-level basic data types, so that a JSON file, made from the encoder, is simple and flat.
      
-     Formats are encoded into a TDV string, with the fields being tab-separated, and the formats being linefeed-separated.
+     Each format is encoded under `format-<id>` with the value `Name (Description)`. Coordinates and address fields are flattened into top-level keys. The start time remains the meeting's wall-clock `HH:mm:ss` value.
      
      If a value is not valid, it is not included in the encoding.
      
-     - parameter inEncoder: The encoder to load with our values.
+     - parameter inEncoder: The encoder to load with the SDK export schema.
+     - throws: Any error raised by the encoder. This type does not decode the export back into a meeting.
      */
     public func encode(to inEncoder: Encoder) throws {
         guard (1..<8).contains(weekday) else { return }
@@ -1650,8 +1583,6 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
         
         try container.encode(localMeetingID, forKey: _CustomCodingKeys(stringValue: "localMeetingID")!)
         
-        // These are included in the encoder, but we don't care about them, for the decoder.
-        try container.encode(id, forKey: _CustomCodingKeys(stringValue: "id")!)
         let typeString = meetingType.rawValue
         if !typeString.isEmpty {
             try container.encode(typeString, forKey: _CustomCodingKeys(stringValue: "meetingType")!)
@@ -1663,6 +1594,9 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
         
         // We hardcode, to provide consistency.
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.timeZone = .gmt
         formatter.dateFormat = "HH:mm:ss"
         let timeString = formatter.string(from: startTime)
         if !timeString.isEmpty {
@@ -1688,87 +1622,84 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
         }
         
         if !formats.isEmpty {
-            var formatIndex = 0
-            
             try formats.forEach {
                 let formatString = $0.asString
                 if !formatString.isEmpty {
                     try container.encode(formatString, forKey: _CustomCodingKeys(stringValue: "format-\($0.id)")!)
-                    formatIndex += 1
                 }
             }
         }
         
         if let comments = comments,
            !comments.isEmpty {
-            try? container.encode(comments, forKey: _CustomCodingKeys(stringValue: "comments")!)
+            try container.encode(comments, forKey: _CustomCodingKeys(stringValue: "comments")!)
         }
         
         if let locationInfo = locationInfo,
            !locationInfo.isEmpty {
-            try? container.encode(locationInfo, forKey: _CustomCodingKeys(stringValue: "locationInfo")!)
+            try container.encode(locationInfo, forKey: _CustomCodingKeys(stringValue: "locationInfo")!)
         }
         
         if let virtualURL = virtualURL?.absoluteString,
            !virtualURL.isEmpty {
-            try? container.encode(virtualURL, forKey: _CustomCodingKeys(stringValue: "virtualURL")!)
+            try container.encode(virtualURL, forKey: _CustomCodingKeys(stringValue: "virtualURL")!)
         }
         
         if let virtualPhoneNumber = virtualPhoneNumber,
            !virtualPhoneNumber.isEmpty {
-            try? container.encode(virtualPhoneNumber, forKey: _CustomCodingKeys(stringValue: "virtualPhoneNumber")!)
+            try container.encode(virtualPhoneNumber, forKey: _CustomCodingKeys(stringValue: "virtualPhoneNumber")!)
         }
         
         if let virtualInfo = virtualInfo,
            !virtualInfo.isEmpty {
-            try? container.encode(virtualInfo, forKey: _CustomCodingKeys(stringValue: "virtualInfo")!)
+            try container.encode(virtualInfo, forKey: _CustomCodingKeys(stringValue: "virtualInfo")!)
         }
 
         if let latitude = coords?.latitude,
            let longitude = coords?.longitude,
            CLLocationCoordinate2DIsValid(coords!) {
-            try? container.encode(Double(round(1000000.0 * latitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "latitude")!)
-            try? container.encode(Double(round(1000000.0 * longitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "longitude")!)
+            try container.encode(Double(round(1000000.0 * latitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "latitude")!)
+            try container.encode(Double(round(1000000.0 * longitude) / 1000000.0), forKey: _CustomCodingKeys(stringValue: "longitude")!)
         }
         
         if let inPersonVenueName = inPersonVenueName,
            !inPersonVenueName.isEmpty {
-            try? container.encode(inPersonVenueName, forKey: _CustomCodingKeys(stringValue: "address_VenueName")!)
+            try container.encode(inPersonVenueName, forKey: _CustomCodingKeys(stringValue: "address_VenueName")!)
         }
         
         if let string = inPersonAddress?.street,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_Street")!)
+            try container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_Street")!)
         }
         
         if let string = inPersonAddress?.subLocality,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_SubLocality")!)
+            try container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_SubLocality")!)
         }
         
         if let string = inPersonAddress?.city,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_City")!)
+            try container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_City")!)
         }
         
         if let string = inPersonAddress?.state,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_State")!)
+            try container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_State")!)
         }
         
         if let string = inPersonAddress?.subAdministrativeArea,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_SubAdministrativeArea")!)
+            try container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_SubAdministrativeArea")!)
         }
         
         if let string = inPersonAddress?.postalCode,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_PostalCode")!)
+            try container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_PostalCode")!)
         }
         
         if let string = inPersonAddress?.country,
            !string.isEmpty {
-            try? container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_Country")!)
+            try container.encode(string, forKey: _CustomCodingKeys(stringValue: "address_Country")!)
         }
     }
 }
@@ -1791,13 +1722,22 @@ extension SwiftBMLSDK_Parser.Meeting {
      These are the supported display widths for localized distance strings.
      */
     public enum DistanceStringWidth {
-        /// Localized abbreviated units (for example, "mi").
+        /* ############################################################## */
+        /**
+         Localized abbreviated units (for example, "mi").
+         */
         case abbreviated
 
-        /// Localized narrow units.
+        /* ############################################################## */
+        /**
+         Localized narrow units.
+         */
         case narrow
 
-        /// Localized wide units (for example, "miles").
+        /* ############################################################## */
+        /**
+         Localized wide units (for example, "miles").
+         */
         case wide
 
         /* ############################################################## */
@@ -1820,7 +1760,7 @@ extension SwiftBMLSDK_Parser.Meeting {
 
     /* ################################################################## */
     /**
-     Internal Enum for the time localization.
+     The time-format preference used by the localized weekday/time display.
      */
     public enum LocalWeekdayTimeStyle {
         /* ############################################################## */
@@ -1852,7 +1792,7 @@ extension SwiftBMLSDK_Parser.Meeting {
     
     /* ################################################# */
     /**
-     This returns the start time as seconds from midnight.
+     The meeting's wall-clock start time as seconds from midnight, including the seconds field. No timezone conversion is applied.
      
      It returns -1, if there was a problem.
      */
@@ -1860,7 +1800,7 @@ extension SwiftBMLSDK_Parser.Meeting {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .gmt
 
-        let components = calendar.dateComponents([.hour, .minute], from: self.startTime)
+        let components = calendar.dateComponents([.hour, .minute, .second], from: self.startTime)
 
         guard let startHour = components.hour,
               let startMinute = components.minute,
@@ -1868,18 +1808,18 @@ extension SwiftBMLSDK_Parser.Meeting {
               (0..<60).contains(startMinute)
         else { return -1 }
 
-        return TimeInterval(startHour * 3600 + startMinute * 60)
+        return TimeInterval(startHour * 3600 + startMinute * 60 + (components.second ?? 0))
     }
     
     /* ################################################# */
     /**
-     This returns the start time and weekday as date components.
+     The scheduled weekday, hour, minute, and second in a Gregorian calendar configured with the meeting's timezone. These recurring components have no year, month, or day.
      */
     public var dateComponents: DateComponents? {
         var extractionCalendar = Calendar(identifier: .gregorian)
         extractionCalendar.timeZone = TimeZone(secondsFromGMT: 0) ?? .gmt
 
-        let components = extractionCalendar.dateComponents([.hour, .minute], from: self.startTime)
+        let components = extractionCalendar.dateComponents([.hour, .minute, .second], from: self.startTime)
 
         guard let startHour = components.hour,
               let startMinute = components.minute
@@ -1893,6 +1833,7 @@ extension SwiftBMLSDK_Parser.Meeting {
             timeZone: self.timeZone,
             hour: startHour,
             minute: startMinute,
+            second: components.second ?? 0,
             weekday: weekday
         )
     }
@@ -1934,35 +1875,19 @@ extension SwiftBMLSDK_Parser.Meeting {
     
     /* ################################################################## */
     /**
-     Returns the number of seconds until the meeting starts (non-mutating. If the cache has not been updated, then this is not accurate).
+     The number of seconds until the next occurrence, rounded up. Calculated on each access; equivalent to ``meetingStartsIn()``.
      */
-    public var nextMeetingIn: TimeInterval {
-        let adjustedNow = Date.now._convert(from: .current, to: timeZone)
-        if let cachedDate = _cachedNextDate,
-           adjustedNow < cachedDate {
-            var ret = adjustedNow.distance(to: cachedDate)
-            
-            if 0 > ret {
-                ret = floor(ret)
-            } else {
-                ret = ceil(ret)
-            }
-        
-            return ret
-        }
-        
-        return 0
-    }
+    public var nextMeetingIn: TimeInterval { meetingStartsIn() }
     
     /* ################################################################## */
     /**
      Returns the distance from the receiver's coordinates to the supplied location.
      
      - parameter inLocation: The location from which the distance is measured.
-     - returns: The distance as a `Measurement<UnitLength>`, stored in meters.
+     - returns: The distance in meters, or zero if either coordinate is invalid or unavailable. Use ``distanceInMeters(from:)`` when you need to distinguish an unavailable distance from zero.
      */
     public func distanceFrom(location inLocation: CLLocationCoordinate2D) -> Measurement<UnitLength> {
-        guard let myCoords = self.coords else {
+        guard let myCoords = self.coords, CLLocationCoordinate2DIsValid(inLocation) else {
             return .init(value: 0, unit: .meters)
         }
         
@@ -1997,15 +1922,17 @@ extension SwiftBMLSDK_Parser.Meeting {
      - `0...2`: Show zero, one, or two fractional digits
      - `1...1`: Always show exactly one fractional digit
      
-     If the calculated distance is exactly zero, this returns an empty string.
+     If the distance is zero or unavailable, this returns an empty string.
      
      - parameter inLocation: The location from which the distance is measured.
      - parameter inWidth: The localized unit-width style used for formatting.
        Optional. Default is `.abbreviated`.
      - parameter inPrecision: The minimum and maximum number of fraction digits
        to display. Optional. Default is `0...1`.
-     - returns: A localized distance string, or an empty string if the distance is zero.
+     - returns: A localized distance string, or an empty string if the distance is zero or unavailable.
      */
+    // Prefer the SDK width enum when the caller omits the width or uses an inferred case.
+    @_disfavoredOverload
     public func distanceStringFrom(
         location inLocation: CLLocationCoordinate2D,
         width inWidth: Measurement<UnitLength>.FormatStyle.UnitWidth = .abbreviated,
@@ -2050,7 +1977,7 @@ extension SwiftBMLSDK_Parser.Meeting {
 
     /* ################################################################## */
     /**
-     Returns the number of seconds until the meeting starts.
+     Returns the number of seconds until the next occurrence, rounded up to a whole second.
      
      - returns: The number of seconds, before the next start.
      */
@@ -2070,12 +1997,15 @@ extension SwiftBMLSDK_Parser.Meeting {
 
     /* ################################################################## */
     /**
-     - returns: true, if the meeting is currently in progress.
+     Returns whether the previous occurrence has started and has not yet ended.
+
+     - returns: True for the half-open interval from the previous start to start plus duration. Zero-duration meetings return false.
      */
     public func isMeetingInProgress() -> Bool {
-        let previousStart = self.previousOccurrenceDateFast()
-        let end = previousStart.addingTimeInterval(self.duration)
-        return previousStart <= .now && .now < end
+        guard duration > 0 else { return false }
+        let now = Date()
+        let previousStart = previousOccurrenceDateFast(from: now)
+        return previousStart <= now && now < previousStart.addingTimeInterval(duration)
     }
 }
 
@@ -2085,7 +2015,7 @@ extension SwiftBMLSDK_Parser.Meeting {
 public extension SwiftBMLSDK_Parser.Meeting {
     /* ################################################################## */
     /**
-     Returns the receiver interpreted in the meeting's local timezone.
+     Returns the next absolute occurrence as date components in the meeting's timezone and the device's calendar.
      
      - returns: Date components in the meeting's local timezone.
      */
@@ -2101,17 +2031,18 @@ public extension SwiftBMLSDK_Parser.Meeting {
 
     /* ################################################################## */
     /**
-     Returns the next real-world occurrence of the receiver, expressed as an absolute `Date`.
-     
-     This version avoids `Calendar.nextDate(...)` for better performance. It computes
-     the next occurrence manually from the receiver's local weekday and local start time,
-     interpreted in the receiver's `timeZone`.
-     
-     - parameter inReferenceDate: The point in time from which the next occurrence
-     should be calculated. Optional. Default is `Date()`.
-     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
-     Default is  the current autoupdating.
-     - returns: The next upcoming occurrence of this meeting as an absolute `Date`.
+     Returns the first weekly occurrence strictly after the reference date.
+
+     The weekday and wall-clock time are interpreted in ``timeZone``. Calendar-day math
+     preserves that clock time across daylight-saving changes. A missing clock hour moves
+     forward while preserving minutes and seconds (02:30 becomes 03:30). A repeated hour
+     uses its first occurrence. The returned `Date` is absolute; format it in the desired
+     display timezone without adding or subtracting timezone offsets.
+
+     - parameter inReferenceDate: Exclusive lower bound. Default is the current instant.
+     - parameter inCalendarIdentifier: Calendar for date math. Default is the device's
+       autoupdating calendar identifier; the meeting's timezone is always used.
+     - returns: The next absolute occurrence. An exact start-time reference advances to next week.
      */
     func nextOccurrenceDateFast(
         from inReferenceDate: Date = Date(),
@@ -2120,56 +2051,27 @@ public extension SwiftBMLSDK_Parser.Meeting {
         var calendar = Calendar(identifier: inCalendarIdentifier)
         calendar.timeZone = self.timeZone
         
-        let nowComponents = calendar.dateComponents(
-            [.weekday, .hour, .minute, .second],
-            from: inReferenceDate
-        )
-        
-        let currentWeekday = nowComponents.weekday ?? 1
-        let currentSeconds =
-        ((nowComponents.hour ?? 0) * 3600) +
-        ((nowComponents.minute ?? 0) * 60) +
-        (nowComponents.second ?? 0)
-        
-        let hour = self.integerStartTime / 100
-        let minute = self.integerStartTime % 100
-        let meetingSeconds = (hour * 3600) + (minute * 60)
-        
-        var dayOffset = (self.weekday - currentWeekday + 7) % 7
-        
-        if 0 == dayOffset,
-           meetingSeconds <= currentSeconds {
-            dayOffset = 7
-        }
-        
-        let startOfToday = calendar.startOfDay(for: inReferenceDate)
-        
-        let targetDate = calendar.date(
-            byAdding: .day,
-            value: dayOffset,
-            to: startOfToday
-        ) ?? startOfToday
-        
-        return calendar.date(
-            byAdding: .second,
-            value: meetingSeconds,
-            to: targetDate
-        ) ?? targetDate
+        let dayOffset = (weekday - calendar.component(.weekday, from: inReferenceDate) + 7) % 7
+        let today = calendar.startOfDay(for: inReferenceDate)
+        let day = calendar.date(byAdding: .day, value: dayOffset, to: today) ?? today
+        let candidate = _occurrence(on: day, calendar: calendar)
+        if candidate > inReferenceDate { return candidate }
+        let nextWeek = calendar.date(byAdding: .day, value: 7, to: day) ?? day
+        return _occurrence(on: nextWeek, calendar: calendar)
     }
     
     /* ################################################################## */
     /**
-     Returns the previous real-world occurrence of the receiver, expressed as an absolute `Date`.
-     
-     This version avoids `Calendar.nextDate(...)` for better performance. It computes
-     the next occurrence manually from the receiver's local weekday and local start time,
-     interpreted in the receiver's `timeZone`.
-     
-     - parameter inReferenceDate: The point in time from which the next occurrence
-     should be calculated. Optional. Default is `Date()`.
-     - parameter inCalendarIdentifier: The calendar used for date math. Optional.
-     Default is  the current autoupdating.
-     - returns: The next upcoming occurrence of this meeting as an absolute `Date`.
+     Returns the most recent weekly occurrence at or before the reference date.
+
+     Uses the same meeting timezone and daylight-saving policy as
+     ``nextOccurrenceDateFast(from:calendar:)``. The result includes an occurrence
+     starting exactly at the reference date, which supports in-progress checks.
+
+     - parameter inReferenceDate: Inclusive upper bound. Default is the current instant.
+     - parameter inCalendarIdentifier: Calendar for date math. Default is the device's
+       autoupdating calendar identifier; the meeting's timezone is always used.
+     - returns: The previous or current occurrence as an absolute date.
      */
     func previousOccurrenceDateFast(
         from inReferenceDate: Date = Date(),
@@ -2178,9 +2080,29 @@ public extension SwiftBMLSDK_Parser.Meeting {
         var calendar = Calendar(identifier: inCalendarIdentifier)
         calendar.timeZone = self.timeZone
 
-        let next = self.nextOccurrenceDateFast(from: inReferenceDate, calendar: inCalendarIdentifier)
+        let dayOffset = (calendar.component(.weekday, from: inReferenceDate) - weekday + 7) % 7
+        let today = calendar.startOfDay(for: inReferenceDate)
+        let day = calendar.date(byAdding: .day, value: -dayOffset, to: today) ?? today
+        let candidate = _occurrence(on: day, calendar: calendar)
+        if candidate <= inReferenceDate { return candidate }
+        let previousWeek = calendar.date(byAdding: .day, value: -7, to: day) ?? day
+        return _occurrence(on: previousWeek, calendar: calendar)
+    }
 
-        return calendar.date(byAdding: .day, value: -7, to: next) ?? next.addingTimeInterval(-7 * 24 * 60 * 60)
+    /* ################################################################## */
+    /**
+     Resolves the meeting's wall-clock time, preserving minutes and seconds across a
+     missing daylight-saving hour and choosing the first occurrence of a repeated hour.
+     */
+    private func _occurrence(on inDay: Date, calendar inCalendar: Calendar) -> Date {
+        let seconds = Int(startTimeInSecondsFromMidnight)
+        let clock = DateComponents(hour: seconds / 3600,
+                                   minute: (seconds % 3600) / 60,
+                                   second: seconds % 60)
+        return inCalendar.nextDate(after: inCalendar.startOfDay(for: inDay).addingTimeInterval(-1),
+                                   matching: clock,
+                                   matchingPolicy: .nextTimePreservingSmallerComponents,
+                                   repeatedTimePolicy: .first) ?? inDay
     }
     
     /* ################################################################## */
@@ -2268,15 +2190,8 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
          - parameter isAdjusted: Optional (default is true), telling the initializer to adjust from the current locale week start, to the 1 == Sunday start, required by the meeting instance.
          */
         init?(rawValue inRawValue: Int, isAdjusted inIsAdjusted: Bool = true) {
-            var rawVal = inRawValue
-            
-            if inIsAdjusted {
-                rawVal = rawVal - Calendar.current.firstWeekday + 1
-                if 1 > rawVal {
-                    rawVal += 7
-                }
-            }
-            
+            guard (1...7).contains(inRawValue) else { return nil }
+            let rawVal = inIsAdjusted ? (inRawValue + Calendar.current.firstWeekday - 2) % 7 + 1 : inRawValue
             self.init(rawValue: rawVal)
         }
     }
@@ -2330,7 +2245,7 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
     /**
      Subscript that allows us to filter for meetings that start within a certain time range. This is in the local meeting timezone.
      
-     - parameter inStartTimeRangeInSecondsFromMidnight: An open range, of start times, 0..<86400.
+     - parameter inStartTimeRangeInSecondsFromMidnight: A half-open range of seconds from midnight within 0..<86400. Use `Range<TimeInterval>` (for example, `32400.0..<43200.0`); an integer range selects the standard array-index subscript.
      - returns: Meetings of the specified type.
      */
     subscript(_ inStartTimeRangeInSecondsFromMidnight: Range<TimeInterval>) -> [SwiftBMLSDK_Parser.Meeting] {
@@ -2358,7 +2273,7 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
      
      Meetings without coordinates are ignored.
      
-     If the array contains no meetings with valid coordinates, this returns nil.
+     Returns nil only when there are no valid coordinates. Each span is at least 0.05 degrees, including duplicate or collinear locations. Longitude bounds use the shortest arc across the date line.
      */
     var mapRegion: MKCoordinateRegion? {
         let coordinates = compactMap { $0.coords }.filter { CLLocationCoordinate2DIsValid($0) }
@@ -2376,36 +2291,26 @@ public extension Array where Element == SwiftBMLSDK_Parser.Meeting {
             )
         }
         
-        var minLatitude = coordinates[0].latitude
-        var maxLatitude = coordinates[0].latitude
-        var minLongitude = coordinates[0].longitude
-        var maxLongitude = coordinates[0].longitude
-        
-        coordinates.forEach {
-            minLatitude = Swift.min(minLatitude, $0.latitude)
-            maxLatitude = Swift.max(maxLatitude, $0.latitude)
-            minLongitude = Swift.min(minLongitude, $0.longitude)
-            maxLongitude = Swift.max(maxLongitude, $0.longitude)
+        let minLatitude = coordinates.map(\.latitude).min() ?? 0
+        let maxLatitude = coordinates.map(\.latitude).max() ?? 0
+        let longitudes = coordinates.map { $0.longitude < 0 ? $0.longitude + 360 : $0.longitude }.sorted()
+        var largestGap = -Double.infinity
+        var arcStart = longitudes[0]
+        for index in longitudes.indices {
+            let next = (index + 1) % longitudes.count
+            let gap = longitudes[next] + (next == 0 ? 360 : 0) - longitudes[index]
+            if gap > largestGap {
+                largestGap = gap
+                arcStart = longitudes[next]
+            }
         }
-        
-        let center = CLLocationCoordinate2D(
-            latitude: (minLatitude + maxLatitude) * 0.5,
-            longitude: (minLongitude + maxLongitude) * 0.5
-        )
-        
-        let latitudeDelta = Swift.max((maxLatitude - minLatitude), 0)
-        let longitudeDelta = Swift.max((maxLongitude - minLongitude), 0)
-        
-        guard !latitudeDelta.isZero,
-              !longitudeDelta.isZero
-        else { return nil }
-        
+        let longitudeDelta = 360 - largestGap
+        var centerLongitude = (arcStart + longitudeDelta / 2).truncatingRemainder(dividingBy: 360)
+        if centerLongitude > 180 { centerLongitude -= 360 }
         return MKCoordinateRegion(
-            center: center,
-            span: MKCoordinateSpan(
-                latitudeDelta: latitudeDelta,
-                longitudeDelta: longitudeDelta
-            )
+            center: CLLocationCoordinate2D(latitude: (minLatitude + maxLatitude) / 2, longitude: centerLongitude),
+            span: MKCoordinateSpan(latitudeDelta: Swift.max(maxLatitude - minLatitude, 0.05),
+                                   longitudeDelta: Swift.max(longitudeDelta, 0.05))
         )
     }
 }

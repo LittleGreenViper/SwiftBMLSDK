@@ -1,63 +1,71 @@
 # ``SwiftBMLSDK``
 
-![Icon](icon.png)
-
-A native Swift client SDK for the `LGV_MeetingServer` Web server.
+Search an LGV_MeetingServer aggregator and interpret its weekly meeting schedules.
 
 ## Overview
 
-Use the SwiftBMLSDK to query instances of the [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer) meeting aggregator server.
+![SwiftBMLSDK icon](icon.png)
 
-This service manages structured queries, and allows powerful parsing and filtering of search results.
+Create a ``SwiftBMLSDK_Query`` with your aggregator's complete entrypoint URL. Search results
+arrive as a ``SwiftBMLSDK_Parser`` with server metadata and an array of meeting objects.
+Query completions run once, asynchronously on the main queue. Empty searches are successful
+responses with an empty meeting array; failures provide an error.
 
-## Usage
+The SDK supports iOS/iPadOS 16+, macOS 13+, and watchOS 9+. tvOS is unsupported because
+the public address type requires Contacts, which tvOS does not provide. It uses Swift 5
+language mode and depends on PhoneNumberKit 5, which requires Swift tools 5.9 or newer.
 
-create an instance of ``SwiftBMLSDK_Query``, and use that to query an external [`LGV_MeetingServer`](https://github.com/LittleGreenViper/LGV_MeetingServer) server.
+```swift
+import Foundation
+import SwiftBMLSDK
 
-The response to the query will be an instance of ``SwiftBMLSDK_Parser``, which can then be used to access, filter and sort the meetings, contained, therein.
+let query = SwiftBMLSDK_Query(
+    serverBaseURI: URL(string: "https://example.org/LGV_MeetingServer/entrypoint.php")
+)
+query.meetingSearch(specification: .init(type: .virtual())) { results, error in
+    if let error = error {
+        print(error.localizedDescription)
+        return
+    }
+    for meeting in results?.meetings ?? [] {
+        print(meeting.name, meeting.localizedWeekdayTimeString(adjusted: true))
+    }
+}
+```
 
-That's just about the only thing that you need to do, as a user of the SDK. It uses completion procs for most of its responses.
+Replace the example URL with your server's actual entrypoint. See <doc:Searching> for
+paging and radius searches, and <doc:MeetingTimes> for timezone-aware display.
 
 ## Topics
 
-### Making a Query to the Server
+### Guides
 
-This is the struct that you need to instantiate, in order to execute queries to [the meeting server](https://github.com/LittleGreenViper/LGV_MeetingServer). Everything else comes from that instance.
+- <doc:Searching>
+- <doc:MeetingTimes>
+- <doc:MeetingLinks>
+
+### Queries
 
 - ``SwiftBMLSDK_Query``
-
-### Meeting Server Information Queries
-
-This is a query that fetches basic information from the server.
-
+- ``SwiftBMLSDK_Query/SearchSpecification``
+- ``SwiftBMLSDK_Query/meetingSearch(specification:priority:completion:)``
+- ``SwiftBMLSDK_Query/meetingAutoRadiusSearch(minimumNumberOfResults:specification:priority:completion:)``
 - ``SwiftBMLSDK_Query/serverInfo(completion:)``
-
 - ``SwiftBMLSDK_Query/ServerInfo``
 
-### Meeting Search Queries
-
-This is how you do a meeting search. Create a ``SwiftBMLSDK_Query/SearchSpecification`` instance, and pass that to the ``SwiftBMLSDK_Query/meetingSearch(specification:priority:completion:)`` method.
-
-- ``SwiftBMLSDK_Query/SearchSpecification``
-
-- ``SwiftBMLSDK_Query/meetingSearch(specification:priority:completion:)``
-
-- ``SwiftBMLSDK_Query/meetingAutoRadiusSearch(minimumNumberOfResults:specification:priority:completion:)``
+### Results and Schedules
 
 - ``SwiftBMLSDK_Parser``
+- ``SwiftBMLSDK_Parser/PageMeta``
+- ``SwiftBMLSDK_Parser/Meeting``
+- ``SwiftBMLSDK_Parser/Meeting/nextOccurrenceDateFast(from:calendar:)``
+- ``SwiftBMLSDK_Parser/Meeting/previousOccurrenceDateFast(from:calendar:)``
+- ``SwiftBMLSDK_Parser/Meeting/localizedWeekdayTimeString(style:locale:calendar:timeZone:adjusted:includeDuration:)``
 
-### Useful Classes
-
-You can create an instance of ``SwiftBMLSDK_MeetingLocalTimezoneCollection``, and use that to manage all the meetings (which are represented in the user's local timezone).
+### Collections and Links
 
 - ``SwiftBMLSDK_MeetingLocalTimezoneCollection``
-
-### Useful Extensions
-
-- ``SwiftBMLSDK_Parser/Meeting/directAppURI``
-
+- ``SwiftBMLSDK_MeetingLocalTimezoneCollection/CachedMeeting``
 - ``SwiftBMLSDK_MeetingProtocol``
-
-## Dependencies
-
-This SDK depends upon the [PhoneNumberKit](https://github.com/marmelroy/PhoneNumberKit) package, for formatting usable phone numbers from meeting data.
+- ``SwiftBMLSDK_Parser/Meeting/directAppURI``
+- ``SwiftBMLSDK_Parser/Meeting/directPhoneURI``

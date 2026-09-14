@@ -36,6 +36,8 @@ class SwiftBMLSDK_TestCase: XCTestCase {
      This caches it as parsed JSON data, so we don't have to keep re-parsing.
      */
     private static var _parsedOriginalJSONData: NSDictionary?
+
+    private static var _originalMeetingsByID = [UInt64: [String: Any]]()
     
     /* ################################################################## */
     /**
@@ -45,9 +47,21 @@ class SwiftBMLSDK_TestCase: XCTestCase {
 
     /* ################################################################## */
     /**
+     Number of records retained after timezone and usable-venue validation.
+     */
+    static let numberOfParsedMeetings = 33556
+
+    /* ################################################################## */
+    /**
      This returns the bundle for this test.
      */
-    var testBundle: Bundle { Bundle(for: type(of: self)) }
+    var testBundle: Bundle {
+        #if SWIFT_PACKAGE
+            return .module
+        #else
+            return Bundle(for: type(of: self))
+        #endif
+    }
 
     /* ################################################################## */
     /**
@@ -68,16 +82,22 @@ class SwiftBMLSDK_TestCase: XCTestCase {
             guard let jsonData = Self._originalJSONData,
                   let simpleJSON = try? JSONSerialization.jsonObject(with: jsonData, options: [.allowFragments]) as? NSDictionary else { return }
             Self._parsedOriginalJSONData = simpleJSON
+            for record in simpleJSON["meetings"] as? [[String: Any]] ?? [] {
+                if let serverID = record["server_id"] as? UInt64,
+                   let meetingID = record["meeting_id"] as? UInt64 {
+                    Self._originalMeetingsByID[(serverID << 44) + meetingID] = record
+                }
+            }
         }
         guard let jsonData = Self._originalJSONData else { return }
-        Self.parser = SwiftBMLSDK_Parser(jsonData: jsonData)
+        Self.parser = SwiftBMLSDK_Parser(jsonData: jsonData, specification: .init())
     }
     
     /* ################################################################## */
     /**
      This compares a parsed meeting instance, with the original JSON data for that meeting.
      
-     - parameter index: The 0-based index of the meeting (used to extract the original data).
+     - parameter index: The parsed meeting index. The original record is matched by composite ID because malformed records are skipped.
      - parameter meeting: The parsed meeting instance.
      */
     func validateMeeting(index inIndex: Int, meeting inMeeting: SwiftBMLSDK_Parser.Meeting) {
@@ -108,7 +128,7 @@ class SwiftBMLSDK_TestCase: XCTestCase {
                 return ret
             }
             
-            guard var ret: String = inURLString?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed),
+            guard var ret: String = inURLString?.trimmingCharacters(in: .whitespacesAndNewlines),
                   let regex = try? NSRegularExpression(pattern: "^(http://|https://|tel://|tel:)", options: .caseInsensitive)
             else { return nil }
             
@@ -116,7 +136,7 @@ class SwiftBMLSDK_TestCase: XCTestCase {
             let wasTel = string(ret.lowercased(), beginsWith: "tel:")
             
             // Yeah, this is pathetic, but it's quick, simple, and works a charm.
-            ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(location: 0, length: ret.count), withTemplate: "")
+            ret = regex.stringByReplacingMatches(in: ret, options: [], range: NSRange(ret.startIndex..<ret.endIndex, in: ret), withTemplate: "")
             
             if ret.isEmpty {
                 return nil
@@ -130,15 +150,11 @@ class SwiftBMLSDK_TestCase: XCTestCase {
             
             return ret
         }
-        guard let meetingsJSON = Self._parsedOriginalJSONData?["meetings"] as? [[String: Any]],
-              (0..<meetingsJSON.count).contains(inIndex)
-        else {
-            XCTFail("Original JSON Not Available!")
+        guard let original = Self._originalMeetingsByID[inMeeting.id] else {
+            XCTFail("Original Meeting Not Available for ID \(inMeeting.id)!")
             return
         }
-        
-        let original = meetingsJSON[inIndex]
-        
+
         guard !original.isEmpty,
               let originalServerID = original["server_id"] as? Int,
               let originalLocalMeetingID = original["meeting_id"] as? Int,
@@ -157,21 +173,21 @@ class SwiftBMLSDK_TestCase: XCTestCase {
         let originalFormats = original["formats"] as? [[String: Any]] ?? []
         
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = .gmt
         dateFormatter.dateFormat = "HH:mm:ss"
-        let originalStartTime = dateFormatter.date(from: originalStartTimeString)
         
         // First, compare the required fields.
         XCTAssertEqual(originalServerID, inMeeting.serverID)
         XCTAssertEqual(originalLocalMeetingID, inMeeting.localMeetingID)
         XCTAssertEqual(originalWeekdayIndex, inMeeting.weekday)
-        XCTAssertEqual(originalStartTime, inMeeting.startTime)
+        XCTAssertEqual(originalStartTimeString, dateFormatter.string(from: inMeeting.startTime))
         XCTAssertEqual(originalDuration, inMeeting.duration)
         XCTAssertEqual(originalTimezone, inMeeting.timeZone.identifier)
         XCTAssertEqual(originalName, inMeeting.name)
         XCTAssertEqual(originalOrganization, inMeeting.organization.rawValue)
         
         if !originalFormats.isEmpty {
-            var index = 0
             originalFormats.forEach{ format in
                 if let key = (format["key"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
                    !key.isEmpty,
@@ -179,7 +195,10 @@ class SwiftBMLSDK_TestCase: XCTestCase {
                    let description = (format["description"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
                    let language = (format["language"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines),
                    let id = format["id"] as? Int {
-                    let currentFormat = inMeeting.formats[index]
+                    guard let currentFormat = inMeeting.formats.first(where: { $0.id == String(id) }) else {
+                        XCTFail("Missing format \(id)")
+                        return
+                    }
                     XCTAssertEqual(currentFormat.key, key)
                     XCTAssertEqual(currentFormat.name, name)
                     XCTAssertEqual(currentFormat.description, description)
@@ -189,7 +208,6 @@ class SwiftBMLSDK_TestCase: XCTestCase {
                     XCTFail("Original Format Missing Required Field!")
                 }
                 
-                index += 1
             }
         } else {
             XCTAssertTrue(inMeeting.formats.isEmpty)
@@ -199,7 +217,9 @@ class SwiftBMLSDK_TestCase: XCTestCase {
         XCTAssertEqual(inMeeting.comments, (original["comments"] as? String ?? "").isEmpty ? nil : (original["comments"] as? String)!)
         
         if let latitude = original["latitude"] as? Double,
-           let longitude = original["longitude"] as? Double {
+           let longitude = original["longitude"] as? Double,
+           inMeeting.inPersonAddress != nil,
+           CLLocationCoordinate2DIsValid(CLLocationCoordinate2D(latitude: latitude, longitude: longitude)) {
             XCTAssertEqual(latitude, inMeeting.coords?.latitude)
             XCTAssertEqual(longitude, inMeeting.coords?.longitude)
         } else {
@@ -208,13 +228,26 @@ class SwiftBMLSDK_TestCase: XCTestCase {
 
         if let virtualInfo = original["virtual_information"] as? [String: String],
            !virtualInfo.isEmpty {
-            XCTAssertEqual(virtualInfo["phone_number"], inMeeting.virtualPhoneNumber)
-            if let originalURL = cleanURI(urlString: virtualInfo["url"]),
+            let phone = virtualInfo["phone_number"].map { value -> String in
+                let parts = value.components(separatedBy: "#@-@#")
+                return (parts.count > 1 ? parts[1] : parts[0]).trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            XCTAssertEqual(phone?.isEmpty == true ? nil : phone, inMeeting.virtualPhoneNumber)
+            if let originalURL = cleanURI(urlString: virtualInfo["url"].map { value in
+                let parts = value.components(separatedBy: "#@-@#")
+                return parts.count > 1 ? parts[1] : parts[0]
+            }),
                !originalURL.isEmpty,
                let testOrig = URL(string: originalURL),
                let meetingURLString = inMeeting.virtualURL?.absoluteString.trimmingCharacters(in: .whitespacesAndNewlines),
                !meetingURLString.isEmpty {
-                XCTAssertEqual(testOrig.absoluteString, meetingURLString)
+                var originalComponents = URLComponents(url: testOrig, resolvingAgainstBaseURL: false)
+                var parsedComponents = URLComponents(string: meetingURLString)
+                let originalScheme = originalComponents?.scheme?.lowercased()
+                originalComponents?.scheme = originalScheme
+                let parsedScheme = parsedComponents?.scheme?.lowercased()
+                parsedComponents?.scheme = parsedScheme
+                XCTAssertEqual(originalComponents, parsedComponents)
             } else {
                 XCTAssertNil(inMeeting.virtualURL)
             }
@@ -224,7 +257,10 @@ class SwiftBMLSDK_TestCase: XCTestCase {
         }
         
         if let virtualInfo = (original["virtual_information"] as? [String: String]),
-           let virtualComments = virtualInfo["info"]?.trimmingCharacters(in: .whitespacesAndNewlines),
+           let virtualComments = virtualInfo["info"].map({ value in
+               let parts = value.components(separatedBy: "#@-@#")
+               return (parts.count > 1 ? parts[1] : parts[0]).trimmingCharacters(in: .whitespacesAndNewlines)
+           }),
            !virtualComments.isEmpty {
             XCTAssertEqual(virtualComments, inMeeting.virtualInfo)
         } else {

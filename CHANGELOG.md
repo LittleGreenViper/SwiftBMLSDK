@@ -1,4 +1,17 @@
- **1.5.3** *August 15, 2026*
+**1.5.4** *September 14, 2026*
+
+- Preserved transport errors, reported HTTP and decoding failures, and made all query completions asynchronous on the main queue. Concurrent requests no longer cancel delegate operations. Server-info queries preserve existing URL parameters.
+- Fixed auto-radius searches to use meters consistently, reach the exact maximum, return partial or empty results, and stop on errors. Geographic searches ignore paging; ID and exclusively virtual searches run once.
+- Accepted empty and count-only responses, removed shared parser search-center state, and honored ID searches independently of type filters.
+- Rejected malformed clock values and IDs that cannot fit the composite ID. Preserved literal percent signs and existing URL escapes.
+- Corrected daylight-saving recurrence calculations, second-level precision, cross-timezone sorting, countdowns, weekday styles, compact 24-hour formatting, and exported clock times. Unified in-progress checks and invalidated cached dates when replacing meetings.
+- Fixed short-path app-link crashes, preserved room paths and Zoom passwords, and tightened host matching. Unified phone-link parsing and preserved numeric passcodes and encoded dialing controls.
+- Corrected weekday conversion and map regions for duplicate, collinear, and date-line locations. Validated explicit distance coordinates, resolved ambiguous distance-formatting overloads, and propagated encoding failures.
+- Fixed watchOS compilation by excluding unavailable UIApplication APIs and kept composite-ID conversion safe on 32-bit watch architectures. Corrected the tvOS support claim: the public address type requires Contacts, which tvOS does not provide.
+- Updated HeaderDoc comments, Quick Help, the DocC overview and guides, and the README with request, timezone, filtering, export, and platform behavior.
+- Added deterministic regression tests and enabled the existing meeting-dump tests in Swift Package Manager, updating their stale assumptions.
+
+**1.5.3** *August 15, 2026*
  
  - Fixed a phone number parsing error.
  
