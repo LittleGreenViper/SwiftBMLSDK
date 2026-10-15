@@ -407,9 +407,10 @@ public struct SwiftBMLSDK_Query {
     /**
      Executes a JSON request. The caller delivers its parsed result on the main queue.
      */
+    @discardableResult
     private func _request(queryItems inQueryItems: [URLQueryItem],
                           priority inPriority: Float = URLSessionTask.defaultPriority,
-                          completion inCompletion: @escaping (Data?, Error?) -> Void) {
+                          completion inCompletion: @escaping (Data?, Error?) -> Void) -> URLSessionDataTask? {
         guard let baseURL = serverBaseURI,
               let scheme = baseURL.scheme?.lowercased(),
               ["http", "https"].contains(scheme),
@@ -417,13 +418,13 @@ public struct SwiftBMLSDK_Query {
               var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true)
         else {
             inCompletion(nil, URLError(.badURL))
-            return
+            return nil
         }
         components.queryItems = (components.queryItems ?? []) + inQueryItems
         components.fragment = nil
         guard let url = components.url else {
             inCompletion(nil, URLError(.badURL))
-            return
+            return nil
         }
 
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
@@ -453,6 +454,7 @@ public struct SwiftBMLSDK_Query {
         }
         task.priority = inPriority.isFinite ? min(1, max(0, inPriority)) : URLSessionTask.defaultPriority
         task.resume()
+        return task
     }
 }
 
@@ -542,10 +544,14 @@ public extension SwiftBMLSDK_Query {
        a parser or an error. Transport errors are preserved. HTTP failures use
        `URLError.badServerResponse` (`HTTPStatusCode` in `userInfo`); malformed JSON or
        an invalid response schema uses `URLError.cannotDecodeContentData`.
+     - returns: The running request, which the caller can cancel without affecting other
+       searches. Cancellation completes with `URLError.cancelled`. Nil indicates an
+       invalid URL; the asynchronous error completion still runs.
      */
+    @discardableResult
     func meetingSearch(specification inSpecification: SearchSpecification,
                        priority inPriority: Float = URLSessionTask.defaultPriority,
-                       completion inCompletion: @escaping QueryResultCompletion) {
+                       completion inCompletion: @escaping QueryResultCompletion) -> URLSessionDataTask? {
         _request(queryItems: inSpecification.urlQueryItems, priority: inPriority) { data, error in
             guard let data = data else {
                 DispatchQueue.main.async { inCompletion(nil, error) }

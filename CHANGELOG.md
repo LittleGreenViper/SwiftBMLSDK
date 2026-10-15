@@ -1,3 +1,7 @@
+**1.5.5** *September 15, 2026*
+
+- Added cancellable searches.
+
 **1.5.4** *September 14, 2026*
 
 - Preserved transport errors, reported HTTP and decoding failures, and made all query completions asynchronous on the main queue. Concurrent requests no longer cancel delegate operations. Server-info queries preserve existing URL parameters.

@@ -42,6 +42,12 @@ query.meetingSearch(specification: specification) { results, error in
 
 Query completions run once, asynchronously on the main queue, including failures before a request starts. Successful empty searches return a parser with an empty `meetings` array. Transport errors are preserved; HTTP failures return `URLError.badServerResponse`, with `HTTPStatusCode` in the error's `userInfo`. Invalid response content returns `URLError.cannotDecodeContentData`. Requests on the same query instance run independently.
 
+`meetingSearch` returns its `URLSessionDataTask` (or nil for an invalid URL).
+Retain it and call `cancel()` to stop that request without affecting other searches;
+its completion receives `URLError.cancelled`. Ignoring the return value preserves
+existing behavior. A higher-level owner should also discard cancelled results
+that were already being parsed or queued for delivery when cancellation occurred.
+
 ## Search options
 
 - `locationRadius` is in **meters**. Nonpositive or nonfinite radii disable geographic filtering for an ordinary search. Coordinates must be valid; the default center is `(0, 0)`.

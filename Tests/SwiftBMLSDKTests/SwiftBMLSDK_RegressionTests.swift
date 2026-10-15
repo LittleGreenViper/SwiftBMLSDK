@@ -297,6 +297,39 @@ final class SwiftBMLSDK_RegressionTests: XCTestCase {
         waitForExpectations(timeout: 5)
     }
 
+    func testReturnedSearchTaskCancelsTransportAndPreservesIndependentRequests() throws {
+        let started = expectation(description: "Cancellable request started")
+        let stopped = expectation(description: "Transport stopped")
+        let cancelled = expectation(description: "Cancelled completion")
+        let independent = expectation(description: "Independent completion")
+        SwiftBMLSDK_CancellationURLProtocol.onStart = { started.fulfill() }
+        SwiftBMLSDK_CancellationURLProtocol.onStop = { stopped.fulfill() }
+        defer {
+            SwiftBMLSDK_CancellationURLProtocol.onStart = nil
+            SwiftBMLSDK_CancellationURLProtocol.onStop = nil
+        }
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [SwiftBMLSDK_CancellationURLProtocol.self]
+        let session = URLSession(configuration: config)
+        defer { session.invalidateAndCancel() }
+        let query = SwiftBMLSDK_Query(serverBaseURI: URL(string: "https://sdk.test/entrypoint.php"), session: session)
+        let task = try XCTUnwrap(query.meetingSearch(specification: .init(locationCenter: .init(latitude: 40, longitude: -74), locationRadius: 1000)) { parser, error in
+            XCTAssertTrue(Thread.isMainThread)
+            XCTAssertNil(parser)
+            XCTAssertEqual((error as? URLError)?.code, .cancelled)
+            cancelled.fulfill()
+        })
+        wait(for: [started], timeout: 2)
+        task.cancel()
+        query.meetingSearch(specification: .init()) { parser, error in
+            XCTAssertTrue(Thread.isMainThread)
+            XCTAssertNotNil(parser)
+            XCTAssertNil(error)
+            independent.fulfill()
+        }
+        wait(for: [stopped, cancelled, independent], timeout: 2)
+    }
+
     func testInvalidURLCompletesAsynchronouslyOnMainQueue() {
         let done = expectation(description: "Invalid URL")
         var returned = false
@@ -479,4 +512,25 @@ private final class SwiftBMLSDK_TestURLProtocol: URLProtocol {
         }
     }
     override func stopLoading() {}
+}
+
+private final class SwiftBMLSDK_CancellationURLProtocol: URLProtocol {
+    static var onStart: (() -> Void)?
+    static var onStop: (() -> Void)?
+
+    override class func canInit(with request: URLRequest) -> Bool { request.url?.host == "sdk.test" }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        if request.url?.query?.contains("geo_radius=1.0") == true {
+            Self.onStart?()
+            return // Remain pending until URLSession cancels this request.
+        }
+        let data = Data(#"{"meta":{"total":0},"meetings":[]}"#.utf8)
+        let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil,
+                                       headerFields: ["Content-Type": "application/json"])!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: data)
+        client?.urlProtocolDidFinishLoading(self)
+    }
+    override func stopLoading() { Self.onStop?() }
 }
