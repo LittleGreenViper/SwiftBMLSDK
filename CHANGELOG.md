@@ -1,3 +1,7 @@
+**1.5.6** *October 20, 2026*
+
+- Updated the privacy manifest, and ensure its inclusion in the package.
+
 **1.5.5** *September 15, 2026*
 
 - Added cancellable searches.

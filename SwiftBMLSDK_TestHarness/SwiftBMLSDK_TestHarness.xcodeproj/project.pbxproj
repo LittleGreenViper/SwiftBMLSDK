@@ -481,6 +481,7 @@
 				CURRENT_PROJECT_VERSION = 0000;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftBMLSDK_TestHarness/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
@@ -496,7 +497,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.littlegreenviper.SwiftBMLSDK-TestHarness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -514,6 +515,7 @@
 				CURRENT_PROJECT_VERSION = 0000;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SwiftBMLSDK_TestHarness/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "This app needs to know your location, in order to find nearby meetings.";
@@ -529,7 +531,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.littlegreenviper.SwiftBMLSDK-TestHarness";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

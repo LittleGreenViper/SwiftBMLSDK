@@ -48,6 +48,7 @@ let package = Package(
             dependencies: isDocsBuild ? [] : [
                 .product(name: "PhoneNumberKit", package: "PhoneNumberKit")
             ],
+            resources: [.copy("PrivacyInfo.xcprivacy")],
             swiftSettings: isDocsBuild ? [
                 .define("SWIFTBMLSDK_DOCS")
             ] : []
