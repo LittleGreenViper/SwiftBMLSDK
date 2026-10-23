@@ -2,7 +2,7 @@
 
 ![SwiftBMLSDK icon](icon.png)
 
-A native Swift client for the [LGV_MeetingServer](https://github.com/LittleGreenViper/LGV_MeetingServer) meeting aggregator. Version **1.5.4**.
+A native Swift client for the [LGV_MeetingServer](https://github.com/LittleGreenViper/LGV_MeetingServer) meeting aggregator. Version **1.5.7**.
 
 ## Requirements and installation
 
@@ -59,6 +59,34 @@ that were already being parsed or queued for delivery when cancellation occurred
 
 The parser preserves server order, skips invalid meeting records, and applies the requested meeting type. Metadata counts come from the server and can exceed the number of accepted meetings. Missing or invalid timezones cause a record to be skipped by default. Setting the process environment variable `IGNORE_NO_TZ` accepts those records using the device's current timezone.
 
+## Meeting accessibility and attendance flags
+
+`SwiftBMLSDK_Parser.Meeting` exposes `wheelchairAccessible`, `isOpen`, and
+`isClosed` as `Bool?`, read from the server's `wheelchair_accessible`, `is_open`,
+and `is_closed` fields. LGV_MeetingServer 1.6.1 emits `true` when the source
+explicitly asserts a flag and otherwise omits it. Missing fields (including older
+responses) and JSON null become `nil`, meaning unknown. Missing accessibility
+does not mean inaccessible; missing open/closed status does not assert its opposite.
+Explicit Boolean `false` is retained if supplied. Invalid types, including numeric
+or string booleans, cause the meeting record to be skipped.
+
+The three flags are independent: `isOpen` and `isClosed` can both be true when
+upstream data conflicts. They are independent of venue type, and are never inferred
+from localized display `formats` such as `O`, `C`, or `WC`. Existing format objects
+and composite meeting identity remain unchanged.
+
+```swift
+let confirmedAccessible = results.meetings.filter { $0.wheelchairAccessible == true }
+let confirmedOpen = results.meetings.filter { $0.isOpen == true }
+let conflictingStatus = results.meetings.filter { $0.isOpen == true && $0.isClosed == true }
+```
+
+Filtering is local to the fetched results. No server flag filters are available;
+metadata counts describe the original query, and further pages may contain matches.
+The SDK's flat JSON export uses `wheelchairAccessible`, `isOpen`, and `isClosed`,
+omitting nil values and retaining both true and false. The export remains a separate
+schema and is not an input cache format.
+
 ## Dates, filtering, and display
 
 `weekday` uses Sunday = 1 through Saturday = 7 in the meeting's timezone. `startTime` stores a floating clock time on January 1, 2001, in GMT; it is not an actual meeting date. Prefer these helpers:
@@ -98,3 +126,13 @@ Run `swift test` on macOS to run the meeting-dump checks and deterministic regre
 `SWIFTBMLSDK_DOCS=1` omits PhoneNumberKit for documentation-only builds; phone URL helpers return `nil` in that configuration. Use normal builds for runtime validation. The existing `docs/` directory contains separately generated Jazzy documentation.
 
 See [CHANGELOG.md](CHANGELOG.md) for release history. Licensed under the [MIT License](LICENSE).
+
+To run the optional prerelease flag smoke test (one page of at most ten meetings):
+
+```sh
+SWIFTBMLSDK_LIVE_TESTS=1 swift test --filter testPrereleaseMeetingFlagsLive
+```
+
+It checks the prerelease `info` response and compares parsed flags with the wire
+response by server and meeting ID. Live records may change; deterministic tests
+cover every flag combination, legacy responses, null, false, and malformed values.

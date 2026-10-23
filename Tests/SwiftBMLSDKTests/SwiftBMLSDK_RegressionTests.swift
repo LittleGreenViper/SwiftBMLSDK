@@ -58,6 +58,85 @@ final class SwiftBMLSDK_RegressionTests: XCTestCase {
         try XCTUnwrap(ISO8601DateFormatter().date(from: value))
     }
 
+    func testMeetingFlagCombinationsAndExport() throws {
+        let wireKeys = ["wheelchair_accessible", "is_open", "is_closed"]
+        let exportKeys = ["wheelchairAccessible", "isOpen", "isClosed"]
+        for mask in 0..<8 {
+            var fields: [String: Any] = [:]
+            for index in 0..<3 where mask & (1 << index) != 0 { fields[wireKeys[index]] = true }
+            let parser = try XCTUnwrap(SwiftBMLSDK_Parser(jsonData: page([record(fields)]), specification: .init()))
+            let value = try XCTUnwrap(parser.meetings.first)
+            let flags = [value.wheelchairAccessible, value.isOpen, value.isClosed]
+            let exported = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(value)) as? [String: Any])
+            for index in 0..<3 {
+                let expected: Bool? = mask & (1 << index) != 0 ? true : nil
+                XCTAssertEqual(flags[index], expected)
+                XCTAssertEqual(exported[exportKeys[index]] as? Bool, expected)
+            }
+        }
+    }
+
+    func testMeetingFlagsUnknownFalseAndMalformedTypes() throws {
+        let keys = ["wheelchair_accessible", "is_open", "is_closed"]
+        for input in [NSNull(), false] as [Any] {
+            let fields = Dictionary(uniqueKeysWithValues: keys.map { ($0, input) })
+            let parser = try XCTUnwrap(SwiftBMLSDK_Parser(jsonData: page([record(fields)]), specification: .init()))
+            let value = try XCTUnwrap(parser.meetings.first)
+            let expected: Bool? = input is NSNull ? nil : false
+            XCTAssertEqual(value.wheelchairAccessible, expected)
+            XCTAssertEqual(value.isOpen, expected)
+            XCTAssertEqual(value.isClosed, expected)
+            let exported = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(value)) as? [String: Any])
+            for key in ["wheelchairAccessible", "isOpen", "isClosed"] {
+                XCTAssertEqual(exported[key] as? Bool, expected)
+            }
+        }
+        for key in keys {
+            for invalid in ["true", "false", 0, 1, 1.5, [], [:]] as [Any] {
+                let parser = try XCTUnwrap(SwiftBMLSDK_Parser(jsonData: page([record([key: invalid]), record()]), specification: .init()))
+                XCTAssertEqual(parser.meetings.count, 1, "Invalid flag: \(key) = \(invalid)")
+            }
+        }
+        let legacy = try meeting(["formats": [
+            ["key": "O", "name": "Open", "id": 1],
+            ["key": "WC", "name": "Wheelchair", "id": 2],
+            ["key": "C", "name": "Closed", "id": 3]
+        ]])
+        XCTAssertEqual(legacy.formats.count, 3)
+        XCTAssertNil(legacy.wheelchairAccessible)
+        XCTAssertNil(legacy.isOpen)
+        XCTAssertNil(legacy.isClosed)
+    }
+
+    /// Opt-in smoke test; ordinary test runs never depend on the network or stable live IDs.
+    func testPrereleaseMeetingFlagsLive() async throws {
+        guard ProcessInfo.processInfo.environment["SWIFTBMLSDK_LIVE_TESTS"] == "1" else {
+            throw XCTSkip("Set SWIFTBMLSDK_LIVE_TESTS=1 to verify the prerelease server")
+        }
+        let endpoint = "https://recovrr.org/recovrr/testMeetings/entrypoint.php"
+        let (infoData, infoResponse) = try await URLSession.shared.data(from: XCTUnwrap(URL(string: endpoint + "?info")))
+        XCTAssertEqual((infoResponse as? HTTPURLResponse)?.statusCode, 200)
+        let info = try XCTUnwrap(JSONSerialization.jsonObject(with: infoData) as? [String: Any])
+        XCTAssertNotNil(info["server_version"] as? String)
+        let (data, response) = try await URLSession.shared.data(from: XCTUnwrap(URL(string: endpoint + "?query&page_size=10&page=0")))
+        XCTAssertEqual((response as? HTTPURLResponse)?.statusCode, 200)
+        let raw = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let rows = try XCTUnwrap(raw["meetings"] as? [[String: Any]])
+        XCTAssertFalse(rows.isEmpty)
+        XCTAssertLessThanOrEqual(rows.count, 10)
+        let parser = try XCTUnwrap(SwiftBMLSDK_Parser(jsonData: data, specification: .init(pageSize: 10, page: 0)))
+        XCTAssertEqual(parser.meta.page, 0)
+        XCTAssertEqual(parser.meetings.count, rows.count)
+        for row in rows {
+            let value = try XCTUnwrap(parser.meetings.first {
+                $0.serverID == row["server_id"] as? Int && $0.localMeetingID == row["meeting_id"] as? Int
+            })
+            XCTAssertEqual(value.wheelchairAccessible, row["wheelchair_accessible"] as? Bool)
+            XCTAssertEqual(value.isOpen, row["is_open"] as? Bool)
+            XCTAssertEqual(value.isClosed, row["is_closed"] as? Bool)
+        }
+    }
+
     func testEmptyAndCountOnlyPages() throws {
         for count in [0, 42] {
             let parser = try XCTUnwrap(SwiftBMLSDK_Parser(jsonData: page(total: count), specification: .init(pageSize: 0)))

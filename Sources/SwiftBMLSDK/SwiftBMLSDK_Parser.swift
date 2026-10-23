@@ -18,6 +18,7 @@
  */
 
 import Foundation
+import CoreFoundation       // Distinguishes JSON booleans from numeric NSNumber values.
 import CoreLocation         // For coordinates
 import Contacts             // For the in-person address
 import MapKit               // For the Array extension that returns location data for meetings.
@@ -817,6 +818,19 @@ public struct SwiftBMLSDK_Parser: Encodable {
                   let organizationStr = inDictionary["organization_key"] as? String
             else { return nil }
 
+            // JSONSerialization bridges both numbers and booleans to NSNumber.
+            // Reject numeric/string flags rather than treating them as assertions.
+            let flagKeys = ["wheelchair_accessible", "is_open", "is_closed"]
+            for key in flagKeys {
+                if let value = inDictionary[key], !(value is NSNull) {
+                    guard let number = value as? NSNumber,
+                          CFGetTypeID(number) == CFBooleanGetTypeID() else { return nil }
+                }
+            }
+            self.wheelchairAccessible = inDictionary["wheelchair_accessible"] as? Bool
+            self.isOpen = inDictionary["is_open"] as? Bool
+            self.isClosed = inDictionary["is_closed"] as? Bool
+
             self.weekday = weekday
             self.startTime = startTime
             self.serverID = serverID
@@ -1111,6 +1125,30 @@ public struct SwiftBMLSDK_Parser: Encodable {
         public let formats: [Format]
 
         // MARK: Public Optional Instance Properties
+
+        /* ################################################# */
+        /**
+         The server's explicit wheelchair accessibility assertion. Nil means unknown,
+         including older responses; it does not mean inaccessible. Explicit false is retained.
+         This is independent of venue type and is never inferred from display formats.
+         */
+        public let wheelchairAccessible: Bool?
+
+        /* ################################################# */
+        /**
+         The server's explicit open-meeting assertion. Nil means unknown, not closed.
+         Independent of `isClosed`: both can be true when the source conflicts.
+         Explicit false is retained; display formats are never used to infer this value.
+         */
+        public let isOpen: Bool?
+
+        /* ################################################# */
+        /**
+         The server's explicit closed-meeting assertion. Nil means unknown, not open.
+         Independent of `isOpen`: both can be true when the source conflicts.
+         Explicit false is retained; display formats are never used to infer this value.
+         */
+        public let isClosed: Bool?
         
         /* ################################################# */
         /**
@@ -1576,6 +1614,10 @@ extension SwiftBMLSDK_Parser.Meeting: Encodable {
         
         var container = inEncoder.container(keyedBy: _CustomCodingKeys.self)
         
+        try container.encodeIfPresent(wheelchairAccessible, forKey: _CustomCodingKeys(stringValue: "wheelchairAccessible")!)
+        try container.encodeIfPresent(isOpen, forKey: _CustomCodingKeys(stringValue: "isOpen")!)
+        try container.encodeIfPresent(isClosed, forKey: _CustomCodingKeys(stringValue: "isClosed")!)
+
         try container.encode(id, forKey: _CustomCodingKeys(stringValue: "id")!)
 
         // These three must always be present.

@@ -1,3 +1,9 @@
+**1.5.7** *October 23, 2026*
+
+- Added public optional `wheelchairAccessible`, `isOpen`, and `isClosed` meeting properties for LGV_MeetingServer 1.6.1. Missing fields and JSON null remain unknown, older responses remain compatible, and explicit false values and conflicting open/closed assertions are preserved. Flags are never inferred from display formats.
+- Added supplied flags to flat JSON exports under camel-case keys, omitting unknown values. Malformed flag types cause the meeting record to be skipped.
+- Added deterministic flag parsing/export coverage and an opt-in prerelease smoke test; documented compatibility and client filtering semantics.
+
 **1.5.6** *October 20, 2026*
 
 - Updated the privacy manifest, and ensure its inclusion in the package.
